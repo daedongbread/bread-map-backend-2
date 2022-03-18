@@ -1,0 +1,35 @@
+#spring:
+#  jwt:
+#    secret: {JWT_KEY}
+#  datasource:
+#    url: jdbc:oracle:thin:@${dev.hostname}:${dev.port}:${dev.dbname}
+#    username: ${dev.username}
+#    password: ${dev.password}
+#    driver-class-name: ${dev.driver}
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#    database:
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    generate-ddl: true
+#
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
+#
+#cloud:
+#  aws:
+#    credentials:
+#      access-key: ${s3.accesskey}
+#      secret-key: ${s3.secretkey}
+#    region:
+#      static: ${s3.resion}
+#    s3:
+#      bucket: ${s3.bucket}
+#    stack:
+#      auto: false
+##    cloudFront:
+##      distributionDomain:
