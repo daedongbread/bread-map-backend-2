@@ -2,10 +2,9 @@ package com.depromeet.breadmapbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-/*
- * Created by ParkSuHo by 2022/03/18.
- */
+@EnableJpaAuditing
 @SpringBootApplication
 public class BreadMapBackendApplication {
 
