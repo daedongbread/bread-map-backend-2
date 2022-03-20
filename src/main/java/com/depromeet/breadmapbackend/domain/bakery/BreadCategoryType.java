@@ -25,11 +25,4 @@ public enum BreadCategoryType {
 
     private final String code;
 
-    public static BreadCategoryType of(String name) {
-        return Arrays.stream(BreadCategoryType.values())
-                .filter(breadCategoryType -> breadCategoryType.name().equals(name))
-                .findAny()
-                .orElse(null);
-    }
-
 }

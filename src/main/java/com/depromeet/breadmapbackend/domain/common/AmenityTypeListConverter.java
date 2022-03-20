@@ -29,7 +29,7 @@ public class AmenityTypeListConverter implements AttributeConverter<List<Amenity
         if(dbData == null) return Collections.emptyList();
 
         return Arrays.stream(dbData.split(SPLIT_CHAR))
-                .map(code -> AmenityType.of(code))
+                .map(code -> AmenityType.valueOf(code))
                 .collect(Collectors.toList());
     }
 

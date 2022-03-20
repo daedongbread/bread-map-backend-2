@@ -3,7 +3,7 @@ package com.depromeet.breadmapbackend.domain.review;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.StringListConverter;
-import com.depromeet.breadmapbackend.domain.member.Member;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class BakeryReview extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private User member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "bakery_id")
@@ -39,7 +39,7 @@ public class BakeryReview extends BaseEntity {
     private List<String> imgPathList = new ArrayList<>();
 
     @Builder
-    private BakeryReview(Member member, Bakery bakery, String contents, Integer rating, List<String> imgPathList) {
+    private BakeryReview(User member, Bakery bakery, String contents, Integer rating, List<String> imgPathList) {
         this.member = member;
         this.bakery = bakery;
         this.contents = contents;

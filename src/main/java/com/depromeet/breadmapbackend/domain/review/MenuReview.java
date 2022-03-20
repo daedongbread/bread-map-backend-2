@@ -4,7 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Menu;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.StringListConverter;
-import com.depromeet.breadmapbackend.domain.member.Member;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class MenuReview extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private User member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "bakery_id")
@@ -48,7 +48,7 @@ public class MenuReview extends BaseEntity {
     private List<String> imgPathList = new ArrayList<>();
 
     @Builder
-    private MenuReview(Member member, Bakery bakery, Menu menu, String contents, Integer rating, List<String> imgPathList) {
+    private MenuReview(User member, Bakery bakery, Menu menu, String contents, Integer rating, List<String> imgPathList) {
         this.member = member;
         this.bakery = bakery;
         this.menu = menu;

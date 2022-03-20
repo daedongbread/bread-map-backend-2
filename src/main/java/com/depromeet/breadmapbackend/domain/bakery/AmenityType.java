@@ -17,11 +17,4 @@ public enum AmenityType {
 
     private final String code;
 
-    public static AmenityType of(String name) {
-        return Arrays.stream(AmenityType.values())
-                .filter(amenityType -> amenityType.name().equals(name))
-                .findAny()
-                .orElse(null);
-    }
-
 }

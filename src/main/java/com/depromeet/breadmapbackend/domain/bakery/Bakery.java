@@ -3,7 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 import com.depromeet.breadmapbackend.domain.common.AmenityTypeListConverter;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.StringListConverter;
-import com.depromeet.breadmapbackend.domain.member.Member;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -44,10 +44,10 @@ public class Bakery extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member host; // 빵집 등록자
+    private User host; // 빵집 등록자
 
     @Builder
-    private Bakery(String name, Double latitude, Double longitude, String address, String businessHour, String telNumber, List<String> websiteUrlList, List<String> imgPathList, List<AmenityType> amenityTypeList, Member host) {
+    private Bakery(String name, Double latitude, Double longitude, String address, String businessHour, String telNumber, List<String> websiteUrlList, List<String> imgPathList, List<AmenityType> amenityTypeList, User host) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
