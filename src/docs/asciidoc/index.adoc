@@ -1,0 +1,60 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+= API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+:docinfo: shared-head
+
+[[introduction]]
+== 소개
+
+DaeDongBread API
+
+[[common]]
+
+== 공통 사항
+
+API 에 관계없이 아래 사항을 지켜주셔야 합니다.
+
+=== Domain
+
+|===
+| 환경 | Domain
+
+| 개발 서버
+| `https://localhost:8080`
+
+| 운영 서버
+| `정해지면 넣기`
+|===
+
+&#160;
+
+== 유저 API
+
+[[user-auth-refresh]]
+=== [ 토큰 갱신 ]
+
+==== - REQUEST -
+
+include::{snippets}/user-auth-refresh/request-headers.adoc[]
+
+===== Request HTTP 예시
+
+include::{snippets}/user-auth-refresh/http-request.adoc[]
+
+==== - RESPONSE -
+
+include::{snippets}/user-auth-refresh/response-fields.adoc[]
+
+===== Response HTTP 예시
+
+include::{snippets}/user-auth-refresh/http-response.adoc[]
+
+&#160;

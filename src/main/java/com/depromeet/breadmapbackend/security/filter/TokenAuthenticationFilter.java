@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.depromeet.breadmapbackend.security.util.HeaderConstant.HEADER_AUTHORIZATION;
-import static com.depromeet.breadmapbackend.security.util.HeaderConstant.TOKEN_PREFIX;
+import static com.depromeet.breadmapbackend.security.util.HeaderConstant.HEADER_ACCESS_TOKEN_PREFIX;
 
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
@@ -25,8 +25,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if (request.getHeader(HEADER_AUTHORIZATION) != null) {
             String jwtHeader = request.getHeader(HEADER_AUTHORIZATION);
 
-            if (jwtHeader != null || jwtHeader.startsWith(TOKEN_PREFIX)) {
-                String accessToken = jwtHeader.replace(TOKEN_PREFIX, "");
+            if (jwtHeader != null || jwtHeader.startsWith(HEADER_ACCESS_TOKEN_PREFIX)) {
+                String accessToken = jwtHeader.replace(HEADER_ACCESS_TOKEN_PREFIX, "");
 
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

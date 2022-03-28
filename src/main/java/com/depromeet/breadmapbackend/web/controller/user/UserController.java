@@ -3,13 +3,13 @@ package com.depromeet.breadmapbackend.web.controller.user;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.service.user.UserService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
-import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRefreshRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /*
  * Created by ParkSuHo by 2022/03/18.
@@ -23,8 +23,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("auth/refresh")
-    public ApiResponse<JwtToken> refresh(HttpServletRequest request, HttpServletResponse response) {
-        JwtToken jwtToken = userService.refresh(request, response);
+    public ApiResponse<JwtToken> refresh(@RequestBody TokenRefreshRequest tokenRefreshRequest) {
+        JwtToken jwtToken = userService.refresh(tokenRefreshRequest);
 
         return new ApiResponse<>(jwtToken);
     }
