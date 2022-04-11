@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
-public enum AmenityType {
+public enum BakeryInfo {
 
     PET("애완 동물"),
     WIFI("와이파이"),
@@ -16,5 +16,4 @@ public enum AmenityType {
     SHIPPING("배송");
 
     private final String code;
-
 }
