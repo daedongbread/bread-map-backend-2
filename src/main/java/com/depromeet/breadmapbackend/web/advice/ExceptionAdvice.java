@@ -14,17 +14,13 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class ExceptionAdvice {
-
     /**
      * 잘못된 URL 접근 에러
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorResponse noHandlerFoundException(NoHandlerFoundException e) {
-        return new ErrorResponse(
-                "Wrong URL access.\n" +
-                "Not Found URL : " + e.getRequestURL()
-        );
+        return new ErrorResponse("Wrong URL access.\n" + "Not Found URL : " + e.getRequestURL());
     }
 
     /**

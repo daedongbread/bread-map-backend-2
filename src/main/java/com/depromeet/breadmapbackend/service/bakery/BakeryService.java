@@ -1,7 +1,9 @@
 package com.depromeet.breadmapbackend.service.bakery;
 
-/*
- * Created by ParkSuHo by 2022/03/18.
- */
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryCardDto;
+
+import java.util.List;
+
 public interface BakeryService {
+    List<BakeryCardDto> getBakeryList(Double latitude, Double longitude, Double height, Double width);
 }

@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.Menu;
+import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.StringListConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -20,41 +20,39 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MenuReview extends BaseEntity {
+public class BreadReview extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private User member;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
+    @JoinColumn(name = "bread_id")
+    private Bread bread;
 
     @Column(nullable = false, length = 200)
-    private String contents;
+    private String content;
 
     @Column(nullable = false)
     private Integer rating;
 
-    @Column(nullable = false)
     @Convert(converter = StringListConverter.class)
-    private List<String> imgPathList = new ArrayList<>();
+    private List<String> imageList = new ArrayList<>();
 
     @Builder
-    private MenuReview(User member, Bakery bakery, Menu menu, String contents, Integer rating, List<String> imgPathList) {
-        this.member = member;
+    private BreadReview(User user, Bakery bakery, Bread bread, String content, Integer rating, List<String> imageList) {
+        this.user = user;
         this.bakery = bakery;
-        this.menu = menu;
-        this.contents = contents;
+        this.bread = bread;
+        this.content = content;
         this.rating = rating;
-        this.imgPathList = imgPathList;
+        this.imageList = imageList;
     }
-
 }

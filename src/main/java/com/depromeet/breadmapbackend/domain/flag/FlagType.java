@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FlagType {
 
-    NONE("안간 곳"),
-    GONE("가본 곳"),
-    PICKED("가볼 곳");
+    NONE("미선택"),
+    PICKED("가고싶어요"),
+    GONE("가봤어요");
 
     private final String code;
 

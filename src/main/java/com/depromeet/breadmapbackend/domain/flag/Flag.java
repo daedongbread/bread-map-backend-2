@@ -16,8 +16,8 @@ public class Flag extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private User member;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bakery_id")
@@ -28,8 +28,8 @@ public class Flag extends BaseEntity {
     private FlagType flagType;
 
     @Builder
-    private Flag(User member, Bakery bakery, FlagType flagType) {
-        this.member = member;
+    private Flag(User user, Bakery bakery, FlagType flagType) {
+        this.user = user;
         this.bakery = bakery;
         this.flagType = flagType;
     }
@@ -37,5 +37,4 @@ public class Flag extends BaseEntity {
     public void updateFlagType(FlagType flagType) {
         this.flagType = flagType;
     }
-
 }

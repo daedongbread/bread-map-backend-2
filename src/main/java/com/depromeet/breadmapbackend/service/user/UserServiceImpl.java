@@ -16,9 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.depromeet.breadmapbackend.security.util.HeaderConstant.*;
 
-/*
- * Created by ParkSuHo by 2022/03/18.
- */
 @Slf4j
 @Service
 @Transactional(readOnly = true)

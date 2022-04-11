@@ -11,10 +11,14 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Menu extends BaseEntity {
+public class Bread extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bakery_id")
+    private Bakery bakery;
 
     @Column(nullable = false)
     private String name;
@@ -22,27 +26,20 @@ public class Menu extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bakery_id")
-    private Bakery bakery;
+    private Long rating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bread_category_id")
-    private BreadCategory breadCategory;
-
-    private String imgPath;
+    private String image;
 
     @Builder
-    private Menu(String name, Integer price, Bakery bakery, BreadCategory breadCategory, String imgPath) {
+    private Bread(String name, Integer price, Bakery bakery, String image) {
         this.name = name;
         this.price = price;
         this.bakery = bakery;
-        this.breadCategory = breadCategory;
-        this.imgPath = imgPath;
+        this.image = image;
     }
 
-    public void updateImgPath(String imgPath) {
-        this.imgPath = imgPath;
+    public void updateImgPath(String image) {
+        this.image = image;
     }
 
 }

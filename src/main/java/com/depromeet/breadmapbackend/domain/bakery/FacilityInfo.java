@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
-public enum BakeryInfo {
+public enum FacilityInfo {
 
     PET("애완 동물"),
     WIFI("와이파이"),

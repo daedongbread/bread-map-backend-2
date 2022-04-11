@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Converter
-public class AmenityTypeListConverter implements AttributeConverter<List<FacilityInfo>, String> {
+public class FacilityInfoListConverter implements AttributeConverter<List<FacilityInfo>, String> {
     
     private static final String SPLIT_CHAR = ",";
 

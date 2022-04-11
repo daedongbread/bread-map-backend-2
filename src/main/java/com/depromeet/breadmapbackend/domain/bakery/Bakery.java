@@ -1,8 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import com.depromeet.breadmapbackend.domain.common.AmenityTypeListConverter;
+import com.depromeet.breadmapbackend.domain.common.FacilityInfoListConverter;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.StringListConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
 
@@ -14,8 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bakery extends BaseEntity {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
 
     @Column(nullable = false)
@@ -27,37 +25,55 @@ public class Bakery extends BaseEntity {
     @Column(nullable = false)
     private Double longitude;
 
-    private String address;
+    @Column(nullable = false)
+    private String streetAddress;
 
-    private String businessHour;
+    @Column(nullable = false)
+    private String domicileAddress;
 
-    private String telNumber;
+    private String hour;
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> websiteUrlList = new ArrayList<>();
+    private String phoneNumber;
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> imgPathList = new ArrayList<>();
+    private String websiteURL;
 
-    @Convert(converter = AmenityTypeListConverter.class)
-    private List<AmenityType> amenityTypeList = new ArrayList<>();
+    private String instagramURL;
+
+    private String facebookURL;
+
+    private String blogURL;
+
+    private String image;
+
+    private Long rating;
+
+    @Convert(converter = FacilityInfoListConverter.class)
+    private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private User host; // 빵집 등록자
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
-    private Bakery(String name, Double latitude, Double longitude, String address, String businessHour, String telNumber, List<String> websiteUrlList, List<String> imgPathList, List<AmenityType> amenityTypeList, User host) {
+    private Bakery(Long id, String name, Double latitude, Double longitude,
+                   String streetAddress, String domicileAddress, String hour, String phoneNumber,
+                   String websiteURL, String instagramURL, String facebookURL, String blogURL,
+                   String image, Long rating, List<FacilityInfo> facilityInfoList, User user) {
+        this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.address = address;
-        this.businessHour = businessHour;
-        this.telNumber = telNumber;
-        this.websiteUrlList = websiteUrlList;
-        this.imgPathList = imgPathList;
-        this.amenityTypeList = amenityTypeList;
-        this.host = host;
+        this.streetAddress = streetAddress;
+        this.domicileAddress = domicileAddress;
+        this.hour = hour;
+        this.phoneNumber = phoneNumber;
+        this.websiteURL = websiteURL;
+        this.instagramURL = instagramURL;
+        this.facebookURL = facebookURL;
+        this.blogURL = blogURL;
+        this.image = image;
+        this.rating = rating;
+        this.facilityInfoList = facilityInfoList;
+        this.user = user;
     }
-
 }
