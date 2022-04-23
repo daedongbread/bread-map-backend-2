@@ -2,7 +2,7 @@ name: Backend_CI
 on:
   pull_request:
     branches:
-      - master
+      - main
       - develop
 jobs:
   backend:
