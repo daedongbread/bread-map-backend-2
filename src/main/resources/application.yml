@@ -1,18 +1,64 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:bread_map
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
-
   mvc:
     throw-exception-if-no-handler-found: true
-
   web:
     resources:
       add-mappings: false
-
   jpa:
     open-in-view: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: google_id
+            client-secret: google_secret
+            scope:
+              - email
+              - profile
+          kakao:
+            client-id: kakao_id
+            client-secret: kakao_secret
+            redirect-uri: kakao_redirect_url
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: kakao_auth_uri
+            token-uri: kakao_token_uri
+            user-info-uri: kakao_user_info_uri
+            user-name-attribute: id
 
-  profiles:
-    include: local # dev # prod
+cloud:
+  aws:
+    region:
+      auto: false
+      static: ap-northeast-2
+    s3:
+      bucket: bucket
+    stack:
+      auto: false
+    cloudFront:
+      distributionDomain: cloudfront
+
+auth:
+  token-secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+  access-token-expiry: 1800000 # 30분
+  refresh-token-expiry: 604800000 # 7일
+
+cors:
+  allowed-origins: '*'
+  allowed-methods: '*'
+  allowed-headers: '*'
+  max-age: 3600
