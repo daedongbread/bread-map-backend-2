@@ -40,7 +40,7 @@ jobs:
         context: .
         builder: ${{ steps.buildx.outputs.name }}
         push: ${{ github.event_name != 'pull_request' }}
-        tags: ghcr.io/daedongbread/bread-map-backend-2:latest
+        tags: ghcr.io/grand7070/bread-map-backend-2:latest
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
