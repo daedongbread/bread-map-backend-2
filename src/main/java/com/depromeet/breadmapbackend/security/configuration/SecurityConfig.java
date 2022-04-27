@@ -1,25 +1,27 @@
 package com.depromeet.breadmapbackend.security.configuration;
 
+import com.depromeet.breadmapbackend.security.CustomAccessDeniedHandler;
+import com.depromeet.breadmapbackend.security.CustomAuthenticationEntryPoint;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
-import com.depromeet.breadmapbackend.security.filter.TokenAuthenticationFilter;
+import com.depromeet.breadmapbackend.security.filter.JwtAuthenticationFilter;
 import com.depromeet.breadmapbackend.security.handler.OAuth2AuthenticationSuccessHandler;
-import com.depromeet.breadmapbackend.security.properties.AppProperties;
-import com.depromeet.breadmapbackend.security.properties.CorsProperties;
 import com.depromeet.breadmapbackend.security.service.CustomOAuth2UserService;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 /*
  * Created by ParkSuHo by 2022/03/18.
@@ -28,76 +30,87 @@ import java.util.Arrays;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final AppProperties appProperties;
-    private final CorsProperties corsProperties;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final CustomOAuth2UserService oAuth2UserService;
 
     // 토큰 프로바이더 설정
+//    @Bean
+//    public JwtTokenProvider jwtTokenProvider() {
+//        return new JwtTokenProvider(appProperties);
+//    }
+
     @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(appProperties);
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider());
+        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider);
     }
 
     // 토큰 필터 설정
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(jwtTokenProvider());
-    }
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+//        return new JwtAuthenticationFilter(jwtTokenProvider);
+//    }
 
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+    protected void configure(HttpSecurity http) throws Exception {
+        http
                 .cors().configurationSource(corsConfigurationSource())
-
                 .and()
-
                 .httpBasic().disable()
                 .formLogin().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                 .and()
-
                 .authorizeRequests()
-                .antMatchers("/user/auth/**").permitAll()
+                .antMatchers("/user/auth/**", "/").permitAll()
+                .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
-                .anyRequest().authenticated()
-
+//                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+//                .anyRequest().authenticated()
                 .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+
                 .oauth2Login()
                 .successHandler(authenticationSuccessHandler())
                 .userInfoEndpoint().userService(oAuth2UserService);
-
-        httpSecurity.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     // Cors 설정
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
         UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
-
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
-        corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsConfig.getMaxAge());
-
-        corsConfigSource.registerCorsConfiguration("/**", corsConfig);
+        corsConfigSource.registerCorsConfiguration("/**", configuration);
         return corsConfigSource;
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/docs/**");
+        web.httpFirewall(defaultHttpFirewall());
     }
 
+    @Bean
+    public HttpFirewall defaultHttpFirewall() { //더블 슬래시 허용
+        return new DefaultHttpFirewall();
+    }
 }

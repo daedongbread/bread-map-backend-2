@@ -1,4 +1,6 @@
 spring:
+  jwt:
+    secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecret
   datasource:
     url: jdbc:h2:mem:bread_map
   servlet:
@@ -52,13 +54,13 @@ cloud:
     cloudFront:
       distributionDomain: cloudfront
 
-auth:
-  token-secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecret
-  access-token-expiry: 1800000 # 30분
-  refresh-token-expiry: 604800000 # 7일
+#auth:
+#  token-secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+#  access-token-expiry: 1800000 # 30분
+#  refresh-token-expiry: 604800000 # 7일
 
-cors:
-  allowed-origins: '*'
-  allowed-methods: '*'
-  allowed-headers: '*'
-  max-age: 3600
+#cors:
+#  allowed-origins: '*'
+#  allowed-methods: '*'
+#  allowed-headers: '*'
+#  max-age: 3600

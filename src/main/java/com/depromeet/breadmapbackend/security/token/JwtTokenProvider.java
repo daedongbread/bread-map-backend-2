@@ -1,55 +1,65 @@
 package com.depromeet.breadmapbackend.security.token;
 
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
-import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
-import com.depromeet.breadmapbackend.security.properties.AppProperties;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+@Slf4j
+@Component
 public class JwtTokenProvider {
-
-    private final Key key;
-    private final long accessTokenExpiry;
-    private final long refreshTokenExpiry;
+    @Value("${spring.jwt.secret}")
+    private String key;
+    private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hour/
+    private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 day
 
     private static final String AUTHORITIES_KEY = "role";
 
-    public JwtTokenProvider(AppProperties appProperties) {
-        this.key = Keys.hmacShaKeyFor(appProperties.getTokenSecret().getBytes());
-        accessTokenExpiry = appProperties.getAccessTokenExpiry();
-        refreshTokenExpiry = appProperties.getRefreshTokenExpiry();
+//    @PostConstruct
+//    protected void init() {
+//        this.key = Base64UrlCodec.BASE64URL.encode(key.getBytes(StandardCharsets.UTF_8));
+//    }
+
+    private Key getSigninKey(String key) {
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public JwtToken createJwtToken(String username, String role) {
-        Date now = new Date();
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put(AUTHORITIES_KEY, role);
 
+        Date now = new Date();
         String accessToken = Jwts.builder()
-                .setSubject(username)
-                .claim(AUTHORITIES_KEY, role)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .setExpiration(new Date(now.getTime() + accessTokenExpiry))
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + accessTokenExpiredDate))
+                .signWith(getSigninKey(key), SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setSubject(username)
-                .claim(AUTHORITIES_KEY, role)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .setExpiration(new Date(now.getTime() + refreshTokenExpiry))
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
+                .signWith(getSigninKey(key), SignatureAlgorithm.HS256)
                 .compact();
 
-        return new JwtToken(accessToken, refreshToken);
+        return JwtToken.builder()
+                .accessToken(accessToken).refreshToken(refreshToken)
+                .accessTokenExpiredDate(accessTokenExpiredDate).build();
     }
 
     // 만료된 토큰이거나 다른 에러가 발생한다면 false
@@ -60,41 +70,41 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            return claims
-                    .getExpiration()
-                    .after(new Date());
-        } catch (Exception e) {
-            return false;
+            return claims.getExpiration().after(new Date());
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("잘못된 Jwt 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("만료된 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("지원하지 않는 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("잘못된 토큰입니다.");
+        }
+        return false;
+    }
+
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
         }
     }
 
     public String getUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return parseClaims(token).getSubject();
     }
 
     public Authentication getAuthentication(String token) {
-        if(verifyToken(token)) {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+        Claims claims = parseClaims(token);
 
-            Collection<? extends GrantedAuthority> authorities = Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-            UserPrincipal userPrincipal = UserPrincipal.create(claims.getSubject(), authorities);
+        UserPrincipal userPrincipal = UserPrincipal.create(claims.getSubject(), authorities);
 
-            return new UsernamePasswordAuthenticationToken(userPrincipal, token, authorities);
-        } else {
-            throw new TokenValidFailedException();
-        }
+        return new UsernamePasswordAuthenticationToken(userPrincipal, token, authorities);
     }
-
 }
