@@ -1,7 +1,8 @@
 package com.depromeet.breadmapbackend.restdocs.utils;
 
-import com.depromeet.breadmapbackend.security.properties.AppProperties;
+import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,8 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-public abstract class ApiDocumentationTest {
-
+public abstract class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
@@ -30,21 +29,23 @@ public abstract class ApiDocumentationTest {
     protected ObjectMapper objectMapper;
 
     @Autowired
-    protected JwtTokenProvider tokenProvider;
+    protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    protected AppProperties appProperties;
+    protected UserRepository userRepository;
 
-    @MockBean
+    @Autowired
+    protected RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
     protected UserService userService;
 
-    @MockBean
+    @Autowired
     protected FlagService flagService;
 
-    @MockBean
+    @Autowired
     protected BakeryService bakeryService;
 
-    @MockBean
+    @Autowired
     protected ReviewService reviewService;
-
 }

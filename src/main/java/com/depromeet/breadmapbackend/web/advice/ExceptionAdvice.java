@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.advice;
 
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
+import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import lombok.RequiredArgsConstructor;
@@ -167,6 +168,14 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(TokenValidFailedException.class)
     public ErrorResponse tokenValidFailedExHandler(TokenValidFailedException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * refresh 토큰이 존재하지 않을 때
+     */
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    public ErrorResponse refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

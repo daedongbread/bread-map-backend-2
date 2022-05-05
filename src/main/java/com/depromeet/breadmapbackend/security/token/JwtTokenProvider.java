@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.security.token;
 
+import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -26,7 +27,7 @@ public class JwtTokenProvider {
     private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hour/
     private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 day
 
-    private static final String AUTHORITIES_KEY = "role";
+    private static final String ROLES = "roles";
 
 //    @PostConstruct
 //    protected void init() {
@@ -40,7 +41,7 @@ public class JwtTokenProvider {
 
     public JwtToken createJwtToken(String username, String role) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(AUTHORITIES_KEY, role);
+        claims.put(ROLES, role);
 
         Date now = new Date();
         String accessToken = Jwts.builder()
@@ -66,7 +67,7 @@ public class JwtTokenProvider {
     public boolean verifyToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(getSigninKey(key))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
@@ -85,7 +86,7 @@ public class JwtTokenProvider {
 
     private Claims parseClaims(String token) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            return Jwts.parserBuilder().setSigningKey(getSigninKey(key)).build().parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
@@ -98,8 +99,13 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
 
+        // 권한 정보가 없음
+        if (claims.get(ROLES) == null) {
+            throw new CAuthenticationEntryPointException();
+        }
+
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
+                Arrays.stream(new String[]{claims.get(ROLES).toString()})
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 

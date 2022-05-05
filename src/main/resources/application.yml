@@ -1,12 +1,15 @@
 spring:
   jwt:
-    secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+    secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
   datasource:
     url: jdbc:h2:mem:bread_map
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 10MB
+      max-request-size: 10MB
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -53,14 +56,3 @@ cloud:
       auto: false
     cloudFront:
       distributionDomain: cloudfront
-
-#auth:
-#  token-secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecret
-#  access-token-expiry: 1800000 # 30분
-#  refresh-token-expiry: 604800000 # 7일
-
-#cors:
-#  allowed-origins: '*'
-#  allowed-methods: '*'
-#  allowed-headers: '*'
-#  max-age: 3600

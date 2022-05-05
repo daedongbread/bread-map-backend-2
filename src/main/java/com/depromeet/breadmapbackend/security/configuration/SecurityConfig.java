@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.security.filter.JwtAuthenticationFilter;
 import com.depromeet.breadmapbackend.security.handler.OAuth2AuthenticationSuccessHandler;
 import com.depromeet.breadmapbackend.security.service.CustomOAuth2UserService;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final CustomOAuth2UserService oAuth2UserService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     // 토큰 프로바이더 설정
 //    @Bean
@@ -48,10 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider);
-    }
+//    @Bean
+//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+//        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, refreshTokenRepository);
+//    }
 
     // 토큰 필터 설정
 //    @Bean
@@ -70,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/auth/**", "/").permitAll()
+                .antMatchers("/user/auth/reissue", "/").permitAll()
                 .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
 //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
@@ -84,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 .oauth2Login()
-                .successHandler(authenticationSuccessHandler())
+                .successHandler(new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, refreshTokenRepository))
                 .userInfoEndpoint().userService(oAuth2UserService);
     }
 

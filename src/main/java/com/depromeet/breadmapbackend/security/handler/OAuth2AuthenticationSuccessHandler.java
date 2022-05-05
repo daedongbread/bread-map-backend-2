@@ -4,6 +4,8 @@ import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.security.token.RefreshToken;
+import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,8 +20,8 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -29,6 +31,12 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         RoleType roleType = hasAuthority(userPrincipal.getAuthorities(), RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
         JwtToken jwtToken = jwtTokenProvider.createJwtToken(username, roleType.getCode());
+
+        if(refreshTokenRepository.findByUsername(username).isPresent()) {
+            refreshTokenRepository.deleteByUsername(username);
+        }
+        RefreshToken refreshToken = RefreshToken.builder().username(username).token(jwtToken.getRefreshToken()).build();
+        refreshTokenRepository.save(refreshToken);
 
         ObjectMapper objectMapper = new ObjectMapper();
         response.setContentType("application/json;charset=UTF-8");

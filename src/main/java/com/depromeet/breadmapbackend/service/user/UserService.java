@@ -8,7 +8,5 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
-
-    JwtToken refresh(TokenRefreshRequest tokenRefreshRequest);
-
+    JwtToken reissue(TokenRefreshRequest tokenRefreshRequest);
 }

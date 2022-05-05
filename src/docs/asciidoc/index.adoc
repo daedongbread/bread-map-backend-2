@@ -8,53 +8,24 @@ endif::[]
 :toc: left
 :toclevels: 3
 :sectlinks:
+:site-url: /build/asciidoc/html5/
+:operation-http-request-title: Example Request
+:operation-http-response-title: Example Response
 
-:docinfo: shared-head
-
-[[introduction]]
 == 소개
-
 DaeDongBread API
 
-[[common]]
-
-== 공통 사항
-
-API 에 관계없이 아래 사항을 지켜주셔야 합니다.
-
 === Domain
-
 |===
 | 환경 | Domain
 
-| 개발 서버
-| `https://localhost:8080`
-
-| 운영 서버
-| `정해지면 넣기`
+| 개발 서버|`http://localhost:8080`
+| 운영 서버|`http://3.36.94.161`
 |===
 
-&#160;
 
 == 유저 API
+토큰 재발급 API
 
-[[user-auth-refresh]]
-=== [ 토큰 갱신 ]
-
-==== - REQUEST -
-
-include::{snippets}/user-auth-refresh/request-headers.adoc[]
-
-===== Request HTTP 예시
-
-include::{snippets}/user-auth-refresh/http-request.adoc[]
-
-==== - RESPONSE -
-
-include::{snippets}/user-auth-refresh/response-fields.adoc[]
-
-===== Response HTTP 예시
-
-include::{snippets}/user-auth-refresh/http-response.adoc[]
-
-&#160;
+=== 토큰 재발급 [POST]
+operation::user/reissue[snippets='http-request,request-fields,http-response,response-fields']

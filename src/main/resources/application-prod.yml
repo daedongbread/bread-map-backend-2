@@ -7,9 +7,10 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
   servlet:
     multipart:
       max-file-size: 10MB
@@ -46,17 +47,6 @@ spring:
             token-uri: ${KAKAO_TOKEN_URL}
             user-info-uri: ${KAKAO_USER_INFO_URL}
             user-name-attribute: id
-
-#auth:
-#  token-secret: ${JWT_KEY}
-#  access-token-expiry: 1800000 # 30분
-#  refresh-token-expiry: 604800000 # 7일
-#
-#cors:
-#  allowed-origins: '*'
-#  allowed-methods: '*'
-#  allowed-headers: '*'
-#  max-age: 3600
 
 cloud:
   aws:

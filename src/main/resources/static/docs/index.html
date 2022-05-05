@@ -446,18 +446,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">소개</a></li>
-<li><a href="#common">공통 사항</a>
+<li><a href="#_소개">소개</a>
 <ul class="sectlevel2">
 <li><a href="#_domain">Domain</a></li>
 </ul>
 </li>
 <li><a href="#_유저_api">유저 API</a>
 <ul class="sectlevel2">
-<li><a href="#user-auth-refresh">[ 토큰 갱신 ]</a>
+<li><a href="#_토큰_재발급_post">토큰 재발급 [POST]</a>
 <ul class="sectlevel3">
-<li><a href="#_request">- REQUEST -</a></li>
-<li><a href="#_response">- RESPONSE -</a></li>
+<li><a href="#_토큰_재발급_post_http_request">Example Request</a></li>
+<li><a href="#_토큰_재발급_post_request_fields">Request fields</a></li>
+<li><a href="#_토큰_재발급_post_http_response">Example Response</a></li>
+<li><a href="#_토큰_재발급_post_response_fields">Response fields</a></li>
 </ul>
 </li>
 </ul>
@@ -467,18 +468,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">소개</a></h2>
+<h2 id="_소개"><a class="link" href="#_소개">소개</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>DaeDongBread API</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="common"><a class="link" href="#common">공통 사항</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>API 에 관계없이 아래 사항을 지켜주셔야 합니다.</p>
 </div>
 <div class="sect2">
 <h3 id="_domain"><a class="link" href="#_domain">Domain</a></h3>
@@ -496,70 +489,46 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">개발 서버</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://localhost:8080" class="bare">https://localhost:8080</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">운영 서버</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>정해지면 넣기</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://3.36.94.161" class="bare">http://3.36.94.161</a></code></p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>&#160;</p>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_유저_api"><a class="link" href="#_유저_api">유저 API</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="user-auth-refresh"><a class="link" href="#user-auth-refresh">[ 토큰 갱신 ]</a></h3>
-<div class="sect3">
-<h4 id="_request"><a class="link" href="#_request">- REQUEST -</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>엑세스 토큰</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>토큰 재발급 API</p>
 </div>
-<div class="sect4">
-<h5 id="_request_http_예시"><a class="link" href="#_request_http_예시">Request HTTP 예시</a></h5>
+<div class="sect2">
+<h3 id="_토큰_재발급_post"><a class="link" href="#_토큰_재발급_post">토큰 재발급 [POST]</a></h3>
+<div class="sect3">
+<h4 id="_토큰_재발급_post_http_request"><a class="link" href="#_토큰_재발급_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/auth/refresh HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/auth/reissue HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMxMjMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjQ5ODQyNzE4fQ.iDKqtPaF7i7kiaVI4uOONJNlREKYOHHp9eQUnr6oxwE
 Accept: application/json
-Content-Length: 162
+Content-Length: 338
 Host: localhost:8080
 
 {
-  "refreshToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMxMjMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjUwNDQ1NzE4fQ.fu23YwXxCaZzo2DckqtltqlQyl003pQOXpBNlQXbUFs"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY1MTc2Njc4NiwiZXhwIjoxNjUxNzcwMzg2fQ.deWt68TD6Pjy71D5VidmJSjf_Fpr9dB0Lf6B76AP_kg",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTI5NzYzODZ9.xUsPtB48weXft3h_8lORx6S1HkHJ8FfAn962_HTejnA"
 }</code></pre>
 </div>
 </div>
 </div>
-</div>
 <div class="sect3">
-<h4 id="_response"><a class="link" href="#_response">- RESPONSE -</a></h4>
+<h4 id="_토큰_재발급_post_request_fields"><a class="link" href="#_토큰_재발급_post_request_fields">Request fields</a></h4>
 <div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -571,31 +540,32 @@ Host: localhost:8080
 <tr>
 <th class="tableblock halign-left valign-top">필드명</th>
 <th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">양식</th>
+<th class="tableblock halign-left valign-top">필수값</th>
 <th class="tableblock halign-left valign-top">설명</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>accessToken</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refreshToken</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sect4">
-<h5 id="_response_http_예시"><a class="link" href="#_response_http_예시">Response HTTP 예시</a></h5>
+</div>
+<div class="sect3">
+<h4 id="_토큰_재발급_post_http_response"><a class="link" href="#_토큰_재발급_post_http_response">Example Response</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -606,19 +576,53 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 402
 
 {
   "data" : {
-    "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMxMjMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjQ5ODQyNzE4fQ.iDKqtPaF7i7kiaVI4uOONJNlREKYOHHp9eQUnr6oxwE",
-    "refreshToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMxMjMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjUwNDQ1NzE4fQ.fu23YwXxCaZzo2DckqtltqlQyl003pQOXpBNlQXbUFs"
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY1MTc2Njc4NywiZXhwIjoxNjUxNzcwMzg3fQ.o_kvVkNDP4DeqaQhHglDNwdgDdODQE4njq7DlnuVSnU",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTI5NzYzODd9.tjDGJ5IHDvX7TT6W9w6P2lMzR9zaKEr_Y8ffs0huHyw",
+    "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>&#160;</p>
 </div>
+<div class="sect3">
+<h4 id="_토큰_재발급_post_response_fields"><a class="link" href="#_토큰_재발급_post_response_fields">Response fields</a></h4>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessTokenExpiredDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰 만료시간</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -628,7 +632,7 @@ Content-Length: 343
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-04-11 23:15:00 +0900
+Last updated 2022-05-05 22:34:50 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
