@@ -6,12 +6,12 @@ services:
     container_name: mysql-db
     restart: always
     ports:
-      - "3306:3306"
+      - "3308:3306"
     environment:
-      - MYSQL_DATABASE=bread_map
-      - MYSQL_USER=user
-      - MYSQL_ROOT_PASSWORD=1234
-      - TZ="Asia/Seoul"
+      MYSQL_DATABASE: bread_map
+      MYSQL_USER: user
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: "Asia/Seoul"
     networks:
       - springboot-mysql-net
 
@@ -22,6 +22,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     depends_on:
       - db
     networks:
