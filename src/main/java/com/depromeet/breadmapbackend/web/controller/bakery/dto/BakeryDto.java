@@ -1,30 +1,24 @@
 package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 /*
  * Created by ParkSuHo by 2022/03/27.
+ * Update by ChoiHyunWoo by 2022/05/15.
  */
 @Getter
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class BakeryDto {
-    private final String name;
-    private final Integer flagNum;
-    private final Long rating;
-    private final Integer reviewNum;
+    private String name;
+    private Double latitude;
+    private Double longitude;
 
-    private final String streetAddress;
-    private final String hour;
+    private String domicileAddress;
+    private String phoneNumber;
+    private String streetAddress;
     private String websiteURL;
-    private String instagramURL;
-    private String facebookURL;
-    private String blogURL;
-    private final String phoneNumber;
 }

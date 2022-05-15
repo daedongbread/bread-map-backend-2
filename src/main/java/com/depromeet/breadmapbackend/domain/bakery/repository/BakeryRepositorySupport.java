@@ -56,4 +56,17 @@ public class BakeryRepositorySupport {
                 .limit(20)
                 .fetch();
     }
+
+    public List<BakeryDto> getAllBakeryList() {
+        return queryFactory.select(Projections.fields(BakeryDto.class,
+                bakery.name,
+                bakery.latitude,
+                bakery.longitude,
+                bakery.domicileAddress,
+                bakery.phoneNumber,
+                bakery.streetAddress,
+                bakery.websiteURL))
+                .from(bakery)
+                .fetch();
+    }
 }
