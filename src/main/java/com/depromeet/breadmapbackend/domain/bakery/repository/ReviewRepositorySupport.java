@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.depromeet.breadmapbackend.domain.review.QBreadReview.breadReview;
-import static com.depromeet.breadmapbackend.domain.common.QBaseEntity.baseEntity;
 
 @Slf4j
 @Repository
