@@ -1,8 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.review;
 
-import com.depromeet.breadmapbackend.service.flag.FlagService;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +13,7 @@ import java.util.List;
 
 /*
  * Created by ParkSuHo by 2022/03/18.
+ * Updated by ChoiHyunWoo by 2022/05/16
  */
 @Slf4j
 @RestController

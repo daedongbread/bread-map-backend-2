@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.bakery.repository;
 
-
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
 import static com.depromeet.breadmapbackend.domain.review.QBreadReview.breadReview;
+import static com.depromeet.breadmapbackend.domain.common.QBaseEntity.baseEntity;
 
 @Slf4j
 @Repository
@@ -23,7 +21,14 @@ public class ReviewRepositorySupport {
     public List<SimpleReviewDto> getAllReviewList() {
         return queryFactory.select(Projections.fields(SimpleReviewDto.class,
                         breadReview.id,
-                        breadReview.content))
+                        breadReview.createdAt,
+                        breadReview.modifiedAt,
+                        breadReview.content,
+                        breadReview.imageList,
+                        breadReview.rating,
+                        breadReview.bakery.id,
+                        breadReview.bread.id,
+                        breadReview.user.id))
                         .from(breadReview)
                         .fetch();
     }

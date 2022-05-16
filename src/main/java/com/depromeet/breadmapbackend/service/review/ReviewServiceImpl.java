@@ -1,8 +1,6 @@
 package com.depromeet.breadmapbackend.service.review;
 
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepositorySupport;
 import com.depromeet.breadmapbackend.domain.bakery.repository.ReviewRepositorySupport;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
