@@ -2,11 +2,12 @@ spring:
   jwt:
     secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
   datasource:
-    url: jdbc:mysql://localhost:3306/bread?serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
-    #url: jdbc:mysql://localhost:3306/
-    username: root
-    password: ch04010508
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:bread_map
+
+    #url: jdbc:mysql://localhost:3306/bread?serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false
+    #username: root
+    #password: ch04010508
+    #driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       max-file-size: 10MB
