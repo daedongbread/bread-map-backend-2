@@ -1,11 +1,13 @@
 package com.depromeet.breadmapbackend.domain.user;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.LongListConverter;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -33,6 +35,12 @@ public class User extends BaseEntity {
     private RoleType roleType;
 
     private String profileImageUrl;
+
+    @Convert(converter = LongListConverter.class)
+    private Set<Long> wantToGoList;
+
+    @Convert(converter = LongListConverter.class)
+    private Set<Long> alreadyGoList;
 
     @Builder
     private User(String username, String nickName, String email, Gender gender, ProviderType providerType, RoleType roleType, String profileImageUrl) {

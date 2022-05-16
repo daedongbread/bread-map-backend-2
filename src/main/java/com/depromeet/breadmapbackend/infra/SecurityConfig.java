@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.security.configuration;
+package com.depromeet.breadmapbackend.infra;
 
 import com.depromeet.breadmapbackend.security.CustomAccessDeniedHandler;
 import com.depromeet.breadmapbackend.security.CustomAuthenticationEntryPoint;
@@ -74,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/auth/reissue", "/").permitAll()
                 .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
-                .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers("/bakery").hasRole(RoleType.USER.getCode())
+                .antMatchers("/admin/**").hasRole(RoleType.ADMIN.getCode())
 //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 //                .anyRequest().authenticated()
