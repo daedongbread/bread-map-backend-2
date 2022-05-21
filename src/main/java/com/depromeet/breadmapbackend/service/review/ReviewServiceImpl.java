@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,5 +19,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<SimpleReviewDto> getAllReviewList(){
         return reviewRepositorySupport.getAllReviewList();
+    }
+
+    @Transactional(readOnly = false)
+    public String addReview(long userId, long bakeryId, long breadId, String content, Integer rating) {
+        return reviewRepositorySupport.addReview(userId, bakeryId, breadId, content, rating);
     }
 }

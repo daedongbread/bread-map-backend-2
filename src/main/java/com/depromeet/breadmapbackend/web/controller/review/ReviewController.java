@@ -1,13 +1,12 @@
 package com.depromeet.breadmapbackend.web.controller.review;
 
+import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,4 +27,11 @@ public class ReviewController {
         return new ApiResponse<>(reviewService.getAllReviewList());
     }
 
+    @PostMapping("add")
+    public ApiResponse<String> addReview(
+            @RequestParam long userId, @RequestParam long bakeryId,
+            @RequestParam long breadId, @RequestParam String content,
+            @RequestParam Integer rating ){
+        return new ApiResponse<>(reviewService.addReview(userId, bakeryId, breadId, content, rating));
+    }
 }
