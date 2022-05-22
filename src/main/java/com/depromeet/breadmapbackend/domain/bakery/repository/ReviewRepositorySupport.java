@@ -6,15 +6,13 @@ import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -46,14 +44,14 @@ public class ReviewRepositorySupport {
                         .fetch();
     }
 
-    public String addReview(long userId, long bakeryId, long breadId, String content, Integer rating) {
+    public Object addReview(long userId, long bakeryId, long breadId, String content, Integer rating) throws DataNotExistedException {
 
-        if(userRepository.existsById(userId) == false) {
-            return "User is not existed";
-        } else if(bakeryRepository.existsById(bakeryId) == false) {
-            return "Bakery is not existed";
-        } else if(breadRepository.existsById(breadId) == false ){
-            return "Bread is not existed";
+        if(!userRepository.existsById(userId)) {
+            throw new DataNotExistedException("User is not existed");
+        } else if(!bakeryRepository.existsById(bakeryId)) {
+            throw new DataNotExistedException("Bakery is not existed");
+        } else if(!breadRepository.existsById(breadId)){
+            throw new DataNotExistedException("Request Body is wrong");
         } else {
             User user = userRepository.getById(userId);
             Bakery bakery = bakeryRepository.getById(bakeryId);

@@ -1,11 +1,11 @@
 package com.depromeet.breadmapbackend.service.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.repository.ReviewRepositorySupport;
+import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(readOnly = false)
-    public String addReview(long userId, long bakeryId, long breadId, String content, Integer rating) {
+    public Object addReview(long userId, long bakeryId, long breadId, String content, Integer rating){
         return reviewRepositorySupport.addReview(userId, bakeryId, breadId, content, rating);
     }
 }
