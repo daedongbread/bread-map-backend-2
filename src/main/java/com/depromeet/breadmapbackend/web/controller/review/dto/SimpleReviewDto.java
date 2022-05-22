@@ -1,8 +1,5 @@
 package com.depromeet.breadmapbackend.web.controller.review.dto;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
-import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +18,7 @@ public class SimpleReviewDto {
     private LocalDateTime modifiedAt;
     private String content;
     private List<String> imageList;
-    private Integer rating;
-    private Bakery bakery;
-    private Bread bread;
-    private User user;
+    private Long bakery_id;
+    private Long user_id;
+    private boolean isUse;
 }

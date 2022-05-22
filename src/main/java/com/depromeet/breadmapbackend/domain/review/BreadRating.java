@@ -1,8 +1,8 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.StringListConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -19,8 +17,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BreadReview extends BaseEntity {
-
+public class BreadRating extends BaseEntity{
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
@@ -32,21 +29,27 @@ public class BreadReview extends BaseEntity {
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
-    @Column(nullable = false, length = 200)
-    private String content;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "bread_id")
+    private Bread bread;
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> imageList = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private BreadReview breadReview;
+
+    @Column(nullable = false)
+    private Integer rating;
 
     @Column(nullable = false, columnDefinition = "boolean default 1")
     private boolean isUse;
 
     @Builder
-    private BreadReview(User user, Bakery bakery, String content, List<String> imageList, boolean isUse) {
+    private BreadRating(User user, Bakery bakery, Bread bread, BreadReview breadReview, Integer rating, boolean isUse) {
         this.user = user;
         this.bakery = bakery;
-        this.content = content;
-        this.imageList = imageList;
+        this.bread = bread;
+        this.breadReview = breadReview;
+        this.rating = rating;
         this.isUse = isUse;
     }
 }

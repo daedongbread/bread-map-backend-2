@@ -1,9 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.review;
 
-import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
-import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +29,8 @@ public class ReviewController {
     @PostMapping("add")
     public ApiResponse<Object> addReview(
             @RequestParam long userId, @RequestParam long bakeryId,
-            @RequestParam long breadId, @RequestParam String content,
-            @RequestParam Integer rating ){
+            @RequestParam String breadId, @RequestParam String content,
+            @RequestParam String rating ){
         return new ApiResponse<>(reviewService.addReview(userId, bakeryId, breadId, content, rating));
     }
 }
