@@ -41,6 +41,9 @@ public class BreadReview extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default 1")
     private boolean isUse;
 
+    @OneToMany(mappedBy = "review_id")
+    private List<BreadRating> ratings = new ArrayList<>();
+
     @Builder
     private BreadReview(User user, Bakery bakery, String content, List<String> imageList, boolean isUse) {
         this.user = user;
@@ -48,5 +51,9 @@ public class BreadReview extends BaseEntity {
         this.content = content;
         this.imageList = imageList;
         this.isUse = isUse;
+    }
+
+    public void addRating(BreadRating breadRating){
+        this.ratings.add(breadRating);
     }
 }

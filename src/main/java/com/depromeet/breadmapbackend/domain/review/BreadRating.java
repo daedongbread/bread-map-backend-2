@@ -38,13 +38,13 @@ public class BreadRating extends BaseEntity{
     private BreadReview breadReview;
 
     @Column(nullable = false)
-    private Integer rating;
+    private Long rating;
 
     @Column(nullable = false, columnDefinition = "boolean default 1")
     private boolean isUse;
 
     @Builder
-    private BreadRating(User user, Bakery bakery, Bread bread, BreadReview breadReview, Integer rating, boolean isUse) {
+    private BreadRating(User user, Bakery bakery, Bread bread, BreadReview breadReview, Long rating, boolean isUse) {
         this.user = user;
         this.bakery = bakery;
         this.bread = bread;

@@ -10,14 +10,16 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
 import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
-import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.depromeet.breadmapbackend.domain.review.QBreadReview.breadReview;
 
@@ -39,8 +41,8 @@ public class ReviewRepositorySupport {
                         breadReview.modifiedAt,
                         breadReview.content,
                         breadReview.imageList,
-                        ExpressionUtils.as(breadReview.bakery.id, "bakery_id"),
-                        ExpressionUtils.as(breadReview.user.id, "user_id"),
+                        breadReview.bakery.id.as("bakery_id"),
+                        breadReview.user.id.as("user_id"),
                         breadReview.isUse))
                 .from(breadReview)
                 .where(breadReview.isUse.eq(true))
@@ -53,12 +55,12 @@ public class ReviewRepositorySupport {
         Long[] breadArray = new Long[breadIdToArray.length];
 
         String[] ratingToArray = rating.replaceAll("\\[", "").replaceAll("]", "").split(",");
-        Integer[] ratingArray = new Integer[ratingToArray.length];
+        Long[] ratingArray = new Long[ratingToArray.length];
 
         for(int i = 0; i < breadArray.length; i++) {
             try {
                 breadArray[i] = Long.parseLong(breadIdToArray[i]);
-                ratingArray[i] = Integer.parseInt(ratingToArray[i]);
+                ratingArray[i] = Long.parseLong(ratingToArray[i]);
             } catch (Exception e) {
                 throw new DataNotExistedException("Unable to parse data");
             }
