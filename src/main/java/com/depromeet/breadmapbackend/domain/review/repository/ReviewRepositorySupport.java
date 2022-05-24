@@ -9,19 +9,20 @@ import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
-import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
+import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.depromeet.breadmapbackend.domain.review.QBreadReview.breadReview;
+import static com.depromeet.breadmapbackend.domain.review.QBreadRating.breadRating;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 @Slf4j
 @Repository
@@ -34,19 +35,28 @@ public class ReviewRepositorySupport {
     private final BreadReviewRepository breadReviewRepository;
     private final BreadRatingRepositroy breadRatingRepositroy;
 
-    public List<SimpleReviewDto> getAllReviewList() {
-        return queryFactory.select(Projections.fields(SimpleReviewDto.class,
-                        breadReview.id,
-                        breadReview.createdAt,
-                        breadReview.modifiedAt,
-                        breadReview.content,
-                        breadReview.imageList,
-                        breadReview.bakery.id.as("bakery_id"),
-                        breadReview.user.id.as("user_id"),
-                        breadReview.isUse))
+    public List<ReviewDTO> getAllReviewList() {
+
+        Map<BreadReview, List<BreadRating>> transform = queryFactory
                 .from(breadReview)
-                .where(breadReview.isUse.eq(true))
-                .fetch();
+                .leftJoin(breadReview.ratings, breadRating)
+                .transform(groupBy(breadReview).as(list(breadRating)));
+
+        return transform.entrySet().stream()
+                .map(entry -> new ReviewDTO(entry.getKey()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ReviewDTO> getBakeryReviewList(long bakeryId) {
+        Map<BreadReview, List<BreadRating>> transform = queryFactory
+                .from(breadReview)
+                .leftJoin(breadReview.ratings, breadRating)
+                .where(breadReview.bakery.id.eq(bakeryId))
+                .transform(groupBy(breadReview).as(list(breadRating)));
+
+        return transform.entrySet().stream()
+                .map(entry -> new ReviewDTO(entry.getKey()))
+                .collect(Collectors.toList());
     }
 
     public Object addReview(long userId, long bakeryId, String breadId, String content, String rating) throws DataNotExistedException {

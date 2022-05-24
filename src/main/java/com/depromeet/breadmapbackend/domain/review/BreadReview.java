@@ -41,7 +41,7 @@ public class BreadReview extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default 1")
     private boolean isUse;
 
-    @OneToMany(mappedBy = "review_id")
+    @OneToMany(mappedBy = "breadReview", cascade = CascadeType.ALL)
     private List<BreadRating> ratings = new ArrayList<>();
 
     @Builder

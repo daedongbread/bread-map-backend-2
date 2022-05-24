@@ -1,16 +1,9 @@
 package com.depromeet.breadmapbackend.domain.bakery.repository;
 
-import com.depromeet.breadmapbackend.domain.bakery.QBakery;
-import com.depromeet.breadmapbackend.domain.flag.QFlag;
-import com.depromeet.breadmapbackend.domain.review.QBreadReview;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

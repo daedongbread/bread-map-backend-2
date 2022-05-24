@@ -1,10 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
-import com.depromeet.breadmapbackend.web.controller.review.dto.SimpleReviewDto;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Builder
