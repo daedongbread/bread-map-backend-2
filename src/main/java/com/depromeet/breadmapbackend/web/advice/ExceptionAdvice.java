@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.web.advice;
 
+import com.depromeet.breadmapbackend.domain.bakery.exception.*;
+import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
@@ -176,6 +178,54 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     public ErrorResponse refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 유저가 존재하지 않을 때
+     */
+    @ExceptionHandler(UserNotFoundException.class)
+    public ErrorResponse userNotFoundException(UserNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 빵집이 존재하지 않을 때
+     */
+    @ExceptionHandler(BakeryNotFoundException.class)
+    public ErrorResponse bakeryNotFoundException(BakeryNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 가고싶어요에 등록된 빵집일 때
+     */
+    @ExceptionHandler(HeartAlreadyException.class)
+    public ErrorResponse heartAlreadyException(HeartAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+    
+    /**
+     * 이미 가고싶어요에서 제거된 빵집일 때
+     */
+    @ExceptionHandler(UnheartAlreadyException.class)
+    public ErrorResponse unHeartAlreadyException(UnheartAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 가봤어요에 등록된 빵집일 때
+     */
+    @ExceptionHandler(FlagAlreadyException.class)
+    public ErrorResponse flagAlreadyException(FlagAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 가봤어요에서 제거된 빵집일 때
+     */
+    @ExceptionHandler(UnflagAlreadyException.class)
+    public ErrorResponse unflagAlreadyException(UnflagAlreadyException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

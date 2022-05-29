@@ -9,11 +9,11 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum FacilityInfo {
 
-    PET("애완 동물"),
+    PARKING("주차 가능"),
     WIFI("와이파이"),
-    PARKING("주차"),
     DELIVERY("배달"),
-    SHIPPING("배송");
+    PET("반려동물"),
+    SHIPPING("택배");
 
     private final String code;
 }

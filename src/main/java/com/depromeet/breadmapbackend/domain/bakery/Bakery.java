@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.FacilityInfoListConverter;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
 
@@ -31,7 +32,7 @@ public class Bakery extends BaseEntity {
     @Column(nullable = false)
     private String domicileAddress;
 
-    private String hour;
+    private String hours;
 
     private String phoneNumber;
 
@@ -45,7 +46,13 @@ public class Bakery extends BaseEntity {
 
     private String image;
 
-    private Long rating;
+    private Integer flagNum;
+
+    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bread> breadList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BreadReview> breadReviewList = new ArrayList<>();
 
     @Convert(converter = FacilityInfoListConverter.class)
     private List<FacilityInfo> facilityInfoList = new ArrayList<>();
@@ -55,25 +62,33 @@ public class Bakery extends BaseEntity {
     private User user;
 
     @Builder
-    private Bakery(Long id, String name, Double latitude, Double longitude,
-                   String streetAddress, String domicileAddress, String hour, String phoneNumber,
-                   String websiteURL, String instagramURL, String facebookURL, String blogURL,
-                   String image, Long rating, List<FacilityInfo> facilityInfoList, User user) {
+    public Bakery(Long id, String name, Double latitude, Double longitude,
+                  String streetAddress, String domicileAddress, String hours, String phoneNumber,
+                  String websiteURL, String instagramURL, String facebookURL, String blogURL,
+                  String image, List<FacilityInfo> facilityInfoList, User user) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.streetAddress = streetAddress;
         this.domicileAddress = domicileAddress;
-        this.hour = hour;
+        this.hours = hours;
         this.phoneNumber = phoneNumber;
         this.websiteURL = websiteURL;
         this.instagramURL = instagramURL;
         this.facebookURL = facebookURL;
         this.blogURL = blogURL;
         this.image = image;
-        this.rating = rating;
+        this.flagNum = 0;
         this.facilityInfoList = facilityInfoList;
         this.user = user;
+    }
+
+    public void addFlagNum() {
+        this.flagNum += 1;
+    }
+
+    public void minusFlagNum() {
+        this.flagNum -= 1;
     }
 }

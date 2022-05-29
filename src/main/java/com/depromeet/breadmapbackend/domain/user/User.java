@@ -7,6 +7,9 @@ import com.depromeet.breadmapbackend.security.domain.RoleType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,10 +40,10 @@ public class User extends BaseEntity {
     private String profileImageUrl;
 
     @Convert(converter = LongListConverter.class)
-    private Set<Long> wantToGoList;
+    private Set<Long> wantToGoList = new LinkedHashSet<>();
 
     @Convert(converter = LongListConverter.class)
-    private Set<Long> alreadyGoList;
+    private Set<Long> alreadyGoList = new LinkedHashSet<>();
 
     @Builder
     private User(String username, String nickName, String email, Gender gender, ProviderType providerType, RoleType roleType, String profileImageUrl) {
