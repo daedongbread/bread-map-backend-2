@@ -5,22 +5,23 @@ import com.depromeet.breadmapbackend.domain.bakery.SortType;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryCardDto;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryInfo;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BreadDto;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +38,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final BreadRepository breadRepository;
     private final BreadReviewRepository breadReviewRepository;
     private final UserRepository userRepository;
-    private final FlagRepository flagRepository;
+    private final FlagRepositorySupport flagRepositorySupport;
 
     @Transactional(readOnly = true)
     public List<BakeryCardDto> findBakeryList
@@ -66,9 +67,41 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(readOnly = true)
-    public List<BakeryCardDto> findBakeryListByFilter
+    public List<BakeryFilterCardDto> findBakeryListByFilter
             (String username, Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, SortType sort) {
-        return null;
+
+        Comparator<BakeryFilterCardDto> comparing;
+        if(sort.equals(SortType.distance)) comparing = Comparator.comparing(BakeryFilterCardDto::getDistance);
+        else if(sort.equals(SortType.popular)) comparing = Comparator.comparing(BakeryFilterCardDto::getPopularNum).reversed();
+        else throw new SortTypeWrongException();
+
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        List<Bakery> bakeryList = bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude - latitudeDelta / 2, latitude + latitudeDelta / 2, longitude - longitudeDelta / 2, longitude + longitudeDelta / 2).stream()
+                .filter(bakery -> flagRepositorySupport.existFlagBakeryByUserAndBakery(user, bakery))
+                .collect(Collectors.toList());
+
+        List<BakeryFilterCardDto> bakeryFilterCardDtoList = new ArrayList<>();
+        for(Bakery b : bakeryList) {
+            FlagBakery flagBakery = flagRepositorySupport.findFlagBakeryByUserAndBakery(user, b);
+            Bakery bakery = flagBakery.getBakery();
+            bakeryFilterCardDtoList.add(BakeryFilterCardDto.builder()
+                    .bakery(bakery)
+                    .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
+                            .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+                    .reviewNum(bakery.getBreadReviewList().size())
+                    .simpleReviewList(bakery.getBreadReviewList().stream()
+                            .sorted(Comparator.comparing(BreadReview::getId)).map(MapSimpleReviewDto::new)
+                            .limit(3).collect(Collectors.toList()))
+                    .distance(Math.floor(acos(cos(toRadians(latitude))
+                            * cos(toRadians(bakery.getLatitude()))
+                            * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
+                            + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
+                    .color(flagBakery.getFlag().getColor()).build());
+        }
+        return bakeryFilterCardDtoList.stream()
+                .sorted(comparing)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

@@ -27,7 +27,7 @@ public class Flag extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "flag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "flag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FlagBakery> flagBakeryList = new LinkedHashSet<>();
 
     @Enumerated(value = EnumType.STRING)
