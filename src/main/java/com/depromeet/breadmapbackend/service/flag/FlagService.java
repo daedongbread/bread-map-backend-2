@@ -1,12 +1,14 @@
 package com.depromeet.breadmapbackend.service.flag;
 
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryCardDto;
-import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.SimpleFlagDto;
 
 import java.util.List;
 
 public interface FlagService {
+    List<SimpleFlagDto> findSimpleFlags(String username);
     List<FlagDto> findFlags(String username);
     void addFlag(String username, FlagRequest request);
     void removeFlag(String username, Long flagId);

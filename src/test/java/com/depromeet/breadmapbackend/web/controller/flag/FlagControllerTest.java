@@ -48,7 +48,7 @@ class FlagControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").build();
+                .name("bakery1").streetAddress("street").image("testImage").build();
         bakery.addFacilityInfo(FacilityInfo.PARKING);
         bakeryRepository.save(bakery);
 
@@ -63,7 +63,28 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+    void findSimpleFlags() throws Exception {
+        mockMvc.perform(get("/flag/simple")
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("flag/findSimple",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        responseFields(
+                                fieldWithPath("data.[].flagId").description("깃발 고유번호"),
+                                fieldWithPath("data.[].name").description("깃발 이름"),
+                                fieldWithPath("data.[].color").description("깃발 색깔")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void findFlags() throws Exception {
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
+        flagBakeryRepository.save(flagBakery);
+
         mockMvc.perform(get("/flag")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -74,7 +95,8 @@ class FlagControllerTest extends ControllerTest {
                         responseFields(
                                 fieldWithPath("data.[].flagId").description("깃발 고유번호"),
                                 fieldWithPath("data.[].name").description("깃발 이름"),
-                                fieldWithPath("data.[].color").description("깃발 색깔")
+                                fieldWithPath("data.[].color").description("깃발 색깔"),
+                                fieldWithPath("data.[].bakeryImageList").description("깃발 빵집 사진 리스트")
                         )
                 ))
                 .andExpect(status().isOk());

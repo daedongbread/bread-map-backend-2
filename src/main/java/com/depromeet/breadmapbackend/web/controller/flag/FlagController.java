@@ -3,9 +3,10 @@ package com.depromeet.breadmapbackend.web.controller.flag;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryCardDto;
-import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.SimpleFlagDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FlagController {
     private final FlagService flagService;
+
+    @GetMapping("/simple")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<SimpleFlagDto>> findSimpleFlags(@CurrentUser String username) {
+        return new ApiResponse<>(flagService.findSimpleFlags(username));
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

@@ -5,21 +5,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
-public class FlagDto {
+public class SimpleFlagDto {
     private Long flagId;
     private String name;
     private FlagColor color;
-    private List<String> bakeryImageList;
 
     @Builder
-    public FlagDto(Long flagId, String name, FlagColor color, List<String> bakeryImageList) {
+    public SimpleFlagDto(Long flagId, String name, FlagColor color) {
         this.flagId = flagId;
         this.name = name;
         this.color = color;
-        this.bakeryImageList = bakeryImageList;
     }
 }

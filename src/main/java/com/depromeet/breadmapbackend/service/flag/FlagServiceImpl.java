@@ -12,9 +12,10 @@ import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryCardDto;
-import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.SimpleFlagDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +37,23 @@ public class FlagServiceImpl implements FlagService {
     private final BakeryRepository bakeryRepository;
 
     @Transactional(readOnly = true)
+    public List<SimpleFlagDto> findSimpleFlags(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return flagRepository.findByUser(user).stream()
+                .map(flag -> SimpleFlagDto.builder()
+                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor()).build())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<FlagDto> findFlags(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return flagRepository.findByUser(user).stream()
                 .map(flag -> FlagDto.builder()
-                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor()).build())
+                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
+                        .bakeryImageList(flagBakeryRepository.findBakeryByFlag(flag).stream()
+                                .sorted(Comparator.comparing(Bakery::getId).reversed()).map(Bakery::getImage)
+                                .limit(3).collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
     }
 
@@ -77,14 +90,15 @@ public class FlagServiceImpl implements FlagService {
     @Transactional(readOnly = true)
     public List<FlagBakeryCardDto> findBakeryByFlag(String username, Long flagId) {
         Flag flag = flagRepository.findById(flagId).orElseThrow(FlagNotFoundException::new);
-        return flagBakeryRepository.findBakeryByFlag(flag).stream()
-                .map(bakery -> FlagBakeryCardDto.builder()
-                        .bakery(bakery)
-                        .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
+        return flagBakeryRepository.findByFlag(flag).stream()
+                .sorted(Comparator.comparing(FlagBakery::getId).reversed())
+                .map(flagBakery -> FlagBakeryCardDto.builder()
+                        .bakery(flagBakery.getBakery())
+                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList().stream().map(BreadReview::getRating)
                                 .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
-                        .reviewNum(bakery.getBreadReviewList().size())
-                        .simpleReviewList(bakery.getBreadReviewList().stream()
-                                .sorted(Comparator.comparing(BreadReview::getId)).map(MapSimpleReviewDto::new)
+                        .reviewNum(flagBakery.getBakery().getBreadReviewList().size())
+                        .simpleReviewList(flagBakery.getBakery().getBreadReviewList().stream()
+                                .sorted(Comparator.comparing(BreadReview::getId).reversed()).map(MapSimpleReviewDto::new)
                                 .limit(3).collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
     }
@@ -94,16 +108,23 @@ public class FlagServiceImpl implements FlagService {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
+        List<Flag> flagList = flagRepository.findByUser(user);
+        for(Flag f : flagList) {
+            if(flagBakeryRepository.findBakeryByFlag(f).contains(bakery)) {
+                FlagBakery flagBakery = flagBakeryRepository.findByFlagAndBakery(f, bakery).get();
+                if(flagBakery.getFlag().getName().equals("가봤어요")) bakery.minusFlagNum();
+                f.removeFlagBakery(flagBakery);
+                flagBakeryRepository.delete(flagBakery);
+                break;
+            }
+        }
+
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
 
-        if(flagBakeryRepository.findByFlagAndBakery(flag, bakery).isPresent()) throw new FlagBakeryAlreadyException();
-        else {
-            if(flag.getName().equals("가봤어요")) bakery.addFlagNum();
-
-            flagBakeryRepository.save(flagBakery);
-            flag.addFlagBakery(flagBakery);
-        }
+        if(flag.getName().equals("가봤어요")) bakery.addFlagNum();
+        flagBakeryRepository.save(flagBakery);
+        flag.addFlagBakery(flagBakery);
     }
 
     @Transactional

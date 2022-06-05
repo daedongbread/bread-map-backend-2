@@ -45,8 +45,12 @@ operation::bakery/find/filter[snippets='http-request,request-parameters,http-res
 operation::bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
 
 == 깃발 API
-깃발 리스트 조회 API, 깃발 추가 API, 깃발 삭제 API, 깃발 업데이트 API,
+깃발 간단 리스트 조회 API, 깃발 리스트 조회 API,
+깃발 추가 API, 깃발 삭제 API, 깃발 업데이트 API,
 깃발에 추가된 빵집 리스트 조회 API, 깃발에 빵집 추가 API, 깃발에 등록된 빵집 삭제 API
+
+=== 깃발 간단 리스트 조회 API [GET]
+operation::flag/findSimple[snippets='http-request,request-headers,http-response,response-fields']
 
 === 깃발 리스트 조회 API [GET]
 operation::flag/find[snippets='http-request,request-headers,http-response,response-fields']

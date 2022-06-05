@@ -30,10 +30,10 @@ public class FlagRepositorySupport{
     }
 
     public FlagBakery findFlagBakeryByUserAndBakery(User user, Bakery bakery) {
-        return queryFactory.selectDistinct(flagBakery)
-                .from(flagBakery)
+        return queryFactory.selectFrom(flagBakery)
+//                .from(flagBakery)
                 .join(flagBakery.flag, flag)
 //                .fetchJoin()
-                .where(flagBakery.bakery.eq(bakery).and(flag.user.eq(user))).fetchFirst();
+                .where(flagBakery.bakery.eq(bakery).and(flag.user.eq(user))).fetchOne();
     }
 }
