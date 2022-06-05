@@ -4,8 +4,8 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.SortType;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepositorySupport;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +37,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final BreadRepository breadRepository;
     private final BreadReviewRepository breadReviewRepository;
     private final UserRepository userRepository;
+    private final FlagRepository flagRepository;
 
     @Transactional(readOnly = true)
     public List<BakeryCardDto> findBakeryList
@@ -84,47 +84,5 @@ public class BakeryServiceImpl implements BakeryService {
                         Math.floor(breadReviewRepository.findBreadAvgRating(bread.getId())*10)/10.0,
                         breadReviewRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
         return BakeryDto.builder().info(info).menu(menu).facilityInfoList(bakery.getFacilityInfoList()).build();
-    }
-
-    @Transactional
-    public void heartToBakery(String username, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if(bakeryRepository.findById(bakeryId).isEmpty()) throw new BakeryNotFoundException();
-
-        if (user.getWantToGoList().contains(bakeryId)) throw new HeartAlreadyException();
-        else user.getWantToGoList().add(bakeryId);
-    }
-
-    @Transactional
-    public void unHeartToBakery(String username, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if(bakeryRepository.findById(bakeryId).isEmpty()) throw new BakeryNotFoundException();
-
-        if (!user.getWantToGoList().contains(bakeryId)) throw new UnheartAlreadyException();
-        else user.getWantToGoList().remove(bakeryId);
-    }
-
-    @Transactional
-    public void flagToBakery(String username, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-
-        if (user.getAlreadyGoList().contains(bakeryId)) throw new FlagAlreadyException();
-        else {
-            user.getAlreadyGoList().add(bakeryId);
-            bakery.addFlagNum();
-        }
-    }
-
-    @Transactional
-    public void unFlagToBakery(String username, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-
-        if (!user.getAlreadyGoList().contains(bakeryId)) throw new UnflagAlreadyException();
-        else {
-            user.getAlreadyGoList().remove(bakeryId);
-            bakery.minusFlagNum();
-        }
     }
 }

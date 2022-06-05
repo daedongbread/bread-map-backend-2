@@ -1,5 +1,8 @@
 package com.depromeet.breadmapbackend.security.service;
 
+import com.depromeet.breadmapbackend.domain.flag.Flag;
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final FlagRepository flagRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -48,10 +52,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .username(providerType.name() + "_" + oAuth2UserInfo.getUsername())
                 .nickName(oAuth2UserInfo.getNickName())
                 .email(oAuth2UserInfo.getEmail())
-                .profileImageUrl(oAuth2UserInfo.getImageUrl())
                 .providerType(providerType)
                 .roleType(RoleType.USER)
+                .profileImageUrl(oAuth2UserInfo.getImageUrl())
                 .build();
+
+        Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
+        Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
+        flagRepository.save(wantToGo);
+        flagRepository.save(alreadyGo);
+        user.addFlag(wantToGo);
+        user.addFlag(alreadyGo);
 
         return userRepository.save(user);
     }

@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.user;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.LongListConverter;
+import com.depromeet.breadmapbackend.domain.flag.Flag;
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import lombok.*;
@@ -16,7 +18,6 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -39,11 +40,8 @@ public class User extends BaseEntity {
 
     private String profileImageUrl;
 
-    @Convert(converter = LongListConverter.class)
-    private Set<Long> wantToGoList = new LinkedHashSet<>();
-
-    @Convert(converter = LongListConverter.class)
-    private Set<Long> alreadyGoList = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flag> flagList = new ArrayList<>();
 
     @Builder
     private User(String username, String nickName, String email, Gender gender, ProviderType providerType, RoleType roleType, String profileImageUrl) {
@@ -64,4 +62,18 @@ public class User extends BaseEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void addFlag(Flag flag) {
+        this.flagList.add(flag);
+    }
+
+    public void removeFlag(Flag flag) { this.flagList.remove(flag); }
+
+//    @Override
+//    public boolean equals(Object object) {
+//        User user = (User) object;
+//        if (user.getUsername().equals(this.getUsername())) {
+//            return true;
+//        }
+//        return false;
+//    }
 }

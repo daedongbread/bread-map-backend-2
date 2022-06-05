@@ -1,13 +1,13 @@
 package com.depromeet.breadmapbackend.web.advice;
 
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
+import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -169,6 +169,7 @@ public class ExceptionAdvice {
      * refresh 갱신할 때, refresh 토큰 유효 X
      */
     @ExceptionHandler(TokenValidFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse tokenValidFailedExHandler(TokenValidFailedException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -177,6 +178,7 @@ public class ExceptionAdvice {
      * refresh 토큰이 존재하지 않을 때
      */
     @ExceptionHandler(RefreshTokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -185,6 +187,7 @@ public class ExceptionAdvice {
      * 유저가 존재하지 않을 때
      */
     @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse userNotFoundException(UserNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -193,39 +196,53 @@ public class ExceptionAdvice {
      * 빵집이 존재하지 않을 때
      */
     @ExceptionHandler(BakeryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse bakeryNotFoundException(BakeryNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     /**
-     * 이미 가고싶어요에 등록된 빵집일 때
-     */
-    @ExceptionHandler(HeartAlreadyException.class)
-    public ErrorResponse heartAlreadyException(HeartAlreadyException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-    
-    /**
-     * 이미 가고싶어요에서 제거된 빵집일 때
-     */
-    @ExceptionHandler(UnheartAlreadyException.class)
-    public ErrorResponse unHeartAlreadyException(UnheartAlreadyException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 이미 가봤어요에 등록된 빵집일 때
+     * 이미 존재하는 리스트일 때
      */
     @ExceptionHandler(FlagAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse flagAlreadyException(FlagAlreadyException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     /**
-     * 이미 가봤어요에서 제거된 빵집일 때
+     * 존재하지 않은 리스트일 때
      */
-    @ExceptionHandler(UnflagAlreadyException.class)
-    public ErrorResponse unflagAlreadyException(UnflagAlreadyException e) {
+    @ExceptionHandler(FlagNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse flagNotFoundException(FlagNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
+     */
+    @ExceptionHandler(FlagUnRemoveException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse flagUnRemoveException(FlagUnRemoveException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 해당 리스트에 등록된 빵집일 때
+     */
+    @ExceptionHandler(FlagBakeryAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse flagBakeryAlreadyException(FlagBakeryAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 해당 리스트에 없는 빵집일 때
+     */
+    @ExceptionHandler(FlagBakeryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse flagBakeryNotFoundException(FlagBakeryNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

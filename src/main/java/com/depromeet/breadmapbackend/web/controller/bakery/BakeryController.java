@@ -46,28 +46,4 @@ public class BakeryController {
     public ApiResponse<BakeryDto> findBakery(@PathVariable Long bakeryId) {
         return new ApiResponse<>(bakeryService.findBakery(bakeryId));
     }
-
-    @PatchMapping("/{bakeryId}/heart")
-    @ResponseStatus(HttpStatus.OK)
-    public void heartToBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
-        bakeryService.heartToBakery(username, bakeryId);
-    }
-
-    @PatchMapping("/{bakeryId}/unheart")
-    @ResponseStatus(HttpStatus.OK)
-    public void unHeartToBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
-        bakeryService.unHeartToBakery(username, bakeryId);
-    }
-
-    @PatchMapping("/{bakeryId}/flag")
-    @ResponseStatus(HttpStatus.OK)
-    public void flagToBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
-        bakeryService.flagToBakery(username, bakeryId);
-    }
-
-    @PatchMapping("/{bakeryId}/unflag")
-    @ResponseStatus(HttpStatus.OK)
-    public void unFlagToBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
-        bakeryService.unFlagToBakery(username, bakeryId);
-    }
 }

@@ -12,8 +12,4 @@ public interface BakeryService {
     List<BakeryCardDto> findBakeryList(Double latitude, Double longitude, Double height, Double width, SortType sort);
     List<BakeryCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, SortType sort);
     BakeryDto findBakery(Long bakeryId);
-    void heartToBakery(String username, Long bakeryId);
-    void unHeartToBakery(String username, Long bakeryId);
-    void flagToBakery(String username, Long bakeryId);
-    void unFlagToBakery(String username, Long bakeryId);
 }

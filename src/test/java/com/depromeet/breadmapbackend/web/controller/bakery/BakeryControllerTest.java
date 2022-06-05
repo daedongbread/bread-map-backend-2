@@ -45,9 +45,12 @@ class BakeryControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").facilityInfoList(new ArrayList<FacilityInfo>(Arrays.asList(FacilityInfo.PARKING))).build();
+                .name("bakery1").streetAddress("street").build();
         bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
-                .name("bakery2").streetAddress("street").facilityInfoList(new ArrayList<FacilityInfo>(Arrays.asList(FacilityInfo.DELIVERY))).build();
+                .name("bakery2").streetAddress("street").build();
+        bakery1.addFacilityInfo(FacilityInfo.PARKING);
+        bakery1.addFacilityInfo(FacilityInfo.DELIVERY);
+
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
 
@@ -71,6 +74,7 @@ class BakeryControllerTest extends ControllerTest {
                 .andDo(document("bakery/find/default",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
                                 parameterWithName("sort").description("정렬 방법"),
                                 parameterWithName("latitude").description("중앙 위도"),
@@ -112,6 +116,7 @@ class BakeryControllerTest extends ControllerTest {
                 .andDo(document("bakery/find",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")
                         ),
@@ -142,79 +147,79 @@ class BakeryControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @Transactional
-    void heartToBakery() throws Exception {
-        mockMvc.perform(patch("/bakery/{bakeryId}/heart", 1L)
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("bakery/heart",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        )))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @Transactional
-    void unHeartToBakery() throws Exception {
-        User user = User.builder().nickName("nickname2").roleType(RoleType.USER).username("username2").build();
-        userRepository.save(user);
-        JwtToken token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
-        user.getWantToGoList().add(bakery1.getId());
-
-        mockMvc.perform(patch("/bakery/{bakeryId}/unheart", 1L)
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("bakery/unHeart",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        )))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @Transactional
-    void flagToBakery() throws Exception {
-        mockMvc.perform(patch("/bakery/{bakeryId}/flag", 1L)
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("bakery/flag",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        )))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @Transactional
-    void unFlagToBakery() throws Exception {
-        User user = User.builder().nickName("nickname2").roleType(RoleType.USER).username("username2").build();
-        userRepository.save(user);
-        JwtToken token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
-        user.getAlreadyGoList().add(bakery1.getId());
-        bakery1.addFlagNum();
-
-        mockMvc.perform(patch("/bakery/{bakeryId}/unflag", 1L)
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("bakery/unFlag",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        )))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @Transactional
+//    void wantToBakery() throws Exception {
+//        mockMvc.perform(patch("/bakery/{bakeryId}/want", 1L)
+//                .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("bakery/heart",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호")
+//                        )))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    @Transactional
+//    void unWantToBakery() throws Exception {
+//        User user = User.builder().nickName("nickname2").roleType(RoleType.USER).username("username2").build();
+//        userRepository.save(user);
+//        JwtToken token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+//        user.getWantToGoList().add(bakery1.getId());
+//
+//        mockMvc.perform(patch("/bakery/{bakeryId}/unwant", 1L)
+//                .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("bakery/unHeart",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호")
+//                        )))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    @Transactional
+//    void flagToBakery() throws Exception {
+//        mockMvc.perform(patch("/bakery/{bakeryId}/flag", 1L)
+//                .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("bakery/flag",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호")
+//                        )))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    @Transactional
+//    void unFlagToBakery() throws Exception {
+//        User user = User.builder().nickName("nickname2").roleType(RoleType.USER).username("username2").build();
+//        userRepository.save(user);
+//        JwtToken token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+//        user.getAlreadyGoList().add(bakery1.getId());
+//        bakery1.addFlagNum();
+//
+//        mockMvc.perform(patch("/bakery/{bakeryId}/unflag", 1L)
+//                .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("bakery/unFlag",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호")
+//                        )))
+//                .andExpect(status().isOk());
+//    }
 
 }

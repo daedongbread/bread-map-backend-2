@@ -65,7 +65,7 @@ public class Bakery extends BaseEntity {
     public Bakery(Long id, String name, Double latitude, Double longitude,
                   String streetAddress, String domicileAddress, String hours, String phoneNumber,
                   String websiteURL, String instagramURL, String facebookURL, String blogURL,
-                  String image, List<FacilityInfo> facilityInfoList, User user) {
+                  String image, User user) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -80,7 +80,6 @@ public class Bakery extends BaseEntity {
         this.blogURL = blogURL;
         this.image = image;
         this.flagNum = 0;
-        this.facilityInfoList = facilityInfoList;
         this.user = user;
     }
 
@@ -91,4 +90,8 @@ public class Bakery extends BaseEntity {
     public void minusFlagNum() {
         this.flagNum -= 1;
     }
+
+    public void addFacilityInfo(FacilityInfo info) { this.facilityInfoList.add(info); }
+
+    public void removeFacilityInfo(FacilityInfo info) { this.facilityInfoList.remove(info); }
 }

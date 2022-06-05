@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.restdocs.utils;
 
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
@@ -48,6 +50,12 @@ public abstract class ControllerTest {
 
     @Autowired
     protected BreadReviewRepository breadReviewRepository;
+
+    @Autowired
+    protected FlagRepository flagRepository;
+
+    @Autowired
+    protected FlagBakeryRepository flagBakeryRepository;
 
     @Autowired
     protected UserService userService;

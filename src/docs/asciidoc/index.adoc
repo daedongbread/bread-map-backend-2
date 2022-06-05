@@ -44,14 +44,17 @@ operation::bakery/find/default[snippets='http-request,request-parameters,http-re
 === 빵집 단건 조회 [GET]
 operation::bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
 
-=== 빵집 가봤어요 [PATCH]
-operation::bakery/heart[snippets='http-request,request-headers,path-parameters,http-response']
+== 깃발 API
+깃발 추가 API, 깃발 삭제 API, 깃발에 빵집 추가 API, 깃발에 등록된 빵집 삭제 API
 
-=== 빵집 가봤어요 취소 [PATCH]
-operation::bakery/unHeart[snippets='http-request,request-headers,path-parameters,http-response']
+=== 깃발 추가 API [POST]
+operation::flag/add[snippets='http-request,request-headers,request-fields,http-response']
 
-=== 빵집 가고싶어요 [PATCH]
-operation::bakery/flag[snippets='http-request,request-headers,path-parameters,http-response']
+=== 깃발 삭제 API [DELETE]
+operation::flag/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
-=== 빵집 가고싶어요 취소 [PATCH]
-operation::bakery/unFlag[snippets='http-request,request-headers,path-parameters,http-response']
+=== 깃발에 빵집 추가 API [PATCH]
+operation::flag/bakeryAdd[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 깃발에 등록된 빵집 삭제 [DELETE]
+operation::flag/bakeryDelete[snippets='http-request,request-headers,path-parameters,http-response']
