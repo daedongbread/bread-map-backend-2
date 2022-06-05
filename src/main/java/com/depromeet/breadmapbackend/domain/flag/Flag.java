@@ -49,12 +49,8 @@ public class Flag extends BaseEntity {
         this.flagBakeryList.remove(flagBakery);
     }
 
-//    @Override
-//    public boolean equals(Object object) {
-//        Flag flag = (Flag) object;
-//        if (flag.getName().equals(this.getName()) && flag.getUser() == this.getUser()) {
-//            return true;
-//        }
-//        return false;
-//    }
+    public void updateFlag(String name, FlagColor color) {
+        this.name = name;
+        this.color = color;
+    }
 }

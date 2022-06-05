@@ -220,11 +220,11 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
+     * 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
      */
-    @ExceptionHandler(FlagUnRemoveException.class)
+    @ExceptionHandler(FlagUnEditException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse flagUnRemoveException(FlagUnRemoveException e) {
+    public ErrorResponse flagUnEditException(FlagUnEditException e) {
         return new ErrorResponse(e.getMessage());
     }
 

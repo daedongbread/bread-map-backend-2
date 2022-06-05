@@ -11,13 +11,13 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AddFlagRequest {
+public class FlagRequest {
     @NotBlank(message = "이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private String name;
     private FlagColor color;
 
     @Builder
-    public AddFlagRequest(String name, FlagColor color) {
+    public FlagRequest(String name, FlagColor color) {
         this.name = name;
         this.color = color;
     }

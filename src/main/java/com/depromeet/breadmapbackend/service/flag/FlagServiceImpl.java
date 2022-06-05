@@ -8,14 +8,23 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.web.controller.flag.dto.AddFlagRequest;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryCardDto;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
+import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,8 +35,17 @@ public class FlagServiceImpl implements FlagService {
     private final UserRepository userRepository;
     private final BakeryRepository bakeryRepository;
 
+    @Transactional(readOnly = true)
+    public List<FlagDto> findFlags(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return flagRepository.findByUser(user).stream()
+                .map(flag -> FlagDto.builder()
+                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor()).build())
+                .collect(Collectors.toList());
+    }
+
     @Transactional
-    public void addFlag(String username, AddFlagRequest request) {
+    public void addFlag(String username, FlagRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(flagRepository.findByUserAndName(user, request.getName()).isPresent()) throw new FlagAlreadyException();
 
@@ -40,10 +58,35 @@ public class FlagServiceImpl implements FlagService {
     public void removeFlag(String username, Long flagId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
-        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new FlagUnRemoveException();
+        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new FlagUnEditException();
 
         user.removeFlag(flag);
         flagRepository.delete(flag);
+    }
+
+    @Transactional
+    public void updateFlag(String username, Long flagId, FlagRequest request) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
+
+        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new FlagUnEditException();
+
+        flag.updateFlag(request.getName(), request.getColor());
+    }
+
+    @Transactional(readOnly = true)
+    public List<FlagBakeryCardDto> findBakeryByFlag(String username, Long flagId) {
+        Flag flag = flagRepository.findById(flagId).orElseThrow(FlagNotFoundException::new);
+        return flagBakeryRepository.findBakeryByFlag(flag).stream()
+                .map(bakery -> FlagBakeryCardDto.builder()
+                        .bakery(bakery)
+                        .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
+                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+                        .reviewNum(bakery.getBreadReviewList().size())
+                        .simpleReviewList(bakery.getBreadReviewList().stream()
+                                .sorted(Comparator.comparing(BreadReview::getId)).map(MapSimpleReviewDto::new)
+                                .limit(3).collect(Collectors.toList())).build())
+                .collect(Collectors.toList());
     }
 
     @Transactional
