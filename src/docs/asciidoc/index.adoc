@@ -20,7 +20,7 @@ DaeDongBread API
 | 환경 | Domain
 
 | 개발 서버|`http://localhost:8080`
-| 운영 서버|`https://api.moodpic.kr`
+| 운영 서버|`http://3.36.94.161`
 |===
 
 
