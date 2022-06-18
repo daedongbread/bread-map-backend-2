@@ -9,7 +9,9 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
+import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.review.repository.BreadRatingRepositroy;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
@@ -36,7 +38,7 @@ import static java.lang.Math.toRadians;
 public class BakeryServiceImpl implements BakeryService {
     private final BakeryRepository bakeryRepository;
     private final BreadRepository breadRepository;
-    private final BreadReviewRepository breadReviewRepository;
+    private final BreadRatingRepositroy breadRatingRepositroy;
     private final UserRepository userRepository;
     private final FlagRepositorySupport flagRepositorySupport;
 
@@ -52,8 +54,15 @@ public class BakeryServiceImpl implements BakeryService {
         return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                 .map(bakery -> BakeryCardDto.builder()
                         .bakery(bakery)
-                        .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
-                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+//                        .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
+//                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+                        .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList()
+                                .stream().map(br -> {
+                                    return Arrays.stream(br.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
+                                }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
+//                                .stream().map(BreadReview::getRatings).collect(Collectors.toList())
+//                                .stream().map(BreadRating::getRating)
+//                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
                         .reviewNum(bakery.getBreadReviewList().size())
                         .simpleReviewList(bakery.getBreadReviewList().stream()
                                 .sorted(Comparator.comparing(BreadReview::getId).reversed()).map(MapSimpleReviewDto::new)
@@ -87,8 +96,12 @@ public class BakeryServiceImpl implements BakeryService {
             Bakery bakery = flagBakery.getBakery();
             bakeryFilterCardDtoList.add(BakeryFilterCardDto.builder()
                     .bakery(bakery)
-                    .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
-                            .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+                    .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList()
+                            .stream().map(br -> {
+                                return Arrays.stream(br.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
+                            }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
+//                    .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
+//                            .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
                     .reviewNum(bakery.getBreadReviewList().size())
                     .simpleReviewList(bakery.getBreadReviewList().stream()
                             .sorted(Comparator.comparing(BreadReview::getId).reversed()).map(MapSimpleReviewDto::new)
@@ -109,13 +122,17 @@ public class BakeryServiceImpl implements BakeryService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         BakeryInfo info = BakeryInfo.builder()
                 .bakery(bakery)
-                .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
-                        .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+//                .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList().stream().map(BreadReview::getRating)
+//                        .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+                .rating(Math.floor(Arrays.stream(bakery.getBreadReviewList()
+                        .stream().map(br -> {
+                            return Arrays.stream(br.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
+                        }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
                 .reviewNum(bakery.getBreadReviewList().size()).build();
         List<BreadDto> menu = breadRepository.findByBakeryId(bakeryId).stream()
                 .map(bread -> new BreadDto(bread,
-                        Math.floor(breadReviewRepository.findBreadAvgRating(bread.getId())*10)/10.0,
-                        breadReviewRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
+                        Math.floor(breadRatingRepositroy.findBreadAvgRating(bread.getId())*10)/10.0,
+                        breadRatingRepositroy.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
         return BakeryDto.builder().info(info).menu(menu).facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 }

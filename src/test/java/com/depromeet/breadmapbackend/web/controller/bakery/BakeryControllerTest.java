@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
@@ -41,6 +42,7 @@ class BakeryControllerTest extends ControllerTest {
     public void setup() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
+        breadRatingRepositroy.deleteAllInBatch();
         breadReviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
@@ -64,10 +66,15 @@ class BakeryControllerTest extends ControllerTest {
         breadRepository.save(bread1);
         breadRepository.save(bread2);
 
-        BreadReview review1 = BreadReview.builder().user(user).bakery(bakery1).bread(bread1).content("content1").rating(4).build();
-        BreadReview review2 = BreadReview.builder().user(user).bakery(bakery2).bread(bread2).content("content1").rating(4).build();
+        BreadReview review1 = BreadReview.builder().user(user).bakery(bakery1).content("content1").build();
+        BreadReview review2 = BreadReview.builder().user(user).bakery(bakery2).content("content1").build();
         breadReviewRepository.save(review1);
         breadReviewRepository.save(review2);
+
+        BreadRating rating1 = BreadRating.builder().bread(bread1).breadReview(review1).rating(4L).build();
+        BreadRating rating2 = BreadRating.builder().bread(bread2).breadReview(review2).rating(4L).build();
+        breadRatingRepositroy.save(rating1);
+        breadRatingRepositroy.save(rating2);
     }
 
     @Test

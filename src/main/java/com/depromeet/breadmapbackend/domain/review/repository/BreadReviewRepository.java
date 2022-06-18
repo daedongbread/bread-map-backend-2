@@ -5,7 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface BreadReviewRepository extends JpaRepository<BreadReview, Long> {
-    @Query("SELECT AVG(br.rating) FROM BreadReview br WHERE br.bread.id = ?1")
-    Double findBreadAvgRating(Long breadId);
-    Integer countByBreadId(Long breadId);
 }

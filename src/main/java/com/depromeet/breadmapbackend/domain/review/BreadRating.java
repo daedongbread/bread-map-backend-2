@@ -21,13 +21,13 @@ public class BreadRating extends BaseEntity{
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "bakery_id")
-    private Bakery bakery;
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
+//
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "bakery_id")
+//    private Bakery bakery;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "bread_id")
@@ -40,16 +40,16 @@ public class BreadRating extends BaseEntity{
     @Column(nullable = false)
     private Long rating;
 
-    @Column(nullable = false, columnDefinition = "boolean default 1")
-    private boolean isUse;
+//    @Column(nullable = false, columnDefinition = "boolean default 1")
+//    private boolean isUse;
 
     @Builder
-    private BreadRating(User user, Bakery bakery, Bread bread, BreadReview breadReview, Long rating, boolean isUse) {
-        this.user = user;
-        this.bakery = bakery;
+    private BreadRating(/*User user, Bakery bakery, */Bread bread, BreadReview breadReview, Long rating/*, boolean isUse*/) {
+//        this.user = user;
+//        this.bakery = bakery;
         this.bread = bread;
         this.breadReview = breadReview;
         this.rating = rating;
-        this.isUse = isUse;
+//        this.isUse = isUse;
     }
 }

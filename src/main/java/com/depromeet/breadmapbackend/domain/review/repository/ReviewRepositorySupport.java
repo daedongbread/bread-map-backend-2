@@ -101,12 +101,12 @@ public class ReviewRepositorySupport {
                     BreadReview breadReview = breadReviewRepository.getById(breadReviewPK);
 
                     BreadRating breadRatingQuery = BreadRating.builder()
-                            .user(user)
-                            .bakery(bakery)
+//                            .user(user)
+//                            .bakery(bakery)
                             .bread(bread)
                             .breadReview(breadReview)
                             .rating(Long.parseLong(String.valueOf(rating.get(i))))
-                            .isUse(true)
+//                            .isUse(true)
                             .build();
 
                     breadRatingRepositroy.save(breadRatingQuery);
