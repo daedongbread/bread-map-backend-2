@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.restdocs;
+package com.depromeet.breadmapbackend.web.controller.user;
 
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;

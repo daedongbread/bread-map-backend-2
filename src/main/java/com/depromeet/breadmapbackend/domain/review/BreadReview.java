@@ -54,5 +54,6 @@ public class BreadReview extends BaseEntity {
         this.content = content;
         this.rating = rating;
         this.imageList = imageList;
+//        bakery.addBreadReview(this);
     }
 }
