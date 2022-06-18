@@ -73,7 +73,7 @@ class BakeryControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findBakeryList() throws Exception {
-        mockMvc.perform(get("/bakery/default?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
+        mockMvc.perform(get("/bakery?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/find/default",
