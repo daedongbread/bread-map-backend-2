@@ -26,8 +26,6 @@ public class Bread extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
-    private Long rating;
-
     private String image;
 
     @Builder
@@ -36,6 +34,7 @@ public class Bread extends BaseEntity {
         this.price = price;
         this.bakery = bakery;
         this.image = image;
+//        bakery.getBreadList().add(this);
     }
 
     public void updateImgPath(String image) {

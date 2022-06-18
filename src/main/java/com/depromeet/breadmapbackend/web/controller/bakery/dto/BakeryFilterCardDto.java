@@ -1,19 +1,17 @@
 package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.lang.Math.*;
-import static java.lang.Math.acos;
 
 @Getter
 @NoArgsConstructor
-public class BakeryCardDto {
+public class BakeryFilterCardDto {
     private Double latitude;
     private Double longitude;
 
@@ -27,8 +25,11 @@ public class BakeryCardDto {
     private Double distance;
     private Integer popularNum;
 
+    private FlagColor color;
+
     @Builder
-    public BakeryCardDto(Bakery bakery, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList, Double distance) {
+    public BakeryFilterCardDto(
+            Bakery bakery, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList, Double distance, FlagColor color) {
         this.latitude = bakery.getLatitude();
         this.longitude = bakery.getLongitude();
         this.id = bakery.getId();
@@ -40,5 +41,6 @@ public class BakeryCardDto {
         this.simpleReviewList = simpleReviewList;
         this.distance = distance;
         this.popularNum = flagNum + reviewNum;
+        this.color = color;
     }
 }
