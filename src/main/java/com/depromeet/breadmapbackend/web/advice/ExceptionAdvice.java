@@ -192,6 +192,8 @@ public class ExceptionAdvice {
     public ErrorResponse DataNotExistedException(DataNotExistedException e) {
         return new ErrorResponse(e.getMessage());
     }
+    
+    /**
      * 유저가 존재하지 않을 때
      */
     @ExceptionHandler(UserNotFoundException.class)
