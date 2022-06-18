@@ -11,7 +11,7 @@ import java.util.List;
 
 /*
  * Created by ParkSuHo by 2022/03/18.
- * Updated by ChoiHyunWoo by 2022/05/16
+ * Updated by ChoiHyunWoo by 2022/06/11
  */
 @Slf4j
 @RestController
@@ -21,8 +21,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("")
-    public ApiResponse<List<ReviewDTO>> getBakeryReviewList(@RequestParam long bakeryId){
+    @GetMapping("/{id}")
+    public ApiResponse<List<ReviewDTO>> getBakeryReviewList(@PathVariable("id") long bakeryId){
         return new ApiResponse<>(reviewService.getBakeryReviewList(bakeryId));
     }
 
@@ -34,8 +34,8 @@ public class ReviewController {
     @PostMapping("add")
     public ApiResponse<Object> addReview(
             @RequestParam long userId, @RequestParam long bakeryId,
-            @RequestParam String breadId, @RequestParam String content,
-            @RequestParam String rating ){
+            @RequestParam Long[] breadId, @RequestParam String content,
+            @RequestParam Long[] rating ){
         return new ApiResponse<>(reviewService.addReview(userId, bakeryId, breadId, content, rating));
     }
 }

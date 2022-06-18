@@ -16,7 +16,6 @@ import java.util.List;
 public class ReviewDTO {
     private Long id;
     private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
     private String content;
     private List<String> imageList;
     private Long bakery_id;
@@ -27,7 +26,6 @@ public class ReviewDTO {
     public ReviewDTO(BreadReview breadReview) {
         this.id = breadReview.getId();
         this.createdAt = breadReview.getCreatedAt();
-        this.modifiedAt = breadReview.getModifiedAt();
         this.content = breadReview.getContent();
         this.imageList = breadReview.getImageList();
         this.bakery_id = breadReview.getBakery().getId();

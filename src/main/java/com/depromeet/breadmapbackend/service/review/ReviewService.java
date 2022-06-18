@@ -10,5 +10,5 @@ public interface ReviewService {
 
     List<ReviewDTO> getBakeryReviewList(long bakeryId);
 
-    Object addReview(long userId, long bakeryId, String breadId, String content, String rating);
+    Object addReview(long userId, long bakeryId, Long[] breadId, String content, Long[] rating);
 }

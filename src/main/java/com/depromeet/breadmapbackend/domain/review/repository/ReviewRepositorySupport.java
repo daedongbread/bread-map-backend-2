@@ -14,6 +14,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -59,22 +62,8 @@ public class ReviewRepositorySupport {
                 .collect(Collectors.toList());
     }
 
-    public Object addReview(long userId, long bakeryId, String breadId, String content, String rating) throws DataNotExistedException {
-
-        String[] breadIdToArray = breadId.replaceAll("\\[", "").replaceAll("]", "").split(",");
-        Long[] breadArray = new Long[breadIdToArray.length];
-
-        String[] ratingToArray = rating.replaceAll("\\[", "").replaceAll("]", "").split(",");
-        Long[] ratingArray = new Long[ratingToArray.length];
-
-        for(int i = 0; i < breadArray.length; i++) {
-            try {
-                breadArray[i] = Long.parseLong(breadIdToArray[i]);
-                ratingArray[i] = Long.parseLong(ratingToArray[i]);
-            } catch (Exception e) {
-                throw new DataNotExistedException("Unable to parse data");
-            }
-        }
+    @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+    public Object addReview(long userId, long bakeryId, Long[] breadId, String content, Long[] rating) throws DataNotExistedException {
 
         if(!userRepository.existsById(userId)) {
             throw new DataNotExistedException("User is not existed");
@@ -94,24 +83,21 @@ public class ReviewRepositorySupport {
 
             breadReviewRepository.save(breadReviewQuery);
 
-            List<Long> breadReviewPK = queryFactory.select(breadReview.id.max())
-                    .from(breadReview)
-                    .where(breadReview.isUse.eq(true))
-                    .fetch();
+            Long breadReviewPK = breadReviewQuery.getId(); //Insert 한 review의 id를 가져온다.
 
-            for(int i = 0; i < breadArray.length; i++) {
-                if(!breadRepository.existsById(breadArray[i])) {
+            for(int i = 0; i < breadId.length; i++) {
+                if(!breadRepository.existsById(breadId[i])) {
                     throw new DataNotExistedException("Bread is not existed");
                 } else {
-                    Bread bread = breadRepository.getById(breadArray[i]);
-                    BreadReview breadReview = breadReviewRepository.getById(breadReviewPK.get(0));
+                    Bread bread = breadRepository.getById(breadId[i]);
+                    BreadReview breadReview = breadReviewRepository.getById(breadReviewPK);
 
                     BreadRating breadRatingQuery = BreadRating.builder()
                             .user(user)
                             .bakery(bakery)
                             .bread(bread)
                             .breadReview(breadReview)
-                            .rating(ratingArray[i])
+                            .rating(rating[i])
                             .isUse(true)
                             .build();
 

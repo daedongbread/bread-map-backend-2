@@ -26,7 +26,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional()
-    public Object addReview(long userId, long bakeryId, String breadId, String content, String rating){
+    public Object addReview(long userId, long bakeryId, Long[] breadId, String content, Long[] rating){
         return reviewRepositorySupport.addReview(userId, bakeryId, breadId, content, rating);
     }
 }
