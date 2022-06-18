@@ -2,6 +2,6 @@ package com.depromeet.breadmapbackend.domain.user.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {
-        super("사용자를 찾을 수 없습니다.");
+        super("User is not existed");
     }
 }

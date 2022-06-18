@@ -9,6 +9,7 @@ import com.depromeet.breadmapbackend.security.service.CustomOAuth2UserService;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -110,6 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/docs/**");
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
         web.httpFirewall(defaultHttpFirewall());
     }
 

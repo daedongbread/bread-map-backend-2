@@ -20,7 +20,7 @@ import java.util.List;
 public class BakeryController {
     private final BakeryService bakeryService;
 
-    @GetMapping("/default")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BakeryCardDto>> findBakeryList(
             @RequestParam SortType sort,
