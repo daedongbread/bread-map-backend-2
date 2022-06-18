@@ -8,6 +8,8 @@ import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
+import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -183,6 +185,14 @@ public class ExceptionAdvice {
         return new ErrorResponse(e.getMessage());
     }
 
+    /**
+     * 가져올 데이터가 존재하지 않을 때
+     */
+    @ExceptionHandler(DataNotExistedException.class)
+    public ErrorResponse DataNotExistedException(DataNotExistedException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+    
     /**
      * 유저가 존재하지 않을 때
      */

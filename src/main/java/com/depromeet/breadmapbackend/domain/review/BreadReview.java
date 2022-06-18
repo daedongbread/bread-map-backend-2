@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.StringListConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -33,27 +32,28 @@ public class BreadReview extends BaseEntity {
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "bread_id")
-    private Bread bread;
-
     @Column(nullable = false, length = 200)
     private String content;
-
-    @Column(nullable = false)
-    private Integer rating;
 
     @Convert(converter = StringListConverter.class)
     private List<String> imageList = new ArrayList<>();
 
+    @Column(nullable = false, columnDefinition = "boolean default 1")
+    private boolean isUse;
+
+    @OneToMany(mappedBy = "breadReview", cascade = CascadeType.ALL)
+    private List<BreadRating> ratings = new ArrayList<>();
+
     @Builder
-    private BreadReview(User user, Bakery bakery, Bread bread, String content, Integer rating, List<String> imageList) {
+    private BreadReview(User user, Bakery bakery, String content, List<String> imageList, boolean isUse) {
         this.user = user;
         this.bakery = bakery;
-        this.bread = bread;
         this.content = content;
-        this.rating = rating;
         this.imageList = imageList;
-//        bakery.addBreadReview(this);
+        this.isUse = isUse;
+    }
+
+    public void addRating(BreadRating breadRating){
+        this.ratings.add(breadRating);
     }
 }

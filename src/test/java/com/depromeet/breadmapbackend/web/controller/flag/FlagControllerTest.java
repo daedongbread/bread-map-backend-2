@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
@@ -39,6 +40,7 @@ class FlagControllerTest extends ControllerTest {
     void setUp() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
+        breadRatingRepositroy.deleteAllInBatch();
         breadReviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
@@ -58,8 +60,11 @@ class FlagControllerTest extends ControllerTest {
         Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         breadRepository.save(bread);
 
-        BreadReview review = BreadReview.builder().user(user).bakery(bakery).bread(bread).content("content1").rating(4).build();
+        BreadReview review = BreadReview.builder().user(user).bakery(bakery).content("content1").build();
         breadReviewRepository.save(review);
+
+        BreadRating rating = BreadRating.builder().bread(bread).breadReview(review).rating(4L).build();
+        breadRatingRepositroy.save(rating);
     }
 
     @Test

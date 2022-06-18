@@ -8,6 +8,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
@@ -94,8 +95,12 @@ public class FlagServiceImpl implements FlagService {
                 .sorted(Comparator.comparing(FlagBakery::getId).reversed())
                 .map(flagBakery -> FlagBakeryCardDto.builder()
                         .bakery(flagBakery.getBakery())
-                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList().stream().map(BreadReview::getRating)
-                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+//                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList().stream().map(BreadReview::getRating)
+//                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
+                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList()
+                                .stream().map(br -> {
+                                    return Arrays.stream(br.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
+                                }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
                         .reviewNum(flagBakery.getBakery().getBreadReviewList().size())
                         .simpleReviewList(flagBakery.getBakery().getBreadReviewList().stream()
                                 .sorted(Comparator.comparing(BreadReview::getId).reversed()).map(MapSimpleReviewDto::new)
