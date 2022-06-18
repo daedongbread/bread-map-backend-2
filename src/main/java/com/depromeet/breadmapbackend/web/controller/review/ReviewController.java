@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /*
  * Created by ParkSuHo by 2022/03/18.
@@ -32,10 +33,7 @@ public class ReviewController {
     }
 
     @PostMapping("add")
-    public ApiResponse<Object> addReview(
-            @RequestParam long userId, @RequestParam long bakeryId,
-            @RequestParam Long[] breadId, @RequestParam String content,
-            @RequestParam Long[] rating ){
-        return new ApiResponse<>(reviewService.addReview(userId, bakeryId, breadId, content, rating));
+    public ApiResponse<Object> addReview(@RequestBody Map<String, Object> data){
+        return new ApiResponse<>(reviewService.addReview(data));
     }
 }

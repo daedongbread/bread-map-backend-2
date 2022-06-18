@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -26,7 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional()
-    public Object addReview(long userId, long bakeryId, Long[] breadId, String content, Long[] rating){
-        return reviewRepositorySupport.addReview(userId, bakeryId, breadId, content, rating);
+    public Object addReview(Map<String, Object> data){
+        return reviewRepositorySupport.addReview(data);
     }
 }

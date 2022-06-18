@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.service.review;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewService {
 
@@ -10,5 +11,5 @@ public interface ReviewService {
 
     List<ReviewDTO> getBakeryReviewList(long bakeryId);
 
-    Object addReview(long userId, long bakeryId, Long[] breadId, String content, Long[] rating);
+    Object addReview(Map<String, Object> data);
 }
