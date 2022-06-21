@@ -1,15 +1,10 @@
 package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
 import lombok.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.lang.Math.*;
-import static java.lang.Math.acos;
 
 @Getter
 @NoArgsConstructor

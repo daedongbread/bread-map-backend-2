@@ -19,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BreadReview extends BaseEntity {
+public class Review extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -41,11 +41,17 @@ public class BreadReview extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default 1")
     private boolean isUse;
 
-    @OneToMany(mappedBy = "breadReview", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BreadRating> ratings = new ArrayList<>();
 
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewLike> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewComment> comments = new ArrayList<>();
+
     @Builder
-    private BreadReview(User user, Bakery bakery, String content, List<String> imageList, boolean isUse) {
+    private Review(User user, Bakery bakery, String content, List<String> imageList, boolean isUse) {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
@@ -53,7 +59,19 @@ public class BreadReview extends BaseEntity {
         this.isUse = isUse;
     }
 
+    public void useChange() { this.isUse = false; }
+
     public void addRating(BreadRating breadRating){
         this.ratings.add(breadRating);
     }
+
+    public void plusLike(ReviewLike reviewLike){ this.likes.add(reviewLike); }
+
+    public void minusLike(ReviewLike reviewLike){ this.likes.remove(reviewLike); }
+
+    public void addComment(ReviewComment reviewComment){
+        this.comments.add(reviewComment);
+    }
+
+    public void removeComment(ReviewComment reviewComment){ this.comments.remove(reviewComment); }
 }

@@ -7,7 +7,7 @@ import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
@@ -40,8 +40,8 @@ class FlagControllerTest extends ControllerTest {
     void setUp() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
-        breadRatingRepositroy.deleteAllInBatch();
-        breadReviewRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
 
@@ -60,14 +60,15 @@ class FlagControllerTest extends ControllerTest {
         Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         breadRepository.save(bread);
 
-        BreadReview review = BreadReview.builder().user(user).bakery(bakery).content("content1").build();
-        breadReviewRepository.save(review);
+        Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
+        reviewRepository.save(review);
 
-        BreadRating rating = BreadRating.builder().bread(bread).breadReview(review).rating(4L).build();
-        breadRatingRepositroy.save(rating);
+        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
+        breadRatingRepository.save(rating);
     }
 
     @Test
+//    @Transactional
     void findSimpleFlags() throws Exception {
         mockMvc.perform(get("/flag/simple")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -86,6 +87,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void findFlags() throws Exception {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);
@@ -108,6 +110,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void addFlag() throws Exception {
         String object = objectMapper.writeValueAsString(
                 FlagRequest.builder().name("testFlag").color(FlagColor.GREEN).build());
@@ -131,6 +134,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void removeFlag() throws Exception {
         mockMvc.perform(delete("/flag/{flagId}", flag.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -145,6 +149,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void updateFlag() throws Exception {
         String object = objectMapper.writeValueAsString(
                 FlagRequest.builder().name("testUpdateFlag").color(FlagColor.YELLOW).build());
@@ -169,6 +174,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void findBakeryByFlag() throws Exception {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);
@@ -197,6 +203,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void addBakeryToFlag() throws Exception {
         mockMvc.perform(post("/flag/{flagId}", flag.getId())
                 .param("bakeryId", String.valueOf(bakery.getId()))
@@ -214,6 +221,7 @@ class FlagControllerTest extends ControllerTest {
     }
 
     @Test
+//    @Transactional
     void removeBakeryToFlag() throws Exception {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);

@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.bakery;
 
-import com.depromeet.breadmapbackend.domain.bakery.SortType;
-import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.bakery.BakerySortType;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
@@ -23,7 +22,7 @@ public class BakeryController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BakeryCardDto>> findBakeryList(
-            @RequestParam SortType sort,
+            @RequestParam BakerySortType sort,
             @RequestParam Double latitude, @RequestParam Double longitude,
             @RequestParam Double latitudeDelta, @RequestParam Double longitudeDelta) {
         return new ApiResponse<>(bakeryService.findBakeryList(latitude, longitude, latitudeDelta, longitudeDelta, sort));
@@ -32,7 +31,7 @@ public class BakeryController {
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BakeryFilterCardDto>> findBakeryListByFilter(
-            @CurrentUser String username, @RequestParam SortType sort,
+            @CurrentUser String username, @RequestParam BakerySortType sort,
             @RequestParam Double latitude, @RequestParam Double longitude,
             @RequestParam Double latitudeDelta, @RequestParam Double longitudeDelta) {
         return new ApiResponse<>(bakeryService.findBakeryListByFilter(username, latitude, longitude, latitudeDelta, longitudeDelta, sort));

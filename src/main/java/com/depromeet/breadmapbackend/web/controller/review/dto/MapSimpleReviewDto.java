@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.review.dto;
 
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +10,7 @@ public class MapSimpleReviewDto {
     private Long id;
     private String content;
 
-    public MapSimpleReviewDto(BreadReview review) {
+    public MapSimpleReviewDto(Review review) {
         this.id = review.getId();
         this.content = review.getContent();
     }
