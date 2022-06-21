@@ -39,8 +39,12 @@ class BakeryControllerTest extends ControllerTest {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
 
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
