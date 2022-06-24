@@ -9,7 +9,7 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
@@ -97,13 +97,13 @@ public class FlagServiceImpl implements FlagService {
                         .bakery(flagBakery.getBakery())
 //                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList().stream().map(BreadReview::getRating)
 //                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
-                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList()
+                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
                                 .stream().map(br -> {
                                     return Arrays.stream(br.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
                                 }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
-                        .reviewNum(flagBakery.getBakery().getBreadReviewList().size())
-                        .simpleReviewList(flagBakery.getBakery().getBreadReviewList().stream()
-                                .sorted(Comparator.comparing(BreadReview::getId).reversed()).map(MapSimpleReviewDto::new)
+                        .reviewNum(flagBakery.getBakery().getReviewList().size())
+                        .simpleReviewList(flagBakery.getBakery().getReviewList().stream()
+                                .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
                                 .limit(3).collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
     }

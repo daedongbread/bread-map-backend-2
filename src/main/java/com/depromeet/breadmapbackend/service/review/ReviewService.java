@@ -1,15 +1,22 @@
 package com.depromeet.breadmapbackend.service.review;
 
-import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDTO;
+import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
+import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ReviewService {
-
-    List<ReviewDTO> getAllReviewList();
-
-    List<ReviewDTO> getBakeryReviewList(long bakeryId);
-
-    Object addReview(Map<String, Object> data);
+    List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort);
+    List<ReviewDto> getAllBakeryReviewList(Long bakeryId, ReviewSortType sort);
+    ReviewDetailDto getReview(Long reviewId);
+    void addReview(String username, Long bakeryId, ReviewRequest request);
+    void removeReview(String username, Long reviewId);
+    List<UserReviewDto> getUserReviewList(String username);
+    void reviewLike(String username, Long reviewId);
+    void reviewUnlike(String username, Long reviewId);
+    List<ReviewCommentDto> getReviewCommentList(Long reviewId);
+    void addReviewComment(String username, Long reviewId, ReviewCommentRequest request);
+    void removeReviewComment(String username, Long reviewId, Long commentId);
+    void reviewCommentLike(String username, Long reviewId, Long commentId);
+    void reviewCommentUnlike(String username, Long reviewId, Long commentId);
 }

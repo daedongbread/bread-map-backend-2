@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.advice;
 
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
+import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
@@ -9,7 +10,6 @@ import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundExce
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -212,6 +212,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 빵이 존재하지 않을 때
+     */
+    @ExceptionHandler(BreadNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse breadNotFoundException(BreadNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 이미 존재하는 리스트일 때
      */
     @ExceptionHandler(FlagAlreadyException.class)
@@ -253,6 +262,69 @@ public class ExceptionAdvice {
     @ExceptionHandler(FlagBakeryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse flagBakeryNotFoundException(FlagBakeryNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 존재하지 않은 리뷰일 때
+     */
+    @ExceptionHandler(ReviewNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse breadReviewNotFoundException(ReviewNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 좋아요를 누른 리뷰일 때
+     */
+    @ExceptionHandler(ReviewLikeAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse reviewLikeAlreadyException(ReviewLikeAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 좋아요를 취소한 리뷰일 때
+     */
+    @ExceptionHandler(ReviewUnlikeAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse reviewUnlikeAlreadyException(ReviewUnlikeAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 삭제된 리뷰일 때
+     */
+    @ExceptionHandler(ReviewUnusedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse reviewUnusedException(ReviewUnusedException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 존재하지 않은 댓글일 때
+     */
+    @ExceptionHandler(ReviewCommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse reviewCommentNotFoundException(ReviewCommentNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 좋아요를 누른 댓글일 때
+     */
+    @ExceptionHandler(ReviewCommentLikeAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse reviewCommentLikeAlreadyException(ReviewCommentLikeAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 좋아요를 취소한 댓글일 때
+     */
+    @ExceptionHandler(ReviewCommentUnlikeAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse reviewCommentUnlikeAlreadyException(ReviewCommentUnlikeAlreadyException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 public class BakeryDto {
     private BakeryInfo info;
     private List<BreadDto> menu;
-//    private List<> reviewList;
     private List<FacilityInfo> facilityInfoList;
 
     @Builder

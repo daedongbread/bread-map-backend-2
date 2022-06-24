@@ -7,17 +7,13 @@ import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -42,9 +38,13 @@ class BakeryControllerTest extends ControllerTest {
     public void setup() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
-        breadRatingRepositroy.deleteAllInBatch();
-        breadReviewRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
 
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
@@ -66,15 +66,15 @@ class BakeryControllerTest extends ControllerTest {
         breadRepository.save(bread1);
         breadRepository.save(bread2);
 
-        BreadReview review1 = BreadReview.builder().user(user).bakery(bakery1).content("content1").build();
-        BreadReview review2 = BreadReview.builder().user(user).bakery(bakery2).content("content1").build();
-        breadReviewRepository.save(review1);
-        breadReviewRepository.save(review2);
+        Review review1 = Review.builder().user(user).bakery(bakery1).content("content1").build();
+        Review review2 = Review.builder().user(user).bakery(bakery2).content("content1").build();
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
 
-        BreadRating rating1 = BreadRating.builder().bread(bread1).breadReview(review1).rating(4L).build();
-        BreadRating rating2 = BreadRating.builder().bread(bread2).breadReview(review2).rating(4L).build();
-        breadRatingRepositroy.save(rating1);
-        breadRatingRepositroy.save(rating2);
+        BreadRating rating1 = BreadRating.builder().bread(bread1).review(review1).rating(4L).build();
+        BreadRating rating2 = BreadRating.builder().bread(bread2).review(review2).rating(4L).build();
+        breadRatingRepository.save(rating1);
+        breadRatingRepository.save(rating2);
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.FacilityInfoListConverter;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.review.BreadReview;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
 
@@ -52,7 +52,7 @@ public class Bakery extends BaseEntity {
     private List<Bread> breadList = new ArrayList<>();
 
     @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BreadReview> breadReviewList = new ArrayList<>();
+    private List<Review> reviewList = new ArrayList<>();
 
     @Convert(converter = FacilityInfoListConverter.class)
     private List<FacilityInfo> facilityInfoList = new ArrayList<>();

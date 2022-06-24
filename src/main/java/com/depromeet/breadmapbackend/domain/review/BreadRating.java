@@ -1,9 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -29,13 +27,13 @@ public class BreadRating extends BaseEntity{
 //    @JoinColumn(name = "bakery_id")
 //    private Bakery bakery;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "bread_id")
     private Bread bread;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "review_id")
-    private BreadReview breadReview;
+    private Review review;
 
     @Column(nullable = false)
     private Long rating;
@@ -44,11 +42,11 @@ public class BreadRating extends BaseEntity{
 //    private boolean isUse;
 
     @Builder
-    private BreadRating(/*User user, Bakery bakery, */Bread bread, BreadReview breadReview, Long rating/*, boolean isUse*/) {
+    private BreadRating(/*User user, Bakery bakery, */Bread bread, Review review, Long rating/*, boolean isUse*/) {
 //        this.user = user;
 //        this.bakery = bakery;
         this.bread = bread;
-        this.breadReview = breadReview;
+        this.review = review;
         this.rating = rating;
 //        this.isUse = isUse;
     }

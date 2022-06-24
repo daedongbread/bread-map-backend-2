@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum SortType {
+public enum BakerySortType {
     distance,
     popular;
 }
