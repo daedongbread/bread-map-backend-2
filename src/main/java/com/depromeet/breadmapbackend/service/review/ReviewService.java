@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.service.review;
 
 import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
+import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface ReviewService {
     ReviewDetailDto getReview(Long reviewId);
     void addReview(String username, Long bakeryId, ReviewRequest request);
     void removeReview(String username, Long reviewId);
-    List<UserReviewDto> getUserReviewList(String username);
+//    List<UserReviewDto> getUserReviewList(String username);
     void reviewLike(String username, Long reviewId);
     void reviewUnlike(String username, Long reviewId);
     List<ReviewCommentDto> getReviewCommentList(Long reviewId);

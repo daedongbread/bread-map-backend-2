@@ -95,6 +95,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].userImage").description("유저 이미지"),
                                 fieldWithPath("data.[].nickName").description("유저 닉네임"),
                                 fieldWithPath("data.[].reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.[].followerNum").description("유저 팔로워 수"),
                                 fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
                                 fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
                                 fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
@@ -128,6 +129,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].userImage").description("유저 이미지"),
                                 fieldWithPath("data.[].nickName").description("유저 닉네임"),
                                 fieldWithPath("data.[].reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.[].followerNum").description("유저 팔로워 수"),
                                 fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
                                 fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
                                 fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
@@ -161,6 +163,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.userImage").description("유저 이미지"),
                                 fieldWithPath("data.nickName").description("유저 닉네임"),
                                 fieldWithPath("data.reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.followerNum").description("유저 팔로워 수"),
                                 fieldWithPath("data.breadRatingDtoList").description("리뷰 빵 점수 리스트"),
                                 fieldWithPath("data.breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
                                 fieldWithPath("data.breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
@@ -194,7 +197,7 @@ class ReviewControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void addReview() throws Exception{
+    void addReview() throws Exception {
         String object = objectMapper.writeValueAsString(ReviewRequest.builder()
                 .breadRatingList(Arrays.asList(
                         ReviewRequest.BreadRatingRequest.builder().breadId(bread.getId()).rating(5L).build()))
@@ -239,30 +242,32 @@ class ReviewControllerTest extends ControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @Test
-//    @Transactional
-    void getUserReviewList() throws Exception {
-        mockMvc.perform(get("/review")
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("review/get/user",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        responseFields(
-                                fieldWithPath("data.[].id").description("리뷰 고유 번호"),
-                                fieldWithPath("data.[].bakeryName").description("빵집 이름"),
-                                fieldWithPath("data.[].bakeryAddress").description("빵집 주소"),
-                                fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
-                                fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
-                                fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
-                                fieldWithPath("data.[].imageList").description("리뷰 이미지"),
-                                fieldWithPath("data.[].content").description("리뷰 내용"),
-                                fieldWithPath("data.[].createdAt").description("리뷰 생성일")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
+//    @Test
+////    @Transactional
+//    void getUserReviewList() throws Exception {
+//        mockMvc.perform(get("/review")
+//                .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("review/get/user",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        responseFields(
+//                                fieldWithPath("data.[].id").description("리뷰 고유 번호"),
+//                                fieldWithPath("data.[].bakeryName").description("빵집 이름"),
+//                                fieldWithPath("data.[].bakeryAddress").description("빵집 주소"),
+//                                fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
+//                                fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
+//                                fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
+//                                fieldWithPath("data.[].imageList").description("리뷰 이미지"),
+//                                fieldWithPath("data.[].content").description("리뷰 내용"),
+//                                fieldWithPath("data.[].likeNum").description("리뷰 좋아요 수"),
+//                                fieldWithPath("data.[].commentNum").description("리뷰 댓글 수"),
+//                                fieldWithPath("data.[].createdAt").description("리뷰 생성일")
+//                        )
+//                ))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
 //    @Transactional

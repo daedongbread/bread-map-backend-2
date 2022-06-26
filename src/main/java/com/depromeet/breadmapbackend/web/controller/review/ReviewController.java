@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
+import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -48,11 +49,11 @@ public class ReviewController {
         reviewService.removeReview(username, reviewId);
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<UserReviewDto>> getUserReviewList(@CurrentUser String username) {
-        return new ApiResponse<>(reviewService.getUserReviewList(username));
-    }
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public ApiResponse<List<UserReviewDto>> getUserReviewList(@CurrentUser String username) {
+//        return new ApiResponse<>(reviewService.getUserReviewList(username));
+//    }
 
     @PostMapping("/{reviewId}/like")
     @ResponseStatus(HttpStatus.CREATED)

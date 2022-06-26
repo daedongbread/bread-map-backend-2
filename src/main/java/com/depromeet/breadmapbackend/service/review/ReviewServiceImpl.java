@@ -12,8 +12,10 @@ import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
+import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
+import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
+    private final FollowRepository followRepository;
 
     @Transactional(readOnly = true)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){
@@ -45,9 +48,11 @@ public class ReviewServiceImpl implements ReviewService {
         else throw new SortTypeWrongException();
 
         return reviewRepository.findByBakeryId(bakeryId)
-                .stream().filter(Review::isUse).map(br -> {
-                    return new ReviewDto(br, Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId())));
-                })
+                .stream().filter(Review::isUse).map(br -> new ReviewDto(br,
+//                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId())),
+                        reviewRepository.countByUser(br.getUser()),
+                        followRepository.countByFromUser(br.getUser())
+                ))
                 .sorted(comparing)
                 .limit(3)
                 .collect(Collectors.toList());
@@ -62,9 +67,11 @@ public class ReviewServiceImpl implements ReviewService {
         else throw new SortTypeWrongException();
 
         return reviewRepository.findByBakeryId(bakeryId)
-                .stream().filter(Review::isUse).map(br -> {
-                    return new ReviewDto(br, Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId())));
-                })
+                .stream().filter(Review::isUse).map(br -> new ReviewDto(br,
+//                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId()))
+                        reviewRepository.countByUser(br.getUser()),
+                        followRepository.countByFromUser(br.getUser())
+                ))
                 .sorted(comparing)
                 .collect(Collectors.toList());
     }
@@ -75,7 +82,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ReviewDetailDto.builder()
                 .review(review)
-                .reviewNum(Math.toIntExact(reviewRepository.countByUserId(review.getUser().getId())))
+//                .reviewNum(Math.toIntExact(reviewRepository.countByUserId(review.getUser().getId())))
+                .reviewNum(reviewRepository.countByUser(review.getUser()))
+                .followerNum(followRepository.countByToUser(review.getUser()))
                 .build();
     }
 
@@ -108,14 +117,14 @@ public class ReviewServiceImpl implements ReviewService {
         review.useChange();
     }
 
-    @Transactional(readOnly = true)
-    public List<UserReviewDto> getUserReviewList(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        return reviewRepository.findByUserId(user.getId())
-                .stream().filter(Review::isUse).map(UserReviewDto::new)
-                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
-                .collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true)
+//    public List<UserReviewDto> getUserReviewList(String username) {
+//        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+//        return reviewRepository.findByUserId(user.getId())
+//                .stream().filter(Review::isUse).map(UserReviewDto::new)
+//                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     public void reviewLike(String username, Long reviewId) {
