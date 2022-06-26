@@ -14,7 +14,6 @@ import java.util.List;
 public class ReviewRequest {
     private List<BreadRatingRequest> breadRatingList;
     private String content;
-    private List<String> imageList;
 
     @Getter
     @Builder
