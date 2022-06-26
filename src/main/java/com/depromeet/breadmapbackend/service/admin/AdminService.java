@@ -7,4 +7,5 @@ import java.util.List;
 public interface AdminService {
     List<AdminAllBakeryDto> getAllBakeryList();
     AdminBakeryDto getBakeryDetail(Long bakeryId);
+    void addBakery(String username, AddBakeryRequest request);
 }
