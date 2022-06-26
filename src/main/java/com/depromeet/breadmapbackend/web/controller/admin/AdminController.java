@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.web.controller.admin;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
+import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,5 +28,11 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AdminBakeryDto> getBakeryDetail(@PathVariable Long bakeryId) {
         return new ApiResponse<>(adminService.getBakeryDetail(bakeryId));
+    }
+
+    @PostMapping("/addBakery")
+    @ResponseStatus(HttpStatus.OK)
+    public void addBakery(@CurrentUser String username, @RequestBody AddBakeryRequest request) {
+        adminService.addBakery(username, request);
     }
 }
