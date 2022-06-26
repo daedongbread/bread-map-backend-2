@@ -110,7 +110,7 @@ class UserControllerTest extends ControllerTest {
         // then
         result
                 .andDo(print())
-                .andDo(document("/user/reissue",
+                .andDo(document("user/reissue",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
