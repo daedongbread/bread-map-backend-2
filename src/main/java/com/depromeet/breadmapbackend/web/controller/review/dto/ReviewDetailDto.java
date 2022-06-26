@@ -19,7 +19,7 @@ public class ReviewDetailDto {
     private String userImage;
     private String nickName;
     private Integer reviewNum;
-//    private Integer followerNum;
+    private Integer followerNum;
 
     private List<BreadRatingDto> breadRatingDtoList;
     private List<String> imageList;
@@ -32,13 +32,13 @@ public class ReviewDetailDto {
     private List<ReviewCommentDto> comments;
 
     @Builder
-    public ReviewDetailDto(Review review, Integer reviewNum) {
+    public ReviewDetailDto(Review review, Integer reviewNum, Integer followerNum) {
         this.id = review.getId();
         this.userId = review.getUser().getId();
         this.userImage = review.getUser().getProfileImageUrl();
         this.nickName = review.getUser().getNickName();
         this.reviewNum = reviewNum;
-//        this.followerNum;
+        this.followerNum = followerNum;
         this.breadRatingDtoList = review.getRatings().stream().map(BreadRatingDto::new).collect(Collectors.toList());
         this.imageList = review.getImageList();
         this.content = review.getContent();

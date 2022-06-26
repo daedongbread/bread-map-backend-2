@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
+import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
@@ -68,6 +69,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected FlagBakeryRepository flagBakeryRepository;
+
+    @Autowired
+    protected FollowRepository followRepository;
 
     @Autowired
     protected UserService userService;
