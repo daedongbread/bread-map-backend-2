@@ -1,8 +1,12 @@
 package com.depromeet.breadmapbackend.web.advice;
 
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
+import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
+import com.depromeet.breadmapbackend.domain.user.exception.FollowAlreadyException;
+import com.depromeet.breadmapbackend.domain.user.exception.FollowNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
@@ -325,6 +329,51 @@ public class ExceptionAdvice {
     @ExceptionHandler(ReviewCommentUnlikeAlreadyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse reviewCommentUnlikeAlreadyException(ReviewCommentUnlikeAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 팔로우가 되어 있지 않을 때
+     */
+    @ExceptionHandler(FollowNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse followNotFoundException(FollowNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 팔로우가 되어 있을 때
+     */
+    @ExceptionHandler(FollowAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse followAlreadyException(FollowAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 정렬 조건이 틀렸을 때
+     */
+    @ExceptionHandler(SortTypeWrongException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse sortTypeWrongException(SortTypeWrongException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미지가 존재하지 않을 때
+     */
+    @ExceptionHandler(ImageNotExistException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse imageNotExistException(ImageNotExistException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미지가 유효하지 않을 때
+     */
+    @ExceptionHandler(ImageInvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse imageInvalidException(ImageInvalidException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

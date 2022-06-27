@@ -3,14 +3,16 @@ package com.depromeet.breadmapbackend.service.review;
 import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ReviewService {
     List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort);
     List<ReviewDto> getAllBakeryReviewList(Long bakeryId, ReviewSortType sort);
     ReviewDetailDto getReview(Long reviewId);
-    void addReview(String username, Long bakeryId, ReviewRequest request);
+    void addReview(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException;
     void removeReview(String username, Long reviewId);
 //    List<UserReviewDto> getUserReviewList(String username);
     void reviewLike(String username, Long reviewId);
@@ -20,4 +22,5 @@ public interface ReviewService {
     void removeReviewComment(String username, Long reviewId, Long commentId);
     void reviewCommentLike(String username, Long reviewId, Long commentId);
     void reviewCommentUnlike(String username, Long reviewId, Long commentId);
+    void reviewReport(Long reviewId, ReviewReportRequest request);
 }

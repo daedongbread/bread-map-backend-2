@@ -9,22 +9,29 @@ import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
+import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportRequest;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BreadReportRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+
+import java.util.UUID;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,6 +43,10 @@ class BakeryControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
+        bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryDeleteReportRepository.deleteAllInBatch();
+        bakeryAddReportRepository.deleteAllInBatch();
+        breadAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
@@ -116,7 +127,6 @@ class BakeryControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findBakeryListByFilter() throws Exception {
-
         Flag flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
@@ -195,5 +205,97 @@ class BakeryControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void bakeryUpdateReport() throws Exception {
+        String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
+                .name("newBakery").location("newLocation").content("newContent").build());
+
+        mockMvc.perform(post("/bakery/report/{bakeryId}/update", bakery1.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken())
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("bakery/report/update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestFields(
+                                fieldWithPath("name").description("수정 빵집 이름"),
+                                fieldWithPath("location").description("수정 빵집 위치"),
+                                fieldWithPath("content").description("수정 사항")
+                        )
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void bakeryDeleteReport() throws Exception {
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/bakery/report/{bakeryId}/delete", bakery1.getId())
+                .file(new MockMultipartFile("file", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/report/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParts(partWithName("file").description("삭제 요청한 빵집 이미지"))
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void bakeryAddReport() throws Exception {
+        String object = objectMapper.writeValueAsString(BakeryReportRequest.builder()
+                .name("newBakery").location("newLocation").content("newContent").build());
+
+        mockMvc.perform(post("/bakery/report/add")
+                .header("Authorization", "Bearer " + token.getAccessToken())
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("bakery/report/add",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(
+                                fieldWithPath("name").description("제보 빵집 이름"),
+                                fieldWithPath("location").description("제보 빵집 위치"),
+                                fieldWithPath("content").description("추천 이유")
+                        )
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void breadAddReport() throws Exception {
+        String object = objectMapper.writeValueAsString(BreadReportRequest.builder().name("newBread").price(4000).build());
+        MockMultipartFile request =
+                new MockMultipartFile("request", "", "application/json", object.getBytes());
+
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/bakery/report/{bakeryId}", bakery1.getId())
+                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(request).accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/report/bread",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParts(
+                                partWithName("request").description("제보 빵 정보"),
+                                partWithName("files").description("제보 빵 이미지들")
+                        ),
+                        requestPartBody("request"),
+                        requestPartFields("request",
+                                fieldWithPath("name").description("제보 빵 이름"),
+                                fieldWithPath("price").description("제보 빵 가격")
+                        )
+                ))
+                .andExpect(status().isCreated());
     }
 }

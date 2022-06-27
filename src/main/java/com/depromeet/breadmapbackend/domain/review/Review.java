@@ -51,15 +51,18 @@ public class Review extends BaseEntity {
     private List<ReviewComment> comments = new ArrayList<>();
 
     @Builder
-    private Review(User user, Bakery bakery, String content, List<String> imageList, boolean isUse) {
+    private Review(User user, Bakery bakery, String content, boolean isUse) {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
-        this.imageList = imageList;
         this.isUse = isUse;
     }
 
     public void useChange() { this.isUse = false; }
+
+    public void addImage(String image) {
+        this.imageList.add(image);
+    }
 
     public void addRating(BreadRating breadRating){
         this.ratings.add(breadRating);

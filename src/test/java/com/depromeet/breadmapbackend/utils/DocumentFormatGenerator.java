@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.restdocs.utils;
+package com.depromeet.breadmapbackend.utils;
 
 import org.springframework.restdocs.snippet.Attributes;
 

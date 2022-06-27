@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -39,8 +41,9 @@ public class ReviewController {
 
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request){
-        reviewService.addReview(username, bakeryId, request);
+    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId,
+                          @RequestPart ReviewRequest request, @RequestPart List<MultipartFile> files) throws IOException {
+        reviewService.addReview(username, bakeryId, request, files);
     }
 
     @DeleteMapping("/{reviewId}")
@@ -95,5 +98,11 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void reviewCommentUnlike(@CurrentUser String username, @PathVariable Long reviewId, @PathVariable Long commentId) {
         reviewService.reviewCommentUnlike(username, reviewId, commentId);
+    }
+
+    @PostMapping("/{reviewId}/report")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void reviewReport(@PathVariable Long reviewId, @RequestBody ReviewReportRequest request) {
+        reviewService.reviewReport(reviewId, request);
     }
 }

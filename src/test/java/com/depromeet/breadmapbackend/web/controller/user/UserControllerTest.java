@@ -10,13 +10,10 @@ import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.FollowAlreadyException;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
-import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
+import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.RefreshToken;
-import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRefreshRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
@@ -35,7 +31,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -87,7 +82,8 @@ class UserControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);
 
-        Review review = Review.builder().user(user1).bakery(bakery).content("content1").imageList(Arrays.asList("reviewImage1")).isUse(true).build();
+        Review review = Review.builder().user(user1).bakery(bakery).content("content1").isUse(true).build();
+        review.addImage("reviewImage1");
         reviewRepository.save(review);
 
         BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();

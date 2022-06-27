@@ -7,6 +7,8 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundExcept
 import com.depromeet.breadmapbackend.domain.bakery.exception.SortTypeWrongException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.common.FileConverter;
+import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
@@ -14,13 +16,16 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +43,9 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
     private final FollowRepository followRepository;
+    private final ReviewReportRepository reviewReportRepository;
+    private final FileConverter fileConverter;
+    private final S3Uploader s3Uploader;
 
     @Transactional(readOnly = true)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){
@@ -89,13 +97,17 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional
-    public void addReview(String username, Long bakeryId, ReviewRequest request){
+    public void addReview(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
         Review review = Review.builder()
-                .user(user).bakery(bakery).content(request.getContent())
-                .imageList(request.getImageList()).isUse(true).build();
+                .user(user).bakery(bakery).content(request.getContent()).isUse(true).build();
+        for (MultipartFile file : files) {
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
+            String image = s3Uploader.upload(file, imagePath);
+            review.addImage(image);
+        }
         reviewRepository.save(review);
 
         request.getBreadRatingList().forEach(breadRatingRequest -> {
@@ -241,5 +253,15 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).orElseThrow(ReviewCommentUnlikeAlreadyException::new);
         reviewComment.minusLike(reviewCommentLike);
         reviewCommentLikeRepository.delete(reviewCommentLike);
+    }
+
+    @Transactional
+    public void reviewReport(Long reviewId, ReviewReportRequest request) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
+
+        ReviewReport reviewReport = ReviewReport.builder()
+                .review(review).reason(request.getReason()).content(request.getContent()).build();
+
+        reviewReportRepository.save(reviewReport);
     }
 }
