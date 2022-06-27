@@ -42,7 +42,7 @@ public class ReviewController {
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void addReview(@CurrentUser String username, @PathVariable Long bakeryId,
-                          @RequestBody ReviewRequest request, List<MultipartFile> files) throws IOException {
+                          @RequestPart ReviewRequest request, @RequestPart List<MultipartFile> files) throws IOException {
         reviewService.addReview(username, bakeryId, request, files);
     }
 

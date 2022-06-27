@@ -11,11 +11,13 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BakeryUpdate extends BaseEntity {
+public class BakeryUpdateReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
     @Column(nullable = false)
@@ -28,7 +30,7 @@ public class BakeryUpdate extends BaseEntity {
     private String content;
 
     @Builder
-    public BakeryUpdate(Bakery bakery, String name, String location, String content) {
+    public BakeryUpdateReport(Bakery bakery, String name, String location, String content) {
         this.bakery = bakery;
         this.name = name;
         this.location = location;

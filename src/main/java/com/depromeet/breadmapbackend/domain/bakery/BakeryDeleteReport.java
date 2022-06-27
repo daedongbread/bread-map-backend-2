@@ -11,19 +11,20 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BakeryDelete extends BaseEntity {
+public class BakeryDeleteReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
     @Column(nullable = false)
     private String image;
 
     @Builder
-    public BakeryDelete(Bakery bakery, String image) {
+    public BakeryDeleteReport(Bakery bakery, String image) {
         this.bakery = bakery;
         this.image = image;
     }

@@ -45,11 +45,10 @@ spring:
 cloud:
   aws:
     region:
-      auto: false
       static: ap-northeast-2
     s3:
-      bucket: ${S3_BUCKET}
+      bucket: bread-map
     stack:
       auto: false
     cloudFront:
-      distributionDomain: ${CLOUDFRONT}
+      distributionDomain: cloudfront

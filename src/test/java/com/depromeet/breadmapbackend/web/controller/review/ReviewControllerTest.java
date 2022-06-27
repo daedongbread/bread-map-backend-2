@@ -5,7 +5,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.restdocs.utils.ControllerTest;
+import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewCommentRequest;
@@ -13,8 +13,11 @@ import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -24,6 +27,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,7 +35,8 @@ class ReviewControllerTest extends ControllerTest {
     private User user;
     private JwtToken token;
     private Bakery bakery;
-    private Bread bread;
+    private Bread bread1;
+    private Bread bread2;
     private Review review;
     private ReviewComment comment1;
     private ReviewComment comment2;
@@ -57,11 +62,14 @@ class ReviewControllerTest extends ControllerTest {
                 .name("bakery1").streetAddress("street").build();
         bakery.addFacilityInfo(FacilityInfo.PARKING);
         bakeryRepository.save(bakery);
-        bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
-        breadRepository.save(bread);
-        review = Review.builder().user(user).bakery(bakery).content("content1").imageList(Arrays.asList("image1")).isUse(true).build();
+        bread1 = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
+        bread2 = Bread.builder().bakery(bakery).name("bread2").price(4000).build();
+        breadRepository.save(bread1);
+        breadRepository.save(bread2);
+        review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();
+        review.addImage("image1");
         reviewRepository.save(review);
-        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
+        BreadRating rating = BreadRating.builder().bread(bread1).review(review).rating(4L).build();
         breadRatingRepository.save(rating);
 
         ReviewLike reviewLike = ReviewLike.builder().review(review).user(user).build();
@@ -200,26 +208,33 @@ class ReviewControllerTest extends ControllerTest {
     void addReview() throws Exception {
         String object = objectMapper.writeValueAsString(ReviewRequest.builder()
                 .breadRatingList(Arrays.asList(
-                        ReviewRequest.BreadRatingRequest.builder().breadId(bread.getId()).rating(5L).build()))
-                .content("review add test").imageList(Arrays.asList("image1", "image2")).build());
+                        ReviewRequest.BreadRatingRequest.builder().breadId(bread1.getId()).rating(5L).build(),
+                        ReviewRequest.BreadRatingRequest.builder().breadId(bread2.getId()).rating(4L).build()
+                )).content("review add test").build());
+        MockMultipartFile request =
+                new MockMultipartFile("request", "", "application/json", object.getBytes());
 
-        mockMvc.perform(post("/review/{bakeryId}", bakery.getId())
-                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/review/{bakeryId}", bakery.getId())
+                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/add",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParts(
+                                partWithName("request").description("리뷰 정보"),
+                                partWithName("files").description("리뷰 이미지들")
                         ),
-                        requestFields(
+                        requestPartBody("request"),
+                        requestPartFields("request",
                                 fieldWithPath("breadRatingList").description("리뷰 빵 점수 리스트"),
                                 fieldWithPath("breadRatingList.[].breadId").description("리뷰 빵 이름"),
                                 fieldWithPath("breadRatingList.[].rating").description("리뷰 빵 점수"),
-                                fieldWithPath("content").description("리뷰 내용"),
-                                fieldWithPath("imageList").description("리뷰 이미지")
+                                fieldWithPath("content").description("리뷰 내용")
                         )
                 ))
                 .andExpect(status().isCreated());

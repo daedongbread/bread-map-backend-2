@@ -11,8 +11,8 @@ public interface BakeryService {
     List<BakeryCardDto> findBakeryList(Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
     List<BakeryFilterCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
     BakeryDto findBakery(Long bakeryId);
-    void bakeryUpdate(Long bakeryId, BakeryUpdateRequest request);
-    void bakeryDelete(Long bakeryId, MultipartFile file) throws IOException;
-    void bakeryReport(BakeryReportRequest request);
-    void breadReport(Long bakeryId, BreadReportRequest request, List<MultipartFile> files) throws IOException;
+    void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request);
+    void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException;
+    void bakeryAddReport(BakeryReportRequest request);
+    void breadAddReport(Long bakeryId, BreadReportRequest request, List<MultipartFile> files) throws IOException;
 }

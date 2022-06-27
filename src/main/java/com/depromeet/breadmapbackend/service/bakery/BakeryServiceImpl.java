@@ -39,10 +39,10 @@ public class BakeryServiceImpl implements BakeryService {
     private final BreadRatingRepository breadRatingRepository;
     private final UserRepository userRepository;
     private final FlagRepositorySupport flagRepositorySupport;
-    private final BakeryUpdateRepository bakeryUpdateRepository;
-    private final BakeryDeleteRepository bakeryDeleteRepository;
-    private final BakeryReportRepository bakeryReportRepository;
-    private final BreadReportRepository breadReportRepository;
+    private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
+    private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
+    private final BakeryAddReportRepository bakeryAddReportRepository;
+    private final BreadAddReportRepository breadAddReportRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
 
@@ -138,44 +138,44 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional
-    public void bakeryUpdate(Long bakeryId, BakeryUpdateRequest request) {
+    public void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-        BakeryUpdate bakeryUpdate = BakeryUpdate.builder()
+        BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
                 .bakery(bakery).name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
-        bakeryUpdateRepository.save(bakeryUpdate);
+        bakeryUpdateReportRepository.save(bakeryUpdateReport);
     }
 
     @Transactional
-    public void bakeryDelete(Long bakeryId, MultipartFile file) throws IOException {
+    public void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
         if(file.isEmpty()) throw new ImageNotExistException();
 
-        String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.bakeryDeleteImage, bakeryId);
+        String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.bakeryDeleteReportImage, bakeryId);
         String image = s3Uploader.upload(file, imagePath);
 
-        BakeryDelete bakeryDelete = BakeryDelete.builder().bakery(bakery).image(image).build();
-        bakeryDeleteRepository.save(bakeryDelete);
+        BakeryDeleteReport bakeryDeleteReport = BakeryDeleteReport.builder().bakery(bakery).image(image).build();
+        bakeryDeleteReportRepository.save(bakeryDeleteReport);
     }
 
     @Transactional
-    public void bakeryReport(BakeryReportRequest request) {
-        BakeryReport bakeryReport = BakeryReport.builder()
+    public void bakeryAddReport(BakeryReportRequest request) {
+        BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
                 .name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
-        bakeryReportRepository.save(bakeryReport);
+        bakeryAddReportRepository.save(bakeryAddReport);
     }
 
     @Transactional
-    public void breadReport(Long bakeryId, BreadReportRequest request, List<MultipartFile> files) throws IOException {
+    public void breadAddReport(Long bakeryId, BreadReportRequest request, List<MultipartFile> files) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
-        BreadReport breadReport = BreadReport.builder()
+        BreadAddReport breadAddReport = BreadAddReport.builder()
                 .bakery(bakery).name(request.getName()).price(request.getPrice()).build();
         for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.breadReportImage, bakeryId);
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.breadAddReportImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
-            breadReport.addImage(image);
+            breadAddReport.addImage(image);
         }
-        breadReportRepository.save(breadReport);
+        breadAddReportRepository.save(breadAddReport);
     }
 }

@@ -1,7 +1,6 @@
-package com.depromeet.breadmapbackend.restdocs.utils;
+package com.depromeet.breadmapbackend.utils;
 
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
+@Import({AmazonS3MockConfig.class})
 public abstract class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
@@ -72,6 +73,18 @@ public abstract class ControllerTest {
 
     @Autowired
     protected FollowRepository followRepository;
+
+    @Autowired
+    protected BakeryUpdateReportRepository bakeryUpdateReportRepository;
+
+    @Autowired
+    protected BakeryDeleteReportRepository bakeryDeleteReportRepository;
+
+    @Autowired
+    protected BakeryAddReportRepository bakeryAddReportRepository;
+
+    @Autowired
+    protected BreadAddReportRepository breadAddReportRepository;
 
     @Autowired
     protected UserService userService;

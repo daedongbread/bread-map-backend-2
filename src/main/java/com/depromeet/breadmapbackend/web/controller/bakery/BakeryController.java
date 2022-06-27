@@ -45,28 +45,28 @@ public class BakeryController {
         return new ApiResponse<>(bakeryService.findBakery(bakeryId));
     }
 
-    @PostMapping("/{bakeryId}/update")
+    @PostMapping("/report/{bakeryId}/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryUpdate(@PathVariable Long bakeryId, @RequestBody BakeryUpdateRequest request) {
-        bakeryService.bakeryUpdate(bakeryId, request);
+    public void bakeryUpdateReport(@PathVariable Long bakeryId, @RequestBody BakeryUpdateRequest request) {
+        bakeryService.bakeryUpdateReport(bakeryId, request);
     }
 
-    @PostMapping("/{bakeryId}/delete")
+    @PostMapping("/report/{bakeryId}/delete")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryDelete(@PathVariable Long bakeryId, @RequestPart MultipartFile file) throws IOException {
-        bakeryService.bakeryDelete(bakeryId, file);
+    public void bakeryDeleteReport(@PathVariable Long bakeryId, @RequestPart MultipartFile file) throws IOException {
+        bakeryService.bakeryDeleteReport(bakeryId, file);
     }
 
-    @PostMapping("/report")
+    @PostMapping("/report/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryReport(@RequestBody BakeryReportRequest request) {
-        bakeryService.bakeryReport(request);
+    public void bakeryAddReport(@RequestBody BakeryReportRequest request) {
+        bakeryService.bakeryAddReport(request);
     }
 
-    @PostMapping("/{bakeryId}/report")
+    @PostMapping("/report/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void breadReport(@PathVariable Long bakeryId, @RequestBody BreadReportRequest request,
-                            List<MultipartFile> files) throws IOException {
-        bakeryService.breadReport(bakeryId, request, files);
+    public void breadAddReport(@PathVariable Long bakeryId, @RequestPart BreadReportRequest request,
+                               @RequestPart List<MultipartFile> files) throws IOException {
+        bakeryService.breadAddReport(bakeryId, request, files);
     }
 }

@@ -104,7 +104,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = Review.builder()
                 .user(user).bakery(bakery).content(request.getContent()).isUse(true).build();
         for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.breadReportImage, bakeryId);
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
             review.addImage(image);
         }

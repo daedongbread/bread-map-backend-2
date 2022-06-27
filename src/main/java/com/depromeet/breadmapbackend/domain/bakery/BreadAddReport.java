@@ -14,12 +14,13 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BreadReport extends BaseEntity {
+public class BreadAddReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
     @Column(nullable = false)
@@ -32,7 +33,7 @@ public class BreadReport extends BaseEntity {
     private List<String> images = new ArrayList<>();
 
     @Builder
-    public BreadReport(Bakery bakery, String name, Integer price) {
+    public BreadAddReport(Bakery bakery, String name, Integer price) {
         this.bakery = bakery;
         this.name = name;
         this.price = price;

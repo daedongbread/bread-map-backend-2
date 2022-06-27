@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BakeryReport extends BaseEntity {
+public class BakeryAddReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +25,7 @@ public class BakeryReport extends BaseEntity {
     private String content;
 
     @Builder
-    public BakeryReport(String name, String location, String content) {
+    public BakeryAddReport(String name, String location, String content) {
         this.name = name;
         this.location = location;
         this.content = content;

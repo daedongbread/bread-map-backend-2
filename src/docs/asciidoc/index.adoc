@@ -13,7 +13,7 @@ endif::[]
 :operation-http-response-title: Example Response
 
 == 소개
-DaeDongBread API
+대동빵지도 API
 
 === Domain
 |===
@@ -54,15 +54,31 @@ operation::user/following[snippets='http-request,request-headers,http-response']
 - 빵집 지도 API
 - 빵집 지도 필터 API
 - 빵집 단건 조회 API
+- 빵집 수정 요청 API
+- 빵집 삭제 요청 API
+- 빵집 추가 요청 API
+- 빵 추가 요청 API
 
-=== 빵집 지도 [GET]
+=== 빵집 지도 API [GET]
 operation::bakery/find/default[snippets='http-request,request-parameters,http-response,response-fields']
 
-=== 빵집 지도 필터 [GET]
+=== 빵집 지도 필터 API [GET]
 operation::bakery/find/filter[snippets='http-request,request-parameters,http-response,response-fields']
 
-=== 빵집 단건 조회 [GET]
+=== 빵집 단건 조회 API [GET]
 operation::bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== 빵집 수정 요청 API [POST]
+operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== 빵집 삭제 요청 API [POST]
+operation::bakery/report/delete[snippets='http-request,request-headers,path-parameters,request-parts,http-response']
+
+=== 빵집 추가 요청 API [POST]
+operation::bakery/report/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 빵 추가 요청 API [POST]
+operation::bakery/report/bread[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
 
 == 깃발 API
 - 깃발 간단 리스트 조회 API
@@ -115,16 +131,16 @@ operation::flag/bakeryDelete[snippets='http-request,request-headers,path-paramet
 - 리뷰 댓글 좋아요 취소 API
 
 === 리뷰 간단 조회 API [GET]
-operation::review/get/simple[snippets='http-request,request-headers,http-response,response-fields']
+operation::review/get/simple[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 전체 조회 API [GET]
-operation::review/get/all[snippets='http-request,request-headers,http-response,response-fields']
+operation::review/get/all[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 상세 조회 API [GET]
-operation::review/get[snippets='http-request,request-headers,http-response,response-fields']
+operation::review/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 추가 API [POST]
-operation::review/add[snippets='http-request,request-headers,request-fields,http-response']
+operation::review/add[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
 
 === 리뷰 삭제 API [DELETE]
 operation::review/remove[snippets='http-request,request-headers,path-parameters,http-response']
