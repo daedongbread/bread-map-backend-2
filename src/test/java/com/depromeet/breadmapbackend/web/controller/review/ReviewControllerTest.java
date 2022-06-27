@@ -9,6 +9,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewCommentRequest;
+import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewReportRequest;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ class ReviewControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
+        reviewReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
@@ -433,5 +435,27 @@ class ReviewControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void reviewReport() throws Exception {
+        String object = objectMapper.writeValueAsString(
+                ReviewReportRequest.builder().reason(ReviewReportReason.COPYRIGHT_THEFT).content("Copyright").build());
+
+        mockMvc.perform(post("/review/{reviewId}/report", review.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken())
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("review/report",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
+                        requestFields(
+                                fieldWithPath("reason").description("리뷰 신고 이유"),
+                                fieldWithPath("content").description("리뷰 신고 내용")
+                        )
+                ))
+                .andExpect(status().isCreated());
     }
 }

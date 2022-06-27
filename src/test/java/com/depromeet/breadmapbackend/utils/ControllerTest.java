@@ -87,6 +87,9 @@ public abstract class ControllerTest {
     protected BreadAddReportRepository breadAddReportRepository;
 
     @Autowired
+    protected ReviewReportRepository reviewReportRepository;
+
+    @Autowired
     protected UserService userService;
 
     @Autowired

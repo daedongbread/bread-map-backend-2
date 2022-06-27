@@ -129,6 +129,7 @@ operation::flag/bakeryDelete[snippets='http-request,request-headers,path-paramet
 - 리뷰 댓글 삭제 API
 - 리뷰 댓글 좋아요 API
 - 리뷰 댓글 좋아요 취소 API
+- 리뷰 신고 API
 
 === 리뷰 간단 조회 API [GET]
 operation::review/get/simple[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
@@ -168,3 +169,6 @@ operation::review/comment/like[snippets='http-request,request-headers,path-param
 
 === 리뷰 댓글 좋아요 취소 API [DELETE]
 operation::review/comment/unlike[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 리뷰 신고 API [POST]
+operation::review/report[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
