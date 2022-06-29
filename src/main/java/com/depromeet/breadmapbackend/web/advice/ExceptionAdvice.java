@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
+import com.depromeet.breadmapbackend.domain.bkreport.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.FollowAlreadyException;
 import com.depromeet.breadmapbackend.domain.user.exception.FollowNotFoundException;
@@ -333,6 +334,7 @@ public class ExceptionAdvice {
     }
 
     /**
+<<<<<<< HEAD
      * 팔로우가 되어 있지 않을 때
      */
     @ExceptionHandler(FollowNotFoundException.class)
@@ -369,11 +371,29 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 이미 등록한 빵집일 일 때
+     */
+    @ExceptionHandler(DuplicateBakeryException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse duplicateBakeryException(DuplicateBakeryException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 이미지가 유효하지 않을 때
      */
     @ExceptionHandler(ImageInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse imageInvalidException(ImageInvalidException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 빵집 제보가 존재하지 않을 때
+     */
+    @ExceptionHandler(BakeryReportNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse reportNotFoundException(BakeryReportNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

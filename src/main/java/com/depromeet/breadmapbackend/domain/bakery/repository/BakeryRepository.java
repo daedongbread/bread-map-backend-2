@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetween(Double leftLatitude, Double rightLatitude, Double downLongitude, Double upLongitude);
     List<Bakery> findAll();
+    Integer countAllByNameEqualsAndStreetAddressEquals(String name, String streetAddress);
     Optional<Bakery> findById(Long bakeryId);
 }
