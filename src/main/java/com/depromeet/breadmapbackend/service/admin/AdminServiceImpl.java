@@ -1,15 +1,19 @@
 package com.depromeet.breadmapbackend.service.admin;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
+import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.DuplicateBakeryException;
+import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +29,7 @@ public class AdminServiceImpl implements AdminService{
     private final BreadRepository breadRepository;
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
-    //private final BkReportRepository bkReportRepository;
+    private final BakeryAddReportRepository bakeryAddReportRepository;
 
     @Transactional(readOnly = true)
     public List<AdminAllBakeryDto> getAllBakeryList() {
@@ -63,24 +67,23 @@ public class AdminServiceImpl implements AdminService{
         });
     }
 
-    /*
+
     @Transactional(readOnly = true)
     public List<BakeryReportDto> getAllBakeryReport() {
-        return bkReportRepository.findAll()
+        return bakeryAddReportRepository.findAll()
                 .stream().map(BakeryReportDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public BakeryReportDto getBakeryReportDetail(Long reportId) {
-        BkReport bkReport = bkReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
-        return new BakeryReportDto(bkReport);
+        BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
+        return new BakeryReportDto(bakeryAddReport);
     }
 
     @Transactional()
     public void updateBakeryReport(Long reportId, UpdateBakeryReportStatusRequest request) {
-        BkReport bkReport = bkReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
-        bkReport.updateStatus(request.getStatus());
+        BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
+        bakeryAddReport.updateStatus(request.getStatus());
     }
-     */
 }
