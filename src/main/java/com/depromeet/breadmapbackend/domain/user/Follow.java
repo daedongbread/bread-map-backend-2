@@ -17,17 +17,17 @@ public class Follow extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_member_id")
-    private User fromMember;
+    @JoinColumn(name = "from_user_id")
+    private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_member_id")
-    private User toMember;
+    @JoinColumn(name = "to_user_id")
+    private User toUser;
 
     @Builder
-    public Follow(User fromMember, User toMember) {
-        this.fromMember = fromMember;
-        this.toMember = toMember;
+    public Follow(User fromUser, User toUser) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
     }
 
 }
