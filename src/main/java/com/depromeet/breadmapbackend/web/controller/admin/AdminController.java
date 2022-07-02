@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.web.controller.admin;
 
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportDto;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +36,10 @@ public class AdminController {
         adminService.addBakery(username, request);
     }
 
+<<<<<<< HEAD
+=======
+    /*
+>>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
     @GetMapping("/getAllBakeryReport")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BakeryReportDto>> getAllBakeryReport() {
@@ -54,4 +57,8 @@ public class AdminController {
     public void updateBakeryReport(@PathVariable Long reportId, @RequestBody UpdateBakeryReportStatusRequest request) {
         adminService.updateBakeryReport(reportId, request);
     }
+<<<<<<< HEAD
+=======
+     */
+>>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
 }

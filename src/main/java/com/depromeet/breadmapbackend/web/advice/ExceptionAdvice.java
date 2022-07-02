@@ -335,6 +335,7 @@ public class ExceptionAdvice {
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * 팔로우가 되어 있지 않을 때
      */
     @ExceptionHandler(FollowNotFoundException.class)
@@ -371,6 +372,8 @@ public class ExceptionAdvice {
     }
 
     /**
+=======
+>>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
      * 이미 등록한 빵집일 일 때
      */
     @ExceptionHandler(DuplicateBakeryException.class)
@@ -378,6 +381,7 @@ public class ExceptionAdvice {
     public ErrorResponse duplicateBakeryException(DuplicateBakeryException e) {
         return new ErrorResponse(e.getMessage());
     }
+<<<<<<< HEAD
 
     /**
      * 이미지가 유효하지 않을 때
@@ -396,4 +400,6 @@ public class ExceptionAdvice {
     public ErrorResponse bakeryReportNotFoundException(BakeryReportNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
+=======
+>>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
 }
