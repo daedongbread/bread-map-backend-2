@@ -1,6 +1,12 @@
 package com.depromeet.breadmapbackend.utils;
 
+<<<<<<< HEAD:src/test/java/com/depromeet/breadmapbackend/utils/ControllerTest.java
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
+=======
+import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.bkreport.BkReportRepository;
+>>>>>>> 739d5b2 (Delete Add Bakery Report files):src/test/java/com/depromeet/breadmapbackend/restdocs/utils/ControllerTest.java
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
@@ -8,7 +14,9 @@ import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
+import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
+import com.depromeet.breadmapbackend.service.bkreport.BkReportService;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.service.user.UserService;
@@ -100,4 +108,7 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ReviewService reviewService;
+
+    @Autowired
+    protected AdminService adminService;
 }

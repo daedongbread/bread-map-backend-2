@@ -6,15 +6,10 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundExcep
 import com.depromeet.breadmapbackend.domain.bakery.exception.DuplicateBakeryException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
-import com.depromeet.breadmapbackend.domain.bkreport.BkReport;
-import com.depromeet.breadmapbackend.domain.bkreport.BkReportRepository;
-import com.depromeet.breadmapbackend.domain.bkreport.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
-import com.depromeet.breadmapbackend.web.controller.bkreport.dto.BakeryReportDto;
-import com.depromeet.breadmapbackend.web.controller.bkreport.dto.UpdateBakeryReportStatusRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +25,7 @@ public class AdminServiceImpl implements AdminService{
     private final BreadRepository breadRepository;
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
-    private final BkReportRepository bkReportRepository;
+    //private final BkReportRepository bkReportRepository;
 
     @Transactional(readOnly = true)
     public List<AdminAllBakeryDto> getAllBakeryList() {
@@ -68,6 +63,7 @@ public class AdminServiceImpl implements AdminService{
         });
     }
 
+    /*
     @Transactional(readOnly = true)
     public List<BakeryReportDto> getAllBakeryReport() {
         return bkReportRepository.findAll()
@@ -86,4 +82,5 @@ public class AdminServiceImpl implements AdminService{
         BkReport bkReport = bkReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
         bkReport.updateStatus(request.getStatus());
     }
+     */
 }

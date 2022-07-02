@@ -4,7 +4,6 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
-import com.depromeet.breadmapbackend.domain.bkreport.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.FollowAlreadyException;
 import com.depromeet.breadmapbackend.domain.user.exception.FollowNotFoundException;
@@ -385,15 +384,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(ImageInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse imageInvalidException(ImageInvalidException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 빵집 제보가 존재하지 않을 때
-     */
-    @ExceptionHandler(BakeryReportNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse reportNotFoundException(BakeryReportNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
