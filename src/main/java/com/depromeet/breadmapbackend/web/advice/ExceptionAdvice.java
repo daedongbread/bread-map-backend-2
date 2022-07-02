@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.web.advice;
 
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
-import com.depromeet.breadmapbackend.domain.bkreport.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
@@ -335,15 +334,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(DuplicateBakeryException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse duplicateBakeryException(DuplicateBakeryException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 빵집 제보가 존재하지 않을 때
-     */
-    @ExceptionHandler(BakeryReportNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse reportNotFoundException(BakeryReportNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
