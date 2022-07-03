@@ -1,28 +1,19 @@
 package com.depromeet.breadmapbackend.service.admin;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-<<<<<<< HEAD
 import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.DuplicateBakeryException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
-=======
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.DuplicateBakeryException;
->>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
-<<<<<<< HEAD
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportDto;
-=======
->>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,11 +29,7 @@ public class AdminServiceImpl implements AdminService{
     private final BreadRepository breadRepository;
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
-<<<<<<< HEAD
     private final BakeryAddReportRepository bakeryAddReportRepository;
-=======
-    //private final BkReportRepository bkReportRepository;
->>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
 
     @Transactional(readOnly = true)
     public List<AdminAllBakeryDto> getAllBakeryList() {
@@ -80,42 +67,23 @@ public class AdminServiceImpl implements AdminService{
         });
     }
 
-<<<<<<< HEAD
 
     @Transactional(readOnly = true)
     public List<BakeryReportDto> getAllBakeryReport() {
         return bakeryAddReportRepository.findAll()
-=======
-    /*
-    @Transactional(readOnly = true)
-    public List<BakeryReportDto> getAllBakeryReport() {
-        return bkReportRepository.findAll()
->>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
                 .stream().map(BakeryReportDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public BakeryReportDto getBakeryReportDetail(Long reportId) {
-<<<<<<< HEAD
         BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
         return new BakeryReportDto(bakeryAddReport);
-=======
-        BkReport bkReport = bkReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
-        return new BakeryReportDto(bkReport);
->>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
     }
 
     @Transactional()
     public void updateBakeryReport(Long reportId, UpdateBakeryReportStatusRequest request) {
-<<<<<<< HEAD
         BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
         bakeryAddReport.updateStatus(request.getStatus());
     }
-=======
-        BkReport bkReport = bkReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
-        bkReport.updateStatus(request.getStatus());
-    }
-     */
->>>>>>> 6dd3eff173e00ee5d4cd6bf4c3385e8785432c14
 }
