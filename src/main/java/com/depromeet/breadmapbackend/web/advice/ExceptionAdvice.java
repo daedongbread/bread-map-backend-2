@@ -334,7 +334,6 @@ public class ExceptionAdvice {
     }
 
     /**
-<<<<<<< HEAD
      * 팔로우가 되어 있지 않을 때
      */
     @ExceptionHandler(FollowNotFoundException.class)

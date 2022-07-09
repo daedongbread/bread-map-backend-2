@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.web.controller.flag;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
@@ -17,6 +18,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -38,9 +42,15 @@ class FlagControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
+        bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryDeleteReportRepository.deleteAllInBatch();
+        bakeryAddReportRepository.deleteAllInBatch();
+        breadAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
+        reviewReportRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
@@ -53,15 +63,16 @@ class FlagControllerTest extends ControllerTest {
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
-        bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").image("testImage").build();
-        bakery.addFacilityInfo(FacilityInfo.PARKING);
+        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
+        bakery = Bakery.builder().domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").image("testImage").build();
         bakeryRepository.save(bakery);
 
         flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
         Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
+
         breadRepository.save(bread);
 
         Review review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();

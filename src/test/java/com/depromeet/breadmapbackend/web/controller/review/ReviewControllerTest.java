@@ -18,6 +18,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -44,10 +46,15 @@ class ReviewControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        reviewReportRepository.deleteAllInBatch();
+        bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryDeleteReportRepository.deleteAllInBatch();
+        bakeryAddReportRepository.deleteAllInBatch();
+        breadAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
+        reviewReportRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
@@ -60,9 +67,9 @@ class ReviewControllerTest extends ControllerTest {
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
-        bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").build();
-        bakery.addFacilityInfo(FacilityInfo.PARKING);
+        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
+        bakery = Bakery.builder().domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
         bakeryRepository.save(bakery);
         bread1 = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         bread2 = Bread.builder().bakery(bakery).name("bread2").price(4000).build();

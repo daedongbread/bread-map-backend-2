@@ -183,19 +183,19 @@ operation::review/report[snippets='http-request,request-headers,path-parameters,
 - 빵집 게시 상태 변경 API
 
 === 모든 빵집 조회 API [GET]
-operation::admin/getAllBakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::admin/getAllBakery[snippets='http-request,request-headers,http-response,response-fields']
 
-=== 모든 빵집 조회 API [GET]
+=== 빵집 조회 API [GET]
 operation::admin/getBakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 빵집 추가 API [POST]
-operation::admin/addBakery[snippets='http-request,request-headers,path-parameters,http-response']
+operation::admin/addBakery[snippets='http-request,request-headers,http-response']
 
 === 모든 빵집 제보 조회 API [GET]
-operation::admin/getAllBakeryReport[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::admin/getAllBakeryReport[snippets='http-request,request-headers,http-response,response-fields']
 
 === 빵집 제보 상세 조회 API [GET]
-operation::admin/getBakeryReport[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::admin/getBakeryReport[snippets='http-request,request-headers,http-response,response-fields']
 
 === 빵집 게시 상태 변경 API [POST]
 operation::admin/updateBakeryReport[snippets='http-request,request-headers,path-parameters,http-response']

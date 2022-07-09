@@ -32,7 +32,7 @@ public class AdminController {
     }
 
     @PostMapping("/addBakery")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void addBakery(@CurrentUser String username, @RequestBody AddBakeryRequest request) {
         adminService.addBakery(username, request);
     }
@@ -50,7 +50,7 @@ public class AdminController {
     }
 
     @PostMapping("/updateBakeryReport/{reportId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void updateBakeryReport(@PathVariable Long reportId, @RequestBody UpdateBakeryReportStatusRequest request) {
         adminService.updateBakeryReport(reportId, request);
     }

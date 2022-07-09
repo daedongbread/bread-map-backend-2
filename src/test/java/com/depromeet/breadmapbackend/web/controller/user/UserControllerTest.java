@@ -23,6 +23,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -43,18 +45,23 @@ class UserControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setUp() {
+        bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryDeleteReportRepository.deleteAllInBatch();
+        bakeryAddReportRepository.deleteAllInBatch();
+        breadAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
+        reviewReportRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
-        followRepository.deleteAllInBatch();
-        refreshTokenRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
+        refreshTokenRepository.deleteAllInBatch();
 
         user1 = User.builder().username("testUserName1").nickName("testNickName1").roleType(RoleType.USER).build();
         user2 = User.builder().username("testUserName2").nickName("testNickName2").roleType(RoleType.USER).build();
@@ -68,9 +75,10 @@ class UserControllerTest extends ControllerTest {
         Follow follow = Follow.builder().fromUser(user1).toUser(user2).build();
         followRepository.save(follow);
 
-        Bakery bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").image("testImage").build();
-        bakery.addFacilityInfo(FacilityInfo.PARKING);
+        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
+
+        Bakery bakery = Bakery.builder().domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").image("testImage").build();
         bakeryRepository.save(bakery);
 
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();
