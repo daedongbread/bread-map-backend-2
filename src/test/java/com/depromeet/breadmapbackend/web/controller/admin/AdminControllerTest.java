@@ -62,7 +62,7 @@ class AdminControllerTest extends ControllerTest {
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
 
-        user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        user = User.builder().nickName("nickname").roleType(RoleType.ADMIN).username("username").build();
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
