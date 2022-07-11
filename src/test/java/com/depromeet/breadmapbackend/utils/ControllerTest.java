@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
@@ -28,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@Import({AmazonS3MockConfig.class})
+@Import({AmazonS3MockConfig.class, EmbeddedRedisConfig.class})
 public abstract class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;

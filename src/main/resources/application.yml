@@ -12,6 +12,9 @@ spring:
   web:
     resources:
       add-mappings: false
+  redis:
+    host: localhost
+    port: 6379
   jpa:
     open-in-view: false
   security:
@@ -52,3 +55,7 @@ cloud:
       auto: false
     cloudFront:
       distributionDomain: cloudfront
+
+firebase:
+  url: FIREBASE_URL
+  path: FIREBASE_PATH
