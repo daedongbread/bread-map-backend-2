@@ -71,3 +71,4 @@ logging:
 firebase:
   url: ${FIREBASE_URL}
   path: ${FIREBASE_PATH}
+  scope: ${FIREBASE_SCOPE}
