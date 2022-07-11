@@ -169,6 +169,9 @@ class ReviewControllerTest extends ControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("data.id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.bakeryAddress").description("빵집 주소"),
                                 fieldWithPath("data.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.userImage").description("유저 이미지"),
                                 fieldWithPath("data.nickName").description("유저 닉네임"),
@@ -199,7 +202,15 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.comments.[].commentDtoList.[].content").description("대댓글 내용"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].createdAt").description("대댓글 생성일"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].likeNum").description("대댓글 좋아요 수"),
-                                fieldWithPath("data.comments.[].commentDtoList.[].commentDtoList").description("대댓글 리스트")
+                                fieldWithPath("data.comments.[].commentDtoList.[].commentDtoList").description("대댓글 리스트"),
+                                fieldWithPath("data.userOtherReviews").description("유저 다른 빵집 리뷰 리스트"),
+                                fieldWithPath("data.userOtherReviews.[].id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.userOtherReviews.[].image").description("리뷰 이미지"),
+                                fieldWithPath("data.userOtherReviews.[].rating").description("리뷰 점수"),
+                                fieldWithPath("data.bakeryOtherReviews").description("빵집 다른 리뷰 리스트"),
+                                fieldWithPath("data.bakeryOtherReviews.[].id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.bakeryOtherReviews.[].image").description("리뷰 이미지"),
+                                fieldWithPath("data.bakeryOtherReviews.[].rating").description("리뷰 점수")
                         )
                 ))
                 .andExpect(status().isOk());

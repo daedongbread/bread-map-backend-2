@@ -88,11 +88,21 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDetailDto getReview(Long reviewId) {
         Review review = reviewRepository.findByIdAndIsUseIsTrue(reviewId).orElseThrow(ReviewNotFoundException::new);
 
+        List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUserId(review.getUser().getId()).stream()
+                .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
+                .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
+
+        List<SimpleReviewDto> bakeryOtherReviews = reviewRepository.findByBakeryId(review.getBakery().getId()).stream()
+                .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
+                .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
+
         return ReviewDetailDto.builder()
                 .review(review)
 //                .reviewNum(Math.toIntExact(reviewRepository.countByUserId(review.getUser().getId())))
                 .reviewNum(reviewRepository.countByUser(review.getUser()))
                 .followerNum(followRepository.countByToUser(review.getUser()))
+                .userOtherReviews(userOtherReviews)
+                .bakeryOtherReviews(bakeryOtherReviews)
                 .build();
     }
 
