@@ -711,6 +711,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel3">
 <li><a href="#_리뷰_댓글_추가_api_post_http_request">Example Request</a></li>
 <li><a href="#_리뷰_댓글_추가_api_post_request_headers">Request headers</a></li>
+<li><a href="#_리뷰_댓글_추가_api_post_request_fields">Request fields</a></li>
 <li><a href="#_리뷰_댓글_추가_api_post_path_parameters">Path parameters</a></li>
 <li><a href="#_리뷰_댓글_추가_api_post_http_response">Example Response</a></li>
 </ul>
@@ -825,8 +826,8 @@ Content-Length: 339
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjYsImV4cCI6MTY1NzUzNjEyNn0.43MElHfBPCW93BJmPuEFfhkAyYG9w3MTe-bO8VFjLLk",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NDIxMjZ9.PVag4QZYRSJOYFNpDpPyoCXhAHWzx7YSiOHFS356UTE"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODEsImV4cCI6MTY1NzU1OTY4MX0.mlg3E4-poikpdVIRK5z1LtVEsYjEiyPLo0jQn22suO8",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NjU2ODF9._yjdpu66_N8laDnNjv-WlaaucjrqjI98fjZiLJuiJVo"
 }</code></pre>
 </div>
 </div>
@@ -886,8 +887,8 @@ Content-Length: 403
 
 {
   "data" : {
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjYsImV4cCI6MTY1NzUzNjEyNn0.43MElHfBPCW93BJmPuEFfhkAyYG9w3MTe-bO8VFjLLk",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NDIxMjZ9.PVag4QZYRSJOYFNpDpPyoCXhAHWzx7YSiOHFS356UTE",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODIsImV4cCI6MTY1NzU1OTY4Mn0.lk48_IDTsL_2rYYvNpEviBoiVu-vMG2gqceDg0d-XxE",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NjU2ODJ9.Q_086rR_lIXWFv7sfS2wK7u--GEzRILDS6DOo1V_8bY",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -939,7 +940,7 @@ Content-Length: 403
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/profile HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjUsImV4cCI6MTY1NzUzNjEyNX0.UY7zLF11YTZhVzYZUztfx4SA4cIIO7eqvkMs0xaWPkg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODEsImV4cCI6MTY1NzU1OTY4MX0.mlg3E4-poikpdVIRK5z1LtVEsYjEiyPLo0jQn22suO8
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -983,7 +984,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 709
+Content-Length: 708
 
 {
   "data" : {
@@ -1010,7 +1011,7 @@ Content-Length: 709
       "content" : "content1",
       "likeNum" : 0,
       "commentNum" : 0,
-      "createdAt" : "2022-07-11T18:42:05.994974"
+      "createdAt" : "2022-07-12T01:14:41.90636"
     } ]
   }
 }</code></pre>
@@ -1159,7 +1160,7 @@ Content-Length: 709
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/follow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjUsImV4cCI6MTY1NzUzNjEyNX0.pgqy4R0GVg1nWsxTdmwh9N8m7yYQcZ2o2YFneHsXt18
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODEsImV4cCI6MTY1NzU1OTY4MX0.W6t41BtjMFujE92cAaiW041up3IGWZ9oy6V0ka1b3Vw
 Content-Length: 21
 Host: localhost:8080
 
@@ -1250,7 +1251,7 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user/unfollow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjUsImV4cCI6MTY1NzUzNjEyNX0.UY7zLF11YTZhVzYZUztfx4SA4cIIO7eqvkMs0xaWPkg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODEsImV4cCI6MTY1NzU1OTY4MX0.mlg3E4-poikpdVIRK5z1LtVEsYjEiyPLo0jQn22suO8
 Content-Length: 21
 Host: localhost:8080
 
@@ -1339,7 +1340,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/follower HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjUsImV4cCI6MTY1NzUzNjEyNX0.pgqy4R0GVg1nWsxTdmwh9N8m7yYQcZ2o2YFneHsXt18
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODEsImV4cCI6MTY1NzU1OTY4MX0.W6t41BtjMFujE92cAaiW041up3IGWZ9oy6V0ka1b3Vw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1405,7 +1406,7 @@ Content-Length: 152
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/following HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1MzI1MjYsImV4cCI6MTY1NzUzNjEyNn0.OqzPpDqShDYSsxbGf0Q1txXiv5ndl2KDVOrFtseGywo
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NTc1NTYwODIsImV4cCI6MTY1NzU1OTY4Mn0.SnbiwzhLa0vpK6pViCOvyA2GTIDU39g9MzX6n6XQs48
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1501,7 +1502,7 @@ Content-Length: 152
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery?sort=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTE5LCJleHAiOjE2NTc1MzYxMTl9.8hKJ_WHnWbk9CiEj0gqqaHb6uOup1mNVsdL_WEr2BUA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDczLCJleHAiOjE2NTc1NTk2NzN9.zAc_1pMqnXSfzxooHejqP7G6fiqvy76oFclFH_GGj4w
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1691,7 +1692,7 @@ Content-Length: 700
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/filter?sort=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIxLCJleHAiOjE2NTc1MzYxMjF9.y0-dAFTEXpwe7Ihtz7U77LP7T2YbmnQVeA2_mP44R0s
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc1LCJleHAiOjE2NTc1NTk2NzV9.SaDVkE0uIJiN2DVuwPGmuyBJB5ErDDv6_zK_ii_fI0o
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1872,7 +1873,7 @@ Content-Length: 384
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIxLCJleHAiOjE2NTc1MzYxMjF9.y0-dAFTEXpwe7Ihtz7U77LP7T2YbmnQVeA2_mP44R0s
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc0LCJleHAiOjE2NTc1NTk2NzR9.KZSz5dTFnZbJt_LgM2ULWsmyDQIX-GfEndVkhSkdYP4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2093,7 +2094,7 @@ Content-Length: 595
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1/update HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIwLCJleHAiOjE2NTc1MzYxMjB9.YNZW3WjSWqmwSd1xdCY0JTsiu5tx1WgKsElcAnJbb0E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDczLCJleHAiOjE2NTc1NTk2NzN9.zAc_1pMqnXSfzxooHejqP7G6fiqvy76oFclFH_GGj4w
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -2231,11 +2232,11 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1/delete HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIwLCJleHAiOjE2NTc1MzYxMjB9.YNZW3WjSWqmwSd1xdCY0JTsiu5tx1WgKsElcAnJbb0E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc0LCJleHAiOjE2NTc1NTk2NzR9.KZSz5dTFnZbJt_LgM2ULWsmyDQIX-GfEndVkhSkdYP4
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=file; filename=9938cee0-6c9b-4a12-add5-13cae6d8ed1c.png
+Content-Disposition: form-data; name=file; filename=69b856b6-c3dd-4e53-983c-bb33f276f1c5.png
 Content-Type: image/png
 
 test
@@ -2347,7 +2348,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/add HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIxLCJleHAiOjE2NTc1MzYxMjF9.y0-dAFTEXpwe7Ihtz7U77LP7T2YbmnQVeA2_mP44R0s
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc0LCJleHAiOjE2NTc1NTk2NzR9.KZSz5dTFnZbJt_LgM2ULWsmyDQIX-GfEndVkhSkdYP4
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -2453,11 +2454,11 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIxLCJleHAiOjE2NTc1MzYxMjF9.y0-dAFTEXpwe7Ihtz7U77LP7T2YbmnQVeA2_mP44R0s
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc0LCJleHAiOjE2NTc1NTk2NzR9.KZSz5dTFnZbJt_LgM2ULWsmyDQIX-GfEndVkhSkdYP4
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=0d864383-fbb0-4dd8-8817-17f9508f632d.png
+Content-Disposition: form-data; name=files; filename=70ac3e83-950c-4d81-a0c6-7dcb714453dd.png
 Content-Type: image/png
 
 test
@@ -2639,7 +2640,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /flag/simple HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc2LCJleHAiOjE2NTc1NTk2NzZ9.1_Kq0wOzLZrk-RIo3iylgGrGbOtfR9FJEvYVspMFas0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2740,7 +2741,7 @@ Content-Length: 100
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /flag HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc2LCJleHAiOjE2NTc1NTk2NzZ9.1_Kq0wOzLZrk-RIo3iylgGrGbOtfR9FJEvYVspMFas0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2848,7 +2849,7 @@ Content-Length: 142
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /flag HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc1LCJleHAiOjE2NTc1NTk2NzV9.SaDVkE0uIJiN2DVuwPGmuyBJB5ErDDv6_zK_ii_fI0o
 Accept: application/json
 Content-Length: 49
 Host: localhost:8080
@@ -2945,7 +2946,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /flag/8 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc2LCJleHAiOjE2NTc1NTk2NzZ9.1_Kq0wOzLZrk-RIo3iylgGrGbOtfR9FJEvYVspMFas0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3033,7 +3034,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /flag/5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc1LCJleHAiOjE2NTc1NTk2NzV9.SaDVkE0uIJiN2DVuwPGmuyBJB5ErDDv6_zK_ii_fI0o
 Accept: application/json
 Content-Length: 56
 Host: localhost:8080
@@ -3163,7 +3164,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /flag/2 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc1LCJleHAiOjE2NTc1NTk2NzV9.SaDVkE0uIJiN2DVuwPGmuyBJB5ErDDv6_zK_ii_fI0o
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3334,7 +3335,7 @@ Content-Length: 245
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /flag/9 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIyLCJleHAiOjE2NTc1MzYxMjJ9.73z8U8qAZI9SDuBS_6oyAf3X_frjjGudNalctVim57o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc2LCJleHAiOjE2NTc1NTk2NzZ9.1_Kq0wOzLZrk-RIo3iylgGrGbOtfR9FJEvYVspMFas0
 Host: localhost:8080
 Content-Type: application/x-www-form-urlencoded
 
@@ -3424,7 +3425,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /flag/10/5 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIzLCJleHAiOjE2NTc1MzYxMjN9.uElcPvueBvnktP0s_btGEGR0Ctb6bEhnFx4fnNsFSDQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc3LCJleHAiOjE2NTc1NTk2Nzd9.irVoZqQ6hoC7ZuMpu2bBbqWG2ZOv5xpUKpNQtY2iz18
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3564,7 +3565,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/1/simple?sort=latest HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI0LCJleHAiOjE2NTc1MzYxMjR9.OW6aWs3Il7d0nZSZ8DtmczysUbSHSd-QCteHjaHQE-E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgxLCJleHAiOjE2NTc1NTk2ODF9.Jn-GGtsvs1qjHtf16UVeMDs6SntHXOJfkS3jkiED9s0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3659,7 +3660,7 @@ Content-Length: 422
     "content" : "content1",
     "likeNum" : 1,
     "commentNum" : 2,
-    "createdAt" : "2022.07.11",
+    "createdAt" : "2022.07.12",
     "averageRating" : 4.0
   } ]
 }</code></pre>
@@ -3771,7 +3772,7 @@ Content-Length: 422
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/1/all?sort=latest HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIzLCJleHAiOjE2NTc1MzYxMjN9.uElcPvueBvnktP0s_btGEGR0Ctb6bEhnFx4fnNsFSDQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgwLCJleHAiOjE2NTc1NTk2ODB9.sBYuJb-QwbHvKZRCs4NfVPsoUaJia2_W_3LIIXUl24U
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3866,7 +3867,7 @@ Content-Length: 422
     "content" : "content1",
     "likeNum" : 1,
     "commentNum" : 2,
-    "createdAt" : "2022.07.11",
+    "createdAt" : "2022.07.12",
     "averageRating" : 4.0
   } ]
 }</code></pre>
@@ -3978,7 +3979,7 @@ Content-Length: 422
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/34 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI0LCJleHAiOjE2NTc1MzYxMjR9.OW6aWs3Il7d0nZSZ8DtmczysUbSHSd-QCteHjaHQE-E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgwLCJleHAiOjE2NTc1NTk2ODB9.sBYuJb-QwbHvKZRCs4NfVPsoUaJia2_W_3LIIXUl24U
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -4055,7 +4056,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1190
+Content-Length: 1264
 
 {
   "data" : {
@@ -4076,22 +4077,24 @@ Content-Length: 1190
     "content" : "content1",
     "likeNum" : 1,
     "commentNum" : 2,
-    "createdAt" : "2022.07.11",
+    "createdAt" : "2022.07.12",
     "comments" : [ {
       "id" : 19,
       "userId" : 25,
       "userImage" : null,
       "nickName" : "nickname",
+      "commentNickName" : null,
       "content" : "comment1",
-      "createdAt" : "2022.07.11",
+      "createdAt" : "2022.07.12",
       "likeNum" : 1,
       "commentDtoList" : [ {
         "id" : 20,
         "userId" : 25,
         "userImage" : null,
         "nickName" : "nickname",
+        "commentNickName" : "nickname",
         "content" : "comment1",
-        "createdAt" : "2022.07.11",
+        "createdAt" : "2022.07.12",
         "likeNum" : 0,
         "commentDtoList" : [ ]
       } ]
@@ -4240,6 +4243,11 @@ Content-Length: 1190
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">댓글 내용</p></td>
@@ -4283,6 +4291,11 @@ Content-Length: 1190
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].nickName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].commentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].content</code></p></td>
@@ -4358,11 +4371,11 @@ Content-Length: 1190
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI0LCJleHAiOjE2NTc1MzYxMjR9.OW6aWs3Il7d0nZSZ8DtmczysUbSHSd-QCteHjaHQE-E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgwLCJleHAiOjE2NTc1NTk2ODB9.sBYuJb-QwbHvKZRCs4NfVPsoUaJia2_W_3LIIXUl24U
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=2744a01f-dd25-49f6-a9c7-afface071939.png
+Content-Disposition: form-data; name=files; filename=bae41c74-92c0-44a0-ae69-8514b7451437.png
 Content-Type: image/png
 
 test
@@ -4521,7 +4534,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/29 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI0LCJleHAiOjE2NTc1MzYxMjR9.OW6aWs3Il7d0nZSZ8DtmczysUbSHSd-QCteHjaHQE-E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgwLCJleHAiOjE2NTc1NTk2ODB9.sBYuJb-QwbHvKZRCs4NfVPsoUaJia2_W_3LIIXUl24U
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -4608,7 +4621,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/25/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIzLCJleHAiOjE2NTc1MzYxMjN9.uElcPvueBvnktP0s_btGEGR0Ctb6bEhnFx4fnNsFSDQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc4LCJleHAiOjE2NTc1NTk2Nzh9.VlhdcjQTHJBVLf2e6PMCh3uAwc2lwUkz3aUcKTzIYHE
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -4695,7 +4708,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/27/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIzLCJleHAiOjE2NTc1MzYxMjN9.uElcPvueBvnktP0s_btGEGR0Ctb6bEhnFx4fnNsFSDQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc5LCJleHAiOjE2NTc1NTk2Nzl9.gheDgvEQKTKvkfv-2GVti5o-dbfC2AygCTDXTV08BSY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -4782,7 +4795,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/30/comment HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI0LCJleHAiOjE2NTc1MzYxMjR9.OW6aWs3Il7d0nZSZ8DtmczysUbSHSd-QCteHjaHQE-E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgwLCJleHAiOjE2NTc1NTk2ODB9.sBYuJb-QwbHvKZRCs4NfVPsoUaJia2_W_3LIIXUl24U
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -4859,7 +4872,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 454
+Content-Length: 524
 
 {
   "data" : [ {
@@ -4867,16 +4880,18 @@ Content-Length: 454
     "userId" : 22,
     "userImage" : null,
     "nickName" : "nickname",
+    "commentNickName" : null,
     "content" : "comment1",
-    "createdAt" : "2022.07.11",
+    "createdAt" : "2022.07.12",
     "likeNum" : 1,
     "commentDtoList" : [ {
       "id" : 14,
       "userId" : 22,
       "userImage" : null,
       "nickName" : "nickname",
+      "commentNickName" : "nickname",
       "content" : "comment1",
-      "createdAt" : "2022.07.11",
+      "createdAt" : "2022.07.12",
       "likeNum" : 0,
       "commentDtoList" : [ ]
     } ]
@@ -4924,6 +4939,11 @@ Content-Length: 454
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">댓글 내용</p></td>
@@ -4964,6 +4984,11 @@ Content-Length: 454
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].commentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 내용</p></td>
@@ -4990,6 +5015,13 @@ Content-Length: 454
 </div>
 <div class="sect2">
 <h3 id="_리뷰_댓글_추가_api_post"><a class="link" href="#_리뷰_댓글_추가_api_post">리뷰 댓글 추가 API [POST]</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>리뷰에 댓글을 달 경우 parentCommentId 를 0으로 줘야 한다.</p>
+</li>
+</ul>
+</div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_추가_api_post_http_request"><a class="link" href="#_리뷰_댓글_추가_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
@@ -4997,7 +5029,7 @@ Content-Length: 454
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/36/comment HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI1LCJleHAiOjE2NTc1MzYxMjV9.iLggRshK9AULmOjmAwioIJzFkSnYak0vw9EAmyNojGk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgxLCJleHAiOjE2NTc1NTk2ODF9.Jn-GGtsvs1qjHtf16UVeMDs6SntHXOJfkS3jkiED9s0
 Content-Length: 71
 Host: localhost:8080
 
@@ -5027,6 +5059,42 @@ Host: localhost:8080
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_리뷰_댓글_추가_api_post_request_fields"><a class="link" href="#_리뷰_댓글_추가_api_post_request_fields">Request fields</a></h4>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parentCommentId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글의 부모 댓글 고유 번호</p></td>
 </tr>
 </tbody>
 </table>
@@ -5090,7 +5158,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/37/comment/26 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI1LCJleHAiOjE2NTc1MzYxMjV9.iLggRshK9AULmOjmAwioIJzFkSnYak0vw9EAmyNojGk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgxLCJleHAiOjE2NTc1NTk2ODF9.Jn-GGtsvs1qjHtf16UVeMDs6SntHXOJfkS3jkiED9s0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -5182,7 +5250,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/23/comment/2/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIzLCJleHAiOjE2NTc1MzYxMjN9.uElcPvueBvnktP0s_btGEGR0Ctb6bEhnFx4fnNsFSDQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc4LCJleHAiOjE2NTc1NTk2Nzh9.VlhdcjQTHJBVLf2e6PMCh3uAwc2lwUkz3aUcKTzIYHE
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -5274,7 +5342,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/33/comment/17/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTI0LCJleHAiOjE2NTc1MzYxMjR9.OW6aWs3Il7d0nZSZ8DtmczysUbSHSd-QCteHjaHQE-E
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDgwLCJleHAiOjE2NTc1NTk2ODB9.sBYuJb-QwbHvKZRCs4NfVPsoUaJia2_W_3LIIXUl24U
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -5367,7 +5435,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/26/report HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTMyNTIzLCJleHAiOjE2NTc1MzYxMjN9.uElcPvueBvnktP0s_btGEGR0Ctb6bEhnFx4fnNsFSDQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjU3NTU2MDc5LCJleHAiOjE2NTc1NTk2Nzl9.gheDgvEQKTKvkfv-2GVti5o-dbfC2AygCTDXTV08BSY
 Accept: application/json
 Content-Length: 64
 Host: localhost:8080
@@ -5496,7 +5564,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-07-11 17:32:50 +0900
+Last updated 2022-07-12 00:58:47 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

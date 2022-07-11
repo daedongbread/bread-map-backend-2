@@ -19,6 +19,7 @@ public class ReviewCommentDto {
     private String userImage;
     private String nickName;
 
+    private String commentNickName;
     private String content;
     private String createdAt;
 
@@ -39,6 +40,14 @@ public class ReviewCommentDto {
             this.userImage = null;
             this.nickName = null;
         }
+
+        if(reviewComment.getParent() == null) this.commentNickName = null;
+        else {
+            ReviewComment parent = reviewComment.getParent();
+            if(parent.getUser() == null) this.commentNickName = null;
+            else this.commentNickName = reviewComment.getParent().getUser().getNickName();
+        }
+
         this.content = reviewComment.getContent();
         this.createdAt = reviewComment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.likeNum = reviewComment.getLikes().size();
