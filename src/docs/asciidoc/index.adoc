@@ -159,7 +159,9 @@ operation::review/unlike[snippets='http-request,request-headers,path-parameters,
 operation::review/comment/all[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 댓글 추가 API [POST]
-operation::review/comment/add[snippets='http-request,request-headers,path-parameters,http-response']
+- 리뷰에 댓글을 달 경우 parentCommentId 를 0으로 줘야 한다.
+
+operation::review/comment/add[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === 리뷰 댓글 삭제 API [DELETE]
 operation::review/comment/remove[snippets='http-request,request-headers,path-parameters,http-response']

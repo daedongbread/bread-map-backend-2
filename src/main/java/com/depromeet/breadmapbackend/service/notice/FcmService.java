@@ -26,6 +26,9 @@ public class FcmService {
     @Value("${firebase.path}")
     private String firebaseConfigPath;
 
+    @Value("${firebase.scope}")
+    private String firebaseScope;
+
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String deviceToken, String title, String body, String path) throws Exception {
@@ -68,7 +71,7 @@ public class FcmService {
     private String getAccessToken() throws Exception {
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
+                .createScoped(List.of(firebaseScope));
 
         // accessToken 생성
         googleCredentials.refreshIfExpired();
