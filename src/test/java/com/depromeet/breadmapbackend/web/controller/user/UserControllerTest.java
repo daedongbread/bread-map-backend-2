@@ -18,6 +18,7 @@ import com.depromeet.breadmapbackend.security.token.RefreshToken;
 import com.depromeet.breadmapbackend.web.controller.user.dto.BlockRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRefreshRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -46,20 +47,6 @@ class UserControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setUp() {
-        flagBakeryRepository.deleteAllInBatch();
-        flagRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
-        reviewCommentLikeRepository.deleteAllInBatch();
-        reviewCommentRepository.deleteAllInBatch();
-        reviewLikeRepository.deleteAllInBatch();
-        reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
-        bakeryRepository.deleteAllInBatch();
-        followRepository.deleteAllInBatch();
-        refreshTokenRepository.deleteAllInBatch();
-        blockUserRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-
         user1 = User.builder().username("testUserName1").nickName("testNickName1").roleType(RoleType.USER).build();
         user2 = User.builder().username("testUserName2").nickName("testNickName2").roleType(RoleType.USER).build();
         userToBlock = User.builder().username("testBlockUserName").nickName("testBlockUserNickName").roleType(RoleType.USER).build();
@@ -97,6 +84,23 @@ class UserControllerTest extends ControllerTest {
 
         BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
         breadRatingRepository.save(rating);
+    }
+
+    @AfterEach
+    public void setDown() {
+        flagBakeryRepository.deleteAllInBatch();
+        flagRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
+        breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
+        refreshTokenRepository.deleteAllInBatch();
+        blockUserRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @Test
