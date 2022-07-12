@@ -102,10 +102,10 @@ class SearchControllerTest extends ControllerTest {
                                 parameterWithName("longitude").description("중앙 경도")
                         ),
                         responseFields(
-                                fieldWithPath("data.bakeryId").description("빵집 고유 번호"),
-                                fieldWithPath("data.bakeryName").description("빵집 이름"),
-                                fieldWithPath("data.reviewNum").description("빵집 리뷰 갯수"),
-                                fieldWithPath("data.distance").description("빵집까지 거리")
+                                fieldWithPath("data.[].bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.[].bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.[].reviewNum").description("빵집 리뷰 갯수"),
+                                fieldWithPath("data.[].distance").description("빵집까지 거리")
                         )
                 ))
                 .andExpect(status().isOk());
