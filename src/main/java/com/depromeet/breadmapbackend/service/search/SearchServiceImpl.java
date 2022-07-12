@@ -45,12 +45,12 @@ public class SearchServiceImpl implements SearchService {
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
                                 + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
                 .sorted(Comparator.comparing(SearchDto::getDistance))
-                .limit(5)
+                .limit(10)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public SearchDto search(String username, String word, Double latitude, Double longitude) {
+    public List<SearchDto> search(String username, String word, Double latitude, Double longitude) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
 
         ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
@@ -58,14 +58,17 @@ public class SearchServiceImpl implements SearchService {
         redisRecentSearch.add(REDIS_KEY_RECENT + username, word, Double.parseDouble(time));
         redisRecentSearch.removeRange(REDIS_KEY_RECENT + username, -(10 + 1), -(10 + 1));
 
-        Bakery bakery = bakeryRepository.findByName(word).orElseThrow(BakeryNotFoundException::new);
-        return SearchDto.builder()
-                .bakeryId(bakery.getId()).bakeryName(bakery.getName())
-                .reviewNum(bakery.getReviewList().size())
-                .distance(floor(acos(cos(toRadians(latitude))
-                        * cos(toRadians(bakery.getLatitude()))
-                        * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                        + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build();
+        return bakeryRepository.findByNameStartsWith(word).stream()
+                .map(bakery -> SearchDto.builder()
+                        .bakeryId(bakery.getId()).bakeryName(bakery.getName())
+                        .reviewNum(bakery.getReviewList().size())
+                        .distance(floor(acos(cos(toRadians(latitude))
+                                * cos(toRadians(bakery.getLatitude()))
+                                * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
+                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
+                .sorted(Comparator.comparing(SearchDto::getDistance))
+                .limit(10)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

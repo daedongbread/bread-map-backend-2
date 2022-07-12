@@ -27,8 +27,8 @@ public class SearchController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SearchDto> search(@CurrentUser String username, @RequestParam String word,
-                                         @RequestParam Double latitude, @RequestParam Double longitude) {
+    public ApiResponse<List<SearchDto>> search(@CurrentUser String username, @RequestParam String word,
+                                               @RequestParam Double latitude, @RequestParam Double longitude) {
         return new ApiResponse<>(searchService.search(username, word, latitude, longitude));
     }
 
