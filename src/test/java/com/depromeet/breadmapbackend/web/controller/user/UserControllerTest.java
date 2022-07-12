@@ -8,12 +8,14 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.RefreshToken;
+import com.depromeet.breadmapbackend.web.controller.user.dto.BlockRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRefreshRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends ControllerTest {
     private User user1;
     private User user2;
+    private User userToBlock;
     private JwtToken token1;
     private JwtToken token2;
 
@@ -54,12 +57,15 @@ class UserControllerTest extends ControllerTest {
         bakeryRepository.deleteAllInBatch();
         followRepository.deleteAllInBatch();
         refreshTokenRepository.deleteAllInBatch();
+        blockUserRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
 
         user1 = User.builder().username("testUserName1").nickName("testNickName1").roleType(RoleType.USER).build();
         user2 = User.builder().username("testUserName2").nickName("testNickName2").roleType(RoleType.USER).build();
+        userToBlock = User.builder().username("testBlockUserName").nickName("testBlockUserNickName").roleType(RoleType.USER).build();
         userRepository.save(user1);
         userRepository.save(user2);
+        userRepository.save(userToBlock);
 
         token1 = jwtTokenProvider.createJwtToken(user1.getUsername(), RoleType.USER.getCode());
         refreshTokenRepository.save(RefreshToken.builder().username(user1.getUsername()).token(token1.getRefreshToken()).build());
@@ -67,6 +73,9 @@ class UserControllerTest extends ControllerTest {
 
         Follow follow = Follow.builder().fromUser(user1).toUser(user2).build();
         followRepository.save(follow);
+
+        BlockUser blockUser = BlockUser.builder().user(user1).blockUser(userToBlock).build();
+        blockUserRepository.save(blockUser);
 
         Bakery bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
                 .name("bakery1").streetAddress("street").image("testImage").build();
@@ -238,4 +247,61 @@ class UserControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
+
+    @Test
+//    @Transactional
+    void blockList() throws Exception {
+        mockMvc.perform(get("/user/block")
+                .header("Authorization", "Bearer " + token1.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/blockList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        responseFields(
+                                fieldWithPath("data.[].userId").description("차단 유저 고유번호"),
+                                fieldWithPath("data.[].userImage").description("차단 유저 이미지"),
+                                fieldWithPath("data.[].nickName").description("차단 유저 닉네임"),
+                                fieldWithPath("data.[].reviewNum").description("차단 유저 리뷰 수"),
+                                fieldWithPath("data.[].followerNum").description("차단 유저 팔로워 수")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+//    @Transactional
+    void block() throws Exception {
+        String object = objectMapper.writeValueAsString(BlockRequest.builder().userId(user2.getId()).build());
+
+        mockMvc.perform(post("/user/block")
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token1.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/block",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(fieldWithPath("userId").description("차단할 유저 고유번호"))
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+//    @Transactional
+    void unblock() throws Exception {
+        String object = objectMapper.writeValueAsString(BlockRequest.builder().userId(userToBlock.getId()).build());
+
+        mockMvc.perform(delete("/user/block")
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token1.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/unblock",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(fieldWithPath("userId").description("차단 해제할 유저 고유번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
 }
