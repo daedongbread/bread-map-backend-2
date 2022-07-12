@@ -4,10 +4,10 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
+import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
+import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
-import com.depromeet.breadmapbackend.domain.user.exception.FollowAlreadyException;
-import com.depromeet.breadmapbackend.domain.user.exception.FollowNotFoundException;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
+import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
@@ -374,6 +374,42 @@ public class ExceptionAdvice {
     @ExceptionHandler(ImageInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse imageInvalidException(ImageInvalidException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 알림 날짜에 오류가 있을 때
+     */
+    @ExceptionHandler(NoticeDateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse noticeDateException(NoticeDateException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 알림 타입이 틀렸을 때
+     */
+    @ExceptionHandler(NoticeTypeWrongException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse noticeTypeWrongException(NoticeTypeWrongException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 차단한 유저일 때
+     */
+    @ExceptionHandler(BlockAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse blockAlreadyException(BlockAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 차단하지 않은 유저일 때
+     */
+    @ExceptionHandler(BlockNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse blockNotFoundException(BlockNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
