@@ -11,6 +11,7 @@ import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewCommentRequest;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewReportRequest;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -44,18 +45,6 @@ class ReviewControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        reviewReportRepository.deleteAllInBatch();
-        flagBakeryRepository.deleteAllInBatch();
-        flagRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
-        reviewCommentLikeRepository.deleteAllInBatch();
-        reviewCommentRepository.deleteAllInBatch();
-        reviewLikeRepository.deleteAllInBatch();
-        reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
-        bakeryRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
@@ -84,6 +73,21 @@ class ReviewControllerTest extends ControllerTest {
 
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(comment1).user(user).build();
         reviewCommentLikeRepository.save(reviewCommentLike);
+    }
+
+    @AfterEach
+    public void setDown() {
+        reviewReportRepository.deleteAllInBatch();
+        flagBakeryRepository.deleteAllInBatch();
+        flagRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
+        breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @Test
