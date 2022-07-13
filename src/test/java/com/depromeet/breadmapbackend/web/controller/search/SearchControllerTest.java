@@ -14,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
+import java.util.Collections;
+
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -42,11 +44,9 @@ class SearchControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").build();
+                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1").streetAddress("street").build();
         bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
-                .name("bakery2").streetAddress("street").build();
-        bakery1.addFacilityInfo(FacilityInfo.PARKING);
-        bakery1.addFacilityInfo(FacilityInfo.DELIVERY);
+                .facilityInfoList(Collections.singletonList(FacilityInfo.DELIVERY)).name("bakery2").streetAddress("street").build();
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
 

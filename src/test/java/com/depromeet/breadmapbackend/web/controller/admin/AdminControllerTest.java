@@ -15,6 +15,7 @@ import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryReport
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportDto;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -45,6 +46,31 @@ class AdminControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
+        user = User.builder().nickName("nickname").roleType(RoleType.ADMIN).username("username").build();
+        userRepository.save(user);
+        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+
+        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
+        bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
+        bakeryRepository.save(bakery1);
+
+        Bread bread1 = Bread.builder().bakery(bakery1).name("bread1").price(3000).build();
+        breadRepository.save(bread1);
+
+        report1 = BakeryAddReport.builder().user(user).content("test content").location("test location")
+                .name("test Report").build();
+        bakeryAddReportRepository.save(report1);
+
+        Review review1 = Review.builder().user(user).bakery(bakery1).content("content1").build();
+        reviewRepository.save(review1);
+
+        BreadRating rating1 = BreadRating.builder().bread(bread1).review(review1).rating(4L).build();
+        breadRatingRepository.save(rating1);
+    }
+
+    @AfterEach
+    public void setDown() {
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
@@ -61,28 +87,6 @@ class AdminControllerTest extends ControllerTest {
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
-
-        user = User.builder().nickName("nickname").roleType(RoleType.ADMIN).username("username").build();
-        userRepository.save(user);
-        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
-
-        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery1 = Bakery.builder().domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
-        bakeryRepository.save(bakery1);
-
-        Bread bread1 = Bread.builder().bakery(bakery1).name("bread1").price(3000).build();
-        breadRepository.save(bread1);
-
-        report1 = BakeryAddReport.builder().user(user).content("test content").location("test location")
-                .name("test Report").build();
-        bakeryAddReportRepository.save(report1);
-
-        Review review1 = Review.builder().user(user).bakery(bakery1).content("content1").build();
-        reviewRepository.save(review1);
-
-        BreadRating rating1 = BreadRating.builder().bread(bread1).review(review1).rating(4L).build();
-        breadRatingRepository.save(rating1);
     }
 
     @Test
@@ -138,7 +142,7 @@ class AdminControllerTest extends ControllerTest {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 
         String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
-                .name("newBakery").imageList("").streetAddress("newLocation").domicileAddress("newLocation")
+                .id(1L).name("newBakery").imageList("").streetAddress("newLocation").domicileAddress("newLocation")
                 .hours("09:00~20:00").instagramURL("").facebookURL("").blogURL("")
                 .websiteURL("https://test.test.com").phoneNumber("01012345678")
                 .facilityInfoList(facilityInfo).breadList(Arrays.asList(
@@ -155,6 +159,7 @@ class AdminControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(
+                                fieldWithPath("id").type("String").description("빵집 고유 번호"),
                                 fieldWithPath("name").type("String").description("빵집 이름"),
                                 fieldWithPath("imageList").type("String").description("빵집 이미지"),
                                 fieldWithPath("streetAddress").type("String").description("빵집 주소"),

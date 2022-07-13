@@ -66,7 +66,7 @@ class UserControllerTest extends ControllerTest {
         BlockUser blockUser = BlockUser.builder().user(user1).blockUser(userToBlock).build();
         blockUserRepository.save(blockUser);
         
-        Bakery bakery = Bakery.builder().domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+        Bakery bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1")
                 .streetAddress("street").image("testImage").build();
         bakeryRepository.save(bakery);

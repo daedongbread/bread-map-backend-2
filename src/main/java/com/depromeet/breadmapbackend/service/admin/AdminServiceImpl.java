@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService{
         if (bakeryRepository.countAllByNameEqualsAndStreetAddressEquals(request.getName(), request.getStreetAddress()) > 0) throw new DuplicateBakeryException();
 
         Bakery bakery = Bakery.builder()
-                .user(user).name(request.getName()).image(request.getImageList())
+                .user(user).id(request.getId()).name(request.getName()).image(request.getImageList())
                 .domicileAddress(request.getDomicileAddress()).hours(request.getHours())
                 .websiteURL(request.getWebsiteURL()).instagramURL(request.getInstagramURL())
                 .facebookURL(request.getFacebookURL()).blogURL(request.getBlogURL())

@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddBakeryRequest {
+    private Long id;
     private String name;
     private String imageList;
     private String streetAddress;

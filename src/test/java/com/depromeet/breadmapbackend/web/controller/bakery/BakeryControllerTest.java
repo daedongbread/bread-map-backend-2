@@ -51,9 +51,9 @@ class BakeryControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery1 = Bakery.builder().domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+        bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
-        bakery2 = Bakery.builder().domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
+        bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
                 .facilityInfoList(facilityInfo).name("bakery2").streetAddress("street").build();
 
         bakeryRepository.save(bakery1);
