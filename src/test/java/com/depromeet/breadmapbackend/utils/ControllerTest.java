@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
+import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
@@ -90,6 +91,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ReviewReportRepository reviewReportRepository;
+
+    @Autowired
+    protected BlockUserRepository blockUserRepository;
 
     @Autowired
     protected UserService userService;

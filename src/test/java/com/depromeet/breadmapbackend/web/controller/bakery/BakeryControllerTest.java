@@ -15,6 +15,7 @@ import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BreadReportRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -45,23 +46,6 @@ class BakeryControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
-        bakeryAddReportRepository.deleteAllInBatch();
-        breadAddReportRepository.deleteAllInBatch();
-        flagBakeryRepository.deleteAllInBatch();
-        flagRepository.deleteAllInBatch();
-        followRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
-        reviewReportRepository.deleteAllInBatch();
-        reviewCommentLikeRepository.deleteAllInBatch();
-        reviewCommentRepository.deleteAllInBatch();
-        reviewLikeRepository.deleteAllInBatch();
-        reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
-        bakeryRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
@@ -89,6 +73,24 @@ class BakeryControllerTest extends ControllerTest {
         BreadRating rating2 = BreadRating.builder().bread(bread2).review(review2).rating(4L).build();
         breadRatingRepository.save(rating1);
         breadRatingRepository.save(rating2);
+    }
+
+    @AfterEach
+    public void setDown() {
+        bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryDeleteReportRepository.deleteAllInBatch();
+        bakeryAddReportRepository.deleteAllInBatch();
+        breadAddReportRepository.deleteAllInBatch();
+        flagBakeryRepository.deleteAllInBatch();
+        flagRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
+        breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @Test

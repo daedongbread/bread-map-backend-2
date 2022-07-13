@@ -11,6 +11,7 @@ import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewCommentRequest;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewReportRequest;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -46,23 +47,6 @@ class ReviewControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
-        bakeryAddReportRepository.deleteAllInBatch();
-        breadAddReportRepository.deleteAllInBatch();
-        flagBakeryRepository.deleteAllInBatch();
-        flagRepository.deleteAllInBatch();
-        followRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
-        reviewReportRepository.deleteAllInBatch();
-        reviewCommentLikeRepository.deleteAllInBatch();
-        reviewCommentRepository.deleteAllInBatch();
-        reviewLikeRepository.deleteAllInBatch();
-        reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
-        bakeryRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
@@ -91,6 +75,21 @@ class ReviewControllerTest extends ControllerTest {
 
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(comment1).user(user).build();
         reviewCommentLikeRepository.save(reviewCommentLike);
+    }
+
+    @AfterEach
+    public void setDown() {
+        reviewReportRepository.deleteAllInBatch();
+        flagBakeryRepository.deleteAllInBatch();
+        flagRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
+        breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @Test
@@ -176,6 +175,9 @@ class ReviewControllerTest extends ControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("data.id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.bakeryAddress").description("빵집 주소"),
                                 fieldWithPath("data.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.userImage").description("유저 이미지"),
                                 fieldWithPath("data.nickName").description("유저 닉네임"),
@@ -194,6 +196,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.comments.[].userId").description("유저 고유 번호"),
                                 fieldWithPath("data.comments.[].userImage").description("유저 이미지"),
                                 fieldWithPath("data.comments.[].nickName").description("유저 닉네임"),
+                                fieldWithPath("data.comments.[].commentNickName").description("부모 댓글 유저 닉네임"),
                                 fieldWithPath("data.comments.[].content").description("댓글 내용"),
                                 fieldWithPath("data.comments.[].createdAt").description("댓글 생성일"),
                                 fieldWithPath("data.comments.[].likeNum").description("댓글 좋아요 수"),
@@ -203,10 +206,19 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.comments.[].commentDtoList.[].userId").description("유저 고유 번호"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].userImage").description("유저 이미지"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].nickName").description("유저 닉네임"),
+                                fieldWithPath("data.comments.[].commentDtoList.[].commentNickName").description("부모 댓글 유저 닉네임"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].content").description("대댓글 내용"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].createdAt").description("대댓글 생성일"),
                                 fieldWithPath("data.comments.[].commentDtoList.[].likeNum").description("대댓글 좋아요 수"),
-                                fieldWithPath("data.comments.[].commentDtoList.[].commentDtoList").description("대댓글 리스트")
+                                fieldWithPath("data.comments.[].commentDtoList.[].commentDtoList").description("대댓글 리스트"),
+                                fieldWithPath("data.userOtherReviews").description("유저 다른 빵집 리뷰 리스트"),
+                                fieldWithPath("data.userOtherReviews.[].id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.userOtherReviews.[].image").description("리뷰 이미지"),
+                                fieldWithPath("data.userOtherReviews.[].rating").description("리뷰 점수"),
+                                fieldWithPath("data.bakeryOtherReviews").description("빵집 다른 리뷰 리스트"),
+                                fieldWithPath("data.bakeryOtherReviews.[].id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.bakeryOtherReviews.[].image").description("리뷰 이미지"),
+                                fieldWithPath("data.bakeryOtherReviews.[].rating").description("리뷰 점수")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -348,6 +360,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].userId").description("유저 고유 번호"),
                                 fieldWithPath("data.[].userImage").description("유저 이미지"),
                                 fieldWithPath("data.[].nickName").description("유저 닉네임"),
+                                fieldWithPath("data.[].commentNickName").description("부모 댓글 유저 닉네임"),
                                 fieldWithPath("data.[].content").description("댓글 내용"),
                                 fieldWithPath("data.[].createdAt").description("댓글 생성일"),
                                 fieldWithPath("data.[].likeNum").description("댓글 좋아요 수"),
@@ -356,6 +369,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].commentDtoList.[].userId").description("유저 고유 번호"),
                                 fieldWithPath("data.[].commentDtoList.[].userImage").description("유저 이미지"),
                                 fieldWithPath("data.[].commentDtoList.[].nickName").description("유저 닉네임"),
+                                fieldWithPath("data.[].commentDtoList.[].commentNickName").description("부모 댓글 유저 닉네임"),
                                 fieldWithPath("data.[].commentDtoList.[].content").description("대댓글 내용"),
                                 fieldWithPath("data.[].commentDtoList.[].createdAt").description("대댓글 생성일"),
                                 fieldWithPath("data.[].commentDtoList.[].likeNum").description("대댓글 좋아요 수"),

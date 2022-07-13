@@ -37,4 +37,4 @@ out/
 .vscode/
 /src/main/resources/application-local.yml
 /.env
-/src/main/resources/firebase/firebase_service_key.json
+/src/main/resources/firebase/firebase-service-key-local.json

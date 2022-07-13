@@ -14,6 +14,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -42,23 +43,6 @@ class FlagControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
-        bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
-        bakeryAddReportRepository.deleteAllInBatch();
-        breadAddReportRepository.deleteAllInBatch();
-        flagBakeryRepository.deleteAllInBatch();
-        flagRepository.deleteAllInBatch();
-        followRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
-        reviewReportRepository.deleteAllInBatch();
-        reviewCommentLikeRepository.deleteAllInBatch();
-        reviewCommentRepository.deleteAllInBatch();
-        reviewLikeRepository.deleteAllInBatch();
-        reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
-        bakeryRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
@@ -82,6 +66,20 @@ class FlagControllerTest extends ControllerTest {
         breadRatingRepository.save(rating);
     }
 
+    @AfterEach
+    public void setDown() {
+        flagBakeryRepository.deleteAllInBatch();
+        flagRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
+        breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+    }
+    
     @Test
 //    @Transactional
     void findSimpleFlags() throws Exception {

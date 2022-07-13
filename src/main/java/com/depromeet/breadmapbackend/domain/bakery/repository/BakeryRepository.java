@@ -11,4 +11,6 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     List<Bakery> findAll();
     Integer countAllByNameEqualsAndStreetAddressEquals(String name, String streetAddress);
     Optional<Bakery> findById(Long bakeryId);
+    List<Bakery> findByNameStartsWith(String name);
+    Optional<Bakery> findByName(String name);
 }
