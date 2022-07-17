@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,8 +19,9 @@ public class ReviewCommentDto {
     private String userImage;
     private String nickName;
 
+    private String commentNickName;
     private String content;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     private Integer likeNum;
 
@@ -38,8 +40,16 @@ public class ReviewCommentDto {
             this.userImage = null;
             this.nickName = null;
         }
+
+        if(reviewComment.getParent() == null) this.commentNickName = null;
+        else {
+            ReviewComment parent = reviewComment.getParent();
+            if(parent.getUser() == null) this.commentNickName = null;
+            else this.commentNickName = reviewComment.getParent().getUser().getNickName();
+        }
+
         this.content = reviewComment.getContent();
-        this.createdAt = reviewComment.getCreatedAt();
+        this.createdAt = reviewComment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.likeNum = reviewComment.getLikes().size();
         this.commentDtoList = reviewComment.getChildList().stream().map(ReviewCommentDto::new).collect(Collectors.toList());
     }

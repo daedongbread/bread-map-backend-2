@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,10 +25,25 @@ public class BakeryAddReport extends BaseEntity {
 
     private String content;
 
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer status;
+
+    @Column(nullable = false, columnDefinition = "boolean default 1")
+    private boolean isUse;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
-    public BakeryAddReport(String name, String location, String content) {
+    public BakeryAddReport(String name, String location, String content, User user) {
         this.name = name;
         this.location = location;
         this.content = content;
+        this.status = 0;
+        this.isUse = true;
+        this.user = user;
     }
+
+    public void updateStatus(Integer status) { this.status = status; }
 }
