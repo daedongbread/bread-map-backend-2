@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/auth/reissue", "/").permitAll()
 //                .antMatchers("/bakery/**").permitAll()
                 .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
-                .antMatchers("/bakery/**", "/flag/**", "/review/**", "/user/**", "/notice/**", "/search/**").hasAuthority(RoleType.USER.getCode())
+                .antMatchers("/bakery/**", "/flag/**", "/review/**", "/user/**").hasAuthority(RoleType.USER.getCode())
                 .antMatchers("/admin/**").hasAuthority(RoleType.ADMIN.getCode())
 //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
@@ -111,8 +111,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/docs/**");
-        web.ignoring().antMatchers("/template/fcm-test.html");
-        web.ignoring().antMatchers("/firebase-messaging-sw.js");
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
         web.httpFirewall(defaultHttpFirewall());
     }

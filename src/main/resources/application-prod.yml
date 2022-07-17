@@ -20,9 +20,6 @@ spring:
   web:
     resources:
       add-mappings: false
-  redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
   security:
     oauth2:
       client:
@@ -67,8 +64,3 @@ cloud:
 logging:
   level:
     root: error
-
-firebase:
-  url: ${FIREBASE_URL}
-  path: ${FIREBASE_PATH}
-  scope: ${FIREBASE_SCOPE}

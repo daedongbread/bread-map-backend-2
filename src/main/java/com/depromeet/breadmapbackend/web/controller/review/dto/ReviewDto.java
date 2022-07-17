@@ -5,7 +5,6 @@ import com.depromeet.breadmapbackend.domain.review.Review;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class ReviewDto {
 
     private Integer likeNum;
     private Integer commentNum;
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     private Double averageRating;
 
@@ -43,7 +42,7 @@ public class ReviewDto {
         this.content = review.getContent();
         this.likeNum = review.getLikes().size();
         this.commentNum = (int) review.getComments().stream().filter(reviewComment -> reviewComment.getUser() != null).count();
-        this.createdAt = review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.createdAt = review.getCreatedAt();
         this.averageRating = Math.floor(
                 review.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue)
                         .average().orElse(0)*10)/10.0;
