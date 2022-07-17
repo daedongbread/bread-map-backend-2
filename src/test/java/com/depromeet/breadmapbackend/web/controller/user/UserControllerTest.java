@@ -26,6 +26,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -63,10 +65,10 @@ class UserControllerTest extends ControllerTest {
 
         BlockUser blockUser = BlockUser.builder().user(user1).blockUser(userToBlock).build();
         blockUserRepository.save(blockUser);
-
+        
         Bakery bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .name("bakery1").streetAddress("street").image("testImage").build();
-        bakery.addFacilityInfo(FacilityInfo.PARKING);
+                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1")
+                .streetAddress("street").image("testImage").build();
         bakeryRepository.save(bakery);
 
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.advice;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
@@ -374,6 +375,24 @@ public class ExceptionAdvice {
     @ExceptionHandler(ImageInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse imageInvalidException(ImageInvalidException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미 등록한 빵집일 일 때
+     */
+    @ExceptionHandler(DuplicateBakeryException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse duplicateBakeryException(DuplicateBakeryException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 빵집 제보가 존재하지 않을 때
+     */
+    @ExceptionHandler(BakeryReportNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse bakeryReportNotFoundException(BakeryReportNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 

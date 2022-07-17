@@ -187,7 +187,6 @@ operation::review/comment/unlike[snippets='http-request,request-headers,path-par
 === 리뷰 신고 API [POST]
 operation::review/report[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
-
 == 검색 API
 
 - 자동 완성 API
@@ -210,3 +209,30 @@ operation::search/keywords/delete[snippets='http-request,request-headers,request
 
 === 최근 검색어 전체 삭제 API [DELETE]
 operation::search/keywords/deleteAll[snippets='http-request,request-headers,http-response']
+
+== 어드민 API
+
+- 모든 빵집 조회 API
+- 빵집 상세 조회 API
+- 빵집 추가 API
+- 모든 빵집 제보 조회 API
+- 빵집 제보 상세 조회 API
+- 빵집 게시 상태 변경 API
+
+=== 모든 빵집 조회 API [GET]
+operation::admin/getAllBakery[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 빵집 조회 API [GET]
+operation::admin/getBakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== 빵집 추가 API [POST]
+operation::admin/addBakery[snippets='http-request,request-headers,http-response']
+
+=== 모든 빵집 제보 조회 API [GET]
+operation::admin/getAllBakeryReport[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 빵집 제보 상세 조회 API [GET]
+operation::admin/getBakeryReport[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 빵집 게시 상태 변경 API [POST]
+operation::admin/updateBakeryReport[snippets='http-request,request-headers,path-parameters,http-response']

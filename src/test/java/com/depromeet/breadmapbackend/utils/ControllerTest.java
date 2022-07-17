@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
+import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
@@ -105,4 +106,7 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ReviewService reviewService;
+
+    @Autowired
+    protected AdminService adminService;
 }
