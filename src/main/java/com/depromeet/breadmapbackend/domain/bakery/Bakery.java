@@ -48,9 +48,6 @@ public class Bakery extends BaseEntity {
 
     private Integer flagNum;
 
-    @Column(nullable = false, columnDefinition = "boolean default 1")
-    private boolean isUse;
-
     @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bread> breadList = new ArrayList<>();
 
@@ -68,7 +65,7 @@ public class Bakery extends BaseEntity {
     public Bakery(Long id, String name, Double latitude, Double longitude,
                   String streetAddress, String domicileAddress, String hours, String phoneNumber,
                   String websiteURL, String instagramURL, String facebookURL, String blogURL,
-                  String image, User user, List<FacilityInfo> facilityInfoList) {
+                  String image, User user) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -84,8 +81,6 @@ public class Bakery extends BaseEntity {
         this.image = image;
         this.flagNum = 0;
         this.user = user;
-        this.facilityInfoList = facilityInfoList;
-        this.isUse = true;
     }
 
     public void addFlagNum() {

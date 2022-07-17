@@ -3,11 +3,10 @@ package com.depromeet.breadmapbackend.service.user;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
-import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.*;
-import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
+import com.depromeet.breadmapbackend.domain.user.exception.FollowAlreadyException;
+import com.depromeet.breadmapbackend.domain.user.exception.FollowNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
@@ -18,6 +17,7 @@ import com.depromeet.breadmapbackend.security.token.RefreshToken;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
+import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
     private final FollowRepository followRepository;
     private final ReviewRepository reviewRepository;
     private final FlagRepository flagRepository;
-    private final BlockUserRepository blockUserRepository;
 
     @Transactional
     public JwtToken reissue(TokenRefreshRequest request) {
@@ -97,53 +96,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<SimpleUserDto> followerList(String username) {
+    public List<FollowDto> followerList(String username) {
         User toUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return followRepository.findByToUser(toUser).stream()
-                .map(follow -> new SimpleUserDto(follow.getFromUser(),
+                .map(follow -> new FollowDto(follow.getFromUser(),
                         reviewRepository.countByUser(follow.getFromUser()),
                         followRepository.countByToUser(follow.getFromUser())))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<SimpleUserDto> followingList(String username) {
+    public List<FollowDto> followingList(String username) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return followRepository.findByToUser(fromUser).stream()
-                .map(follow -> new SimpleUserDto(follow.getToUser(),
+                .map(follow -> new FollowDto(follow.getToUser(),
                         reviewRepository.countByUser(follow.getToUser()),
                         followRepository.countByToUser(follow.getToUser())))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<SimpleUserDto> blockList(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-
-        return blockUserRepository.findByUser(user).stream()
-                .map(blockUser -> new SimpleUserDto(blockUser.getBlockUser(),
-                        reviewRepository.countByUser(blockUser.getBlockUser()),
-                        followRepository.countByToUser(blockUser.getBlockUser())))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void block(String username, BlockRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        User userToBlock = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
-        if(blockUserRepository.findByUserAndBlockUser(user, userToBlock).isPresent())
-            throw new BlockAlreadyException();
-
-        BlockUser blockUser = BlockUser.builder().user(user).blockUser(userToBlock).build();
-        blockUserRepository.save(blockUser);
-    }
-
-    @Transactional
-    public void unblock(String username, BlockRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        User userToUnblock = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
-        BlockUser blockUser = blockUserRepository.findByUserAndBlockUser(user, userToUnblock).orElseThrow(BlockNotFoundException::new);
-
-        blockUserRepository.delete(blockUser);
     }
 }
