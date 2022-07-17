@@ -4,13 +4,10 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
-import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
-import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
@@ -30,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@Import({AmazonS3MockConfig.class, EmbeddedRedisConfig.class})
+@Import({AmazonS3MockConfig.class})
 public abstract class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
@@ -93,9 +90,6 @@ public abstract class ControllerTest {
     protected ReviewReportRepository reviewReportRepository;
 
     @Autowired
-    protected BlockUserRepository blockUserRepository;
-
-    @Autowired
     protected UserService userService;
 
     @Autowired
@@ -106,7 +100,4 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ReviewService reviewService;
-
-    @Autowired
-    protected AdminService adminService;
 }

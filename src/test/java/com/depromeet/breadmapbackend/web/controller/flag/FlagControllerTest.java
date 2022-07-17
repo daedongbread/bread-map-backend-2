@@ -3,7 +3,6 @@ package com.depromeet.breadmapbackend.web.controller.flag;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
@@ -14,14 +13,10 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Collections;
-import java.util.List;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -43,31 +38,6 @@ class FlagControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
-        userRepository.save(user);
-        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
-
-        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").image("testImage").build();
-        bakeryRepository.save(bakery);
-
-        flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
-        flagRepository.save(flag);
-
-        Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
-
-        breadRepository.save(bread);
-
-        Review review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();
-        reviewRepository.save(review);
-
-        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
-        breadRatingRepository.save(rating);
-    }
-
-    @AfterEach
-    public void setDown() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
         breadRatingRepository.deleteAllInBatch();
@@ -78,8 +48,29 @@ class FlagControllerTest extends ControllerTest {
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
+
+        user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        userRepository.save(user);
+        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+
+        bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+                .name("bakery1").streetAddress("street").image("testImage").build();
+        bakery.addFacilityInfo(FacilityInfo.PARKING);
+        bakeryRepository.save(bakery);
+
+        flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
+        flagRepository.save(flag);
+
+        Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
+        breadRepository.save(bread);
+
+        Review review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();
+        reviewRepository.save(review);
+
+        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
+        breadRatingRepository.save(rating);
     }
-    
+
     @Test
 //    @Transactional
     void findSimpleFlags() throws Exception {

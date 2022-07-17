@@ -15,15 +15,12 @@ import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BreadReportRequest;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -46,15 +43,31 @@ class BakeryControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
+        bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryDeleteReportRepository.deleteAllInBatch();
+        bakeryAddReportRepository.deleteAllInBatch();
+        breadAddReportRepository.deleteAllInBatch();
+        flagBakeryRepository.deleteAllInBatch();
+        flagRepository.deleteAllInBatch();
+        breadRatingRepository.deleteAllInBatch();
+        reviewCommentLikeRepository.deleteAllInBatch();
+        reviewCommentRepository.deleteAllInBatch();
+        reviewLikeRepository.deleteAllInBatch();
+        reviewRepository.deleteAllInBatch();
+        breadRepository.deleteAllInBatch();
+        bakeryRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
-        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
+                .name("bakery1").streetAddress("street").build();
         bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(facilityInfo).name("bakery2").streetAddress("street").build();
+                .name("bakery2").streetAddress("street").build();
+        bakery1.addFacilityInfo(FacilityInfo.PARKING);
+        bakery1.addFacilityInfo(FacilityInfo.DELIVERY);
 
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
@@ -73,24 +86,6 @@ class BakeryControllerTest extends ControllerTest {
         BreadRating rating2 = BreadRating.builder().bread(bread2).review(review2).rating(4L).build();
         breadRatingRepository.save(rating1);
         breadRatingRepository.save(rating2);
-    }
-
-    @AfterEach
-    public void setDown() {
-        bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
-        bakeryAddReportRepository.deleteAllInBatch();
-        breadAddReportRepository.deleteAllInBatch();
-        flagBakeryRepository.deleteAllInBatch();
-        flagRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
-        reviewCommentLikeRepository.deleteAllInBatch();
-        reviewCommentRepository.deleteAllInBatch();
-        reviewLikeRepository.deleteAllInBatch();
-        reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
-        bakeryRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
     }
 
     @Test
@@ -175,7 +170,7 @@ class BakeryControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findBakery() throws Exception {
-        mockMvc.perform(get("/bakery/{bakeryId}", bakery1.getId())
+        mockMvc.perform(get("/bakery/{bakeryId}", 1L)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/find",

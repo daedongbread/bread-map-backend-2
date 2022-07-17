@@ -2,10 +2,14 @@ package com.depromeet.breadmapbackend.web.controller.user;
 
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.service.user.UserService;
+import com.depromeet.breadmapbackend.web.advice.ValidationGroups;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
-import com.depromeet.breadmapbackend.web.controller.user.dto.*;
+import com.depromeet.breadmapbackend.web.controller.user.dto.FollowDto;
+import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
+import com.depromeet.breadmapbackend.web.controller.user.dto.ProfileDto;
+import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRefreshRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,31 +51,13 @@ public class UserController {
 
     @GetMapping("/follower")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleUserDto>> followerList(@CurrentUser String username) {
+    public ApiResponse<List<FollowDto>> followerList(@CurrentUser String username) {
         return new ApiResponse<>(userService.followerList(username));
     }
 
     @GetMapping("/following")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleUserDto>> followingList(@CurrentUser String username) {
+    public ApiResponse<List<FollowDto>> followingList(@CurrentUser String username) {
         return new ApiResponse<>(userService.followingList(username));
-    }
-
-    @GetMapping("/block")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleUserDto>> blockList(@CurrentUser String username) {
-        return new ApiResponse<>(userService.blockList(username));
-    }
-
-    @PostMapping("/block")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void block(@CurrentUser String username, @RequestBody BlockRequest request) {
-        userService.block(username, request);
-    }
-
-    @DeleteMapping("/block")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unblock(@CurrentUser String username, @RequestBody BlockRequest request) {
-        userService.unblock(username, request);
     }
 }

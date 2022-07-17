@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,10 +14,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ReviewDetailDto {
     private Long id;
-
-    private String bakeryImage;
-    private String bakeryName;
-    private String bakeryAddress;
 
     private Long userId;
     private String userImage;
@@ -32,19 +27,12 @@ public class ReviewDetailDto {
 
     private Integer likeNum;
     private Integer commentNum;
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     private List<ReviewCommentDto> comments;
 
-    private List<SimpleReviewDto> userOtherReviews;
-    private List<SimpleReviewDto> bakeryOtherReviews;
-
     @Builder
-    public ReviewDetailDto(Review review, Integer reviewNum, Integer followerNum,
-                           List<SimpleReviewDto> userOtherReviews, List<SimpleReviewDto> bakeryOtherReviews) {
-        this.bakeryImage = review.getBakery().getImage();
-        this.bakeryName = review.getBakery().getName();
-        this.bakeryAddress = review.getBakery().getStreetAddress();
+    public ReviewDetailDto(Review review, Integer reviewNum, Integer followerNum) {
         this.id = review.getId();
         this.userId = review.getUser().getId();
         this.userImage = review.getUser().getProfileImageUrl();
@@ -56,10 +44,8 @@ public class ReviewDetailDto {
         this.content = review.getContent();
         this.likeNum = review.getLikes().size();
         this.commentNum = (int) review.getComments().stream().filter(reviewComment -> reviewComment.getUser() != null).count();
-        this.createdAt = review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.createdAt = review.getCreatedAt();
         this.comments = review.getComments().stream()
                 .filter(reviewComment -> reviewComment.getParent() == null).map(ReviewCommentDto::new).collect(Collectors.toList());
-        this.userOtherReviews = userOtherReviews;
-        this.bakeryOtherReviews = bakeryOtherReviews;
     }
 }
