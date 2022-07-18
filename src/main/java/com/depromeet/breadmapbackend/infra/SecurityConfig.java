@@ -98,6 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://bread-map.s3-website.ap-northeast-2.amazonaws.com/");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
@@ -111,8 +112,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/docs/**");
-        web.ignoring().antMatchers("/template/fcm-test.html");
-        web.ignoring().antMatchers("/firebase-messaging-sw.js");
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
         web.httpFirewall(defaultHttpFirewall());
     }
