@@ -20,6 +20,10 @@ spring:
   web:
     resources:
       add-mappings: false
+  data:
+    redis:
+      repositories:
+        enabled: false
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -64,9 +68,9 @@ cloud:
     cloudFront:
       distributionDomain: ${S3_CLOUDFRONT}
 
-#logging:
-#  level:
-#    root: error
+logging:
+  level:
+    root: error
 
 firebase:
   url: ${FIREBASE_URL}
