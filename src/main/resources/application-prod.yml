@@ -46,9 +46,9 @@ spring:
               - account_email
         provider:
           kakao:
-            authorization-uri: ${KAKAO_AUTH_URL}
-            token-uri: ${KAKAO_TOKEN_URL}
-            user-info-uri: ${KAKAO_USER_INFO_URL}
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
 cloud:
@@ -64,9 +64,9 @@ cloud:
     cloudFront:
       distributionDomain: ${S3_CLOUDFRONT}
 
-logging:
-  level:
-    root: error
+#logging:
+#  level:
+#    root: error
 
 firebase:
   url: ${FIREBASE_URL}
