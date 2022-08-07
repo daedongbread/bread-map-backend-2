@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.SimpleBreadDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,17 @@ public class BakeryController {
     public void breadAddReport(@PathVariable Long bakeryId, @RequestPart BreadReportRequest request,
                                @RequestPart List<MultipartFile> files) throws IOException {
         bakeryService.breadAddReport(bakeryId, request, files);
+    }
+
+    @GetMapping("/{bakeryId}/bread")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<SimpleBreadDto>> findSimpleBreadList(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryService.findSimpleBreadList(bakeryId));
+    }
+
+    @GetMapping("/{bakeryId}/bread/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<SimpleBreadDto>> searchSimpleBreadList(@PathVariable Long bakeryId, @RequestParam String name) {
+        return new ApiResponse<>(bakeryService.searchSimpleBreadList(bakeryId, name));
     }
 }

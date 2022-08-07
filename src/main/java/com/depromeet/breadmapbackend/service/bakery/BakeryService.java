@@ -15,4 +15,6 @@ public interface BakeryService {
     void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException;
     void bakeryAddReport(BakeryReportRequest request);
     void breadAddReport(Long bakeryId, BreadReportRequest request, List<MultipartFile> files) throws IOException;
+    List<SimpleBreadDto> findSimpleBreadList(Long bakeryId);
+    List<SimpleBreadDto> searchSimpleBreadList(Long bakeryId, String name);
 }

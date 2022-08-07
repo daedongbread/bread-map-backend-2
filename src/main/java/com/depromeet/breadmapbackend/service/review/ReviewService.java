@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.service.review;
 
 import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
-import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
