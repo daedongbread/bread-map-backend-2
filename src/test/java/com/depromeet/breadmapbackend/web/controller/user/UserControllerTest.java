@@ -176,6 +176,19 @@ class UserControllerTest extends ControllerTest {
     }
 
     @Test
+    void deleteUser() throws Exception {
+        mockMvc.perform(delete("/user")
+                .header("Authorization", "Bearer " + token2.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
 //    @Transactional
     void follow() throws Exception {
         String object = objectMapper.writeValueAsString(FollowRequest.builder().userId(user1.getId()).build());

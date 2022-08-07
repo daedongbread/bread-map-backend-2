@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService {
     JwtToken reissue(TokenRefreshRequest tokenRefreshRequest);
     ProfileDto profile(String username);
+    void deleteUser(String username);
     void follow(String username, FollowRequest request);
     void unfollow(String username, FollowRequest request);
     List<SimpleUserDto> followerList(String username);

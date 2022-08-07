@@ -10,7 +10,8 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByBakeryId(Long bakeryId);
     Long countByUserId(Long userId);
-    List<Review> findByUserId(Long userId);
+    List<Review> findByUser(User user);
+    void deleteByUser(User user);
     Optional<Review> findByIdAndIsUseIsTrue(Long id);
     Optional<Review> findByIdAndUserAndIsUseIsTrue(Long id, User user);
     Integer countByUser(User user);
