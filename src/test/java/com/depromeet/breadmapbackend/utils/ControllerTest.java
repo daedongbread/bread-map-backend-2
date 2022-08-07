@@ -18,10 +18,12 @@ import com.depromeet.breadmapbackend.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,10 +44,13 @@ public abstract class ControllerTest {
     protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    protected UserRepository userRepository;
+    protected StringRedisTemplate redisTemplate;
+
+    @Value("${spring.redis.key.refresh}")
+    protected String REDIS_KEY_REFRESH;
 
     @Autowired
-    protected RefreshTokenRepository refreshTokenRepository;
+    protected UserRepository userRepository;
 
     @Autowired
     protected BakeryRepository bakeryRepository;

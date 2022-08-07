@@ -12,6 +12,7 @@ import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
+import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
@@ -429,6 +430,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(BlockNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse blockNotFoundException(BlockNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 탈퇴한지 7일이 지나지 않았는데 재가입 시
+     */
+    @ExceptionHandler(RejoinException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse rejoinException(RejoinException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

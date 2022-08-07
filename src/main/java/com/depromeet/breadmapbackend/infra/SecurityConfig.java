@@ -9,9 +9,11 @@ import com.depromeet.breadmapbackend.security.service.CustomOAuth2UserService;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -37,7 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private final CustomOAuth2UserService oAuth2UserService;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final StringRedisTemplate redisTemplate;
+
+    @Value("${spring.redis.key.refresh}")
+    private String REDIS_KEY_REFRESH;
 
     // 토큰 프로바이더 설정
 //    @Bean
@@ -73,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/auth/reissue", "/").permitAll()
+                .antMatchers("/user/auth/reissue").permitAll()
 //                .antMatchers("/bakery/**").permitAll()
                 .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
                 .antMatchers("/bakery/**", "/flag/**", "/review/**", "/user/**", "/notice/**", "/search/**").hasAuthority(RoleType.USER.getCode())
@@ -89,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 .oauth2Login()
-                .successHandler(new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, refreshTokenRepository))
+                .successHandler(new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, redisTemplate, REDIS_KEY_REFRESH))
                 .userInfoEndpoint().userService(oAuth2UserService);
     }
 

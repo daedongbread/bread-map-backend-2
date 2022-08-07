@@ -9,14 +9,14 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
-public class TokenRefreshRequest {
+public class TokenRequest {
     @NotBlank(message = "Access Token 은 필수 값입니다.", groups = NotEmptyGroup.class)
     private String accessToken;
     @NotBlank(message = "Refresh Token 은 필수 값입니다.", groups = NotEmptyGroup.class)
     private String refreshToken;
 
     @Builder
-    public TokenRefreshRequest(String accessToken, String refreshToken) {
+    public TokenRequest(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
