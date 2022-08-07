@@ -12,4 +12,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     List<Follow> findByToUser(User toUser);
     Integer countByToUser(User toUser);
     Integer countByFromUser(User fromUser);
+    void deleteByFromUser(User fromUser);
+    void deleteByToUser(User toUser);
 }

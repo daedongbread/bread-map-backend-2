@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface ReviewCommentLikeRepository extends JpaRepository<ReviewCommentLike, Long> {
     Optional<ReviewCommentLike> findByUserAndReviewComment(User user, ReviewComment reviewComment);
+    void deleteByUser(User user);
 }

@@ -1,7 +1,13 @@
 package com.depromeet.breadmapbackend.service.user;
 
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentLikeRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewLikeRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
@@ -38,7 +44,13 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final FollowRepository followRepository;
     private final ReviewRepository reviewRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final ReviewCommentRepository reviewCommentRepository;
+    private final ReviewCommentLikeRepository reviewCommentLikeRepository;
+    private final NoticeRepository noticeRepository;
+    private final NoticeTokenRepository noticeTokenRepository;
     private final FlagRepository flagRepository;
+    private final FlagBakeryRepository flagBakeryRepository;
     private final BlockUserRepository blockUserRepository;
 
     @Transactional
@@ -69,7 +81,7 @@ public class UserServiceImpl implements UserService {
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
                                 .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
-        List<UserReviewDto> userReviewDtoList = reviewRepository.findByUserId(user.getId())
+        List<UserReviewDto> userReviewDtoList = reviewRepository.findByUser(user)
                 .stream().filter(Review::isUse).map(UserReviewDto::new)
                 .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
                 .collect(Collectors.toList());
@@ -77,6 +89,30 @@ public class UserServiceImpl implements UserService {
         return ProfileDto.builder().user(user)
                 .followingNum(followingNum).followerNum(followerNum)
                 .userFlagDtoList(userFlagDtoList).userReviewDtoList(userReviewDtoList).build();
+    }
+
+    @Transactional
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        reviewCommentLikeRepository.deleteByUser(user);
+        reviewCommentRepository.deleteByUser(user);
+        reviewLikeRepository.deleteByUser(user);
+        reviewRepository.findByUser(user);
+
+        noticeTokenRepository.deleteByUser(user);
+        noticeRepository.deleteByUser(user);
+
+        flagRepository.findByUser(user).forEach(flagBakeryRepository::deleteByFlag);
+        flagRepository.deleteByUser(user);
+
+        blockUserRepository.deleteByUser(user);
+        blockUserRepository.deleteByBlockUser(user);
+
+        followRepository.deleteByFromUser(user);
+        followRepository.deleteByToUser(user);
+
+        //TODO: access, refresh 처리
     }
 
     @Transactional

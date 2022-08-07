@@ -33,6 +33,12 @@ public class UserController {
         return new ApiResponse<>(userService.profile(username));
     }
 
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@CurrentUser String username) {
+        userService.deleteUser(username);
+    }
+
     @PostMapping("/follow")
     @ResponseStatus(HttpStatus.CREATED)
     public void follow(@CurrentUser String username, @RequestBody FollowRequest request) {

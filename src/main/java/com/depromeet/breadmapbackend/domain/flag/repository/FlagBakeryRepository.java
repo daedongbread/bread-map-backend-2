@@ -18,4 +18,5 @@ public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
     List<FlagBakery> findByFlag(Flag flag);
     @Transactional
     void delete(FlagBakery flagBakery);
+    void deleteByFlag(Flag flag);
 }
