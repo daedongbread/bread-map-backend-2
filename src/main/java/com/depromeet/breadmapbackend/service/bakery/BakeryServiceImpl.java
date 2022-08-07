@@ -178,4 +178,16 @@ public class BakeryServiceImpl implements BakeryService {
         }
         breadAddReportRepository.save(breadAddReport);
     }
+
+    @Transactional(readOnly = true)
+    public List<SimpleBreadDto> findSimpleBreadList(Long bakeryId) { // 순서?
+        return breadRepository.findByBakeryId(bakeryId).stream()
+                .map(SimpleBreadDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleBreadDto> searchSimpleBreadList(Long bakeryId, String name) {
+        return breadRepository.findByBakeryIdAndNameStartsWith(bakeryId, name)
+                .stream().map(SimpleBreadDto::new).collect(Collectors.toList());
+    }
 }

@@ -206,6 +206,7 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.menu.[].rating").description("빵 평점"),
                                 fieldWithPath("data.menu.[].reviewNum").description("빵 리뷰 수"),
                                 fieldWithPath("data.menu.[].price").description("빵 가격"),
+                                fieldWithPath("data.menu.[].image").description("빵 이미지"),
                                 fieldWithPath("data.facilityInfoList").description("빵집 시설 정보")
                         )
                 ))
@@ -302,5 +303,46 @@ class BakeryControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void findSimpleBreadList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/bread", bakery1.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/bread",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        responseFields(
+                                fieldWithPath("data.[].id").description("빵 고유 번호"),
+                                fieldWithPath("data.[].name").description("빵 이름"),
+                                fieldWithPath("data.[].price").description("빵 가격"),
+                                fieldWithPath("data.[].image").description("빵 이미지")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void searchSimpleBreadList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/bread/search?name=bread", bakery1.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/bread/search",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(parameterWithName("name").description("검색 키워드")),
+                        responseFields(
+                                fieldWithPath("data.[].id").description("빵 고유 번호"),
+                                fieldWithPath("data.[].name").description("빵 이름"),
+                                fieldWithPath("data.[].price").description("빵 가격"),
+                                fieldWithPath("data.[].image").description("빵 이미지")
+                        )
+                ))
+                .andExpect(status().isOk());
     }
 }

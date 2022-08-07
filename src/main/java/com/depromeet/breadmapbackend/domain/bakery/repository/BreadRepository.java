@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface BreadRepository extends JpaRepository<Bread, Long> {
     List<Bread> findByBakeryId(Long bakeryId);
+    List<Bread> findByBakeryIdAndNameStartsWith(Long bakeryId, String name);
 }

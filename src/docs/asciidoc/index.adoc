@@ -70,6 +70,8 @@ operation::user/unblock[snippets='http-request,request-headers,request-fields,ht
 - 빵집 삭제 요청 API
 - 빵집 추가 요청 API
 - 빵 추가 요청 API
+- 리뷰용 빵 간단 리스트 조회 API
+- 리뷰용 빵 검색 API
 
 === 빵집 지도 API [GET]
 operation::bakery/find/default[snippets='http-request,request-parameters,http-response,response-fields']
@@ -91,6 +93,12 @@ operation::bakery/report/add[snippets='http-request,request-headers,request-fiel
 
 === 빵 추가 요청 API [POST]
 operation::bakery/report/bread[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
+
+=== 리뷰용 빵 간단 리스트 조회 API [GET]
+operation::bakery/bread[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== 리뷰용 빵 검색 API [GET]
+operation::bakery/bread/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 == 깃발 API
 - 깃발 간단 리스트 조회 API
