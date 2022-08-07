@@ -12,9 +12,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -31,10 +33,11 @@ public class JwtTokenProvider {
 
 //    @PostConstruct
 //    protected void init() {
-//        this.key = Base64UrlCodec.BASE64URL.encode(key.getBytes(StandardCharsets.UTF_8));
+//        this.key = Base64.getEncoder()
+//                .encodeToString(key.getBytes(StandardCharsets.UTF_8));
 //    }
 
-    private Key getSigninKey(String key) {
+    private Key getSigningKey() {
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -49,13 +52,13 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenExpiredDate))
-                .signWith(getSigninKey(key), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
-                .signWith(getSigninKey(key), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         return JwtToken.builder()
@@ -66,11 +69,7 @@ public class JwtTokenProvider {
     // 만료된 토큰이거나 다른 에러가 발생한다면 false
     public boolean verifyToken(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(getSigninKey(key))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = parseClaims(token);
             return claims.getExpiration().after(new Date());
         } catch (SecurityException | MalformedJwtException e) {
             log.error("잘못된 Jwt 서명입니다.");
@@ -85,11 +84,10 @@ public class JwtTokenProvider {
     }
 
     private Claims parseClaims(String token) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(getSigninKey(key)).build().parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token).getBody();
     }
 
     public String getUsername(String token) {
@@ -112,5 +110,17 @@ public class JwtTokenProvider {
         UserPrincipal userPrincipal = UserPrincipal.create(claims.getSubject(), authorities);
 
         return new UsernamePasswordAuthenticationToken(userPrincipal, token, authorities);
+    }
+
+    public Long getRefreshTokenExpiredDate() {
+        return this.refreshTokenExpiredDate;
+    }
+
+    public Long getExpiration(String accessToken) {
+        // accessToken 남은 유효시간
+        Date expiration = parseClaims(accessToken).getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 }
