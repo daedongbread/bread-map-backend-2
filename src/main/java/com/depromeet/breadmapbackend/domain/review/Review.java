@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Review extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -38,7 +40,7 @@ public class Review extends BaseEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> imageList = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "boolean default 1")
+    @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
     private boolean isUse;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -51,14 +53,14 @@ public class Review extends BaseEntity {
     private List<ReviewComment> comments = new ArrayList<>();
 
     @Builder
-    private Review(User user, Bakery bakery, String content, boolean isUse) {
+    private Review(User user, Bakery bakery, String content) {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
-        this.isUse = isUse;
+        this.isUse = true;
     }
 
-    public void useChange() { this.isUse = false; }
+    public void useChange() { this.isUse = !isUse; }
 
     public void addImage(String image) {
         this.imageList.add(image);

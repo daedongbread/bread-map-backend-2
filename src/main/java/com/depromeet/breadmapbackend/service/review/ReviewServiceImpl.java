@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.service.review;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
+import com.depromeet.breadmapbackend.domain.bakery.exception.BreadAlreadyException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.SortTypeWrongException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
@@ -111,12 +112,7 @@ public class ReviewServiceImpl implements ReviewService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
         Review review = Review.builder()
-                .user(user).bakery(bakery).content(request.getContent()).isUse(true).build();
-        for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
-            String image = s3Uploader.upload(file, imagePath);
-            review.addImage(image);
-        }
+                .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
         reviewRepository.save(review);
 
         request.getBreadRatingList().forEach(breadRatingRequest -> {
@@ -128,14 +124,32 @@ public class ReviewServiceImpl implements ReviewService {
                 review.addRating(breadRating);
             }
         });
+
+        request.getNoExistBreadRatingRequestList().forEach(noExistBreadRatingRequest -> {
+            if(breadRepository.findByName(noExistBreadRatingRequest.getBreadName()).isPresent())
+                throw new BreadAlreadyException();
+            Bread bread = Bread.builder().name(noExistBreadRatingRequest.getBreadName())
+                    .price(0).bakery(bakery).image(null).isTrue(false).build();
+            breadRepository.save(bread);
+            BreadRating breadRating = BreadRating.builder()
+                    .bread(bread).review(review).rating(noExistBreadRatingRequest.getRating()).build();
+            breadRatingRepository.save(breadRating);
+            review.addRating(breadRating);
+        });
+
+        for (MultipartFile file : files) {
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
+            String image = s3Uploader.upload(file, imagePath);
+            review.addImage(image);
+        }
     }
 
     @Transactional
     public void removeReview(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findByIdAndUserAndIsUseIsTrue(reviewId, user).orElseThrow(ReviewNotFoundException::new);
-//        reviewRepository.delete(review);
-        review.useChange();
+        reviewRepository.delete(review);
+//        review.useChange();
     }
 
 //    @Transactional(readOnly = true)

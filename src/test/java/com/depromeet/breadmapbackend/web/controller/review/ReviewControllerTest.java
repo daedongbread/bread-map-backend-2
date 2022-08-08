@@ -59,7 +59,7 @@ class ReviewControllerTest extends ControllerTest {
         bread2 = Bread.builder().bakery(bakery).name("bread2").price(4000).build();
         breadRepository.save(bread1);
         breadRepository.save(bread2);
-        review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();
+        review = Review.builder().user(user).bakery(bakery).content("content1").build();
         review.addImage("image1");
         reviewRepository.save(review);
         BreadRating rating = BreadRating.builder().bread(bread1).review(review).rating(4L).build();
@@ -231,6 +231,10 @@ class ReviewControllerTest extends ControllerTest {
                 .breadRatingList(Arrays.asList(
                         ReviewRequest.BreadRatingRequest.builder().breadId(bread1.getId()).rating(5L).build(),
                         ReviewRequest.BreadRatingRequest.builder().breadId(bread2.getId()).rating(4L).build()
+                ))
+                .noExistBreadRatingRequestList(Arrays.asList(
+                        ReviewRequest.NoExistBreadRatingRequest.builder().breadName("fakeBread1").rating(5L).build(),
+                        ReviewRequest.NoExistBreadRatingRequest.builder().breadName("fakeBread2").rating(4L).build()
                 )).content("review add test").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
@@ -253,8 +257,11 @@ class ReviewControllerTest extends ControllerTest {
                         requestPartBody("request"),
                         requestPartFields("request",
                                 fieldWithPath("breadRatingList").description("리뷰 빵 점수 리스트"),
-                                fieldWithPath("breadRatingList.[].breadId").description("리뷰 빵 이름"),
+                                fieldWithPath("breadRatingList.[].breadId").description("리뷰 빵 고유 번호"),
                                 fieldWithPath("breadRatingList.[].rating").description("리뷰 빵 점수"),
+                                fieldWithPath("noExistBreadRatingRequestList").description("빵집에 없는 빵 점수 리스트"),
+                                fieldWithPath("noExistBreadRatingRequestList.[].breadName").description("빵집에 없는 빵 이름"),
+                                fieldWithPath("noExistBreadRatingRequestList.[].rating").description("빵집에 없는 빵 점수"),
                                 fieldWithPath("content").description("리뷰 내용")
                         )
                 ))
@@ -308,7 +315,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void reviewLike() throws Exception {
-        Review review = Review.builder().user(user).bakery(bakery).content("new content").isUse(true).build();
+        Review review = Review.builder().user(user).bakery(bakery).content("new content").build();
         reviewRepository.save(review);
 
         mockMvc.perform(post("/review/{reviewId}/like", review.getId())

@@ -227,6 +227,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 이미 존재하는 빵일 때
+     */
+    @ExceptionHandler(BreadAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse breadAlreadyException(BreadAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 이미 존재하는 리스트일 때
      */
     @ExceptionHandler(FlagAlreadyException.class)
