@@ -46,6 +46,12 @@ public class BakeryController {
         return new ApiResponse<>(bakeryService.findBakery(bakeryId));
     }
 
+    @GetMapping("/{bakeryId}/bread")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<BreadDto>> findBreadList(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryService.findBreadList(bakeryId));
+    }
+
     @PostMapping("/report/{bakeryId}/update")
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryUpdateReport(@PathVariable Long bakeryId, @RequestBody BakeryUpdateRequest request) {
@@ -71,13 +77,13 @@ public class BakeryController {
         bakeryService.breadAddReport(bakeryId, request, files);
     }
 
-    @GetMapping("/{bakeryId}/bread")
+    @GetMapping("/{bakeryId}/review/bread")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<SimpleBreadDto>> findSimpleBreadList(@PathVariable Long bakeryId) {
         return new ApiResponse<>(bakeryService.findSimpleBreadList(bakeryId));
     }
 
-    @GetMapping("/{bakeryId}/bread/search")
+    @GetMapping("/{bakeryId}/review/bread/search")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<SimpleBreadDto>> searchSimpleBreadList(@PathVariable Long bakeryId, @RequestParam String name) {
         return new ApiResponse<>(bakeryService.searchSimpleBreadList(bakeryId, name));

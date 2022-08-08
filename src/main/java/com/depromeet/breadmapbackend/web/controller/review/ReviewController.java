@@ -22,16 +22,10 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/{bakeryId}/simple")
+    @GetMapping("/{bakeryId}/all")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<ReviewDto>> getBakeryReviewList(@PathVariable Long bakeryId, @RequestParam ReviewSortType sort){
         return new ApiResponse<>(reviewService.getBakeryReviewList(bakeryId, sort));
-    }
-
-    @GetMapping("/{bakeryId}/all")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<ReviewDto>> getAllBakeryReviewList(@PathVariable Long bakeryId, @RequestParam ReviewSortType sort){
-        return new ApiResponse<>(reviewService.getAllBakeryReviewList(bakeryId, sort));
     }
 
     @GetMapping("/{reviewId}")
