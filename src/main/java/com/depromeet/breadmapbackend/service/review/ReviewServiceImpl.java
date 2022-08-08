@@ -48,26 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final S3Uploader s3Uploader;
 
     @Transactional(readOnly = true)
-    public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){
-        Comparator<ReviewDto> comparing;
-        if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
-        else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
-        else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new SortTypeWrongException();
-
-        return reviewRepository.findByBakeryId(bakeryId)
-                .stream().filter(Review::isUse).map(br -> new ReviewDto(br,
-//                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId())),
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(comparing)
-                .limit(3)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<ReviewDto> getAllBakeryReviewList(Long bakeryId, ReviewSortType sort){
+    public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
         Comparator<ReviewDto> comparing;
         if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();

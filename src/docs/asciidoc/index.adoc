@@ -74,6 +74,7 @@ operation::user/unblock[snippets='http-request,request-headers,request-fields,ht
 - 빵집 지도 API
 - 빵집 지도 필터 API
 - 빵집 단건 조회 API
+- 빵집 빵 리스트 조회 API
 - 빵집 수정 요청 API
 - 빵집 삭제 요청 API
 - 빵집 추가 요청 API
@@ -90,6 +91,9 @@ operation::bakery/find/filter[snippets='http-request,request-parameters,http-res
 === 빵집 단건 조회 API [GET]
 operation::bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
 
+=== 빵집 빵 리스트 조회 API [GET]
+operation::bakery/bread[snippets='http-request,path-parameters,http-response,response-fields']
+
 === 빵집 수정 요청 API [POST]
 operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
@@ -103,13 +107,12 @@ operation::bakery/report/add[snippets='http-request,request-headers,request-fiel
 operation::bakery/report/bread[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
 
 === 리뷰용 빵 간단 리스트 조회 API [GET]
-operation::bakery/bread[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::bakery/review/bread[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰용 빵 검색 API [GET]
-operation::bakery/bread/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::bakery/review/bread/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 == 깃발 API
-- 깃발 간단 리스트 조회 API
 - 깃발 리스트 조회 API,
 - 깃발 추가 API
 - 깃발 삭제 API
@@ -117,9 +120,6 @@ operation::bakery/bread/search[snippets='http-request,request-headers,path-param
 - 깃발에 추가된 빵집 리스트 조회 API
 - 깃발에 빵집 추가 API
 - 깃발에 등록된 빵집 삭제 API
-
-=== 깃발 간단 리스트 조회 API [GET]
-operation::flag/findSimple[snippets='http-request,request-headers,http-response,response-fields']
 
 === 깃발 리스트 조회 API [GET]
 operation::flag/find[snippets='http-request,request-headers,http-response,response-fields']

@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface ReviewService {
     List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort);
-    List<ReviewDto> getAllBakeryReviewList(Long bakeryId, ReviewSortType sort);
     ReviewDetailDto getReview(Long reviewId);
     void addReview(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException;
     void removeReview(String username, Long reviewId);
