@@ -131,6 +131,7 @@ public class BakeryServiceImpl implements BakeryService {
                         .average().orElse(0)*10)/10.0)
                 .reviewNum(bakery.getReviewList().size()).build();
         List<BreadDto> menu = breadRepository.findByBakeryId(bakeryId).stream()
+                .filter(Bread::isTrue)
                 .map(bread -> new BreadDto(bread,
                         Math.floor(breadRatingRepository.findBreadAvgRating(bread.getId())*10)/10.0, //TODO
                         breadRatingRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
@@ -182,12 +183,14 @@ public class BakeryServiceImpl implements BakeryService {
     @Transactional(readOnly = true)
     public List<SimpleBreadDto> findSimpleBreadList(Long bakeryId) { // 순서?
         return breadRepository.findByBakeryId(bakeryId).stream()
+                .filter(Bread::isTrue)
                 .map(SimpleBreadDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<SimpleBreadDto> searchSimpleBreadList(Long bakeryId, String name) {
-        return breadRepository.findByBakeryIdAndNameStartsWith(bakeryId, name)
-                .stream().map(SimpleBreadDto::new).collect(Collectors.toList());
+        return breadRepository.findByBakeryIdAndNameStartsWith(bakeryId, name).stream()
+                .filter(Bread::isTrue)
+                .map(SimpleBreadDto::new).collect(Collectors.toList());
     }
 }

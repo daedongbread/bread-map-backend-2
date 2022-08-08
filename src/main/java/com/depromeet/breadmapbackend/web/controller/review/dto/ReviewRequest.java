@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ReviewRequest {
     private List<BreadRatingRequest> breadRatingList;
+    private List<NoExistBreadRatingRequest> noExistBreadRatingRequestList;
     private String content;
 
     @Getter
@@ -21,6 +22,15 @@ public class ReviewRequest {
     @AllArgsConstructor
     public static class BreadRatingRequest {
         private Long breadId;
+        private Long rating;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class NoExistBreadRatingRequest {
+        private String breadName;
         private Long rating;
     }
 }

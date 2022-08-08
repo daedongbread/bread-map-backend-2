@@ -59,7 +59,7 @@ class FlagControllerTest extends ControllerTest {
 
         breadRepository.save(bread);
 
-        Review review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();
+        Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
 
         BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();

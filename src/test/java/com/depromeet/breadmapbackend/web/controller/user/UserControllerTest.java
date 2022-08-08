@@ -80,7 +80,7 @@ class UserControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);
 
-        Review review = Review.builder().user(user1).bakery(bakery).content("content1").isUse(true).build();
+        Review review = Review.builder().user(user1).bakery(bakery).content("content1").build();
         review.addImage("reviewImage1");
         reviewRepository.save(review);
 
