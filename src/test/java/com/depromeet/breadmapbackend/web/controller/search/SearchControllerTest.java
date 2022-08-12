@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
@@ -43,10 +44,10 @@ class SearchControllerTest extends ControllerTest {
         userRepository.save(user);
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
-        bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1").streetAddress("street").build();
-        bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(Collections.singletonList(FacilityInfo.DELIVERY)).name("bakery2").streetAddress("street").build();
+        bakery1 = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1").status(BakeryStatus.posting).build();
+        bakery2 = Bakery.builder().id(2L).address("address").latitude(37.55950448505721).longitude(127.04416263787213)
+                .facilityInfoList(Collections.singletonList(FacilityInfo.DELIVERY)).name("bakery2").status(BakeryStatus.posting).build();
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
 

@@ -41,7 +41,8 @@ public class Review extends BaseEntity {
     private List<String> imageList = new ArrayList<>();
 
     @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
-    private boolean isUse;
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BreadRating> ratings = new ArrayList<>();
@@ -57,10 +58,13 @@ public class Review extends BaseEntity {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
-        this.isUse = true;
+        this.status = ReviewStatus.UNBLOCK;
     }
 
-    public void useChange() { this.isUse = !isUse; }
+    public void useChange() {
+        if(this.status.equals(ReviewStatus.BLOCK)) this.status = ReviewStatus.UNBLOCK;
+        else this.status = ReviewStatus.BLOCK;
+    }
 
     public void addImage(String image) {
         this.imageList.add(image);

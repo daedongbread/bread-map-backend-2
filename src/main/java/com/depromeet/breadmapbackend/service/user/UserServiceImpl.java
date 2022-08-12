@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewLikeRepository;
@@ -100,7 +101,8 @@ public class UserServiceImpl implements UserService {
                                 .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
         List<UserReviewDto> userReviewDtoList = reviewRepository.findByUser(user)
-                .stream().filter(Review::isUse).map(UserReviewDto::new)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(UserReviewDto::new)
                 .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
                 .collect(Collectors.toList());
 

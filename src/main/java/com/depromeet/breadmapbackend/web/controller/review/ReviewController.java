@@ -96,7 +96,8 @@ public class ReviewController {
 
     @PostMapping("/{reviewId}/report")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewReport(@PathVariable Long reviewId, @RequestBody ReviewReportRequest request) {
-        reviewService.reviewReport(reviewId, request);
+    public void reviewReport(
+            @CurrentUser String username, @PathVariable Long reviewId, @RequestBody ReviewReportRequest request) {
+        reviewService.reviewReport(username, reviewId, request);
     }
 }

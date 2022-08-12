@@ -21,6 +21,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -83,7 +85,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (oAuth2UserInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(oAuth2UserInfo.getImageUrl())) {
             user.updateProfileImageUrl(oAuth2UserInfo.getImageUrl());
         }
-
+        user.updateLastAccessAt();
         return user;
     }
 

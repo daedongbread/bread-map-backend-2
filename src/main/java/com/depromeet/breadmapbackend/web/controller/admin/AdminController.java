@@ -2,13 +2,16 @@ package com.depromeet.breadmapbackend.web.controller.admin;
 
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportDto;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
-import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,39 +22,83 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    @GetMapping("/getAllBakery")
+    @GetMapping("/bakery/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<AdminAllBakeryDto>> getAllBakeryList() {
-        return new ApiResponse<>(adminService.getAllBakeryList());
+    public ApiResponse<AdminBakeryListDto> getBakeryList(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryList(pageable));
     }
 
-    @GetMapping("/getBakery/{bakeryId}")
+    @GetMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AdminBakeryDto> getBakeryDetail(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(adminService.getBakeryDetail(bakeryId));
+    public ApiResponse<AdminBakeryDto> getBakery(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(adminService.getBakery(bakeryId));
     }
 
-    @PostMapping("/addBakery")
+    @GetMapping("/bakery/location")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<BakeryLocationDto> getBakeryLatitudeLongitude(@RequestParam String address) throws JsonProcessingException {
+        return new ApiResponse<>(adminService.getBakeryLatitudeLongitude(address));
+    }
+
+    @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBakery(@CurrentUser String username, @RequestBody AddBakeryRequest request) {
-        adminService.addBakery(username, request);
+    public void addBakery(
+            @RequestPart AddBakeryRequest request,
+            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) {
+        adminService.addBakery(request, bakeryImage, breadImageList);
     }
 
-    @GetMapping("/getAllBakeryReport")
+    @PatchMapping("/bakery/{bakeryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateBakery(
+            @PathVariable Long bakeryId, @RequestBody UpdateBakeryRequest request,
+            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) {
+        adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
+    }
+
+    @GetMapping("/bakery/report/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<BakeryReportDto>> getAllBakeryReport() {
-        return new ApiResponse<>(adminService.getAllBakeryReport());
+    public ApiResponse<BakeryAddReportListDto> getBakeryReportList(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryReportList(pageable));
     }
 
-    @GetMapping("/getBakeryReport/{reportId}")
+    @GetMapping("/bakery/report/{reportId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<BakeryReportDto> getBakeryReportDetail(@PathVariable Long reportId) {
-        return new ApiResponse<>(adminService.getBakeryReportDetail(reportId));
+    public ApiResponse<BakeryAddReportDto> getBakeryReport(@PathVariable Long reportId) {
+        return new ApiResponse<>(adminService.getBakeryReport(reportId));
     }
 
-    @PostMapping("/updateBakeryReport/{reportId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void updateBakeryReport(@PathVariable Long reportId, @RequestBody UpdateBakeryReportStatusRequest request) {
-        adminService.updateBakeryReport(reportId, request);
+    @PatchMapping("/bakery/report/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateBakeryAddReportStatus(@PathVariable Long reportId, @RequestBody UpdateBakeryReportStatusRequest request) {
+        adminService.updateBakeryAddReportStatus(reportId, request);
+    }
+
+    @GetMapping("/review/report/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminReviewReportListDto> getReviewReportList(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getReviewReportList(pageable));
+    }
+
+    @PatchMapping("/review/report/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateReviewStatus(@PathVariable Long reportId) {
+        adminService.updateReviewStatus(reportId);
+    }
+
+    @GetMapping("/user/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminUserListDto> getUserList(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getUserList(pageable));
+    }
+
+    @PatchMapping("/user/{userId}/block")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeUserBlock(@PathVariable Long userId) {
+        adminService.changeUserBlock(userId);
     }
 }

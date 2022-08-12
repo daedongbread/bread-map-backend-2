@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.flag;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
@@ -48,8 +49,8 @@ class FlagControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").image("testImage").build();
+        bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").image("testImage").status(BakeryStatus.posting).build();
         bakeryRepository.save(bakery);
 
         flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();

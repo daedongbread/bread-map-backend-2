@@ -20,5 +20,5 @@ public interface ReviewService {
     void removeReviewComment(String username, Long reviewId, Long commentId);
     void reviewCommentLike(String username, Long reviewId, Long commentId);
     void reviewCommentUnlike(String username, Long reviewId, Long commentId);
-    void reviewReport(Long reviewId, ReviewReportRequest request);
+    void reviewReport(String username, Long reviewId, ReviewReportRequest request);
 }

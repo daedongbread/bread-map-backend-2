@@ -30,7 +30,7 @@ public class UserReviewDto {
     public UserReviewDto(Review review) {
         this.id = review.getId();
         this.bakeryName = review.getBakery().getName();
-        this.bakeryAddress = review.getBakery().getStreetAddress();
+        this.bakeryAddress = review.getBakery().getAddress();
         this.breadRatingDtoList = review.getRatings().stream().map(BreadRatingDto::new).collect(Collectors.toList());
         this.imageList = review.getImageList();
         this.content = review.getContent();

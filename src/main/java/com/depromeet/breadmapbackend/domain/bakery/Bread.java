@@ -45,7 +45,15 @@ public class Bread extends BaseEntity {
 //        bakery.getBreadList().add(this);
     }
 
-    public void updateImgPath(String image) {
+    public void updateName(String name) {
+        if(!this.name.equals(name)) this.name = name;
+    }
+
+    public void updatePrice(Integer price) {
+        if(!this.price.equals(price)) this.price = price;
+    }
+
+    public void updateImage(String image) {
         this.image = image;
     }
 }
