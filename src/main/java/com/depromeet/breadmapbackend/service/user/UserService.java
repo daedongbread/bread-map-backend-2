@@ -7,8 +7,10 @@ import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import java.util.List;
 
 public interface UserService {
-    JwtToken reissue(TokenRefreshRequest tokenRefreshRequest);
+    JwtToken reissue(TokenRequest tokenRequest);
     ProfileDto profile(String username);
+    void logout(TokenRequest tokenRequest);
+    void deleteUser(String username);
     void follow(String username, FollowRequest request);
     void unfollow(String username, FollowRequest request);
     List<SimpleUserDto> followerList(String username);

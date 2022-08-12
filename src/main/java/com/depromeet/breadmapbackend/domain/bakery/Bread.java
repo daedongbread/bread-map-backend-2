@@ -5,8 +5,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -28,17 +30,30 @@ public class Bread extends BaseEntity {
 
     private String image;
 
+    @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
+    @ColumnDefault("true")
+    private boolean isTrue;
+
     @Builder
-    private Bread(String name, Integer price, Bakery bakery, String image) {
+    private Bread(String name, Integer price, Bakery bakery, String image, Boolean isTrue) {
         this.name = name;
         this.price = price;
         this.bakery = bakery;
         this.image = image;
+        if(isTrue == null) this.isTrue = true;
+        else this.isTrue = isTrue;
 //        bakery.getBreadList().add(this);
     }
 
-    public void updateImgPath(String image) {
-        this.image = image;
+    public void updateName(String name) {
+        if(!this.name.equals(name)) this.name = name;
     }
 
+    public void updatePrice(Integer price) {
+        if(!this.price.equals(price)) this.price = price;
+    }
+
+    public void updateImage(String image) {
+        this.image = image;
+    }
 }

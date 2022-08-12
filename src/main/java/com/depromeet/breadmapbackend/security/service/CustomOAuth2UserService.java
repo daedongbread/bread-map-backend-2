@@ -8,9 +8,12 @@ import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
+import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfo;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -18,13 +21,18 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
     private final UserRepository userRepository;
     private final FlagRepository flagRepository;
+    private final StringRedisTemplate redisTemplate;
+
+    @Value("${spring.redis.key.delete}")
+    private String REDIS_KEY_DELETE;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -35,6 +43,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, oAuth2User.getAttributes());
 
         String username = providerType.name() + "_" + oAuth2UserInfo.getUsername();
+
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_DELETE + username))) throw new RejoinException();
 
         User user = null;
         if (userRepository.findByUsername(username).isPresent()) {
@@ -75,7 +85,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (oAuth2UserInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(oAuth2UserInfo.getImageUrl())) {
             user.updateProfileImageUrl(oAuth2UserInfo.getImageUrl());
         }
-
+        user.updateLastAccessAt();
         return user;
     }
 

@@ -12,6 +12,7 @@ import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
+import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
@@ -227,6 +228,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 이미 존재하는 빵일 때
+     */
+    @ExceptionHandler(BreadAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse breadAlreadyException(BreadAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 이미 존재하는 리스트일 때
      */
     @ExceptionHandler(FlagAlreadyException.class)
@@ -335,6 +345,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 존재하지 않는 리뷰 신고일 때
+     */
+    @ExceptionHandler(ReviewReportNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse reviewReportNotFoundException(ReviewReportNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 팔로우가 되어 있지 않을 때
      */
     @ExceptionHandler(FollowNotFoundException.class)
@@ -430,6 +449,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(BlockNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse blockNotFoundException(BlockNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 탈퇴한지 7일이 지나지 않았는데 재가입 시
+     */
+    @ExceptionHandler(RejoinException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse rejoinException(RejoinException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

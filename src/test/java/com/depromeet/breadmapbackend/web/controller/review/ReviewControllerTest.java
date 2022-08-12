@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.review.*;
@@ -52,14 +53,14 @@ class ReviewControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
+        bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.posting).build();
         bakeryRepository.save(bakery);
         bread1 = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         bread2 = Bread.builder().bakery(bakery).name("bread2").price(4000).build();
         breadRepository.save(bread1);
         breadRepository.save(bread2);
-        review = Review.builder().user(user).bakery(bakery).content("content1").isUse(true).build();
+        review = Review.builder().user(user).bakery(bakery).content("content1").build();
         review.addImage("image1");
         reviewRepository.save(review);
         BreadRating rating = BreadRating.builder().bread(bread1).review(review).rating(4L).build();
@@ -92,43 +93,43 @@ class ReviewControllerTest extends ControllerTest {
         userRepository.deleteAllInBatch();
     }
 
-    @Test
-//    @Transactional
-    void getBakeryReviewList() throws Exception {
-        mockMvc.perform(get("/review/{bakeryId}/simple?sort=latest", bakery.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("review/get/simple",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("data.[].id").description("리뷰 고유 번호"),
-                                fieldWithPath("data.[].userId").description("유저 고유 번호"),
-                                fieldWithPath("data.[].userImage").description("유저 이미지"),
-                                fieldWithPath("data.[].nickName").description("유저 닉네임"),
-                                fieldWithPath("data.[].reviewNum").description("유저 리뷰 수"),
-                                fieldWithPath("data.[].followerNum").description("유저 팔로워 수"),
-                                fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
-                                fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
-                                fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
-                                fieldWithPath("data.[].imageList").description("리뷰 이미지"),
-                                fieldWithPath("data.[].content").description("리뷰 내용"),
-                                fieldWithPath("data.[].likeNum").description("리뷰 좋아요 수"),
-                                fieldWithPath("data.[].commentNum").description("리뷰 댓글 수"),
-                                fieldWithPath("data.[].createdAt").description("리뷰 생성일"),
-                                fieldWithPath("data.[].averageRating").description("리뷰 평균 점수")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
+//    @Test
+////    @Transactional
+//    void getBakeryReviewList() throws Exception {
+//        mockMvc.perform(get("/review/{bakeryId}/simple?sort=latest", bakery.getId())
+//                .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("review/get/simple",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("data.[].id").description("리뷰 고유 번호"),
+//                                fieldWithPath("data.[].userId").description("유저 고유 번호"),
+//                                fieldWithPath("data.[].userImage").description("유저 이미지"),
+//                                fieldWithPath("data.[].nickName").description("유저 닉네임"),
+//                                fieldWithPath("data.[].reviewNum").description("유저 리뷰 수"),
+//                                fieldWithPath("data.[].followerNum").description("유저 팔로워 수"),
+//                                fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
+//                                fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
+//                                fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
+//                                fieldWithPath("data.[].imageList").description("리뷰 이미지"),
+//                                fieldWithPath("data.[].content").description("리뷰 내용"),
+//                                fieldWithPath("data.[].likeNum").description("리뷰 좋아요 수"),
+//                                fieldWithPath("data.[].commentNum").description("리뷰 댓글 수"),
+//                                fieldWithPath("data.[].createdAt").description("리뷰 생성일"),
+//                                fieldWithPath("data.[].averageRating").description("리뷰 평균 점수")
+//                        )
+//                ))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
 //    @Transactional
-    void getAllBakeryReviewList() throws Exception{
+    void getBakeryReviewList() throws Exception{
         mockMvc.perform(get("/review/{bakeryId}/all?sort=latest", bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -231,6 +232,10 @@ class ReviewControllerTest extends ControllerTest {
                 .breadRatingList(Arrays.asList(
                         ReviewRequest.BreadRatingRequest.builder().breadId(bread1.getId()).rating(5L).build(),
                         ReviewRequest.BreadRatingRequest.builder().breadId(bread2.getId()).rating(4L).build()
+                ))
+                .noExistBreadRatingRequestList(Arrays.asList(
+                        ReviewRequest.NoExistBreadRatingRequest.builder().breadName("fakeBread1").rating(5L).build(),
+                        ReviewRequest.NoExistBreadRatingRequest.builder().breadName("fakeBread2").rating(4L).build()
                 )).content("review add test").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
@@ -253,8 +258,11 @@ class ReviewControllerTest extends ControllerTest {
                         requestPartBody("request"),
                         requestPartFields("request",
                                 fieldWithPath("breadRatingList").description("리뷰 빵 점수 리스트"),
-                                fieldWithPath("breadRatingList.[].breadId").description("리뷰 빵 이름"),
+                                fieldWithPath("breadRatingList.[].breadId").description("리뷰 빵 고유 번호"),
                                 fieldWithPath("breadRatingList.[].rating").description("리뷰 빵 점수"),
+                                fieldWithPath("noExistBreadRatingRequestList").description("빵집에 없는 빵 점수 리스트"),
+                                fieldWithPath("noExistBreadRatingRequestList.[].breadName").description("빵집에 없는 빵 이름"),
+                                fieldWithPath("noExistBreadRatingRequestList.[].rating").description("빵집에 없는 빵 점수"),
                                 fieldWithPath("content").description("리뷰 내용")
                         )
                 ))
@@ -308,7 +316,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void reviewLike() throws Exception {
-        Review review = Review.builder().user(user).bakery(bakery).content("new content").isUse(true).build();
+        Review review = Review.builder().user(user).bakery(bakery).content("new content").build();
         reviewRepository.save(review);
 
         mockMvc.perform(post("/review/{reviewId}/like", review.getId())

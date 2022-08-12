@@ -1,7 +1,14 @@
 package com.depromeet.breadmapbackend.service.user;
 
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentLikeRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewLikeRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
@@ -10,22 +17,24 @@ import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
-import com.depromeet.breadmapbackend.security.token.RefreshToken;
-import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,25 +43,47 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final FollowRepository followRepository;
     private final ReviewRepository reviewRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final ReviewCommentRepository reviewCommentRepository;
+    private final ReviewCommentLikeRepository reviewCommentLikeRepository;
+    private final NoticeRepository noticeRepository;
+    private final NoticeTokenRepository noticeTokenRepository;
     private final FlagRepository flagRepository;
+    private final FlagBakeryRepository flagBakeryRepository;
     private final BlockUserRepository blockUserRepository;
+    private final StringRedisTemplate redisTemplate;
+
+    @Value("${spring.redis.key.delete}")
+    private String REDIS_KEY_DELETE;
+
+    @Value("${spring.redis.key.refresh}")
+    private String REDIS_KEY_REFRESH;
+
+    @Value("${spring.redis.key.access}")
+    private String REDIS_KEY_ACCESS;
 
     @Transactional
-    public JwtToken reissue(TokenRefreshRequest request) {
+    public JwtToken reissue(TokenRequest request) {
         if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
 
         String accessToken = request.getAccessToken();
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         String username = authentication.getName();
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
-        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
+
+        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + user.getUsername());
+        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
+//        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
+//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
+
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
-        refreshToken.updateToken(reissueToken.getRefreshToken());
+        redisTemplate.opsForValue()
+                .set(REDIS_KEY_REFRESH + user.getUsername(),
+                        reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+//        refreshToken.updateToken(reissueToken.getRefreshToken());
 
         return reissueToken;
     }
@@ -69,14 +100,64 @@ public class UserServiceImpl implements UserService {
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
                                 .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
-        List<UserReviewDto> userReviewDtoList = reviewRepository.findByUserId(user.getId())
-                .stream().filter(Review::isUse).map(UserReviewDto::new)
+        List<UserReviewDto> userReviewDtoList = reviewRepository.findByUser(user)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(UserReviewDto::new)
                 .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
                 .collect(Collectors.toList());
 
         return ProfileDto.builder().user(user)
                 .followingNum(followingNum).followerNum(followerNum)
                 .userFlagDtoList(userFlagDtoList).userReviewDtoList(userReviewDtoList).build();
+    }
+
+    @Transactional
+    public void logout(TokenRequest request) {
+        String accessToken = request.getAccessToken();
+        if (!jwtTokenProvider.verifyToken(accessToken)) throw new TokenValidFailedException();
+
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        String username = authentication.getName();
+
+        // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_REFRESH + username))) {
+            redisTemplate.delete(REDIS_KEY_REFRESH + username);
+        }
+
+        // 해당 Access Token 남은 유효시간 가지고 와서 BlackList 로 저장하기
+        Long expiration = jwtTokenProvider.getExpiration(request.getAccessToken());
+        redisTemplate.opsForValue()
+                .set(request.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+    }
+
+    @Transactional
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        reviewCommentLikeRepository.deleteByUser(user);
+        reviewCommentRepository.deleteByUser(user);
+        reviewLikeRepository.deleteByUser(user);
+        reviewRepository.findByUser(user);
+
+        noticeTokenRepository.deleteByUser(user);
+        noticeRepository.deleteByUser(user);
+
+        flagRepository.findByUser(user).forEach(flagBakeryRepository::deleteByFlag);
+        flagRepository.deleteByUser(user);
+
+        blockUserRepository.deleteByUser(user);
+        blockUserRepository.deleteByBlockUser(user);
+
+        followRepository.deleteByFromUser(user);
+        followRepository.deleteByToUser(user);
+
+        userRepository.delete(user);
+
+        redisTemplate.delete(Arrays.asList(REDIS_KEY_ACCESS + username, REDIS_KEY_REFRESH + username));
+
+        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
+        redisDeleteUser.set(REDIS_KEY_DELETE + username, username);
+        redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
     }
 
     @Transactional

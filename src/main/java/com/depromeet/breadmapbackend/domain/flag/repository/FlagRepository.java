@@ -11,4 +11,5 @@ public interface FlagRepository extends JpaRepository<Flag, Long> {
     Optional<Flag> findByUserAndName(User user, String name);
     Optional<Flag> findByUserAndId(User user, Long flagId);
     List<Flag> findByUser(User user);
+    void deleteByUser(User user);
 }

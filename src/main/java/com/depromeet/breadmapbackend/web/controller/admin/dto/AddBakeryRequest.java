@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.admin.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewRequest;
 import lombok.AllArgsConstructor;
@@ -14,11 +15,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddBakeryRequest {
-    private Long id;
+    private Long bakeryId;
     private String name;
-    private String imageList;
-    private String streetAddress;
-    private String domicileAddress;
+    private String address;
+    private Double latitude;
+    private Double longitude;
     private String hours;
     private String websiteURL;
     private String instagramURL;
@@ -27,6 +28,7 @@ public class AddBakeryRequest {
     private String phoneNumber;
     private List<FacilityInfo> facilityInfoList;
     private List<AddBreadRequest> breadList;
+    private BakeryStatus status;
 
     @Getter
     @Builder
@@ -34,7 +36,6 @@ public class AddBakeryRequest {
     @AllArgsConstructor
     public static class AddBreadRequest {
         private String name;
-        private String imageList;
         private Integer price;
     }
 }

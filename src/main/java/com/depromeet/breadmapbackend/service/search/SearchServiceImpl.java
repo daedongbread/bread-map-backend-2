@@ -8,6 +8,7 @@ import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.search.dto.SearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,8 @@ public class SearchServiceImpl implements SearchService {
     private final UserRepository userRepository;
     private final StringRedisTemplate redisTemplate;
 
-    private String REDIS_KEY_RECENT = "recentKeywords:";
+    @Value("${spring.redis.key.recent}")
+    private String REDIS_KEY_RECENT;
 
     @Transactional(readOnly = true)
     public List<SearchDto> autoComplete(String word, Double latitude, Double longitude) {

@@ -1,13 +1,13 @@
 package com.depromeet.breadmapbackend.web.controller.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
-import com.depromeet.breadmapbackend.domain.review.BreadRating;
-import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
@@ -51,10 +51,10 @@ class BakeryControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
-        bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(facilityInfo).name("bakery2").streetAddress("street").build();
+        bakery1 = Bakery.builder().id(1L).address("address1").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.posting).build();
+        bakery2 = Bakery.builder().id(2L).address("address2").latitude(37.55950448505721).longitude(127.04416263787213)
+                .facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.posting).build();
 
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
@@ -73,6 +73,17 @@ class BakeryControllerTest extends ControllerTest {
         BreadRating rating2 = BreadRating.builder().bread(bread2).review(review2).rating(4L).build();
         breadRatingRepository.save(rating1);
         breadRatingRepository.save(rating2);
+
+        ReviewLike reviewLike = ReviewLike.builder().review(review1).user(user).build();
+        reviewLikeRepository.save(reviewLike);
+
+        ReviewComment comment1 = ReviewComment.builder().review(review1).user(user).content("comment1").build();
+        ReviewComment comment2 = ReviewComment.builder().review(review1).user(user).content("comment1").parent(comment1).build();
+        reviewCommentRepository.save(comment1);
+        reviewCommentRepository.save(comment2);
+
+        ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(comment1).user(user).build();
+        reviewCommentLikeRepository.save(reviewCommentLike);
     }
 
     @AfterEach
@@ -192,11 +203,10 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.info.flagNum").description("빵집 가봤어요 수"),
                                 fieldWithPath("data.info.rating").description("빵집 평점"),
                                 fieldWithPath("data.info.reviewNum").description("빵집 리뷰 수"),
-                                fieldWithPath("data.info.domicileAddress").description("빵집 도로명 주소"),
-                                fieldWithPath("data.info.streetAddress").description("빵집 번지 주소"),
+                                fieldWithPath("data.info.address").description("빵집 도로명 주소"),
                                 fieldWithPath("data.info.hours").description("빵집 영업 시간"),
-                                fieldWithPath("data.info.websiteURL").description("빵집 웹사이트"),
-                                fieldWithPath("data.info.instagramURL").description("빵집 인스타"),
+                                fieldWithPath("data.info.websiteURL").description("빵집 홈페이지"),
+                                fieldWithPath("data.info.instagramURL").description("빵집 인스타그램"),
                                 fieldWithPath("data.info.facebookURL").description("빵집 페이스북"),
                                 fieldWithPath("data.info.blogURL").description("빵집 블로그"),
                                 fieldWithPath("data.info.phoneNumber").description("빵집 전화번호"),
@@ -206,7 +216,48 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.menu.[].rating").description("빵 평점"),
                                 fieldWithPath("data.menu.[].reviewNum").description("빵 리뷰 수"),
                                 fieldWithPath("data.menu.[].price").description("빵 가격"),
+                                fieldWithPath("data.menu.[].image").description("빵 이미지"),
+                                fieldWithPath("data.review").description("빵집 리뷰"),
+                                fieldWithPath("data.review.[].id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.review.[].userId").description("유저 고유 번호"),
+                                fieldWithPath("data.review.[].userImage").description("유저 이미지"),
+                                fieldWithPath("data.review.[].nickName").description("유저 닉네임"),
+                                fieldWithPath("data.review.[].reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.review.[].followerNum").description("유저 팔로워 수"),
+                                fieldWithPath("data.review.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
+                                fieldWithPath("data.review.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
+                                fieldWithPath("data.review.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
+                                fieldWithPath("data.review.[].imageList").description("리뷰 이미지"),
+                                fieldWithPath("data.review.[].content").description("리뷰 내용"),
+                                fieldWithPath("data.review.[].likeNum").description("리뷰 좋아요 수"),
+                                fieldWithPath("data.review.[].commentNum").description("리뷰 댓글 수"),
+                                fieldWithPath("data.review.[].createdAt").description("리뷰 생성일"),
+                                fieldWithPath("data.review.[].averageRating").description("리뷰 평균 점수"),
                                 fieldWithPath("data.facilityInfoList").description("빵집 시설 정보")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findBreadList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/bread", bakery1.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/bread",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.[].id").description("빵 고유번호"),
+                                fieldWithPath("data.[].name").description("빵 이름"),
+                                fieldWithPath("data.[].rating").description("빵 평점"),
+                                fieldWithPath("data.[].reviewNum").description("빵 리뷰 수"),
+                                fieldWithPath("data.[].price").description("빵 가격"),
+                                fieldWithPath("data.[].image").description("빵 이미지")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -302,5 +353,46 @@ class BakeryControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void findSimpleBreadList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/review/bread", bakery1.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/review/bread",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        responseFields(
+                                fieldWithPath("data.[].id").description("빵 고유 번호"),
+                                fieldWithPath("data.[].name").description("빵 이름"),
+                                fieldWithPath("data.[].price").description("빵 가격"),
+                                fieldWithPath("data.[].image").description("빵 이미지")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void searchSimpleBreadList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/review/bread/search?name=bread", bakery1.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/review/bread/search",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(parameterWithName("name").description("검색 키워드")),
+                        responseFields(
+                                fieldWithPath("data.[].id").description("빵 고유 번호"),
+                                fieldWithPath("data.[].name").description("빵 이름"),
+                                fieldWithPath("data.[].price").description("빵 가격"),
+                                fieldWithPath("data.[].image").description("빵 이미지")
+                        )
+                ))
+                .andExpect(status().isOk());
     }
 }

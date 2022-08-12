@@ -44,7 +44,7 @@ public class ReviewDetailDto {
                            List<SimpleReviewDto> userOtherReviews, List<SimpleReviewDto> bakeryOtherReviews) {
         this.bakeryImage = review.getBakery().getImage();
         this.bakeryName = review.getBakery().getName();
-        this.bakeryAddress = review.getBakery().getStreetAddress();
+        this.bakeryAddress = review.getBakery().getAddress();
         this.id = review.getId();
         this.userId = review.getUser().getId();
         this.userImage = review.getUser().getProfileImageUrl();

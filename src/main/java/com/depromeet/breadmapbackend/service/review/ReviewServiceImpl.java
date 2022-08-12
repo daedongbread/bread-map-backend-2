@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.service.review;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
+import com.depromeet.breadmapbackend.domain.bakery.exception.BreadAlreadyException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.SortTypeWrongException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
@@ -18,7 +19,6 @@ import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
-import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final S3Uploader s3Uploader;
 
     @Transactional(readOnly = true)
-    public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){
+    public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
         Comparator<ReviewDto> comparing;
         if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
@@ -56,26 +56,8 @@ public class ReviewServiceImpl implements ReviewService {
         else throw new SortTypeWrongException();
 
         return reviewRepository.findByBakeryId(bakeryId)
-                .stream().filter(Review::isUse).map(br -> new ReviewDto(br,
-//                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId())),
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(comparing)
-                .limit(3)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<ReviewDto> getAllBakeryReviewList(Long bakeryId, ReviewSortType sort){
-        Comparator<ReviewDto> comparing;
-        if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
-        else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
-        else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new SortTypeWrongException();
-
-        return reviewRepository.findByBakeryId(bakeryId)
-                .stream().filter(Review::isUse).map(br -> new ReviewDto(br,
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(br -> new ReviewDto(br,
 //                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId()))
                         reviewRepository.countByUser(br.getUser()),
                         followRepository.countByFromUser(br.getUser())
@@ -86,9 +68,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(readOnly = true)
     public ReviewDetailDto getReview(Long reviewId) {
-        Review review = reviewRepository.findByIdAndIsUseIsTrue(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
 
-        List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUserId(review.getUser().getId()).stream()
+        List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUser(review.getUser()).stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
                 .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
 
@@ -112,12 +95,7 @@ public class ReviewServiceImpl implements ReviewService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
         Review review = Review.builder()
-                .user(user).bakery(bakery).content(request.getContent()).isUse(true).build();
-        for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
-            String image = s3Uploader.upload(file, imagePath);
-            review.addImage(image);
-        }
+                .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
         reviewRepository.save(review);
 
         request.getBreadRatingList().forEach(breadRatingRequest -> {
@@ -129,14 +107,33 @@ public class ReviewServiceImpl implements ReviewService {
                 review.addRating(breadRating);
             }
         });
+
+        request.getNoExistBreadRatingRequestList().forEach(noExistBreadRatingRequest -> {
+            if(breadRepository.findByName(noExistBreadRatingRequest.getBreadName()).isPresent())
+                throw new BreadAlreadyException();
+            Bread bread = Bread.builder().name(noExistBreadRatingRequest.getBreadName())
+                    .price(0).bakery(bakery).image(null).isTrue(false).build();
+            breadRepository.save(bread);
+            BreadRating breadRating = BreadRating.builder()
+                    .bread(bread).review(review).rating(noExistBreadRatingRequest.getRating()).build();
+            breadRatingRepository.save(breadRating);
+            review.addRating(breadRating);
+        });
+
+        for (MultipartFile file : files) {
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
+            String image = s3Uploader.upload(file, imagePath);
+            review.addImage(image);
+        }
     }
 
     @Transactional
     public void removeReview(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Review review = reviewRepository.findByIdAndUserAndIsUseIsTrue(reviewId, user).orElseThrow(ReviewNotFoundException::new);
-//        reviewRepository.delete(review);
-        review.useChange();
+        Review review = reviewRepository.findByIdAndUser(reviewId, user)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+        reviewRepository.delete(review);
+//        review.useChange();
     }
 
 //    @Transactional(readOnly = true)
@@ -151,7 +148,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void reviewLike(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Review review = reviewRepository.findByIdAndIsUseIsTrue(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
 
         if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new ReviewLikeAlreadyException();
 
@@ -162,7 +160,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void reviewUnlike(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Review review = reviewRepository.findByIdAndIsUseIsTrue(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
 
         ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review).orElseThrow(ReviewUnlikeAlreadyException::new);
         review.minusLike(reviewLike);
@@ -170,7 +169,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(readOnly = true)
     public List<ReviewCommentDto> getReviewCommentList(Long reviewId) {
-        if(reviewRepository.findByIdAndIsUseIsTrue(reviewId).isEmpty()) throw new ReviewNotFoundException();
+        if(reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
 
         return reviewCommentRepository.findByReviewIdAndParentIsNull(reviewId)
                 .stream().map(ReviewCommentDto::new).collect(Collectors.toList());
@@ -179,7 +179,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void addReviewComment(String username, Long reviewId, ReviewCommentRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Review review = reviewRepository.findByIdAndIsUseIsTrue(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
 
         if(request.getParentCommentId().equals(0L)) { // 댓글
             ReviewComment reviewComment = ReviewComment.builder()
@@ -202,7 +203,8 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user)
                 .orElseThrow(ReviewCommentNotFoundException::new);
-        Review review = reviewRepository.findByIdAndIsUseIsTrue(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
 
         if(reviewComment.getParent() == null) { // 부모 댓글
             if(reviewComment.getChildList().isEmpty()) { // 자식 댓글이 없으면
@@ -246,7 +248,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void reviewCommentLike(String username, Long reviewId, Long commentId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if(reviewRepository.findByIdAndIsUseIsTrue(reviewId).isEmpty()) throw new ReviewNotFoundException();
+        if(reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(ReviewCommentNotFoundException::new);
 
         if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent()) throw new ReviewCommentLikeAlreadyException();
@@ -257,7 +260,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void reviewCommentUnlike(String username, Long reviewId, Long commentId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if(reviewRepository.findByIdAndIsUseIsTrue(reviewId).isEmpty()) throw new ReviewNotFoundException();
+        if(reviewRepository.findById(reviewId)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(ReviewCommentNotFoundException::new);
 
         ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).orElseThrow(ReviewCommentUnlikeAlreadyException::new);
@@ -266,11 +270,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional
-    public void reviewReport(Long reviewId, ReviewReportRequest request) {
+    public void reviewReport(String username, Long reviewId, ReviewReportRequest request) {
+        User reporter = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
 
         ReviewReport reviewReport = ReviewReport.builder()
-                .review(review).reason(request.getReason()).content(request.getContent()).build();
+                .reporter(reporter).review(review).reason(request.getReason()).content(request.getContent()).build();
 
         reviewReportRepository.save(reviewReport);
     }

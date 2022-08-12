@@ -7,7 +7,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
@@ -27,6 +27,11 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
+    key:
+      delete: ${REDIS_KEY_DELETE}
+      recent: ${REDIS_KEY_RECENT}
+      access: ${REDIS_KEY_ACCESS}
+      refresh: ${REDIS_KEY_REFRESH}
   security:
     oauth2:
       client:

@@ -22,16 +22,10 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/{bakeryId}/simple")
+    @GetMapping("/{bakeryId}/all")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<ReviewDto>> getBakeryReviewList(@PathVariable Long bakeryId, @RequestParam ReviewSortType sort){
         return new ApiResponse<>(reviewService.getBakeryReviewList(bakeryId, sort));
-    }
-
-    @GetMapping("/{bakeryId}/all")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<ReviewDto>> getAllBakeryReviewList(@PathVariable Long bakeryId, @RequestParam ReviewSortType sort){
-        return new ApiResponse<>(reviewService.getAllBakeryReviewList(bakeryId, sort));
     }
 
     @GetMapping("/{reviewId}")
@@ -102,7 +96,8 @@ public class ReviewController {
 
     @PostMapping("/{reviewId}/report")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewReport(@PathVariable Long reviewId, @RequestBody ReviewReportRequest request) {
-        reviewService.reviewReport(reviewId, request);
+    public void reviewReport(
+            @CurrentUser String username, @PathVariable Long reviewId, @RequestBody ReviewReportRequest request) {
+        reviewService.reviewReport(username, reviewId, request);
     }
 }

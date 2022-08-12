@@ -10,13 +10,18 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadRatingRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
+import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
+import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
+import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,6 +42,8 @@ public class BakeryServiceImpl implements BakeryService {
     private final BakeryRepository bakeryRepository;
     private final BreadRepository breadRepository;
     private final BreadRatingRepository breadRatingRepository;
+    private final ReviewRepository reviewRepository;
+    private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final FlagRepositorySupport flagRepositorySupport;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
@@ -130,11 +137,35 @@ public class BakeryServiceImpl implements BakeryService {
                         .stream().mapToDouble(Double::doubleValue)
                         .average().orElse(0)*10)/10.0)
                 .reviewNum(bakery.getReviewList().size()).build();
-        List<BreadDto> menu = breadRepository.findByBakeryId(bakeryId).stream()
+        List<BreadDto> menu = breadRepository.findByBakery(bakery).stream()
+                .filter(Bread::isTrue)
                 .map(bread -> new BreadDto(bread,
                         Math.floor(breadRatingRepository.findBreadAvgRating(bread.getId())*10)/10.0, //TODO
                         breadRatingRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
-        return BakeryDto.builder().info(info).menu(menu).facilityInfoList(bakery.getFacilityInfoList()).build();
+
+        List<ReviewDto> review = reviewRepository.findByBakeryId(bakeryId)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(br -> new ReviewDto(br,
+                        reviewRepository.countByUser(br.getUser()),
+                        followRepository.countByFromUser(br.getUser())
+                ))
+                .sorted(Comparator.comparing(ReviewDto::getId).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        return BakeryDto.builder()
+                .info(info).menu(menu).review(review).facilityInfoList(bakery.getFacilityInfoList()).build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<BreadDto> findBreadList(Long bakeryId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        return breadRepository.findByBakery(bakery).stream()
+                .filter(Bread::isTrue)
+                .map(bread -> new BreadDto(bread,
+                        Math.floor(breadRatingRepository.findBreadAvgRating(bread.getId())*10)/10.0, //TODO
+                        breadRatingRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
+
     }
 
     @Transactional
@@ -159,9 +190,11 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional
-    public void bakeryAddReport(BakeryReportRequest request) {
+    public void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
-                .name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
+                .name(request.getName()).location(request.getLocation()).content(request.getContent())
+                .user(user).build();
         bakeryAddReportRepository.save(bakeryAddReport);
     }
 
@@ -177,5 +210,21 @@ public class BakeryServiceImpl implements BakeryService {
             breadAddReport.addImage(image);
         }
         breadAddReportRepository.save(breadAddReport);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleBreadDto> findSimpleBreadList(Long bakeryId) { // 순서?
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        return breadRepository.findByBakery(bakery).stream()
+                .filter(Bread::isTrue)
+                .map(SimpleBreadDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleBreadDto> searchSimpleBreadList(Long bakeryId, String name) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        return breadRepository.findByBakeryAndNameStartsWith(bakery, name).stream()
+                .filter(Bread::isTrue)
+                .map(SimpleBreadDto::new).collect(Collectors.toList());
     }
 }

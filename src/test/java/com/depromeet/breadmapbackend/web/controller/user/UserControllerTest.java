@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.user;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
@@ -14,10 +15,9 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
-import com.depromeet.breadmapbackend.security.token.RefreshToken;
 import com.depromeet.breadmapbackend.web.controller.user.dto.BlockRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
-import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRefreshRequest;
+import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +25,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -57,7 +56,9 @@ class UserControllerTest extends ControllerTest {
         userRepository.save(userToBlock);
 
         token1 = jwtTokenProvider.createJwtToken(user1.getUsername(), RoleType.USER.getCode());
-        refreshTokenRepository.save(RefreshToken.builder().username(user1.getUsername()).token(token1.getRefreshToken()).build());
+        redisTemplate.opsForValue()
+                .set(REDIS_KEY_REFRESH + user1.getUsername(),
+                        token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
         token2 = jwtTokenProvider.createJwtToken(user2.getUsername(), RoleType.USER.getCode());
 
         Follow follow = Follow.builder().fromUser(user1).toUser(user2).build();
@@ -66,9 +67,9 @@ class UserControllerTest extends ControllerTest {
         BlockUser blockUser = BlockUser.builder().user(user1).blockUser(userToBlock).build();
         blockUserRepository.save(blockUser);
         
-        Bakery bakery = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
+        Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1")
-                .streetAddress("street").image("testImage").build();
+                .image("testImage").status(BakeryStatus.posting).build();
         bakeryRepository.save(bakery);
 
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();
@@ -80,7 +81,7 @@ class UserControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);
 
-        Review review = Review.builder().user(user1).bakery(bakery).content("content1").isUse(true).build();
+        Review review = Review.builder().user(user1).bakery(bakery).content("content1").build();
         review.addImage("reviewImage1");
         reviewRepository.save(review);
 
@@ -100,7 +101,6 @@ class UserControllerTest extends ControllerTest {
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         followRepository.deleteAllInBatch();
-        refreshTokenRepository.deleteAllInBatch();
         blockUserRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
@@ -109,7 +109,7 @@ class UserControllerTest extends ControllerTest {
 //    @Transactional
     void refresh() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(TokenRefreshRequest.builder()
+        String object = objectMapper.writeValueAsString(TokenRequest.builder()
                 .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken()).build());
 
         // when
@@ -173,6 +173,47 @@ class UserControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void logout() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(TokenRequest.builder()
+                .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken()).build());
+
+        // when
+        ResultActions result = mockMvc.perform(post("/user/logout")
+                .header("Authorization", "Bearer " + token1.getAccessToken())
+                .content(object)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andDo(print())
+                .andDo(document("user/logout",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(
+                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("엑세스 토큰"),
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                        )
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteUser() throws Exception {
+        mockMvc.perform(delete("/user")
+                .header("Authorization", "Bearer " + token2.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token"))
+                ))
+                .andExpect(status().isNoContent());
     }
 
     @Test

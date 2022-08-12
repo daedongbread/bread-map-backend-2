@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Review extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -38,8 +40,9 @@ public class Review extends BaseEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> imageList = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "boolean default 1")
-    private boolean isUse;
+    @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BreadRating> ratings = new ArrayList<>();
@@ -51,14 +54,17 @@ public class Review extends BaseEntity {
     private List<ReviewComment> comments = new ArrayList<>();
 
     @Builder
-    private Review(User user, Bakery bakery, String content, boolean isUse) {
+    private Review(User user, Bakery bakery, String content) {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
-        this.isUse = isUse;
+        this.status = ReviewStatus.UNBLOCK;
     }
 
-    public void useChange() { this.isUse = false; }
+    public void useChange() {
+        if(this.status.equals(ReviewStatus.BLOCK)) this.status = ReviewStatus.UNBLOCK;
+        else this.status = ReviewStatus.BLOCK;
+    }
 
     public void addImage(String image) {
         this.imageList.add(image);

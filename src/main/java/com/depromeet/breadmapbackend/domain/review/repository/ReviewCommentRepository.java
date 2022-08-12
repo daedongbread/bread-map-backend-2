@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Long> {
     List<ReviewComment> findByReviewIdAndParentIsNull(Long reviewId);
     Optional<ReviewComment> findByIdAndUser(Long id, User user);
+    void deleteByUser(User user);
 }

@@ -13,6 +13,7 @@ public class BreadDto {
     private Double rating;
     private Integer reviewNum;
     private Integer price;
+    private String image;
 
     @Builder
     public BreadDto(Bread bread, Double rating, Integer reviewNum) {
@@ -21,5 +22,6 @@ public class BreadDto {
         this.rating = rating;
         this.reviewNum = reviewNum;
         this.price = bread.getPrice();
+        this.image = bread.getImage();
     }
 }

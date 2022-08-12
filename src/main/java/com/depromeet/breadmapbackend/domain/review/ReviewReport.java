@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -17,6 +19,10 @@ public class ReviewReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User reporter;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
@@ -28,7 +34,8 @@ public class ReviewReport extends BaseEntity {
     private String content;
 
     @Builder
-    public ReviewReport(Review review, ReviewReportReason reason, String content) {
+    public ReviewReport(User reporter, Review review, ReviewReportReason reason, String content) {
+        this.reporter = reporter;
         this.review = review;
         this.reason = reason;
         this.content = content;

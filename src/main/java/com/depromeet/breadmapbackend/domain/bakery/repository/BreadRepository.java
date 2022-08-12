@@ -1,11 +1,15 @@
 package com.depromeet.breadmapbackend.domain.bakery.repository;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BreadRepository extends JpaRepository<Bread, Long> {
-    List<Bread> findByBakeryId(Long bakeryId);
+    List<Bread> findByBakery(Bakery bakery);
+    List<Bread> findByBakeryAndNameStartsWith(Bakery bakery, String name);
+    Optional<Bread> findByName(String name);
 }

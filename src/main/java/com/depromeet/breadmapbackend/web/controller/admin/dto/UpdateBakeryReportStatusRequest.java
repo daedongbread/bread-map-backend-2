@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.admin.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReportStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateBakeryReportStatusRequest {
-    private Integer status;
+    private BakeryAddReportStatus status;
 }
