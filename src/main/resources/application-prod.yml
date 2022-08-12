@@ -11,6 +11,7 @@ spring:
       use-new-id-generator-mappings: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+    show-sql: true
   servlet:
     multipart:
       max-file-size: 10MB
@@ -73,9 +74,9 @@ cloud:
     cloudFront:
       distributionDomain: ${S3_CLOUDFRONT}
 
-logging:
-  level:
-    root: error
+#logging:
+#  level:
+#    root: error
 
 firebase:
   url: ${FIREBASE_URL}
