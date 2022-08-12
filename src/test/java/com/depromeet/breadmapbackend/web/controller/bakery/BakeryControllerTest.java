@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
@@ -50,10 +51,10 @@ class BakeryControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery1 = Bakery.builder().id(1L).domicileAddress("domicile").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").streetAddress("street").build();
-        bakery2 = Bakery.builder().id(2L).domicileAddress("domicile").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(facilityInfo).name("bakery2").streetAddress("street").build();
+        bakery1 = Bakery.builder().id(1L).address("address1").latitude(37.5596080725671).longitude(127.044235133983)
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.posting).build();
+        bakery2 = Bakery.builder().id(2L).address("address2").latitude(37.55950448505721).longitude(127.04416263787213)
+                .facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.posting).build();
 
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
@@ -202,11 +203,10 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.info.flagNum").description("빵집 가봤어요 수"),
                                 fieldWithPath("data.info.rating").description("빵집 평점"),
                                 fieldWithPath("data.info.reviewNum").description("빵집 리뷰 수"),
-                                fieldWithPath("data.info.domicileAddress").description("빵집 도로명 주소"),
-                                fieldWithPath("data.info.streetAddress").description("빵집 번지 주소"),
+                                fieldWithPath("data.info.address").description("빵집 도로명 주소"),
                                 fieldWithPath("data.info.hours").description("빵집 영업 시간"),
-                                fieldWithPath("data.info.websiteURL").description("빵집 웹사이트"),
-                                fieldWithPath("data.info.instagramURL").description("빵집 인스타"),
+                                fieldWithPath("data.info.websiteURL").description("빵집 홈페이지"),
+                                fieldWithPath("data.info.instagramURL").description("빵집 인스타그램"),
                                 fieldWithPath("data.info.facebookURL").description("빵집 페이스북"),
                                 fieldWithPath("data.info.blogURL").description("빵집 블로그"),
                                 fieldWithPath("data.info.phoneNumber").description("빵집 전화번호"),

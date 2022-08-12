@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -18,6 +19,7 @@ import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
+import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
@@ -142,7 +144,8 @@ public class BakeryServiceImpl implements BakeryService {
                         breadRatingRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
 
         List<ReviewDto> review = reviewRepository.findByBakeryId(bakeryId)
-                .stream().filter(Review::isUse).map(br -> new ReviewDto(br,
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(br -> new ReviewDto(br,
                         reviewRepository.countByUser(br.getUser()),
                         followRepository.countByFromUser(br.getUser())
                 ))
@@ -187,9 +190,11 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional
-    public void bakeryAddReport(BakeryReportRequest request) {
+    public void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
-                .name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
+                .name(request.getName()).location(request.getLocation()).content(request.getContent())
+                .user(user).build();
         bakeryAddReportRepository.save(bakeryAddReport);
     }
 

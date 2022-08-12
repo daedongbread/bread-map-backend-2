@@ -25,11 +25,9 @@ public class BakeryAddReport extends BaseEntity {
 
     private String content;
 
-    @Column(nullable = false, columnDefinition = "integer default 0")
-    private Integer status;
-
-    @Column(nullable = false, columnDefinition = "boolean default 1")
-    private boolean isUse;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BakeryAddReportStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -40,10 +38,9 @@ public class BakeryAddReport extends BaseEntity {
         this.name = name;
         this.location = location;
         this.content = content;
-        this.status = 0;
-        this.isUse = true;
+        this.status = BakeryAddReportStatus.before_reflect;
         this.user = user;
     }
 
-    public void updateStatus(Integer status) { this.status = status; }
+    public void updateStatus(BakeryAddReportStatus status) { this.status = status; }
 }

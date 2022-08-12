@@ -143,7 +143,6 @@ operation::flag/bakeryAdd[snippets='http-request,request-headers,path-parameters
 operation::flag/bakeryDelete[snippets='http-request,request-headers,path-parameters,http-response']
 
 == 리뷰 API
-
 - 리뷰 간단 조회 API
 - 리뷰 전체 조회 API
 - 리뷰 상세 조회 API
@@ -204,7 +203,6 @@ operation::review/comment/unlike[snippets='http-request,request-headers,path-par
 operation::review/report[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 == 검색 API
-
 - 자동 완성 API
 - 검색 API
 - 최근 검색어 조회 API
@@ -226,29 +224,52 @@ operation::search/keywords/delete[snippets='http-request,request-headers,request
 === 최근 검색어 전체 삭제 API [DELETE]
 operation::search/keywords/deleteAll[snippets='http-request,request-headers,http-response']
 
-== 어드민 API
-
-- 모든 빵집 조회 API
+== 관리자 API
+- 빵집 전체 조회 API
 - 빵집 상세 조회 API
-- 빵집 추가 API
-- 모든 빵집 제보 조회 API
+//- 빵집 위도 경도 조회 API
+//- 빵집 추가 API
+//- 빵집 수정 API
+- 빵집 제보 전체 조회 API
 - 빵집 제보 상세 조회 API
 - 빵집 게시 상태 변경 API
+- 리뷰 신고 전체 조회 API
+- 리뷰 게시 상태 변경 API
+- 유저 전체 조회 API
+- 유저 차단 API
 
-=== 모든 빵집 조회 API [GET]
-operation::admin/getAllBakery[snippets='http-request,request-headers,http-response,response-fields']
+=== 빵집 전체 조회 API [GET]
+operation::admin/bakery/all[snippets='http-request,request-headers,http-response,response-fields']
 
 === 빵집 조회 API [GET]
-operation::admin/getBakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::admin/bakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
-=== 빵집 추가 API [POST]
-operation::admin/addBakery[snippets='http-request,request-headers,http-response']
+//=== 빵집 위도 경도 조회 API [GET]
+//operation::admin/bakery/location[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
-=== 모든 빵집 제보 조회 API [GET]
-operation::admin/getAllBakeryReport[snippets='http-request,request-headers,http-response,response-fields']
+//=== 빵집 추가 API [POST]
+//operation::admin/addBakery[snippets='http-request,request-headers,http-response']
+//
+//=== 빵집 수정 API [PATCH]
+//operation::admin/addBakery[snippets='http-request,request-headers,http-response']
+
+=== 빵집 제보 전체 조회 API [GET]
+operation::admin/bakeryReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 제보 상세 조회 API [GET]
-operation::admin/getBakeryReport[snippets='http-request,request-headers,http-response,response-fields']
+operation::admin/bakeryReport[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
-=== 빵집 게시 상태 변경 API [POST]
-operation::admin/updateBakeryReport[snippets='http-request,request-headers,path-parameters,http-response']
+=== 빵집 게시 상태 변경 API [PATCH]
+operation::admin/bakeryReport/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== 리뷰 신고 전체 조회 API [GET]
+operation::admin/reviewReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== 리뷰 게시 상태 변경 API [PATCH]
+operation::admin/reviewReport/update[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 유저 전체 조회 API [GET]
+operation::admin/user/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== 유저 차단 API [PATCH]
+operation::admin/user/block[snippets='http-request,request-headers,path-parameters,http-response']

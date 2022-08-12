@@ -344,6 +344,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 존재하지 않는 리뷰 신고일 때
+     */
+    @ExceptionHandler(ReviewReportNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse reviewReportNotFoundException(ReviewReportNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 팔로우가 되어 있지 않을 때
      */
     @ExceptionHandler(FollowNotFoundException.class)

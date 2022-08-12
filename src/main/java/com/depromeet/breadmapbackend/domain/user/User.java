@@ -1,18 +1,15 @@
 package com.depromeet.breadmapbackend.domain.user;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.LongListConverter;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -43,8 +40,16 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flag> flagList = new ArrayList<>();
 
+    @Column(nullable = false)
+    private LocalDateTime lastAccessAt;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
     @Builder
-    private User(String username, String nickName, String email, Gender gender, ProviderType providerType, RoleType roleType, String profileImageUrl) {
+    private User(String username, String nickName, String email, Gender gender,
+                 ProviderType providerType, RoleType roleType, String profileImageUrl) {
         this.username = username;
         this.nickName = nickName;
         this.email = email;
@@ -52,6 +57,8 @@ public class User extends BaseEntity {
         this.providerType = providerType;
         this.roleType = roleType;
         this.profileImageUrl = profileImageUrl;
+        this.lastAccessAt = LocalDateTime.now();
+        this.status = UserStatus.UNBLOCK;
     }
 
     public void updateNickName(String nickName) {
@@ -67,6 +74,13 @@ public class User extends BaseEntity {
     }
 
     public void removeFlag(Flag flag) { this.flagList.remove(flag); }
+
+    public void updateLastAccessAt() { this.lastAccessAt = LocalDateTime.now(); }
+
+    public void changeBlock() {
+        if(this.status.equals(UserStatus.BLOCK)) this.status = UserStatus.UNBLOCK;
+        else this.status = UserStatus.BLOCK;
+    }
 
 //    @Override
 //    public boolean equals(Object object) {

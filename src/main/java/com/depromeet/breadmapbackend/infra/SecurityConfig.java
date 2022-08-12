@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.infra;
 
+import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.CustomAccessDeniedHandler;
 import com.depromeet.breadmapbackend.security.CustomAuthenticationEntryPoint;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
@@ -43,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.redis.key.refresh}")
     private String REDIS_KEY_REFRESH;
+
+    private final UserRepository userRepository;
 
     // 토큰 프로바이더 설정
 //    @Bean
@@ -94,7 +97,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 .oauth2Login()
-                .successHandler(new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, redisTemplate, REDIS_KEY_REFRESH))
+                .successHandler(
+                        new OAuth2AuthenticationSuccessHandler(
+                                jwtTokenProvider, redisTemplate, REDIS_KEY_REFRESH, userRepository))
                 .userInfoEndpoint().userService(oAuth2UserService);
     }
 
