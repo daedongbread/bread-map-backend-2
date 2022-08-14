@@ -19,7 +19,7 @@ jobs:
     - name: Build with Gradle
       run: |
         chmod +x ./gradlew
-        ./gradlew build
+        ./gradlew build -DsgisKey=${{secrets.SGIS_KEY}} -DsgisSecret=${{secrets.SGIS_SECRET}}
         
     - name: If failure then upload test reports
       if: failure()

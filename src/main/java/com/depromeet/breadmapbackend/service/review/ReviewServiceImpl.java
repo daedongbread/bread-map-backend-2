@@ -49,13 +49,14 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(readOnly = true)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Comparator<ReviewDto> comparing;
         if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
         else throw new SortTypeWrongException();
 
-        return reviewRepository.findByBakeryId(bakeryId)
+        return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
                 .map(br -> new ReviewDto(br,
 //                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId()))
@@ -75,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
                 .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
 
-        List<SimpleReviewDto> bakeryOtherReviews = reviewRepository.findByBakeryId(review.getBakery().getId()).stream()
+        List<SimpleReviewDto> bakeryOtherReviews = reviewRepository.findByBakery(review.getBakery()).stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
                 .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
 

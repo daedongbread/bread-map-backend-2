@@ -5,9 +5,8 @@ import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.bakery.repository.*;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewReportRepository;
@@ -21,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -43,8 +43,18 @@ public class AdminServiceImpl implements AdminService{
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
+    private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
+    private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
+    private final BreadAddReportRepository breadAddReportRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
+    private final FlagBakeryRepository flagBakeryRepository;
+
+    @Value("${sgis.key}")
+    public String SGIS_CONSUMER_KEY;
+
+    @Value("${sgis.secret}")
+    private String SGIS_CONSUMER_SECRET;
 
     @Transactional(readOnly = true)
     public AdminBakeryListDto getBakeryList(Pageable pageable) {
@@ -64,52 +74,69 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true)
+    public AdminBakeryListDto searchBakeryList(String name, Pageable pageable) {
+        Page<Bakery> all = bakeryRepository.findByNameContains(name, pageable);
+        List<AdminSimpleBakeryDto> dtoList = all.stream().map(AdminSimpleBakeryDto::new).collect(Collectors.toList());
+        int totalNum = (int) all.getTotalElements();
+        return AdminBakeryListDto.builder().bakeryDtoList(dtoList).totalNum(totalNum).build();
+    }
+
+    @Transactional(readOnly = true)
     public BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException {
-//        String URL = "https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json";
-//        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(URL);
-//        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.TEMPLATE_AND_VALUES);
-//        WebClient webClient = WebClient.builder()
-//                .uriBuilderFactory(factory)
-//                .baseUrl(URL)
-//                .build();
-//        Map<String, Object> response = webClient.get()
-//                .uri(uriBuilder -> uriBuilder
-//                        .queryParam("accessToken", "")
-//                        .queryParam("address", address)
-//                        .build())
-//                .retrieve()
-//                .bodyToMono(Map.class)
-//                .block();
-//        ObjectMapper mapper = new ObjectMapper();
-//        Map map = mapper.convertValue(response.get("result"), Map.class);
-//        Map map1 = mapper.convertValue(((List<String>) map.get("resultdata")).get(0), Map.class);
-//        String x = (String) map1.get("x");
-//        String y = (String) map1.get("y");
-//
-//        URL = "https://sgisapi.kostat.go.kr/OpenAPI3/transformation/transcoord.json";
-//        factory = new DefaultUriBuilderFactory(URL);
-//        webClient = WebClient.builder()
-//                .uriBuilderFactory(factory)
-//                .baseUrl(URL)
-//                .build();
-//        Map<String, Object> response2 = webClient.get()
-//                .uri(uriBuilder -> uriBuilder
-//                        .queryParam("accessToken", "fe9097bd-018a-4ff1-9d10-a992b6f2ef68")
-//                        .queryParam("src", 5179)
-//                        .queryParam("dst", 4326)
-//                        .queryParam("posX", x)
-//                        .queryParam("posY", y)
-//                        .build())
-//                .retrieve()
-//                .bodyToMono(Map.class)
-//                .block();
-//        Map map3 = mapper.convertValue(response2.get("result"), Map.class);
-//        Double posX = (Double) map3.get("posX");
-//        Double posY = (Double) map3.get("posY");
-////        log.info("X : " + posX);
-////        log.info("Y : " + posY);
-//        return BakeryLocationDto.builder().latitude(posY).longitude(posX).build();
-        return BakeryLocationDto.builder().latitude(3D).longitude(4D).build();
+        ObjectMapper mapper = new ObjectMapper();
+
+        String auth_url = "https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json";
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(auth_url);
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.TEMPLATE_AND_VALUES);
+        WebClient webClient = WebClient.builder().uriBuilderFactory(factory).baseUrl(auth_url).build();
+        Map accessResponse = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("consumer_key", SGIS_CONSUMER_KEY)
+                        .queryParam("consumer_secret", SGIS_CONSUMER_SECRET)
+                        .build())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        Map map = mapper.convertValue(accessResponse.get("result"), Map.class);
+        String accessToken = (String) map.get("accessToken");
+
+        String geocode_url = "https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json";
+        factory = new DefaultUriBuilderFactory(geocode_url);
+        webClient = WebClient.builder().uriBuilderFactory(factory).baseUrl(geocode_url).build();
+        Map geoResponse = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("accessToken", accessToken)
+                        .queryParam("address", address)
+                        .build())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        map = mapper.convertValue(geoResponse.get("result"), Map.class);
+        map = mapper.convertValue(((List<String>) map.get("resultdata")).get(0), Map.class);
+        String x = (String) map.get("x");
+        String y = (String) map.get("y");
+
+        String trans_url = "https://sgisapi.kostat.go.kr/OpenAPI3/transformation/transcoord.json";
+        factory = new DefaultUriBuilderFactory(trans_url);
+        webClient = WebClient.builder().uriBuilderFactory(factory).baseUrl(trans_url).build();
+        Map transResponse = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("accessToken", accessToken)
+                        .queryParam("src", 5179)
+                        .queryParam("dst", 4326)
+                        .queryParam("posX", x)
+                        .queryParam("posY", y)
+                        .build())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        map = mapper.convertValue(transResponse.get("result"), Map.class);
+        Double posX = (Double) map.get("posX");
+        Double posY = (Double) map.get("posY");
+//        log.info("X : " + posX);
+//        log.info("Y : " + posY);
+        return BakeryLocationDto.builder().latitude(posY).longitude(posX).build();
+//        return BakeryLocationDto.builder().latitude(3D).longitude(4D).build();
     }
 
     @Transactional
@@ -138,6 +165,17 @@ public class AdminServiceImpl implements AdminService{
     @Transactional
     public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) {
 
+    }
+
+    @Transactional
+    public void deleteBakery(Long bakeryId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        flagBakeryRepository.deleteByBakery(bakery);
+        bakeryDeleteReportRepository.deleteByBakery(bakery);
+        bakeryUpdateReportRepository.deleteByBakery(bakery);
+        breadAddReportRepository.deleteByBakery(bakery);
+        reviewRepository.findByBakery(bakery).forEach(reviewReportRepository::deleteByReview);
+        bakeryRepository.deleteById(bakeryId);
     }
 
     @Transactional(readOnly = true)

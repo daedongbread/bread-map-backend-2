@@ -106,7 +106,10 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryDtoList.[].name").description("빵집 이름"),
                                 fieldWithPath("data.bakeryDtoList.[].createdAt").description("빵집 최초 등록일"),
                                 fieldWithPath("data.bakeryDtoList.[].modifiedAt").description("빵집 마지막 수정일"),
-                                fieldWithPath("data.bakeryDtoList.[].status").description("빵집 게시상태"),
+                                fieldWithPath("data.bakeryDtoList.[].status")
+                                        .description("빵집 게시상태 (" +
+                                                "posting(\"게시중\"),\n" +
+                                                "unposting(\"미게시\"))"),
                                 fieldWithPath("data.totalNum").description("빵집 갯수")
                         )
                 ))
@@ -144,26 +147,55 @@ class AdminControllerTest extends ControllerTest {
     }
 
     @Test
-    void getBakeryLatitudeLongitude() throws Exception {
-//        mockMvc.perform(get("/admin/bakery/location?address=")
-//                .header("Authorization", "Bearer " + token.getAccessToken()))
-//                .andDo(print())
-//                .andDo(document("admin/bakery/location",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-//                        requestParameters(
-//                                parameterWithName("address").description("조회 주소")),
-//                        responseFields(
-//                                fieldWithPath("data.latitude").description("빵집 위도"),
-//                                fieldWithPath("data.longitude").description("빵집 경도")
-//                        )
-//                ))
-//                .andExpect(status().isOk());
+    void searchBakeryList() throws Exception {
+        mockMvc.perform(get("/admin/bakery/search?name=bak&page=0")
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/search",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        requestParameters(
+                                parameterWithName("name").description("검색어"),
+                                parameterWithName("page").description("페이지 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.bakeryDtoList").description("빵집 리스트"),
+                                fieldWithPath("data.bakeryDtoList.[].bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.bakeryDtoList.[].name").description("빵집 이름"),
+                                fieldWithPath("data.bakeryDtoList.[].createdAt").description("빵집 최초 등록일"),
+                                fieldWithPath("data.bakeryDtoList.[].modifiedAt").description("빵집 마지막 수정일"),
+                                fieldWithPath("data.bakeryDtoList.[].status")
+                                        .description("빵집 게시 상태 (" +
+                                                "posting(\"게시중\"),\n" +
+                                                "unposting(\"미게시\"))"),
+                                fieldWithPath("data.totalNum").description("빵집 갯수")
+                        )
+                ))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void addUpdateBakery() throws Exception {
+    void getBakeryLatitudeLongitude() throws Exception {
+        mockMvc.perform(get("/admin/bakery/location?address=서울 중구 세종대로 110 서울특별시청")
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/location",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        requestParameters(
+                                parameterWithName("address").description("조회 주소")),
+                        responseFields(
+                                fieldWithPath("data.latitude").description("빵집 위도"),
+                                fieldWithPath("data.longitude").description("빵집 경도")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void addBakery() throws Exception {
 //        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 //
 //        String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
@@ -209,6 +241,21 @@ class AdminControllerTest extends ControllerTest {
     }
 
     @Test
+    void deleteBakery() throws Exception {
+        mockMvc.perform(delete("/admin/bakery/{bakeryId}", bakery.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void getBakeryReportList() throws Exception {
         mockMvc.perform(get("/admin/bakery/report/all?page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -227,7 +274,11 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryAddReportDtoList.[].location").description("빵집 위치"),
                                 fieldWithPath("data.bakeryAddReportDtoList.[].content").description("빵집 제보 내용"),
                                 fieldWithPath("data.bakeryAddReportDtoList.[].createdAt").description("빵집 제보 시간"),
-                                fieldWithPath("data.bakeryAddReportDtoList.[].status").description("빵집 제보 처리 상태"),
+                                fieldWithPath("data.bakeryAddReportDtoList.[].status")
+                                        .description("빵집 제보 처리 상태 " +
+                                                "(before_reflect(\"검토전\"),\n" +
+                                                "not_reflect(\"미반영\"),\n" +
+                                                "reflect(\"반영완료\"))"),
                                 fieldWithPath("data.totalNum").description("빵집 제보 갯수")
                         )
                 ))
@@ -250,7 +301,11 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryName").description("빵집 이름"),
                                 fieldWithPath("data.location").description("빵집 위치"),
                                 fieldWithPath("data.content").description("빵집 제보 내용"),
-                                fieldWithPath("data.status").description("빵집 제보 처리 상태")
+                                fieldWithPath("data.status")
+                                        .description("빵집 제보 처리 상태 " +
+                                                "(before_reflect(\"검토전\"),\n" +
+                                                "not_reflect(\"미반영\"),\n" +
+                                                "reflect(\"반영완료\"))")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -272,7 +327,11 @@ class AdminControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("reportId").description("빵집 제보 고유 번호")),
                         requestFields(
-                                fieldWithPath("status").description("빵집 제보 처리 상태"))
+                                fieldWithPath("status").description("빵집 제보 처리 상태 " +
+                                        "(before_reflect(\"검토전\"),\n" +
+                                        "not_reflect(\"미반영\"),\n" +
+                                        "reflect(\"반영완료\"))")
+                        )
                 ))
                 .andExpect(status().isNoContent());
     }
@@ -292,12 +351,22 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.reviewReportDtoList").description("리뷰 신고 리스트"),
                                 fieldWithPath("data.reviewReportDtoList.[].reviewReportId").description("리뷰 신고 고유 번호"),
                                 fieldWithPath("data.reviewReportDtoList.[].reporterNickName").description("신고자 닉네임"),
-                                fieldWithPath("data.reviewReportDtoList.[].reason").description("리뷰 신고 이유"),
+                                fieldWithPath("data.reviewReportDtoList.[].reason")
+                                        .description("리뷰 신고 이유 (" +
+                                                "IRRELEVANT_CONTENT(\"리뷰와 관계없는 내용\"),\n" +
+                                                "INAPPROPRIATE_CONTENT(\"음란성, 욕설 등 부적절한 내용\"),\n" +
+                                                "IRRELEVANT_IMAGE(\"리뷰와 관련없는 사진 게시\"),\n" +
+                                                "UNFIT_CONTENT(\"리뷰 작성 취지에 맞지 않는 내용(복사글 등)\"),\n" +
+                                                "COPYRIGHT_THEFT(\"저작권 도용 의심(사진 등)\"),\n" +
+                                                "ETC(\"기타(하단 내용 작성)\"))"),
                                 fieldWithPath("data.reviewReportDtoList.[].respondentNickName").description("피신고자 닉네임"),
                                 fieldWithPath("data.reviewReportDtoList.[].reportedReviewId").description("신고된 리뷰 고유 번호"),
                                 fieldWithPath("data.reviewReportDtoList.[].content").description("리뷰 신고 내용"),
                                 fieldWithPath("data.reviewReportDtoList.[].createdAt").description("리뷰 신고 시간"),
-                                fieldWithPath("data.reviewReportDtoList.[].status").description("리뷰 신고 처리 상태"),
+                                fieldWithPath("data.reviewReportDtoList.[].status")
+                                        .description("리뷰 게시 상태" +
+                                                "(BLOCK,\n" +
+                                                "UNBLOCK)"),
                                 fieldWithPath("data.totalNum").description("리뷰 신고 갯수")
                         )
                 ))

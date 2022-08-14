@@ -10,10 +10,12 @@ import java.util.List;
 public interface AdminService {
     AdminBakeryListDto getBakeryList(Pageable pageable);
     AdminBakeryDto getBakery(Long bakeryId);
+    AdminBakeryListDto searchBakeryList(String name, Pageable pageable);
     BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException;
 //    BakeryLocationDto getBakeryLatitudeLongitude(String address);
     void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList);
     void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList);
+    void deleteBakery(Long bakeryId);
     BakeryAddReportListDto getBakeryReportList(Pageable pageable);
     BakeryAddReportDto getBakeryReport(Long reportId);
     void updateBakeryAddReportStatus(Long reportId, UpdateBakeryReportStatusRequest request);

@@ -35,6 +35,14 @@ public class AdminController {
         return new ApiResponse<>(adminService.getBakery(bakeryId));
     }
 
+    @GetMapping("/bakery/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBakeryListDto> searchBakeryList(
+            @RequestParam String name,
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.searchBakeryList(name, pageable));
+    }
+
     @GetMapping("/bakery/location")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<BakeryLocationDto> getBakeryLatitudeLongitude(@RequestParam String address) throws JsonProcessingException {
@@ -55,6 +63,12 @@ public class AdminController {
             @PathVariable Long bakeryId, @RequestBody UpdateBakeryRequest request,
             @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) {
         adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBakery(@PathVariable Long bakeryId) {
+        adminService.deleteBakery(bakeryId);
     }
 
     @GetMapping("/bakery/report/all")

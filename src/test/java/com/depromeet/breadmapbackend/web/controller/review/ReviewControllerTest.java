@@ -138,8 +138,9 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        ),
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("sort").description("정렬 방법 (latest, high, low)")),
                         responseFields(
                                 fieldWithPath("data.[].id").description("리뷰 고유 번호"),
                                 fieldWithPath("data.[].userId").description("유저 고유 번호"),
