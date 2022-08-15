@@ -66,9 +66,6 @@ firebase:
   path: FIREBASE_PATH
   scope: FIREBASE_SCOPE
 
-#sgis:
-#  key: ${sgisKey}
-#  secret: ${sgisSecret}
 sgis:
-  key: ed4792bf267847c3a0b8
-  secret: 397296f02ada48559b33
+  key: ${sgisKey}
+  secret: ${sgisSecret}
