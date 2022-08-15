@@ -11,10 +11,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Setting application.yml
+      run: |
+        echo "sgis:key:$SGIS_KEY" >> bread-map-backend-2/src/main/resources/application.yml
+        echo "sgis:key:$SGIS_SECRET" >> bread-map-backend-2/src/main/resources/application.yml
+      env:
+        SGIS_KEY: ${{ secrets.SGIS_KEY }}
+        SGIS_SECRET: ${{ secrets.SGIS_SECRET }}
+
     - name: Build with Gradle
       run: |
         chmod +x ./gradlew
-        ./gradlew build -DsgisKey=${{secrets.SGIS_KEY}} -DsgisSecret=${{secrets.SGIS_SECRET}}
+        ./gradlew build
     - name: Set up docker buildx
       id: buildx
       uses: docker/setup-buildx-action@v1

@@ -65,7 +65,3 @@ firebase:
   url: FIREBASE_URL
   path: FIREBASE_PATH
   scope: FIREBASE_SCOPE
-
-sgis:
-  key: ${sgisKey}
-  secret: ${sgisSecret}

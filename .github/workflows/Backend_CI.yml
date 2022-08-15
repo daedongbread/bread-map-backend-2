@@ -15,11 +15,19 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-        
+
+    - name: Setting application.yml
+      run: |
+        echo "sgis:key:$SGIS_KEY" >> bread-map-backend-2/src/main/resources/application.yml
+        echo "sgis:key:$SGIS_SECRET" >> bread-map-backend-2/src/main/resources/application.yml
+      env:
+        SGIS_KEY: ${{ secrets.SGIS_KEY }}
+        SGIS_SECRET: ${{ secrets.SGIS_SECRET }}
+
     - name: Build with Gradle
       run: |
         chmod +x ./gradlew
-        ./gradlew build -DsgisKey=${{secrets.SGIS_KEY}} -DsgisSecret=${{secrets.SGIS_SECRET}}
+        ./gradlew build
         
     - name: If failure then upload test reports
       if: failure()
