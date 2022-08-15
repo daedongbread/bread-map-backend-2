@@ -14,7 +14,7 @@ jobs:
     - name: Setting application.yml
       uses: microsoft/variable-substitution@v1
       with:
-        files: ${{ env.RESOURCE_PATH }}
+        files: ${{ env.RESOURCE_PATH }}/application.yml
       env:
         sgis.key: ${{ secrets.SGIS_KEY }}
         sgis_secret: ${{ secrets.SGIS_SECRET }}
