@@ -22,7 +22,7 @@ jobs:
         files: ./src/main/resources/application.yml
       env:
         sgis.key: ${{ secrets.SGIS_KEY }}
-        sgis_secret: ${{ secrets.SGIS_SECRET }}
+        sgis.secret: ${{ secrets.SGIS_SECRET }}
 
     - name: Build with Gradle
       run: |
