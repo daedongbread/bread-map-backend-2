@@ -85,7 +85,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (oAuth2UserInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(oAuth2UserInfo.getImageUrl())) {
             user.updateProfileImageUrl(oAuth2UserInfo.getImageUrl());
         }
-        user.updateLastAccessAt();
         return user;
     }
 

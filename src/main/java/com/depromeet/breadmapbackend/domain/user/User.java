@@ -41,9 +41,6 @@ public class User extends BaseEntity {
     private List<Flag> flagList = new ArrayList<>();
 
     @Column(nullable = false)
-    private LocalDateTime lastAccessAt;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
@@ -57,7 +54,6 @@ public class User extends BaseEntity {
         this.providerType = providerType;
         this.roleType = roleType;
         this.profileImageUrl = profileImageUrl;
-        this.lastAccessAt = LocalDateTime.now();
         this.status = UserStatus.UNBLOCK;
     }
 
@@ -74,8 +70,6 @@ public class User extends BaseEntity {
     }
 
     public void removeFlag(Flag flag) { this.flagList.remove(flag); }
-
-    public void updateLastAccessAt() { this.lastAccessAt = LocalDateTime.now(); }
 
     public void changeBlock() {
         if(this.status.equals(UserStatus.BLOCK)) this.status = UserStatus.UNBLOCK;

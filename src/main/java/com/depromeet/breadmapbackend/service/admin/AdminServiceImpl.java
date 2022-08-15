@@ -394,7 +394,7 @@ public class AdminServiceImpl implements AdminService{
 
         }
         else if(address.contains("광주광역시") || address.contains("광주시")) {
-            if(address.contains("동구")) bakeryId = "3590000";
+            if(address.contains("동구")) bakeryId = "359";
             else if(address.contains("서구")) bakeryId = "3600000";
             else if(address.contains("남구")) bakeryId = "3610000";
             else if(address.contains("북구")) bakeryId = "3620000";
@@ -424,10 +424,12 @@ public class AdminServiceImpl implements AdminService{
         Random rand = new Random();
         do {
             String random = "";
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < 5; i++) {
                 random += Integer.toString(rand.nextInt(9));
             }
-            bakeryId = bakeryId + "999" + LocalDateTime.now().getYear() + random;
+            // 자치단체코드 7자리, 년도 뒷 2자리, 번호 5자리 -> 14자리
+            String year = String.valueOf(LocalDateTime.now().getYear());
+            bakeryId = bakeryId + year.substring(2) + random;
         } while(bakeryRepository.findById(Long.parseLong(bakeryId)).isPresent());
         return Long.valueOf(bakeryId);
     }
