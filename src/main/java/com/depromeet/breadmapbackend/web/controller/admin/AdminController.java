@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -35,26 +36,41 @@ public class AdminController {
         return new ApiResponse<>(adminService.getBakery(bakeryId));
     }
 
+    @GetMapping("/bakery/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBakeryListDto> searchBakeryList(
+            @RequestParam String name,
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.searchBakeryList(name, pageable));
+    }
+
     @GetMapping("/bakery/location")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<BakeryLocationDto> getBakeryLatitudeLongitude(@RequestParam String address) throws JsonProcessingException {
         return new ApiResponse<>(adminService.getBakeryLatitudeLongitude(address));
     }
 
+
     @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBakery(
             @RequestPart AddBakeryRequest request,
-            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) {
+            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) throws IOException {
         adminService.addBakery(request, bakeryImage, breadImageList);
     }
 
-    @PatchMapping("/bakery/{bakeryId}")
+    @PostMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBakery(
-            @PathVariable Long bakeryId, @RequestBody UpdateBakeryRequest request,
-            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) {
+            @PathVariable Long bakeryId, @RequestPart UpdateBakeryRequest request,
+            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBakery(@PathVariable Long bakeryId) {
+        adminService.deleteBakery(bakeryId);
     }
 
     @GetMapping("/bakery/report/all")

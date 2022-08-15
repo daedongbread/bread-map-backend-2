@@ -77,3 +77,7 @@ firebase:
   url: ${FIREBASE_URL}
   path: ${FIREBASE_PATH}
   scope: ${FIREBASE_SCOPE}
+
+sgis:
+  key: ${SGIS_KEY}
+  secret: ${SGIS_SECRET}

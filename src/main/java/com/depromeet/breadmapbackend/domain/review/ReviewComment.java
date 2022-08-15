@@ -38,10 +38,10 @@ public class ReviewComment extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private ReviewComment parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewComment> childList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reviewComment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reviewComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewCommentLike> likes = new ArrayList<>();
 
     @Column(nullable = false, columnDefinition = "boolean default 0")

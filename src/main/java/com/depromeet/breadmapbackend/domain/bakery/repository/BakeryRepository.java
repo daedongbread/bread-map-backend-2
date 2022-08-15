@@ -15,5 +15,6 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     Page<Bakery> findAll(Pageable pageable);
 //    Integer countAllByNameEqualsAndStreetAddressEquals(String name, String streetAddress);
     List<Bakery> findByNameStartsWith(String name);
-    Optional<Bakery> findByName(String name);
+    @Query(value = "select b from Bakery b where b.name like %?1%", countQuery = "select count(b) from Bakery b where b.name like %?1%")
+    Page<Bakery> findByNameContains(String name, Pageable pageable);
 }

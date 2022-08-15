@@ -218,6 +218,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 빵집 고유 번호가 이미 존재할 때
+     */
+    @ExceptionHandler(BakeryIdAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse bakeryIdAlreadyException(BakeryIdAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 빵이 존재하지 않을 때
      */
     @ExceptionHandler(BreadNotFoundException.class)

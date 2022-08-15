@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ImageFolderPath {
+    bakeryImage,
+    breadImage,
+    reviewImage,
     bakeryDeleteReportImage,
-    breadAddReportImage,
-    reviewAddImage;
+    breadAddReportImage;
 }

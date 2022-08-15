@@ -115,7 +115,7 @@ class BakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법"),
+                                parameterWithName("sort").description("정렬 방법 (distance, popular)"),
                                 parameterWithName("latitude").description("중앙 위도"),
                                 parameterWithName("longitude").description("중앙 경도"),
                                 parameterWithName("latitudeDelta").description("위도 범위"),
@@ -157,7 +157,7 @@ class BakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법"),
+                                parameterWithName("sort").description("정렬 방법 (distance, popular)"),
                                 parameterWithName("latitude").description("중앙 위도"),
                                 parameterWithName("longitude").description("중앙 경도"),
                                 parameterWithName("latitudeDelta").description("위도 범위"),
@@ -233,7 +233,12 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.review.[].commentNum").description("리뷰 댓글 수"),
                                 fieldWithPath("data.review.[].createdAt").description("리뷰 생성일"),
                                 fieldWithPath("data.review.[].averageRating").description("리뷰 평균 점수"),
-                                fieldWithPath("data.facilityInfoList").description("빵집 시설 정보")
+                                fieldWithPath("data.facilityInfoList")
+                                        .description("빵집 시설 정보 (PARKING(\"주차 가능\"),\n" +
+                                                "WIFI(\"와이파이\"),\n" +
+                                                "DELIVERY(\"배달\"),\n" +
+                                                "PET(\"반려동물\"),\n" +
+                                                "SHIPPING(\"택배\"))")
                         )
                 ))
                 .andExpect(status().isOk());

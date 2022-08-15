@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddBakeryRequest {
-    private Long bakeryId;
     private String name;
     private String address;
     private Double latitude;
