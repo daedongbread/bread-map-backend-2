@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface AdminService {
@@ -12,9 +13,8 @@ public interface AdminService {
     AdminBakeryDto getBakery(Long bakeryId);
     AdminBakeryListDto searchBakeryList(String name, Pageable pageable);
     BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException;
-//    BakeryLocationDto getBakeryLatitudeLongitude(String address);
-    void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList);
-    void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList);
+    void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException;
+    void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException;
     void deleteBakery(Long bakeryId);
     BakeryAddReportListDto getBakeryReportList(Pageable pageable);
     BakeryAddReportDto getBakeryReport(Long reportId);

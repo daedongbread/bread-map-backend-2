@@ -96,4 +96,24 @@ public class Bakery extends BaseEntity {
     public void addFacilityInfo(FacilityInfo info) { this.facilityInfoList.add(info); }
 
     public void removeFacilityInfo(FacilityInfo info) { this.facilityInfoList.remove(info); }
+
+    public void updateImage(String image) { this.image = image; }
+
+    public void update(Long id, String name, String address, Double latitude, Double longitude, String hours,
+                       String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber,
+                       List<FacilityInfo> facilityInfoList, BakeryStatus status) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.hours = hours;
+        this.phoneNumber = phoneNumber;
+        this.websiteURL = websiteURL;
+        this.instagramURL = instagramURL;
+        this.facebookURL = facebookURL;
+        this.blogURL = blogURL;
+        this.facilityInfoList = facilityInfoList;
+        this.status = status;
+    }
 }

@@ -8,11 +8,15 @@ import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.AddBakeryRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryReportStatusRequest;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +29,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,6 +36,7 @@ class AdminControllerTest extends ControllerTest {
     private User admin;
     private User user;
     private Bakery bakery;
+    private Bread bread;
     private BakeryAddReport bakeryAddReport;
     private JwtToken token;
     private ReviewReport reviewReport;
@@ -51,7 +55,7 @@ class AdminControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.posting).build();
         bakeryRepository.save(bakery);
 
-        Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
+        bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         breadRepository.save(bread);
 
         bakeryAddReport = BakeryAddReport.builder().user(user).content("test content").location("test location")
@@ -196,48 +200,109 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void addBakery() throws Exception {
-//        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-//
-//        String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
-//                .bakeryId(1L).name("newBakery").address("address")
-//                .hours("09:00~20:00").instagramURL("").facebookURL("").blogURL("")
-//                .websiteURL("https://test.test.com").phoneNumber("01012345678")
-//                .facilityInfoList(facilityInfo).breadList(Arrays.asList(
-//                        AddBakeryRequest.AddBreadRequest.builder().name("testBread").price(12000).build(),
-//                        AddBakeryRequest.AddBreadRequest.builder().name("testBread2").price(22000).build()
-//                )).build());
-//
-//        mockMvc.perform(post("/admin/bakery")
-//                .header("Authorization", "Bearer " + token.getAccessToken())
-//                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andDo(document("admin/bakery/add",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-//                        requestFields(
-//                                fieldWithPath("id").description("빵집 고유 번호"),
-//                                fieldWithPath("name").description("빵집 이름"),
-//                                fieldWithPath("imageList").description("빵집 이미지"),
-//                                fieldWithPath("streetAddress").description("빵집 주소"),
-//                                fieldWithPath("domicileAddress").description("빵집 도로명주소"),
-//                                fieldWithPath("hours").description("빵집 영업시간"),
-//                                fieldWithPath("instagramURL").description("빵집 인스타그램"),
-//                                fieldWithPath("facebookURL").description("빵집 페이스북"),
-//                                fieldWithPath("blogURL").description("빵집 블로그"),
-//                                fieldWithPath("websiteURL").description("빵집 홈페이지"),
-//                                fieldWithPath("phoneNumber").description("빵집 전화번호"),
-//                                fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
-//                                fieldWithPath("breadList.[].name").description("빵 이름"),
-//                                fieldWithPath("breadList.[].price").description("빵 가격")
-//                        )
-//                ))
-//                .andExpect(status().isCreated());
+        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
+        String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
+                .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
+                .facilityInfoList(facilityInfo).status(BakeryStatus.posting).breadList(Arrays.asList(
+                        AddBakeryRequest.AddBreadRequest.builder().name("testBread").price(12000).build()
+                )).build());
+        MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
+
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/admin/bakery")
+                .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("breadImageList", null, "image/png", (InputStream) null))
+                .file(request).accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/add",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestParts(
+                                partWithName("request").description("빵 정보"),
+                                partWithName("bakeryImage").description("빵집 이미지"),
+                                partWithName("breadImageList").description("빵 이미지 " +
+                                        "(request의 빵 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("name").description("빵집 이름"),
+                                fieldWithPath("address").description("빵집 도로명 주소"),
+                                fieldWithPath("latitude").description("빵집 위도"),
+                                fieldWithPath("longitude").description("빵집 경도"),
+                                fieldWithPath("hours").description("빵집 영업시간"),
+                                fieldWithPath("instagramURL").description("빵집 인스타그램"),
+                                fieldWithPath("facebookURL").description("빵집 페이스북"),
+                                fieldWithPath("blogURL").description("빵집 블로그"),
+                                fieldWithPath("websiteURL").description("빵집 홈페이지"),
+                                fieldWithPath("phoneNumber").description("빵집 전화번호"),
+                                fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
+                                fieldWithPath("breadList.[].name").description("빵 이름"),
+                                fieldWithPath("breadList.[].price").description("빵 가격"),
+                                fieldWithPath("status")
+                                        .description("빵집 게시상태 (" +
+                                                "posting(\"게시중\"),\n" +
+                                                "unposting(\"미게시\"))")
+                        )
+                ))
+                .andExpect(status().isCreated());
     }
 
     @Test
     void updateBakery() throws Exception {
+        List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
+        String object = objectMapper.writeValueAsString(UpdateBakeryRequest.builder()
+                .bakeryId(bakery.getId()).name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
+                .facilityInfoList(facilityInfo).status(BakeryStatus.posting).breadList(Arrays.asList(
+                        UpdateBakeryRequest.UpdateBreadRequest.builder()
+                                .breadId(bread.getId()).name("testBread").price(12000).build()
+                )).build());
+        MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/admin/bakery/{bakeryId}", bakery.getId())
+                .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("breadImageList", null, "image/png", (InputStream) null))
+                .file(request).accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParts(
+                                partWithName("request").description("빵 정보"),
+                                partWithName("bakeryImage").description("빵집 이미지"),
+                                partWithName("breadImageList").description("빵 이미지 " +
+                                        "(request의 빵 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("name").description("빵집 이름"),
+                                fieldWithPath("address").description("빵집 도로명 주소"),
+                                fieldWithPath("latitude").description("빵집 위도"),
+                                fieldWithPath("longitude").description("빵집 경도"),
+                                fieldWithPath("hours").description("빵집 영업시간"),
+                                fieldWithPath("instagramURL").description("빵집 인스타그램"),
+                                fieldWithPath("facebookURL").description("빵집 페이스북"),
+                                fieldWithPath("blogURL").description("빵집 블로그"),
+                                fieldWithPath("websiteURL").description("빵집 홈페이지"),
+                                fieldWithPath("phoneNumber").description("빵집 전화번호"),
+                                fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
+                                fieldWithPath("breadList.[].breadId").description("빵 고유 번호"),
+                                fieldWithPath("breadList.[].name").description("빵 이름"),
+                                fieldWithPath("breadList.[].price").description("빵 가격"),
+                                fieldWithPath("status")
+                                        .description("빵집 게시상태 (" +
+                                                "posting(\"게시중\"),\n" +
+                                                "unposting(\"미게시\"))")
+                        )
+                ))
+                .andExpect(status().isNoContent());
     }
 
     @Test

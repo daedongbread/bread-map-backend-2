@@ -122,7 +122,7 @@ public class ReviewServiceImpl implements ReviewService {
         });
 
         for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewAddImage, bakeryId);
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
             review.addImage(image);
         }

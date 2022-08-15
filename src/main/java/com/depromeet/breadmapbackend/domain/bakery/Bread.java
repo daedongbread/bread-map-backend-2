@@ -63,4 +63,9 @@ public class Bread extends BaseEntity {
     public void updateImage(String image) {
         this.image = image;
     }
+
+    public void update(String name, Integer price) {
+        this.name = name;
+        this.price = price;
+    }
 }
