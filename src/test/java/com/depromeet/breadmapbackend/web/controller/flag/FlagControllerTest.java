@@ -224,7 +224,7 @@ class FlagControllerTest extends ControllerTest {
                                                 "PINK(\"핑크색\"))")
                         )
                 ))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test

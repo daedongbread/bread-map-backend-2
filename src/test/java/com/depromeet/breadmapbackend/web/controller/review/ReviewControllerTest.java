@@ -407,7 +407,7 @@ class ReviewControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("content").description("리뷰 댓글 내용"),
-                                fieldWithPath("parentCommentId").description("리뷰 댓글의 부모 댓글 고유 번호")
+                                fieldWithPath("parentCommentId").description("리뷰 댓글의 부모 댓글 고유 번호 (리뷰에 단 댓글일 땐 0)")
                         )
                 ))
                 .andExpect(status().isCreated());

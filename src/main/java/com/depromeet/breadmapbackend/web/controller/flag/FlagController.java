@@ -46,7 +46,7 @@ public class FlagController {
     }
 
     @PatchMapping("/{flagId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateFlag(@CurrentUser String username, @PathVariable Long flagId, @RequestBody FlagRequest request) {
         flagService.updateFlag(username, flagId, request);
     }
