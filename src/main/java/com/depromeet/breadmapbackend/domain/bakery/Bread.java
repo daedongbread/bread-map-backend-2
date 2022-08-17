@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -30,6 +33,9 @@ public class Bread extends BaseEntity {
 
     private String image;
 
+    @OneToMany(mappedBy = "bread", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BreadRating> breadRatingList = new ArrayList<>();
+
     @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
     @ColumnDefault("true")
     private boolean isTrue;
@@ -42,6 +48,7 @@ public class Bread extends BaseEntity {
         this.image = image;
         if(isTrue == null) this.isTrue = true;
         else this.isTrue = isTrue;
+//        this.bakery.getBreadList().add(this);
 //        bakery.getBreadList().add(this);
     }
 
@@ -55,5 +62,10 @@ public class Bread extends BaseEntity {
 
     public void updateImage(String image) {
         this.image = image;
+    }
+
+    public void update(String name, Integer price) {
+        this.name = name;
+        this.price = price;
     }
 }

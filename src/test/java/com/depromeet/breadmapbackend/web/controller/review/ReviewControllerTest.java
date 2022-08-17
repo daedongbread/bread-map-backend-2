@@ -138,8 +138,9 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        ),
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("sort").description("정렬 방법 (latest, high, low)")),
                         responseFields(
                                 fieldWithPath("data.[].id").description("리뷰 고유 번호"),
                                 fieldWithPath("data.[].userId").description("유저 고유 번호"),
@@ -406,7 +407,7 @@ class ReviewControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("content").description("리뷰 댓글 내용"),
-                                fieldWithPath("parentCommentId").description("리뷰 댓글의 부모 댓글 고유 번호")
+                                fieldWithPath("parentCommentId").description("리뷰 댓글의 부모 댓글 고유 번호 (리뷰에 단 댓글일 땐 0)")
                         )
                 ))
                 .andExpect(status().isCreated());

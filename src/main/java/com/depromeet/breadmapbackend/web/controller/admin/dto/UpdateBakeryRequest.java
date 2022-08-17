@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.admin.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,8 @@ public class UpdateBakeryRequest {
     private Long bakeryId;
     private String name;
     private String address;
+    private Double latitude;
+    private Double longitude;
     private String hours;
     private String websiteURL;
     private String instagramURL;
@@ -24,6 +27,7 @@ public class UpdateBakeryRequest {
     private String phoneNumber;
     private List<FacilityInfo> facilityInfoList;
     private List<UpdateBreadRequest> breadList;
+    private BakeryStatus status;
 
     @Getter
     @Builder

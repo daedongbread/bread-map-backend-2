@@ -26,7 +26,7 @@ public class AdminUserDto {
         this.nickName = user.getNickName();
         this.email = user.getEmail();
         this.createdAt = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.lastAccessAt = user.getLastAccessAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.lastAccessAt = user.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.roleType = user.getRoleType();
     }
 }

@@ -94,7 +94,17 @@ class FlagControllerTest extends ControllerTest {
                         responseFields(
                                 fieldWithPath("data.[].flagId").description("깃발 고유번호"),
                                 fieldWithPath("data.[].name").description("깃발 이름"),
-                                fieldWithPath("data.[].color").description("깃발 색깔")
+                                fieldWithPath("data.[].color")
+                                        .description("깃발 색깔 (ORANGE(\"주황색\"),\n" +
+                                                "GREEN(\"초록색\"),\n" +
+                                                "YELLOW(\"노란색\"),\n" +
+                                                "CYAN(\"청록색\"),\n" +
+                                                "BLUE(\"초록색\"),\n" +
+                                                "SKY(\"하늘색\"),\n" +
+                                                "NAVY(\"네이비색\"),\n" +
+                                                "PURPLE(\"보라색\"),\n" +
+                                                "RED(\"빨간색\"),\n" +
+                                                "PINK(\"핑크색\"))")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -116,7 +126,17 @@ class FlagControllerTest extends ControllerTest {
                         responseFields(
                                 fieldWithPath("data.[].flagId").description("깃발 고유번호"),
                                 fieldWithPath("data.[].name").description("깃발 이름"),
-                                fieldWithPath("data.[].color").description("깃발 색깔"),
+                                fieldWithPath("data.[].color")
+                                        .description("깃발 색깔 (ORANGE(\"주황색\"),\n" +
+                                                "GREEN(\"초록색\"),\n" +
+                                                "YELLOW(\"노란색\"),\n" +
+                                                "CYAN(\"청록색\"),\n" +
+                                                "BLUE(\"초록색\"),\n" +
+                                                "SKY(\"하늘색\"),\n" +
+                                                "NAVY(\"네이비색\"),\n" +
+                                                "PURPLE(\"보라색\"),\n" +
+                                                "RED(\"빨간색\"),\n" +
+                                                "PINK(\"핑크색\"))"),
                                 fieldWithPath("data.[].bakeryImageList").description("깃발 빵집 사진 리스트")
                         )
                 ))
@@ -141,7 +161,17 @@ class FlagControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(
                                 fieldWithPath("name").description("깃발 이름"),
-                                fieldWithPath("color").description("깃발 색깔")
+                                fieldWithPath("color")
+                                        .description("깃발 색깔 (ORANGE(\"주황색\"),\n" +
+                                                "GREEN(\"초록색\"),\n" +
+                                                "YELLOW(\"노란색\"),\n" +
+                                                "CYAN(\"청록색\"),\n" +
+                                                "BLUE(\"초록색\"),\n" +
+                                                "SKY(\"하늘색\"),\n" +
+                                                "NAVY(\"네이비색\"),\n" +
+                                                "PURPLE(\"보라색\"),\n" +
+                                                "RED(\"빨간색\"),\n" +
+                                                "PINK(\"핑크색\"))")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -181,10 +211,20 @@ class FlagControllerTest extends ControllerTest {
                         pathParameters(parameterWithName("flagId").description("깃발 고유번호")),
                         requestFields(
                                 fieldWithPath("name").description("깃발 이름"),
-                                fieldWithPath("color").description("깃발 색깔")
+                                fieldWithPath("color")
+                                        .description("깃발 색깔 (ORANGE(\"주황색\"),\n" +
+                                                "GREEN(\"초록색\"),\n" +
+                                                "YELLOW(\"노란색\"),\n" +
+                                                "CYAN(\"청록색\"),\n" +
+                                                "BLUE(\"초록색\"),\n" +
+                                                "SKY(\"하늘색\"),\n" +
+                                                "NAVY(\"네이비색\"),\n" +
+                                                "PURPLE(\"보라색\"),\n" +
+                                                "RED(\"빨간색\"),\n" +
+                                                "PINK(\"핑크색\"))")
                         )
                 ))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
