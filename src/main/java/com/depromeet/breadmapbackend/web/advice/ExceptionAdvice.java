@@ -80,7 +80,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse requestBodyWrongException(HttpServletRequest request, HttpMessageNotReadableException e) {
-        log.info(e.getMessage());
+        log.error(e.getMessage());
         return new ErrorResponse("Request Body is wrong");
     }
 
@@ -142,6 +142,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorResponse wrongURLException(HttpServletRequest request, NoHandlerFoundException e) {
+        log.error(e.getMessage());
         return new ErrorResponse("Wrong URL");
     }
 
