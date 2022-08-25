@@ -112,6 +112,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    public void updateNickName(String username, UpdateNickNameRequest request) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        if (userRepository.findByNickName(request.getNickName()).isEmpty()) {
+            user.updateNickName(request.getNickName());
+        }
+        else {
+            if(!user.getNickName().equals(request.getNickName())) throw new NickNameAlreadyException();
+        }
+    }
+
+    @Transactional
     public void logout(TokenRequest request) {
         String accessToken = request.getAccessToken();
         if (!jwtTokenProvider.verifyToken(accessToken)) throw new TokenValidFailedException();

@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService {
     JwtToken reissue(TokenRequest tokenRequest);
     ProfileDto profile(String username);
+    void updateNickName(String username, UpdateNickNameRequest request);
     void logout(TokenRequest tokenRequest);
     void deleteUser(String username);
     void follow(String username, FollowRequest request);

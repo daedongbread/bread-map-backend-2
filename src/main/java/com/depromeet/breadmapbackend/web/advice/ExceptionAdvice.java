@@ -210,6 +210,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 닉네임이 이미 존재할 때
+     */
+    @ExceptionHandler(NickNameAlreadyException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse nickNameAlreadyException(NickNameAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 빵집이 존재하지 않을 때
      */
     @ExceptionHandler(BakeryNotFoundException.class)

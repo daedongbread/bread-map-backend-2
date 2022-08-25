@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -57,10 +60,30 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
+    private String createNickName() {
+        List<String> adjectiveList =
+                Arrays.asList("맛있는", "달콤한", "매콤한", "바삭한", "짭잘한", "고소한", "알싸한", "새콤한", "느끼한", "무서운");
+        List<String> breadNameList =
+                Arrays.asList("식빵", "소금빵", "바게트", "마카롱", "마늘빵", "베이글", "도넛", "꽈배기", "피자빵", "크루아상");
+
+        String nickName;
+        do {
+            Random rand = new Random();
+            String adjective = adjectiveList.get(rand.nextInt(adjectiveList.size()));
+            String breadName = breadNameList.get(rand.nextInt(breadNameList.size()));
+
+            int num = rand.nextInt(9999) + 1;
+
+            nickName = adjective + breadName + num;
+        } while (userRepository.findByNickName(nickName).isEmpty());
+        return nickName;
+    }
+
     private User createUser(OAuth2UserInfo oAuth2UserInfo, ProviderType providerType) {
         User user = User.builder()
                 .username(providerType.name() + "_" + oAuth2UserInfo.getUsername())
-                .nickName(oAuth2UserInfo.getNickName())
+                .nickName(createNickName())
+//                .nickName(oAuth2UserInfo.getNickName())
                 .email(oAuth2UserInfo.getEmail())
                 .providerType(providerType)
                 .roleType(RoleType.USER)
@@ -78,9 +101,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateUser(User user, OAuth2UserInfo oAuth2UserInfo) {
-        if (oAuth2UserInfo.getNickName() != null && !user.getUsername().equals(oAuth2UserInfo.getNickName())) {
-            user.updateNickName(oAuth2UserInfo.getNickName());
-        }
+//        if (oAuth2UserInfo.getNickName() != null && !user.getUsername().equals(oAuth2UserInfo.getNickName())) {
+//            user.updateNickName(oAuth2UserInfo.getNickName());
+//        }
 
         if (oAuth2UserInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(oAuth2UserInfo.getImageUrl())) {
             user.updateProfileImageUrl(oAuth2UserInfo.getImageUrl());

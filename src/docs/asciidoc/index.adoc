@@ -27,6 +27,7 @@ endif::[]
 == 유저 API
 - 토큰 재발급 API
 - 프로필 조회 API
+- 닉네임 업데이트 API
 - 로그아웃 API
 - 유저 탈퇴 API
 - 팔로우 API
@@ -42,6 +43,9 @@ operation::user/reissue[snippets='http-request,request-fields,http-response,resp
 
 === 프로필 조회 API [GET]
 operation::user/profile[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 닉네임 업데이트 API [PATCH]
+operation::user/nickname[snippets='http-request,request-headers,request-fields,http-response']
 
 === 로그아웃 API [POST]
 operation::user/logout[snippets='http-request,request-headers,request-fields,http-response']
