@@ -18,6 +18,7 @@ import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.user.dto.BlockRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRequest;
+import com.depromeet.breadmapbackend.web.controller.user.dto.UpdateNickNameRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -173,6 +174,32 @@ class UserControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateNickName() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("testNickName3").build());
+
+        // when
+        ResultActions result = mockMvc.perform(patch("/user/nickname")
+                .header("Authorization", "Bearer " + token1.getAccessToken())
+                .content(object)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andDo(print())
+                .andDo(document("user/nickname",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(
+                                fieldWithPath("nickName").type(JsonFieldType.STRING).description("변경할 닉네임")
+                        )
+                ))
+                .andExpect(status().isNoContent());
     }
 
     @Test
