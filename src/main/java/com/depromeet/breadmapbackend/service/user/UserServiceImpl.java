@@ -2,9 +2,10 @@ package com.depromeet.breadmapbackend.service.user;
 
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
+import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
-import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentRepository;
@@ -12,6 +13,7 @@ import com.depromeet.breadmapbackend.domain.review.repository.ReviewLikeReposito
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
+import com.depromeet.breadmapbackend.domain.user.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
@@ -25,6 +27,7 @@ import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
@@ -55,6 +58,7 @@ public class UserServiceImpl implements UserService {
     private final FlagBakeryRepository flagBakeryRepository;
     private final BlockUserRepository blockUserRepository;
     private final StringRedisTemplate redisTemplate;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Value("${spring.redis.key.delete}")
     private String REDIS_KEY_DELETE;
@@ -66,7 +70,7 @@ public class UserServiceImpl implements UserService {
     private String REDIS_KEY_ACCESS;
 
     @Transactional
-    public JwtToken reissue(TokenRequest request) {
+    public JwtToken reissue(ReissueRequest request) {
         if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
 
         String accessToken = request.getAccessToken();
@@ -123,12 +127,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void logout(TokenRequest request) {
+    public void logout(LogoutRequest request) {
         String accessToken = request.getAccessToken();
         if (!jwtTokenProvider.verifyToken(accessToken)) throw new TokenValidFailedException();
 
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         String username = authentication.getName();
+
+        // 알람 가지 않게 처리
+        NoticeToken noticeToken = noticeTokenRepository.findByDeviceToken(request.getDeviceToken()).orElseThrow(NoticeTokenNotFoundException::new);
+        noticeTokenRepository.delete(noticeToken);
 
         // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
         if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_REFRESH + username))) {
@@ -139,6 +147,8 @@ public class UserServiceImpl implements UserService {
         Long expiration = jwtTokenProvider.getExpiration(request.getAccessToken());
         redisTemplate.opsForValue()
                 .set(request.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+
+
     }
 
     @Transactional
@@ -178,6 +188,7 @@ public class UserServiceImpl implements UserService {
         if(followRepository.findByFromUserAndToUser(fromUser, toUser).isPresent()) throw new FollowAlreadyException();
         Follow follow = Follow.builder().fromUser(fromUser).toUser(toUser).build();
         followRepository.save(follow);
+        eventPublisher.publishEvent(FollowEvent.builder().userId(toUser.getId()).fromUserId(fromUser.getId()).build());
     }
 
     @Transactional

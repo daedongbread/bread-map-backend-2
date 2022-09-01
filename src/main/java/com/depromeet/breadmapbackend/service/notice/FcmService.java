@@ -1,9 +1,13 @@
 package com.depromeet.breadmapbackend.service.notice;
 
+import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
+import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.FcmMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FcmService {
+    private final NoticeTokenRepository noticeTokenRepository;
+
     @Value("${firebase.url}")
     private String API_URL;
 
@@ -32,6 +38,10 @@ public class FcmService {
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String deviceToken, String title, String body, String path) throws Exception {
+        NoticeToken noticeToken = noticeTokenRepository.findByDeviceToken(deviceToken).orElseThrow(NoticeTokenNotFoundException::new);
+        if(!noticeToken.isAlarmOn()) return;
+        // TODO : deviceToken 만료시??
+
         String message = makeMessage(deviceToken, title, body, path);
 
         OkHttpClient client = new OkHttpClient();
@@ -43,9 +53,9 @@ public class FcmService {
                 .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                 .build();
 
-        Response response  = client.newCall(request).execute();
-
-        log.info(response.body().string());
+        client.newCall(request).execute();
+//        Response response  = client.newCall(request).execute();
+//        log.info(response.body().string());
     }
 
     private String makeMessage(String deviceToken, String title, String body, String path) throws JsonProcessingException {
@@ -64,7 +74,7 @@ public class FcmService {
                         .build()
                 ).build();
         
-        log.info(objectMapper.writeValueAsString(fcmMessage));
+//        log.info(objectMapper.writeValueAsString(fcmMessage));
         return objectMapper.writeValueAsString(fcmMessage);
     }
 

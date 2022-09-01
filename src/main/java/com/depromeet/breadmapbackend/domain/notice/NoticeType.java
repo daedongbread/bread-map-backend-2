@@ -8,7 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum NoticeType {
     follow,
+    reviewComment,
     reviewLike,
-    commentLike,
-    comment;
+    recomment,
+    reviewCommentLike,
+    addBakery,
+    addBread,
+    flagBakeryChange,
+    flagBakeryAdminNotice;
 }

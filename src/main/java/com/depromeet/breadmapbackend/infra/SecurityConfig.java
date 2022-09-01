@@ -8,7 +8,6 @@ import com.depromeet.breadmapbackend.security.filter.JwtAuthenticationFilter;
 import com.depromeet.breadmapbackend.security.handler.OAuth2AuthenticationSuccessHandler;
 import com.depromeet.breadmapbackend.security.service.CustomOAuth2UserService;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
-import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -20,7 +19,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
@@ -98,8 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .oauth2Login()
                 .successHandler(
-                        new OAuth2AuthenticationSuccessHandler(
-                                jwtTokenProvider, redisTemplate, REDIS_KEY_REFRESH, userRepository))
+                        new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, redisTemplate, REDIS_KEY_REFRESH, userRepository))
                 .userInfoEndpoint().userService(oAuth2UserService);
     }
 

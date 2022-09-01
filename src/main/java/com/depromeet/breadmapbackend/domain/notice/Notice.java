@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
@@ -23,15 +25,26 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "fromUser_id")
+    private User fromUser;
+
     @Column(nullable = false)
+    private String title;
+
+    private Long contentId; // 리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 빵 아이디 or 빵집 관리자 글 아이디
+
     private String content;
 
     @Column(nullable = false)
     private NoticeType type;
 
     @Builder
-    public Notice(User user, String content, NoticeType type) {
+    public Notice(User user, User fromUser, String title, Long contentId, String content, NoticeType type) {
         this.user = user;
+        this.fromUser = fromUser;
+        this.title = title;
+        this.contentId = contentId;
         this.content = content;
         this.type = type;
     }

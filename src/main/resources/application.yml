@@ -54,6 +54,12 @@ spring:
             user-info-uri: ${KAKAO_USER_INFO_URI}
             user-name-attribute: id
 
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
 cloud:
   aws:
     region:

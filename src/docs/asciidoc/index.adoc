@@ -285,3 +285,29 @@ operation::admin/user/all[snippets='http-request,request-headers,request-paramet
 
 === 유저 차단 API [PATCH]
 operation::admin/user/block[snippets='http-request,request-headers,path-parameters,http-response']
+
+== 알림 API
+- 알림 토큰 추가 API
+- 알림 토큰 수정 API
+- 알림 토큰 삭제 API
+- 알림 상태 조회 API
+- 알림 상태 변경 API
+- 알림 전체 조회 API
+
+=== 알림 토큰 추가 API [POST]
+operation::notice/token/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 알림 토큰 수정 API [PATCH]
+operation::notice/token/update[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 알림 토큰 삭제 API [DELETE]
+operation::notice/token/delete[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 알림 상태 조회 API [GET]
+operation::notice/token/alarm[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+=== 알림 상태 변경 API [PATCH]
+operation::notice/token/alarm/update[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 알림 전체 조회 API [GET]
+operation::notice[snippets='http-request,request-headers,request-fields,http-response,response-fields']

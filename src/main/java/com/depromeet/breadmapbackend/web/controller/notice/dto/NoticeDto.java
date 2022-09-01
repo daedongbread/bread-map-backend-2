@@ -8,12 +8,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoticeDto {
     private String image;
+    private Long fromUserId;
+    private String title;
+    private Long contentId;
     private String content;
     private String createdAt;
 
     @Builder
-    public NoticeDto(String image, String content, String createdAt) {
+    public NoticeDto(String image, Long fromUserId, String title, Long contentId, String content, String createdAt) {
         this.image = image;
+        this.fromUserId = fromUserId;
+        this.title = title;
+        this.contentId = contentId;
         this.content = content;
         this.createdAt = createdAt;
     }

@@ -3,6 +3,8 @@ package com.depromeet.breadmapbackend.security.service;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
@@ -33,6 +35,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final FlagRepository flagRepository;
     private final StringRedisTemplate redisTemplate;
+    private final NoticeTokenRepository noticeTokenRepository;
 
     @Value("${spring.redis.key.delete}")
     private String REDIS_KEY_DELETE;
@@ -96,8 +99,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         flagRepository.save(alreadyGo);
         user.addFlag(wantToGo);
         user.addFlag(alreadyGo);
+        userRepository.save(user);
 
-        return userRepository.save(user);
+        return user;
     }
 
     private User updateUser(User user, OAuth2UserInfo oAuth2UserInfo) {
