@@ -3,6 +3,8 @@ package com.depromeet.breadmapbackend.utils;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
@@ -99,6 +101,12 @@ public abstract class ControllerTest {
 
     @Autowired
     protected BlockUserRepository blockUserRepository;
+
+    @Autowired
+    protected NoticeRepository noticeRepository;
+
+    @Autowired
+    protected NoticeTokenRepository noticeTokenRepository;
 
     @Autowired
     protected UserService userService;

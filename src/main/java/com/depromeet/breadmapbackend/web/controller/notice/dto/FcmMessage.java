@@ -13,8 +13,8 @@ public class FcmMessage {
     @NoArgsConstructor
     public static class Message {
         private String token;
-        private Notification notification;
-        private FcmData data;
+        private Notification notification; // 알람의 제목과 내용
+        private FcmData data; // 알람 클릭 시 이동 정보
 
         @Builder
         public Message(String token, Notification notification, FcmData data) {

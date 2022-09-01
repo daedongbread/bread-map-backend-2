@@ -6,6 +6,8 @@ import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
+import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
+import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.*;
@@ -449,6 +451,24 @@ public class ExceptionAdvice {
     @ExceptionHandler(NoticeTypeWrongException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse noticeTypeWrongException(NoticeTypeWrongException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 알림 토큰이 이미 존재할 때
+     */
+    @ExceptionHandler(NoticeTokenAlreadyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse noticeTokenAlreadyException(NoticeTokenAlreadyException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 알림 토큰이 존재하지 않을 때
+     */
+    @ExceptionHandler(NoticeTokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse noticeTokenNotFoundException(NoticeTokenNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 

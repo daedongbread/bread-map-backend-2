@@ -90,6 +90,8 @@ class ReviewControllerTest extends ControllerTest {
         reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
+        noticeTokenRepository.deleteAllInBatch();
+        noticeRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
