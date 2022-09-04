@@ -129,6 +129,8 @@ public class BakeryServiceImpl implements BakeryService {
     @Transactional(readOnly = true)
     public BakeryDto findBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        bakery.addViews();
+
         BakeryInfo info = BakeryInfo.builder()
                 .bakery(bakery)
                 .rating(Math.floor(bakery.getReviewList()

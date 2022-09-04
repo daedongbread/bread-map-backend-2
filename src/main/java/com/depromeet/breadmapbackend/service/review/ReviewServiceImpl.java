@@ -94,6 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDetailDto getReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+        review.addViews();
 
         List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUser(review.getUser()).stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
@@ -132,7 +133,6 @@ public class ReviewServiceImpl implements ReviewService {
             }
         });
 
-        if (files.size() > 10) throw new ImageNumExceedException();
         request.getNoExistBreadRatingRequestList().forEach(noExistBreadRatingRequest -> {
             if(breadRepository.findByName(noExistBreadRatingRequest.getBreadName()).isPresent())
                 throw new BreadAlreadyException();
@@ -145,6 +145,7 @@ public class ReviewServiceImpl implements ReviewService {
             review.addRating(breadRating);
         });
 
+        if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
