@@ -51,10 +51,30 @@ public class ReviewServiceImpl implements ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
+    public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Comparator<ReviewDto> comparing;
+        if(sort == null || sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
+        else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
+        else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
+        else throw new SortTypeWrongException();
+
+        return reviewRepository.findByBakery(bakery)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(br -> new ReviewDto(br,
+                        reviewRepository.countByUser(br.getUser()),
+                        followRepository.countByFromUser(br.getUser())
+                ))
+                .sorted(comparing)
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Comparator<ReviewDto> comparing;
-        if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
+        if(sort == null || sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
         else throw new SortTypeWrongException();

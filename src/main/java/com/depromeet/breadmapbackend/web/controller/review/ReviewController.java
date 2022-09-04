@@ -21,9 +21,17 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/{bakeryId}/all")
+    @GetMapping("/{bakeryId}/simple")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<ReviewDto>> getBakeryReviewList(@PathVariable Long bakeryId, @RequestParam ReviewSortType sort){
+    public ApiResponse<List<ReviewDto>> getSimpleBakeryReviewList(@PathVariable Long bakeryId,
+                                                                  @RequestParam(defaultValue = "latest") ReviewSortType sort){
+        return new ApiResponse<>(reviewService.getSimpleBakeryReviewList(bakeryId, sort));
+    }
+
+    @GetMapping("/{bakeryId}/all")
+    @ResponseStatus(HttpStatus.OK) //TODO : 페이징?
+    public ApiResponse<List<ReviewDto>> getBakeryReviewList(@PathVariable Long bakeryId,
+                                                            @RequestParam(defaultValue = "latest") ReviewSortType sort){
         return new ApiResponse<>(reviewService.getBakeryReviewList(bakeryId, sort));
     }
 

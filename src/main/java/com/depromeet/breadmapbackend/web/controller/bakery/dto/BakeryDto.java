@@ -13,14 +13,14 @@ import java.util.List;
 public class BakeryDto {
     private BakeryInfo info;
     private List<BreadDto> menu;
-    private List<ReviewDto> review;
+//    private List<ReviewDto> review;
     private List<FacilityInfo> facilityInfoList;
 
     @Builder
-    public BakeryDto(BakeryInfo info, List<BreadDto> menu, List<ReviewDto> review, List<FacilityInfo> facilityInfoList) {
+    public BakeryDto(BakeryInfo info, List<BreadDto> menu, /*List<ReviewDto> review, */List<FacilityInfo> facilityInfoList) {
         this.info = info;
         this.menu = menu;
-        this.review = review;
+//        this.review = review;
         this.facilityInfoList = facilityInfoList;
     }
 }

@@ -144,18 +144,18 @@ public class BakeryServiceImpl implements BakeryService {
                         Math.floor(breadRatingRepository.findBreadAvgRating(bread.getId())*10)/10.0, //TODO
                         breadRatingRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
 
-        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(br -> new ReviewDto(br,
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(Comparator.comparing(ReviewDto::getId).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
+//        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
+//                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+//                .map(br -> new ReviewDto(br,
+//                        reviewRepository.countByUser(br.getUser()),
+//                        followRepository.countByFromUser(br.getUser())
+//                ))
+//                .sorted(Comparator.comparing(ReviewDto::getId).reversed())
+//                .limit(3)
+//                .collect(Collectors.toList());
 
         return BakeryDto.builder()
-                .info(info).menu(menu).review(review).facilityInfoList(bakery.getFacilityInfoList()).build();
+                .info(info).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 
     @Transactional(readOnly = true)
