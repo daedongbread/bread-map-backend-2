@@ -62,6 +62,9 @@ public class Bakery extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    private Integer views;
+
     @Builder
     public Bakery(Long id, String name, Double latitude, Double longitude,
                   String address, String hours, String phoneNumber,
@@ -83,6 +86,7 @@ public class Bakery extends BaseEntity {
         this.user = user;
         this.facilityInfoList = facilityInfoList;
         this.status = status;
+        this.views = 0;
     }
 
     public void addFlagNum() {
@@ -116,4 +120,6 @@ public class Bakery extends BaseEntity {
         this.facilityInfoList = facilityInfoList;
         this.status = status;
     }
+
+    public void addViews() { this.views += 1; }
 }

@@ -1,9 +1,10 @@
 package com.depromeet.breadmapbackend.web.advice;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
@@ -17,7 +18,6 @@ import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundExce
 import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
-import com.depromeet.breadmapbackend.web.controller.review.DataNotExistedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +66,7 @@ public class ExceptionAdvice {
     }
 
     /*
-     * Request Body validation Exception
+     * Request Part validation Exception
      */
     @ExceptionHandler(WebExchangeBindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -74,6 +75,16 @@ public class ExceptionAdvice {
             log.error("error field : \"{}\", value : \"{}\", message : \"{}\"", error.getField(), error.getRejectedValue(), error.getDefaultMessage());
         }
         return new ErrorResponse("Request part's field is not valid");
+    }
+
+    /*
+     * Request Part File Missing Exception
+     */
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ErrorResponse missingServletRequestPartException(HttpServletRequest request, MissingServletRequestPartException e) {
+        log.error("error field : \"{}\", message : \"{}\"", e.getRequestPartName(), e.getMessage());
+        return new ErrorResponse("Request part's file is missing.");
     }
 
     /*
@@ -191,14 +202,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 가져올 데이터가 존재하지 않을 때
-     */
-    @ExceptionHandler(DataNotExistedException.class)
-    public ErrorResponse DataNotExistedException(DataNotExistedException e) {
         return new ErrorResponse(e.getMessage());
     }
     
@@ -415,6 +418,24 @@ public class ExceptionAdvice {
     @ExceptionHandler(ImageInvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse imageInvalidException(ImageInvalidException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미지 개수가 일치하지 않을 때
+     */
+    @ExceptionHandler(ImageNumMatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse imageNumMatchException(ImageNumMatchException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 이미지 개수가 초과될 때
+     */
+    @ExceptionHandler(ImageNumExceedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse imageNumExceedException(ImageNumExceedException e) {
         return new ErrorResponse(e.getMessage());
     }
 

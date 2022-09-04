@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
@@ -50,10 +51,30 @@ public class ReviewServiceImpl implements ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
+    public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Comparator<ReviewDto> comparing;
+        if(sort == null || sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
+        else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
+        else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
+        else throw new SortTypeWrongException();
+
+        return reviewRepository.findByBakery(bakery)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(br -> new ReviewDto(br,
+                        reviewRepository.countByUser(br.getUser()),
+                        followRepository.countByFromUser(br.getUser())
+                ))
+                .sorted(comparing)
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Comparator<ReviewDto> comparing;
-        if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
+        if(sort == null || sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
         else throw new SortTypeWrongException();
@@ -73,6 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDetailDto getReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+        review.addViews();
 
         List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUser(review.getUser()).stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
@@ -123,6 +145,7 @@ public class ReviewServiceImpl implements ReviewService {
             review.addRating(breadRating);
         });
 
+        if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);

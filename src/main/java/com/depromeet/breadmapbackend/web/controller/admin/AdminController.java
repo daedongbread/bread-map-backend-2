@@ -55,7 +55,8 @@ public class AdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addBakery(
             @RequestPart AddBakeryRequest request,
-            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) throws IOException {
+            @RequestPart(required = false) MultipartFile bakeryImage,
+            @RequestPart List<MultipartFile> breadImageList) throws IOException {
         adminService.addBakery(request, bakeryImage, breadImageList);
     }
 
@@ -63,7 +64,8 @@ public class AdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBakery(
             @PathVariable Long bakeryId, @RequestPart UpdateBakeryRequest request,
-            @RequestPart MultipartFile bakeryImage, @RequestPart List<MultipartFile> breadImageList) throws IOException {
+            @RequestPart(required = false) MultipartFile bakeryImage,
+            @RequestPart List<MultipartFile> breadImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
     }
 
