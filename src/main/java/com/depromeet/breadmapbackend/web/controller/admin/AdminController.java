@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.web.controller.admin;
 
+import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
+import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +25,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
+
+    @PostMapping(value = "/join")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void adminJoin(@RequestBody @Validated(ValidationSequence.class) AdminJoinRequest request) {
+        adminService.adminJoin(request);
+    }
+
+
+    @PostMapping(value = "/login")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<JwtToken> adminLogin(@RequestBody @Validated(ValidationSequence.class) AdminLoginRequest request) {
+        return new ApiResponse<>(adminService.adminLogin(request));
+    }
 
     @GetMapping("/bakery/all")
     @ResponseStatus(HttpStatus.OK)

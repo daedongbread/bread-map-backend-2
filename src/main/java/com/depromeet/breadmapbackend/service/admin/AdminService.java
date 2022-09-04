@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.service.admin;
 
+import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface AdminService {
+    void adminJoin(AdminJoinRequest request);
+    JwtToken adminLogin(AdminLoginRequest request);
     AdminBakeryListDto getBakeryList(Pageable pageable);
     AdminBakeryDto getBakery(Long bakeryId);
     AdminBakeryListDto searchBakeryList(String name, Pageable pageable);

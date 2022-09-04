@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.AddBakeryRequest;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminLoginRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryReportStatusRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryRequest;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -43,7 +45,9 @@ class AdminControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        admin = User.builder().nickName("adminNickName").roleType(RoleType.ADMIN).username("adminUserName").build();
+        admin = User.builder()
+                .email("adminId").nickName("adminNickName").roleType(RoleType.ADMIN)
+                .username(passwordEncoder.encode("password")).build();
         userRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getUsername(), admin.getRoleType().getCode());
 
@@ -91,6 +95,33 @@ class AdminControllerTest extends ControllerTest {
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
+    }
+
+    @Test
+    void adminLogin() throws Exception {
+        String object = objectMapper.writeValueAsString(AdminLoginRequest.builder()
+                .adminId("adminId").password("password").build());
+
+        ResultActions result = mockMvc.perform(post("/admin/login")
+                .content(object)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andDo(print())
+                .andDo(document("admin/login",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("adminId").description("관리자 아이디"),
+                                fieldWithPath("password").description("관리자 비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.accessToken").description("엑세스 토큰"),
+                                fieldWithPath("data.refreshToken").description("리프레시 토큰"),
+                                fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
+                        )
+                ))
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -469,7 +500,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.userDtoList.[].id").description("유저 고유 번호"),
                                 fieldWithPath("data.userDtoList.[].username").description("유저 식별자"),
                                 fieldWithPath("data.userDtoList.[].nickName").description("유저 닉네임"),
-                                fieldWithPath("data.userDtoList.[].email").description("유저 이메일"),
+                                fieldWithPath("data.userDtoList.[].email").description("유저 이메일").optional(),
                                 fieldWithPath("data.userDtoList.[].createdAt").description("유저 가입 날짜"),
                                 fieldWithPath("data.userDtoList.[].lastAccessAt").description("유저 최종 접속"),
                                 fieldWithPath("data.userDtoList.[].roleType").description("유저 권한"),
