@@ -1,6 +1,7 @@
 spring:
   jwt:
     secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+    admin: jwtadminsecretkeyjwtadminsecretkeyjwtadminsecretkey
   datasource:
     url: jdbc:h2:mem:bread_map
   servlet:

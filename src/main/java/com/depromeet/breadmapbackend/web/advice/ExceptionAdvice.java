@@ -1,10 +1,7 @@
 package com.depromeet.breadmapbackend.web.advice;
 
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
-import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
+import com.depromeet.breadmapbackend.domain.exception.*;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
@@ -517,6 +514,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(RejoinException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse rejoinException(RejoinException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 관리자 회원가입에서 예외 발생
+     */
+    @ExceptionHandler(AdminJoinException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse adminJoinException(AdminJoinException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
