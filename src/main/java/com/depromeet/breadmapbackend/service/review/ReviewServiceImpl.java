@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
@@ -111,6 +112,7 @@ public class ReviewServiceImpl implements ReviewService {
             }
         });
 
+        if (files.size() > 10) throw new ImageNumExceedException();
         request.getNoExistBreadRatingRequestList().forEach(noExistBreadRatingRequest -> {
             if(breadRepository.findByName(noExistBreadRatingRequest.getBreadName()).isPresent())
                 throw new BreadAlreadyException();

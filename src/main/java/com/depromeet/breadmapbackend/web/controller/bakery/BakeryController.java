@@ -73,7 +73,7 @@ public class BakeryController {
     @PostMapping("/report/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void breadAddReport(@PathVariable Long bakeryId, @RequestPart BreadReportRequest request,
-                               @RequestPart List<MultipartFile> files) throws IOException {
+                               @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         bakeryService.breadAddReport(bakeryId, request, files);
     }
 

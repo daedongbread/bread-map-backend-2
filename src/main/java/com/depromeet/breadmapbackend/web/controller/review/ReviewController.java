@@ -5,7 +5,6 @@ import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
-import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,7 @@ public class ReviewController {
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void addReview(@CurrentUser String username, @PathVariable Long bakeryId,
-                          @RequestPart ReviewRequest request, @RequestPart List<MultipartFile> files) throws IOException {
+                          @RequestPart ReviewRequest request, @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         reviewService.addReview(username, bakeryId, request, files);
     }
 

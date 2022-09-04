@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
@@ -204,6 +205,8 @@ public class BakeryServiceImpl implements BakeryService {
 
         BreadAddReport breadAddReport = BreadAddReport.builder()
                 .bakery(bakery).name(request.getName()).price(request.getPrice()).build();
+
+        if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.breadAddReportImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);

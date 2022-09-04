@@ -11,6 +11,8 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
@@ -454,9 +456,8 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        log.info("1 : " + request.getBreadList().size());
-        log.info("2 : " + breadImageList.size());
-        if(request.getBreadList().size() != breadImageList.size()) throw new ImageInvalidException();
+        if(request.getBreadList().size() != breadImageList.size()) throw new ImageNumMatchException();
+        if (breadImageList.size() > 10) throw new ImageNumExceedException();
         for(int i = 0; i < request.getBreadList().size(); i++) {
             AddBakeryRequest.AddBreadRequest addBreadRequest = request.getBreadList().get(i);
             Bread bread = Bread.builder().bakery(bakery)
@@ -489,7 +490,8 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getBreadList().size() != breadImageList.size()) throw new ImageInvalidException();
+        if(request.getBreadList().size() != breadImageList.size()) throw new ImageNumMatchException();
+        if (breadImageList.size() > 10) throw new ImageNumExceedException();
         for(int i = 0; i < request.getBreadList().size(); i++) {
             UpdateBakeryRequest.UpdateBreadRequest updateBreadRequest = request.getBreadList().get(i);
             Bread bread = breadRepository.findById(updateBreadRequest.getBreadId()).orElseThrow(BreadNotFoundException::new);
