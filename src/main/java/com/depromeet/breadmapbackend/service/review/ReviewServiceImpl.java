@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
@@ -21,6 +22,7 @@ import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,12 +48,33 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewReportRepository reviewReportRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Transactional(readOnly = true)
+    public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Comparator<ReviewDto> comparing;
+        if(sort == null || sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
+        else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
+        else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
+        else throw new SortTypeWrongException();
+
+        return reviewRepository.findByBakery(bakery)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(br -> new ReviewDto(br,
+                        reviewRepository.countByUser(br.getUser()),
+                        followRepository.countByFromUser(br.getUser())
+                ))
+                .sorted(comparing)
+                .limit(3)
+                .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Comparator<ReviewDto> comparing;
-        if(sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
+        if(sort == null || sort.equals(ReviewSortType.latest)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.high)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.low)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
         else throw new SortTypeWrongException();
@@ -71,6 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDetailDto getReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+        review.addViews();
 
         List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUser(review.getUser()).stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
@@ -121,6 +145,7 @@ public class ReviewServiceImpl implements ReviewService {
             review.addRating(breadRating);
         });
 
+        if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.reviewImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
@@ -137,15 +162,6 @@ public class ReviewServiceImpl implements ReviewService {
 //        review.useChange();
     }
 
-//    @Transactional(readOnly = true)
-//    public List<UserReviewDto> getUserReviewList(String username) {
-//        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-//        return reviewRepository.findByUserId(user.getId())
-//                .stream().filter(Review::isUse).map(UserReviewDto::new)
-//                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
-//                .collect(Collectors.toList());
-//    }
-
     @Transactional
     public void reviewLike(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -156,6 +172,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         ReviewLike reviewLike = ReviewLike.builder().review(review).user(user).build();
         review.plusLike(reviewLike);
+        eventPublisher.publishEvent(ReviewLikeEvent.builder()
+                .userId(review.getUser().getId()).fromUserId(user.getId())
+                .reviewId(reviewId).reviewContent(review.getContent()).build());
     }
 
     @Transactional
@@ -188,14 +207,20 @@ public class ReviewServiceImpl implements ReviewService {
                     .review(review).user(user).content(request.getContent()).build();
             reviewCommentRepository.save(reviewComment);
             review.addComment(reviewComment); //TODO
-        }
-        else { // 대댓글
+            eventPublisher.publishEvent(ReviewCommentEvent.builder()
+                    .userId(review.getUser().getId()).fromUserId(user.getId())
+                    .reviewId(reviewId).reviewContent(review.getContent()).build());
+
+        } else { // 대댓글
             ReviewComment parentComment = reviewCommentRepository.findById(request.getParentCommentId()).orElseThrow(ReviewCommentNotFoundException::new);
             ReviewComment reviewComment = ReviewComment.builder()
                     .review(review).user(user).content(request.getContent()).parent(parentComment).build();
             reviewCommentRepository.save(reviewComment);
             parentComment.addChildComment(reviewComment);
             review.addComment(reviewComment); //TODO
+            eventPublisher.publishEvent(RecommentEvent.builder()
+                    .userId(parentComment.getUser().getId()).fromUserId(user.getId())
+                    .commentId(parentComment.getId()).commentContent(parentComment.getContent()).build());
         }
     }
 
@@ -210,26 +235,21 @@ public class ReviewServiceImpl implements ReviewService {
         if(reviewComment.getParent() == null) { // 부모 댓글
             if(reviewComment.getChildList().isEmpty()) { // 자식 댓글이 없으면
                 reviewCommentRepository.delete(reviewComment);
-            }
-            else { // 자식 댓글이 있으면
+            } else { // 자식 댓글이 있으면
                 reviewComment.delete();
             }
-        }
-        else { // 자식 댓글
+        } else { // 자식 댓글
             if(!reviewComment.getParent().isDelete()) { // 부모 댓글이 있으면, isDelete = false
                 reviewComment.getParent().removeChildComment(reviewComment);
                 reviewCommentRepository.delete(reviewComment);
-            }
-            else { // 부모 댓글이 없으면, isDelete = true
+            } else { // 부모 댓글이 없으면, isDelete = true
                 if(reviewComment.getParent().getChildList().size() == 1) { // 자식 댓글이 마지막이었으면
-                    log.info("THIS!");
                     ReviewComment parent = reviewComment.getParent();
                     parent.removeChildComment(reviewComment);
                     reviewCommentRepository.delete(reviewComment);
                     reviewCommentRepository.delete(parent); // 삭제가 안됨!!
                     review.removeComment(parent);
-                }
-                else { // 자식 댓글이 마지막이 아니면
+                } else { // 자식 댓글이 마지막이 아니면
                     reviewComment.getParent().removeChildComment(reviewComment);
                     reviewCommentRepository.delete(reviewComment);
                 }
@@ -256,6 +276,9 @@ public class ReviewServiceImpl implements ReviewService {
         if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent()) throw new ReviewCommentLikeAlreadyException();
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
         reviewComment.plusLike(reviewCommentLike);
+        eventPublisher.publishEvent(ReviewCommentLikeEvent.builder()
+                .userId(reviewComment.getUser().getId()).fromUserId(user.getId())
+                .commentId(reviewComment.getId()).commentContent(reviewComment.getContent()).build());
     }
 
     @Transactional

@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    private String profileImageUrl;
+    private String profileImageUrl; //TODO : 이름 변경
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flag> flagList = new ArrayList<>();

@@ -1,6 +1,7 @@
 spring:
   jwt:
     secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+    admin: jwtadminsecretkeyjwtadminsecretkeyjwtadminsecretkey
   datasource:
     url: jdbc:h2:mem:bread_map
   servlet:
@@ -53,6 +54,12 @@ spring:
             token-uri: ${KAKAO_TOKEN_URI}
             user-info-uri: ${KAKAO_USER_INFO_URI}
             user-name-attribute: id
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
 
 cloud:
   aws:

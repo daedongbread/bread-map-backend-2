@@ -10,7 +10,10 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundExcept
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.exception.AdminJoinException;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
@@ -19,6 +22,9 @@ import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.security.domain.RoleType;
+import com.depromeet.breadmapbackend.security.token.JwtToken;
+import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.SimpleBakeryAddReportDto;
@@ -29,7 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -62,11 +71,41 @@ public class AdminServiceImpl implements AdminService{
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
 
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final StringRedisTemplate redisTemplate;
+
     @Value("${sgis.key}")
     public String SGIS_CONSUMER_KEY;
 
     @Value("${sgis.secret}")
     private String SGIS_CONSUMER_SECRET;
+
+    @Value("${spring.jwt.admin}")
+    private String JWT_ADMIN_KEY;
+
+    @Transactional
+    public void adminJoin(AdminJoinRequest request) {
+        if(userRepository.findByEmail(request.getAdminId()).isPresent()) throw new AdminJoinException();
+        if(!request.getSecret().equals(JWT_ADMIN_KEY)) throw new AdminJoinException();
+        User admin = User.builder().email(request.getAdminId())
+                .username(passwordEncoder.encode(request.getPassword()))
+                .roleType(RoleType.ADMIN).build();
+        userRepository.save(admin);
+    }
+
+    @Transactional
+    public JwtToken adminLogin(AdminLoginRequest request) {
+        User user = userRepository.findByEmail(request.getAdminId()).orElseThrow(UserNotFoundException::new);
+        log.info("PW : " + user.getUsername());
+        if (!passwordEncoder.matches(request.getPassword(), user.getUsername())) throw new UserNotFoundException();
+
+        JwtToken adminToken = jwtTokenProvider.createJwtToken(user.getUsername(), "ROLE_ADMIN");
+        redisTemplate.opsForValue()
+                .set("RT:" + user.getId(),
+                        adminToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+        return adminToken;
+    }
 
     @Transactional(readOnly = true)
     public AdminBakeryListDto getBakeryList(Pageable pageable) {
@@ -454,9 +493,8 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        log.info("1 : " + request.getBreadList().size());
-        log.info("2 : " + breadImageList.size());
-        if(request.getBreadList().size() != breadImageList.size()) throw new ImageInvalidException();
+        if(request.getBreadList().size() != breadImageList.size()) throw new ImageNumMatchException();
+        if (breadImageList.size() > 10) throw new ImageNumExceedException();
         for(int i = 0; i < request.getBreadList().size(); i++) {
             AddBakeryRequest.AddBreadRequest addBreadRequest = request.getBreadList().get(i);
             Bread bread = Bread.builder().bakery(bakery)
@@ -489,7 +527,8 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getBreadList().size() != breadImageList.size()) throw new ImageInvalidException();
+        if(request.getBreadList().size() != breadImageList.size()) throw new ImageNumMatchException();
+        if (breadImageList.size() > 10) throw new ImageNumExceedException();
         for(int i = 0; i < request.getBreadList().size(); i++) {
             UpdateBakeryRequest.UpdateBreadRequest updateBreadRequest = request.getBreadList().get(i);
             Bread bread = breadRepository.findById(updateBreadRequest.getBreadId()).orElseThrow(BreadNotFoundException::new);

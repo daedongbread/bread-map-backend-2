@@ -3,6 +3,8 @@ package com.depromeet.breadmapbackend.utils;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
@@ -25,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -39,6 +42,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
@@ -99,6 +105,12 @@ public abstract class ControllerTest {
 
     @Autowired
     protected BlockUserRepository blockUserRepository;
+
+    @Autowired
+    protected NoticeRepository noticeRepository;
+
+    @Autowired
+    protected NoticeTokenRepository noticeTokenRepository;
 
     @Autowired
     protected UserService userService;

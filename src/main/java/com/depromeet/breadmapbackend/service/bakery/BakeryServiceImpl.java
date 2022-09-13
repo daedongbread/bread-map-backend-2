@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
+import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
@@ -128,6 +129,8 @@ public class BakeryServiceImpl implements BakeryService {
     @Transactional(readOnly = true)
     public BakeryDto findBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        bakery.addViews();
+
         BakeryInfo info = BakeryInfo.builder()
                 .bakery(bakery)
                 .rating(Math.floor(bakery.getReviewList()
@@ -143,18 +146,18 @@ public class BakeryServiceImpl implements BakeryService {
                         Math.floor(breadRatingRepository.findBreadAvgRating(bread.getId())*10)/10.0, //TODO
                         breadRatingRepository.countByBreadId(bread.getId()))).limit(3).collect(Collectors.toList());
 
-        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(br -> new ReviewDto(br,
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(Comparator.comparing(ReviewDto::getId).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
+//        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
+//                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+//                .map(br -> new ReviewDto(br,
+//                        reviewRepository.countByUser(br.getUser()),
+//                        followRepository.countByFromUser(br.getUser())
+//                ))
+//                .sorted(Comparator.comparing(ReviewDto::getId).reversed())
+//                .limit(3)
+//                .collect(Collectors.toList());
 
         return BakeryDto.builder()
-                .info(info).menu(menu).review(review).facilityInfoList(bakery.getFacilityInfoList()).build();
+                .info(info).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 
     @Transactional(readOnly = true)
@@ -204,6 +207,8 @@ public class BakeryServiceImpl implements BakeryService {
 
         BreadAddReport breadAddReport = BreadAddReport.builder()
                 .bakery(bakery).name(request.getName()).price(request.getPrice()).build();
+
+        if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.breadAddReportImage, bakeryId);
             String image = s3Uploader.upload(file, imagePath);

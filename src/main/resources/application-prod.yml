@@ -1,6 +1,7 @@
 spring:
   jwt:
     secret: ${JWT_KEY}
+    admin: ${JWT_ADMIN_KEY}
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}

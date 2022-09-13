@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping("/auth/reissue")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<JwtToken> reissue(@RequestBody @Validated(ValidationSequence.class) TokenRequest request) {
+    public ApiResponse<JwtToken> reissue(@RequestBody @Validated(ValidationSequence.class) ReissueRequest request) {
         return new ApiResponse<>(userService.reissue(request));
     }
 
@@ -33,9 +33,16 @@ public class UserController {
         return new ApiResponse<>(userService.profile(username));
     }
 
+    @PatchMapping("/nickname")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateNickName(@CurrentUser String username,
+                               @RequestBody @Validated(ValidationSequence.class) UpdateNickNameRequest request) {
+        userService.updateNickName(username, request);
+    }
+
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(@RequestBody @Validated(ValidationSequence.class) TokenRequest request) {
+    public void logout(@RequestBody @Validated(ValidationSequence.class) LogoutRequest request) {
         userService.logout(request);
     }
 

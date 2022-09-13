@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
@@ -15,9 +16,7 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
-import com.depromeet.breadmapbackend.web.controller.user.dto.BlockRequest;
-import com.depromeet.breadmapbackend.web.controller.user.dto.FollowRequest;
-import com.depromeet.breadmapbackend.web.controller.user.dto.TokenRequest;
+import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +44,7 @@ class UserControllerTest extends ControllerTest {
     private User userToBlock;
     private JwtToken token1;
     private JwtToken token2;
+    private NoticeToken noticeToken1;
 
     @BeforeEach
     public void setUp() {
@@ -60,6 +60,9 @@ class UserControllerTest extends ControllerTest {
                 .set(REDIS_KEY_REFRESH + user1.getUsername(),
                         token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
         token2 = jwtTokenProvider.createJwtToken(user2.getUsername(), RoleType.USER.getCode());
+
+        noticeToken1 = NoticeToken.builder().user(user1).deviceToken("deviceToken1").build();
+        noticeTokenRepository.save(noticeToken1);
 
         Follow follow = Follow.builder().fromUser(user1).toUser(user2).build();
         followRepository.save(follow);
@@ -102,6 +105,8 @@ class UserControllerTest extends ControllerTest {
         bakeryRepository.deleteAllInBatch();
         followRepository.deleteAllInBatch();
         blockUserRepository.deleteAllInBatch();
+        noticeTokenRepository.deleteAllInBatch();
+        noticeRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
@@ -109,7 +114,7 @@ class UserControllerTest extends ControllerTest {
 //    @Transactional
     void refresh() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(TokenRequest.builder()
+        String object = objectMapper.writeValueAsString(ReissueRequest.builder()
                 .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken()).build());
 
         // when
@@ -125,13 +130,13 @@ class UserControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("엑세스 토큰"),
-                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                                fieldWithPath("accessToken").description("엑세스 토큰"),
+                                fieldWithPath("refreshToken").description("리프레시 토큰")
                         ),
                         responseFields(
-                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("엑세스 토큰"),
-                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
-                                fieldWithPath("data.accessTokenExpiredDate").type(JsonFieldType.NUMBER).description("엑세스 토큰 만료시간")
+                                fieldWithPath("data.accessToken").description("엑세스 토큰"),
+                                fieldWithPath("data.refreshToken").description("리프레시 토큰"),
+                                fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -176,10 +181,37 @@ class UserControllerTest extends ControllerTest {
     }
 
     @Test
+    void updateNickName() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("testNickName3").build());
+
+        // when
+        ResultActions result = mockMvc.perform(patch("/user/nickname")
+                .header("Authorization", "Bearer " + token1.getAccessToken())
+                .content(object)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andDo(print())
+                .andDo(document("user/nickname",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(
+                                fieldWithPath("nickName").description("변경할 닉네임")
+                        )
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void logout() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(TokenRequest.builder()
-                .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken()).build());
+        String object = objectMapper.writeValueAsString(LogoutRequest.builder()
+                .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken())
+                .deviceToken(noticeToken1.getDeviceToken()).build());
 
         // when
         ResultActions result = mockMvc.perform(post("/user/logout")
@@ -196,8 +228,9 @@ class UserControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(
-                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("엑세스 토큰"),
-                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                                fieldWithPath("accessToken").description("엑세스 토큰"),
+                                fieldWithPath("refreshToken").description("리프레시 토큰"),
+                                fieldWithPath("deviceToken").description("디바이스 토큰")
                         )
                 ))
                 .andExpect(status().isNoContent());
