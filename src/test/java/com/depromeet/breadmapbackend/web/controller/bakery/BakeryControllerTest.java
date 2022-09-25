@@ -52,9 +52,9 @@ class BakeryControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery1 = Bakery.builder().id(1L).address("address1").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.posting).build();
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
         bakery2 = Bakery.builder().id(2L).address("address2").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.posting).build();
+                .facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.POSTING).build();
 
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
@@ -238,7 +238,8 @@ class BakeryControllerTest extends ControllerTest {
                                                 "WIFI(\"와이파이\"),\n" +
                                                 "DELIVERY(\"배달\"),\n" +
                                                 "PET(\"반려동물\"),\n" +
-                                                "SHIPPING(\"택배\"))")
+                                                "SHIPPING(\"택배\"),\n" +
+                                                "BOOKING(\"예약\"))")
                         )
                 ))
                 .andExpect(status().isOk());

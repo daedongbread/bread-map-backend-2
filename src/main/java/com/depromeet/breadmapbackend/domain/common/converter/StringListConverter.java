@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.common;
+package com.depromeet.breadmapbackend.domain.common.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

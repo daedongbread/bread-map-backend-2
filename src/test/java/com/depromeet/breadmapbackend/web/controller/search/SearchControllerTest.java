@@ -45,9 +45,9 @@ class SearchControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         bakery1 = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1").status(BakeryStatus.posting).build();
+                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1").status(BakeryStatus.POSTING).build();
         bakery2 = Bakery.builder().id(2L).address("address").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(Collections.singletonList(FacilityInfo.DELIVERY)).name("bakery2").status(BakeryStatus.posting).build();
+                .facilityInfoList(Collections.singletonList(FacilityInfo.DELIVERY)).name("bakery2").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
 

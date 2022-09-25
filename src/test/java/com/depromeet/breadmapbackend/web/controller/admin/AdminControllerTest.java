@@ -56,7 +56,7 @@ class AdminControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.posting).build();
+                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
         bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
@@ -143,8 +143,8 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryDtoList.[].modifiedAt").description("빵집 마지막 수정일"),
                                 fieldWithPath("data.bakeryDtoList.[].status")
                                         .description("빵집 게시상태 (" +
-                                                "posting(\"게시중\"),\n" +
-                                                "unposting(\"미게시\"))"),
+                                                "POSTING(\"게시중\"),\n" +
+                                                "UNPOSTING(\"미게시\"))"),
                                 fieldWithPath("data.totalNum").description("빵집 갯수")
                         )
                 ))
@@ -202,8 +202,8 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryDtoList.[].modifiedAt").description("빵집 마지막 수정일"),
                                 fieldWithPath("data.bakeryDtoList.[].status")
                                         .description("빵집 게시 상태 (" +
-                                                "posting(\"게시중\"),\n" +
-                                                "unposting(\"미게시\"))"),
+                                                "POSTING(\"게시중\"),\n" +
+                                                "UNPOSTING(\"미게시\"))"),
                                 fieldWithPath("data.totalNum").description("빵집 갯수")
                         )
                 ))
@@ -235,7 +235,7 @@ class AdminControllerTest extends ControllerTest {
         String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
                 .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
-                .facilityInfoList(facilityInfo).status(BakeryStatus.posting).breadList(Arrays.asList(
+                .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).breadList(Arrays.asList(
                         AddBakeryRequest.AddBreadRequest.builder().name("testBread").price(12000).build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
@@ -273,8 +273,8 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("breadList.[].price").description("빵 가격"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
-                                                "posting(\"게시중\"),\n" +
-                                                "unposting(\"미게시\"))")
+                                                "POSTING(\"게시중\"),\n" +
+                                                "UNPOSTING(\"미게시\"))")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -286,7 +286,7 @@ class AdminControllerTest extends ControllerTest {
         String object = objectMapper.writeValueAsString(UpdateBakeryRequest.builder()
                 .bakeryId(bakery.getId()).name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
-                .facilityInfoList(facilityInfo).status(BakeryStatus.posting).breadList(Arrays.asList(
+                .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).breadList(Arrays.asList(
                         UpdateBakeryRequest.UpdateBreadRequest.builder()
                                 .breadId(bread.getId()).name("testBread").price(12000).build()
                 )).build());
@@ -329,8 +329,8 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("breadList.[].price").description("빵 가격"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
-                                                "posting(\"게시중\"),\n" +
-                                                "unposting(\"미게시\"))")
+                                                "POSTING(\"게시중\"),\n" +
+                                                "UNPOSTING(\"미게시\"))")
                         )
                 ))
                 .andExpect(status().isNoContent());
@@ -372,9 +372,9 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryAddReportDtoList.[].createdAt").description("빵집 제보 시간"),
                                 fieldWithPath("data.bakeryAddReportDtoList.[].status")
                                         .description("빵집 제보 처리 상태 " +
-                                                "(before_reflect(\"검토전\"),\n" +
-                                                "not_reflect(\"미반영\"),\n" +
-                                                "reflect(\"반영완료\"))"),
+                                                "(BEFORE_REFLECT(\"검토전\"),\n" +
+                                                "NOT_REFLECT(\"미반영\"),\n" +
+                                                "REFLECT(\"반영완료\"))"),
                                 fieldWithPath("data.totalNum").description("빵집 제보 갯수")
                         )
                 ))
@@ -399,9 +399,9 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.content").description("빵집 제보 내용"),
                                 fieldWithPath("data.status")
                                         .description("빵집 제보 처리 상태 " +
-                                                "(before_reflect(\"검토전\"),\n" +
-                                                "not_reflect(\"미반영\"),\n" +
-                                                "reflect(\"반영완료\"))")
+                                                "(BEFORE_REFLECT(\"검토전\"),\n" +
+                                                "NOT_REFLECT(\"미반영\"),\n" +
+                                                "REFLECT(\"반영완료\"))")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -410,7 +410,7 @@ class AdminControllerTest extends ControllerTest {
     @Test
     void updateBakeryAddReportStatus() throws Exception {
         String object = objectMapper.writeValueAsString(UpdateBakeryReportStatusRequest.builder()
-                .status(BakeryAddReportStatus.reflect).build());
+                .status(BakeryAddReportStatus.REFLECT).build());
 
         mockMvc.perform(patch("/admin/bakery/report/{reportId}", bakeryAddReport.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken())
@@ -424,9 +424,9 @@ class AdminControllerTest extends ControllerTest {
                                 parameterWithName("reportId").description("빵집 제보 고유 번호")),
                         requestFields(
                                 fieldWithPath("status").description("빵집 제보 처리 상태 " +
-                                        "(before_reflect(\"검토전\"),\n" +
-                                        "not_reflect(\"미반영\"),\n" +
-                                        "reflect(\"반영완료\"))")
+                                        "(BEFORE_REFLECT(\"검토전\"),\n" +
+                                        "NOT_REFLECT(\"미반영\"),\n" +
+                                        "REFLECT(\"반영완료\"))")
                         )
                 ))
                 .andExpect(status().isNoContent());

@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BakeryAddReportStatus {
-    before_reflect("검토전"),
-    not_reflect("미반영"),
-    reflect("반영완료");
+    BEFORE_REFLECT("검토전"),
+    NOT_REFLECT("미반영"),
+    REFLECT("반영완료");
 
     private final String code;
 }

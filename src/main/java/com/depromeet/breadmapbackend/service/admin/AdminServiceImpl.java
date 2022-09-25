@@ -8,10 +8,9 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundExcep
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
-import com.depromeet.breadmapbackend.domain.common.FileConverter;
+import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.exception.AdminJoinException;
-import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
@@ -36,18 +35,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -488,7 +484,7 @@ public class AdminServiceImpl implements AdminService{
         bakeryRepository.save(bakery);
 
         if(!bakeryImage.isEmpty()) {
-            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageFolderPath.bakeryImage, bakery.getId());
+            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageFolderPath.BAKERY_IMAGE, bakery.getId());
             String image = s3Uploader.upload(bakeryImage, imagePath);
             bakery.updateImage(image);
         }
@@ -503,7 +499,7 @@ public class AdminServiceImpl implements AdminService{
 
             MultipartFile breadImage = breadImageList.get(i);
             if(!breadImage.isEmpty()) {
-                String imagePath = fileConverter.parseFileInfo(breadImage, ImageFolderPath.breadImage, bread.getId());
+                String imagePath = fileConverter.parseFileInfo(breadImage, ImageFolderPath.BREAD_IMAGE, bread.getId());
                 String image = s3Uploader.upload(breadImage, imagePath);
                 bread.updateImage(image);
             }
@@ -522,7 +518,7 @@ public class AdminServiceImpl implements AdminService{
 
         if(!bakeryImage.isEmpty()) {
             if(bakery.getImage() != null) s3Uploader.deleteFileS3(bakery.getImage());
-            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageFolderPath.bakeryImage, bakery.getId());
+            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageFolderPath.BAKERY_IMAGE, bakery.getId());
             String image = s3Uploader.upload(bakeryImage, imagePath);
             bakery.updateImage(image);
         }
@@ -537,7 +533,7 @@ public class AdminServiceImpl implements AdminService{
             MultipartFile breadImage = breadImageList.get(i);
             if(!breadImage.isEmpty()) {
                 s3Uploader.deleteFileS3(bread.getImage());
-                String imagePath = fileConverter.parseFileInfo(breadImage, ImageFolderPath.breadImage, bread.getId());
+                String imagePath = fileConverter.parseFileInfo(breadImage, ImageFolderPath.BREAD_IMAGE, bread.getId());
                 String image = s3Uploader.upload(breadImage, imagePath);
                 bread.updateImage(image);
             }

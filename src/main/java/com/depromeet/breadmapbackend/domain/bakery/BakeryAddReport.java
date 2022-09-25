@@ -38,7 +38,7 @@ public class BakeryAddReport extends BaseEntity {
         this.name = name;
         this.location = location;
         this.content = content;
-        this.status = BakeryAddReportStatus.before_reflect;
+        this.status = BakeryAddReportStatus.BEFORE_REFLECT;
         this.user = user;
     }
 

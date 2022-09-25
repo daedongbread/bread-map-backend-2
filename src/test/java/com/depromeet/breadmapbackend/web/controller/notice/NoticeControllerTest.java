@@ -44,7 +44,7 @@ class NoticeControllerTest extends ControllerTest {
         noticeTokenRepository.save(noticeToken);
 
         notice = Notice.builder().user(user).fromUser(fromUser).
-                title("title1").contentId(1L).content("content1").type(NoticeType.reviewComment).build();
+                title("title1").contentId(1L).content("content1").type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
     }
 
