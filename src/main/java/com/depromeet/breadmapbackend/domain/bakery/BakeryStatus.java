@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BakeryStatus {
-    posting("게시중"),
-    unposting("미게시");
+    POSTING("게시중"),
+    UNPOSTING("미게시");
 
     private final String code;
 }

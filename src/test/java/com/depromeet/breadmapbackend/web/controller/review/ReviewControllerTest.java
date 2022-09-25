@@ -54,7 +54,7 @@ class ReviewControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.posting).build();
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
         bread1 = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         bread2 = Bread.builder().bakery(bakery).name("bread2").price(4000).build();

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ReviewStatus {
-    BLOCK,
-    UNBLOCK;
+    BLOCK("차단"),
+    UNBLOCK("비차단");
+
+    private final String code;
 }

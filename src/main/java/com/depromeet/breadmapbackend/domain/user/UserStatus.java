@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum UserStatus {
-    BLOCK,
-    UNBLOCK;
+    BLOCK("차단"),
+    UNBLOCK("비차단");
+
+    private final String code;
 }

@@ -3,7 +3,7 @@ package com.depromeet.breadmapbackend.service.bakery;
 import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
-import com.depromeet.breadmapbackend.domain.common.FileConverter;
+import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
@@ -11,7 +11,6 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
 import com.depromeet.breadmapbackend.domain.review.repository.BreadRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -22,7 +21,6 @@ import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
-import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,8 +57,8 @@ public class BakeryServiceImpl implements BakeryService {
             (Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
 
         Comparator<BakeryCardDto> comparing;
-        if(sort.equals(BakerySortType.distance)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
-        else if(sort.equals(BakerySortType.popular)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
+        if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
+        else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new SortTypeWrongException();
 
         return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
@@ -89,8 +87,8 @@ public class BakeryServiceImpl implements BakeryService {
             (String username, Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
 
         Comparator<BakeryFilterCardDto> comparing;
-        if(sort.equals(BakerySortType.distance)) comparing = Comparator.comparing(BakeryFilterCardDto::getDistance);
-        else if(sort.equals(BakerySortType.popular)) comparing = Comparator.comparing(BakeryFilterCardDto::getPopularNum).reversed();
+        if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryFilterCardDto::getDistance);
+        else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryFilterCardDto::getPopularNum).reversed();
         else throw new SortTypeWrongException();
 
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
@@ -185,7 +183,7 @@ public class BakeryServiceImpl implements BakeryService {
 
         if(file.isEmpty()) throw new ImageNotExistException();
 
-        String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.bakeryDeleteReportImage, bakeryId);
+        String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.BAKERY_DELETE_REPORT_IMAGE, bakeryId);
         String image = s3Uploader.upload(file, imagePath);
 
         BakeryDeleteReport bakeryDeleteReport = BakeryDeleteReport.builder().bakery(bakery).image(image).build();
@@ -210,7 +208,7 @@ public class BakeryServiceImpl implements BakeryService {
 
         if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.breadAddReportImage, bakeryId);
+            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.BREAD_ADD_REPORT_IMAGE, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
             breadAddReport.addImage(image);
         }

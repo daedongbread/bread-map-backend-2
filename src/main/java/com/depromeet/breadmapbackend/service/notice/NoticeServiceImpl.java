@@ -100,7 +100,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title(fromUser.getNickName() + "님이 회원님을 팔로우하기 시작했어요")
-                .type(NoticeType.follow).build();
+                .type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice);
     }
 
@@ -114,7 +114,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .title("내 리뷰에 " + fromUser.getNickName() + "님이 댓글을 달았어요!")
                 // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰
                 .contentId(event.getReviewId()).content(event.getReviewContent())
-                .type(NoticeType.reviewComment).build();
+                .type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
     }
 
@@ -128,7 +128,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .title("내 리뷰를 " + fromUser.getNickName() + "님이 좋아해요!")
                 // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰
                 .contentId(event.getReviewId()).content(event.getReviewContent())
-                .type(NoticeType.reviewLike).build();
+                .type(NoticeType.REVIEW_LIKE).build();
         noticeRepository.save(notice);
     }
 
@@ -142,7 +142,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .title("내 댓글에 " + fromUser.getNickName() + "님이 대댓글을 달았어요!")
                 // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글
                 .contentId(event.getCommentId()).content(event.getCommentContent())
-                .type(NoticeType.recomment).build();
+                .type(NoticeType.RECOMMENT).build();
         noticeRepository.save(notice);
     }
 
@@ -156,7 +156,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .title("내 댓글을 " + fromUser.getNickName() + "님이 좋아해요!")
                 // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 제목
                 .contentId(event.getCommentId()).content(event.getCommentContent())
-                .type(NoticeType.reviewCommentLike).build();
+                .type(NoticeType.REVIEW_COMMENT_LIKE).build();
         noticeRepository.save(notice);
     }
 
@@ -257,14 +257,14 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     private String noticeImage(Notice notice) {
-        if(notice.getType().equals(NoticeType.follow)) return notice.getFromUser().getProfileImageUrl();
-        else if(notice.getType().equals(NoticeType.reviewComment) || notice.getType().equals(NoticeType.recomment))
+        if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getProfileImageUrl();
+        else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
             return commentImage;
-        else if(notice.getType().equals(NoticeType.reviewLike) || notice.getType().equals(NoticeType.reviewCommentLike))
+        else if(notice.getType().equals(NoticeType.REVIEW_LIKE) || notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))
             return likeImage;
-        else if(notice.getType().equals(NoticeType.addBakery) || notice.getType().equals(NoticeType.addBread))
+        else if(notice.getType().equals(NoticeType.ADD_BAKERY) || notice.getType().equals(NoticeType.ADD_BREAD))
             return reportImage;
-        else if(notice.getType().equals(NoticeType.flagBakeryChange) || notice.getType().equals(NoticeType.flagBakeryAdminNotice))
+        else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
             return flagImage;
         else throw new NoticeTypeWrongException();
     }

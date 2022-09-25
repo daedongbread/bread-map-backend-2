@@ -34,6 +34,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.security.SignatureException;
 import java.text.ParseException;
 
 @Slf4j
@@ -144,6 +145,16 @@ public class ExceptionAdvice {
     protected ErrorResponse pathVariableMissingException(HttpServletRequest request, MissingServletRequestParameterException e) {
         log.error("error field : \"{}\", message : \"{}\"", e.getParameterName(), e.getMessage());
         return new ErrorResponse("Query Parameter is missing");
+    }
+
+    /*
+     * JWT Signature Exception
+     */
+    @ExceptionHandler(SignatureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    protected ErrorResponse signatureException(HttpServletRequest request, SignatureException e) {
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse("JWT Signature Error");
     }
 
     /*

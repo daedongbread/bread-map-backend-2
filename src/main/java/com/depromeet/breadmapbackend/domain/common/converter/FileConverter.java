@@ -1,5 +1,6 @@
-package com.depromeet.breadmapbackend.domain.common;
+package com.depromeet.breadmapbackend.domain.common.converter;
 
+import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
 import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.common;
+package com.depromeet.breadmapbackend.domain.common.converter;
 
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 
@@ -14,11 +14,11 @@ public class FacilityInfoListConverter implements AttributeConverter<List<Facili
 
     @Override
     public String convertToDatabaseColumn(List<FacilityInfo> attribute) {
-        return attribute == null ? null : String.join(SPLIT_CHAR, attribute.stream().map(facilityInfo -> facilityInfo.name()).collect(Collectors.toList()));
+        return attribute == null ? null : attribute.stream().map(Enum::name).collect(Collectors.joining(SPLIT_CHAR));
     }
 
     @Override
     public List<FacilityInfo> convertToEntityAttribute(String dbData) {
-        return (dbData == null || dbData.isBlank()) ? Collections.emptyList() : Arrays.stream(dbData.split(SPLIT_CHAR)).map(code -> FacilityInfo.valueOf(code)).collect(Collectors.toList());
+        return (dbData == null || dbData.isBlank()) ? Collections.emptyList() : Arrays.stream(dbData.split(SPLIT_CHAR)).map(FacilityInfo::valueOf).collect(Collectors.toList());
     }
 }
