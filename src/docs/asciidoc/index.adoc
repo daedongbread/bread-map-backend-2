@@ -6,7 +6,7 @@ endif::[]
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 3
+:toclevels: 2
 :sectlinks:
 :site-url: /build/asciidoc/html5/
 :operation-http-request-title: Example Request
@@ -23,298 +23,24 @@ endif::[]
 | 운영 서버|`http://3.36.94.161`
 |===
 
+== APIs
+=== User API
+- xref:user.adoc[User APIs]
 
-== 유저 API
-- 토큰 재발급 API
-- 프로필 조회 API
-- 닉네임 업데이트 API
-- 로그아웃 API
-- 유저 탈퇴 API
-- 팔로우 API
-- 언팔로우 API
-- 팔로워 리스트 조회 API
-- 팔로잉 리스트 조회 API
-- 차단 리스트 조회 API
-- 차단 API
-- 차단 해제 API
+=== Bakery API
+- xref:bakery.adoc[Bakery APIs]
 
-=== 토큰 재발급 API [POST]
-operation::user/reissue[snippets='http-request,request-fields,http-response,response-fields']
+=== Flag API
+- xref:flag.adoc[Flag APIs]
 
-=== 프로필 조회 API [GET]
-operation::user/profile[snippets='http-request,request-headers,http-response,response-fields']
+=== Review API
+- xref:review.adoc[Review APIs]
 
-=== 닉네임 업데이트 API [PATCH]
-operation::user/nickname[snippets='http-request,request-headers,request-fields,http-response']
+=== Search API
+- xref:search.adoc[Search APIs]
 
-=== 로그아웃 API [POST]
-operation::user/logout[snippets='http-request,request-headers,request-fields,http-response']
+=== Admin API
+- xref:admin.adoc[Admin APIs]
 
-=== 유저 탈퇴 API [DELETE]
-operation::user/delete[snippets='http-request,request-headers,http-response']
-
-=== 팔로우 API [POST]
-operation::user/follow[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 언팔로우 API [DELETE]
-operation::user/unfollow[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 팔로워 리스트 조회 [GET]
-operation::user/follower[snippets='http-request,request-headers,http-response']
-
-=== 팔로잉 리스트 조회 [GET]
-operation::user/following[snippets='http-request,request-headers,http-response']
-
-=== 차단 리스트 조회 [GET]
-operation::user/blockList[snippets='http-request,request-headers,http-response']
-
-=== 차단 API [POST]
-operation::user/block[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 차단 해제 API [DELETE]
-operation::user/unblock[snippets='http-request,request-headers,request-fields,http-response']
-
-== 빵집 API
-- 빵집 지도 API
-- 빵집 지도 필터 API
-- 빵집 단건 조회 API
-- 빵집 빵 리스트 조회 API
-- 빵집 수정 요청 API
-- 빵집 삭제 요청 API
-- 빵집 추가 요청 API
-- 빵 추가 요청 API
-- 리뷰용 빵 간단 리스트 조회 API
-- 리뷰용 빵 검색 API
-
-=== 빵집 지도 API [GET]
-operation::bakery/find/default[snippets='http-request,request-parameters,http-response,response-fields']
-
-=== 빵집 지도 필터 API [GET]
-operation::bakery/find/filter[snippets='http-request,request-parameters,http-response,response-fields']
-
-=== 빵집 단건 조회 API [GET]
-operation::bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
-
-=== 빵집 빵 리스트 조회 API [GET]
-operation::bakery/bread[snippets='http-request,path-parameters,http-response,response-fields']
-
-=== 빵집 수정 요청 API [POST]
-operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
-
-=== 빵집 삭제 요청 API [POST]
-operation::bakery/report/delete[snippets='http-request,request-headers,path-parameters,request-parts,http-response']
-
-=== 빵집 추가 요청 API [POST]
-operation::bakery/report/add[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 빵 추가 요청 API [POST]
-operation::bakery/report/bread[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
-
-=== 리뷰용 빵 간단 리스트 조회 API [GET]
-operation::bakery/review/bread[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
-
-=== 리뷰용 빵 검색 API [GET]
-operation::bakery/review/bread/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
-
-== 깃발 API
-- 깃발 리스트 조회 API,
-- 깃발 추가 API
-- 깃발 삭제 API
-- 깃발 업데이트 API,
-- 깃발에 추가된 빵집 리스트 조회 API
-- 깃발에 빵집 추가 API
-- 깃발에 등록된 빵집 삭제 API
-
-=== 깃발 리스트 조회 API [GET]
-operation::flag/find[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 깃발 추가 API [POST]
-operation::flag/add[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 깃발 삭제 API [DELETE]
-operation::flag/delete[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 깃발 업데이트 API [PATCH]
-operation::flag/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
-
-=== 깃발에 추가된 빵집 리스트 조회 [GET]
-operation::flag/bakeryFind[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
-
-=== 깃발에 빵집 추가 API [POST]
-operation::flag/bakeryAdd[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 깃발에 등록된 빵집 삭제 [DELETE]
-operation::flag/bakeryDelete[snippets='http-request,request-headers,path-parameters,http-response']
-
-== 리뷰 API
-- 리뷰 간단 조회 API
-- 리뷰 전체 조회 API
-- 리뷰 상세 조회 API
-- 리뷰 추가 API
-- 리뷰 삭제 API
-//- 유저 리뷰 전체 조회 API
-- 리뷰 좋아요 API
-- 리뷰 좋아요 취소 API
-- 리뷰 댓글 전체 조회 API
-- 리뷰 댓글 추가 API
-- 리뷰 댓글 삭제 API
-- 리뷰 댓글 좋아요 API
-- 리뷰 댓글 좋아요 취소 API
-- 리뷰 신고 API
-
-=== 리뷰 간단 조회 API [GET]
-빵집 조회시 나오는 리뷰 간단 조회 API.
-3개만 조회 가능.
-
-operation::review/get/simple[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
-
-=== 리뷰 전체 조회 API [GET]
-operation::review/get/all[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
-
-=== 리뷰 상세 조회 API [GET]
-operation::review/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
-
-=== 리뷰 추가 API [POST]
-operation::review/add[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
-
-=== 리뷰 삭제 API [DELETE]
-operation::review/remove[snippets='http-request,request-headers,path-parameters,http-response']
-
-//=== 유저 리뷰 전체 조회 API [GET]
-//operation::review/get/user[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 리뷰 좋아요 API [POST]
-operation::review/like[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 리뷰 좋아요 취소 API [DELETE]
-operation::review/unlike[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 리뷰 댓글 전체 조회 API [GET]
-operation::review/comment/all[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
-
-=== 리뷰 댓글 추가 API [POST]
-- 리뷰에 댓글을 달 경우 parentCommentId 를 0으로 줘야 한다.
-
-operation::review/comment/add[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
-
-=== 리뷰 댓글 삭제 API [DELETE]
-operation::review/comment/remove[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 리뷰 댓글 좋아요 API [POST]
-operation::review/comment/like[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 리뷰 댓글 좋아요 취소 API [DELETE]
-operation::review/comment/unlike[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 리뷰 신고 API [POST]
-operation::review/report[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
-
-== 검색 API
-- 자동 완성 API
-- 검색 API
-- 최근 검색어 조회 API
-- 최근 검색어 단건 삭제 API
-- 최근 검색어 전체 삭제 API
-
-=== 자동 완성 API [GET]
-operation::search/auto[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 검색 API [GET]
-operation::search/search[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 최근 검색어 조회 API [GET]
-operation::search/keywords[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 최근 검색어 단건 삭제 API [DELETE]
-operation::search/keywords/delete[snippets='http-request,request-headers,request-parameters,http-response']
-
-=== 최근 검색어 전체 삭제 API [DELETE]
-operation::search/keywords/deleteAll[snippets='http-request,request-headers,http-response']
-
-== 관리자 API
-- 관리자 로그인 API
-- 빵집 전체 조회 API
-- 빵집 상세 조회 API
-- 빵집 검색 API
-- 빵집 위도 경도 조회 API
-- 빵집 추가 API
-- 빵집 수정 API
-- 빵집 삭제 API
-- 빵집 제보 전체 조회 API
-- 빵집 제보 상세 조회 API
-- 빵집 게시 상태 변경 API
-- 리뷰 신고 전체 조회 API
-- 리뷰 게시 상태 변경 API
-- 유저 전체 조회 API
-- 유저 차단 API
-
-=== 관리자 로그인 API [POST]
-operation::admin/login[snippets='http-request,request-fields,http-response,response-fields']
-
-=== 빵집 전체 조회 API [GET]
-operation::admin/bakery/all[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 빵집 조회 API [GET]
-operation::admin/bakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
-
-=== 빵집 검색 API [GET]
-operation::admin/bakery/search[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 빵집 위도 경도 조회 API [GET]
-operation::admin/bakery/location[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 빵집 추가 API [POST]
-operation::admin/bakery/add[snippets='http-request,request-headers,request-parts,request-part-request-fields,http-response']
-
-=== 빵집 수정 API [PATCH]
-operation::admin/bakery/update[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
-
-=== 빵집 삭제 API [DELETE]
-operation::admin/bakery/delete[snippets='http-request,request-headers,http-response']
-
-=== 빵집 제보 전체 조회 API [GET]
-operation::admin/bakeryReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 빵집 제보 상세 조회 API [GET]
-operation::admin/bakeryReport[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
-
-=== 빵집 게시 상태 변경 API [PATCH]
-operation::admin/bakeryReport/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
-
-=== 리뷰 신고 전체 조회 API [GET]
-operation::admin/reviewReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 리뷰 게시 상태 변경 API [PATCH]
-operation::admin/reviewReport/update[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 유저 전체 조회 API [GET]
-operation::admin/user/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-=== 유저 차단 API [PATCH]
-operation::admin/user/block[snippets='http-request,request-headers,path-parameters,http-response']
-
-== 알림 API
-- 알림 토큰 추가 API
-- 알림 토큰 수정 API
-- 알림 토큰 삭제 API
-- 알림 상태 조회 API
-- 알림 상태 변경 API
-- 알림 전체 조회 API
-
-=== 알림 토큰 추가 API [POST]
-operation::notice/token/add[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 알림 토큰 수정 API [PATCH]
-operation::notice/token/update[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 알림 토큰 삭제 API [DELETE]
-operation::notice/token/delete[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 알림 상태 조회 API [GET]
-operation::notice/token/alarm[snippets='http-request,request-headers,request-fields,http-response,response-fields']
-
-=== 알림 상태 변경 API [PATCH]
-operation::notice/token/alarm/update[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 알림 전체 조회 API [GET]
-operation::notice[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+=== Notice API
+- xref:notice.adoc[Notice APIs]
