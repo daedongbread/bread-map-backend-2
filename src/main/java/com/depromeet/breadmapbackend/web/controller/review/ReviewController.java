@@ -36,15 +36,22 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<ReviewDetailDto> getReview(@PathVariable Long reviewId) {
         return new ApiResponse<>(reviewService.getReview(reviewId));
     }
 
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId,
-                          @RequestPart ReviewRequest request, @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        reviewService.addReview(username, bakeryId, request, files);
+    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
+        reviewService.addReview(username, bakeryId, request);
+    }
+
+    @PostMapping("/{reviewId}/image")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addReviewImage(@CurrentUser String username, @PathVariable Long reviewId,
+                               @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+        reviewService.addReviewImage(username, reviewId, files);
     }
 
     @DeleteMapping("/{reviewId}")

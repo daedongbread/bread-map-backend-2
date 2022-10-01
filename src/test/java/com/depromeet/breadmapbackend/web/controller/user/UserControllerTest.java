@@ -4,12 +4,14 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -85,7 +87,8 @@ class UserControllerTest extends ControllerTest {
         flagBakeryRepository.save(flagBakery);
 
         Review review = Review.builder().user(user1).bakery(bakery).content("content1").build();
-        review.addImage("reviewImage1");
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
+        review.addImage(image);
         reviewRepository.save(review);
 
         BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
@@ -100,6 +103,7 @@ class UserControllerTest extends ControllerTest {
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
+        reviewImageRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();

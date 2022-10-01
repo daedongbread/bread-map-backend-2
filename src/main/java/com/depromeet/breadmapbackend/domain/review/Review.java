@@ -22,7 +22,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class Review extends BaseEntity {
-
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
@@ -37,8 +36,11 @@ public class Review extends BaseEntity {
     @Column(nullable = false, length = 200)
     private String content;
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> imageList = new ArrayList<>();
+//    @Convert(converter = StringListConverter.class)
+//    private List<String> imageList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewImage> imageList = new ArrayList<>();
 
     @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
     @Enumerated(EnumType.STRING)
@@ -70,8 +72,12 @@ public class Review extends BaseEntity {
         else this.status = ReviewStatus.BLOCK;
     }
 
-    public void addImage(String image) {
-        this.imageList.add(image);
+//    public void addImage(String image) {
+//        this.imageList.add(image);
+//    }
+
+    public void addImage(ReviewImage reviewImage) {
+        this.imageList.add(reviewImage);
     }
 
     public void addRating(BreadRating breadRating){

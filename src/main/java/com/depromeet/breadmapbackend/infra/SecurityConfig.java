@@ -79,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/auth/reissue", "/admin/join", "/admin/login").permitAll()
+                .antMatchers("/user/auth/reissue", "/admin/join", "/admin/login", "/admin/reissue").permitAll()
                 .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
                 .antMatchers("/bakery/**", "/flag/**", "/review/**", "/user/**", "/notice/**", "/search/**").hasAuthority(RoleType.USER.getCode())
                 .antMatchers("/admin/**").hasAuthority(RoleType.ADMIN.getCode())
