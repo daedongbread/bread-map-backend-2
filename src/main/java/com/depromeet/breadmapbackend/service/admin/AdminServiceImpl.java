@@ -15,6 +15,7 @@ import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewImageRepository;
@@ -30,6 +31,8 @@ import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.SimpleBakeryAddReportDto;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -138,11 +141,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true)
-    public AdminBakeryListDto getBakeryList(Pageable pageable) {
+    public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable) {
         Page<Bakery> all = bakeryRepository.findAll(pageable);
-        List<AdminSimpleBakeryDto> dtoList = all.stream().map(AdminSimpleBakeryDto::new).collect(Collectors.toList());
-        int totalNum = (int) all.getTotalElements();
-        return AdminBakeryListDto.builder().bakeryDtoList(dtoList).totalNum(totalNum).build();
+        return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 
     @Transactional(readOnly = true)
@@ -155,11 +156,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true)
-    public AdminBakeryListDto searchBakeryList(String name, Pageable pageable) {
+    public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable) {
         Page<Bakery> all = bakeryRepository.findByNameContains(name, pageable);
-        List<AdminSimpleBakeryDto> dtoList = all.stream().map(AdminSimpleBakeryDto::new).collect(Collectors.toList());
-        int totalNum = (int) all.getTotalElements();
-        return AdminBakeryListDto.builder().bakeryDtoList(dtoList).totalNum(totalNum).build();
+        return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 
     @Transactional(readOnly = true)
@@ -575,10 +574,10 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true)
-    public AdminBakeryReviewImageListDto getBakeryReviewImages(Long bakeryId, Pageable pageable) {
+    public SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-        return AdminBakeryReviewImageListDto.builder()
-                .images(reviewImageRepository.findSliceByBakery(bakery, pageable)).build();
+        Slice<ReviewImage> reviewImageSlice = reviewImageRepository.findSliceByBakery(bakery, pageable);
+        return SliceResponseDto.of(reviewImageSlice, AdminBakeryReviewImageDto::new);
     }
 
     @Transactional
@@ -594,11 +593,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true)
-    public BakeryAddReportListDto getBakeryReportList(Pageable pageable) {
+    public PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable) {
         Page<BakeryAddReport> all = bakeryAddReportRepository.findAll(pageable);
-        List<SimpleBakeryAddReportDto> dtoList = all.stream().map(SimpleBakeryAddReportDto::new).collect(Collectors.toList());
-        int totalNum = (int) all.getTotalElements();
-        return BakeryAddReportListDto.builder().bakeryAddReportDtoList(dtoList).totalNum(totalNum).build();
+        return PageResponseDto.of(all, SimpleBakeryAddReportDto::new);
     }
 
     @Transactional(readOnly = true)
@@ -614,11 +611,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true)
-    public AdminReviewReportListDto getReviewReportList(Pageable pageable) {
+    public PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable) {
         Page<ReviewReport> all = reviewReportRepository.findAll(pageable);
-        List<AdminReviewReportDto> dtoList = all.stream().map(AdminReviewReportDto::new).collect(Collectors.toList());
-        int totalNum = (int) all.getTotalElements();
-        return AdminReviewReportListDto.builder().reviewReportDtoList(dtoList).totalNum(totalNum).build();
+        return PageResponseDto.of(all, AdminReviewReportDto::new);
     }
 
     @Transactional
