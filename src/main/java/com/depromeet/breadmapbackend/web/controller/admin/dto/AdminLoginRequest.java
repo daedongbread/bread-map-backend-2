@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminLoginRequest {
-    @NotBlank(message = "관리자 아이디는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-    private String adminId;
+    @NotBlank(message = "관리자 이메일은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+    private String email;
     @NotBlank(message = "비밀번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private String password;
 }
