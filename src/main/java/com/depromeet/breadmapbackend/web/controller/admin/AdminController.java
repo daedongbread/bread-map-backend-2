@@ -5,6 +5,8 @@ import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,7 @@ public class AdminController {
 
     @GetMapping("/bakery/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AdminBakeryListDto> getBakeryList(
+    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ApiResponse<>(adminService.getBakeryList(pageable));
     }
@@ -61,7 +63,7 @@ public class AdminController {
 
     @GetMapping("/bakery/search")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AdminBakeryListDto> searchBakeryList(
+    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
             @RequestParam String name,
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ApiResponse<>(adminService.searchBakeryList(name, pageable));
@@ -93,7 +95,7 @@ public class AdminController {
 
     @GetMapping("/bakery/{bakeryId}/image")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AdminBakeryReviewImageListDto> getBakeryReviewImages(
+    public ApiResponse<SliceResponseDto<AdminBakeryReviewImageDto>> getBakeryReviewImages(
             @PathVariable Long bakeryId,
             @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId ,pageable));
@@ -107,7 +109,7 @@ public class AdminController {
 
     @GetMapping("/bakery/report/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<BakeryAddReportListDto> getBakeryReportList(
+    public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryReportList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ApiResponse<>(adminService.getBakeryReportList(pageable));
     }
@@ -126,7 +128,7 @@ public class AdminController {
 
     @GetMapping("/review/report/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AdminReviewReportListDto> getReviewReportList(
+    public ApiResponse<PageResponseDto<AdminReviewReportDto>> getReviewReportList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ApiResponse<>(adminService.getReviewReportList(pageable));
     }

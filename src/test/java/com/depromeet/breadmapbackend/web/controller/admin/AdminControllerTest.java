@@ -179,16 +179,20 @@ class AdminControllerTest extends ControllerTest {
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
-                                fieldWithPath("data.bakeryList").description("빵집 리스트"),
-                                fieldWithPath("data.bakeryList.[].bakeryId").description("빵집 고유 번호"),
-                                fieldWithPath("data.bakeryList.[].name").description("빵집 이름"),
-                                fieldWithPath("data.bakeryList.[].createdAt").description("빵집 최초 등록일"),
-                                fieldWithPath("data.bakeryList.[].modifiedAt").description("빵집 마지막 수정일"),
-                                fieldWithPath("data.bakeryList.[].status")
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.listDto").description("빵집 리스트"),
+                                fieldWithPath("data.listDto.[].bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.listDto.[].name").description("빵집 이름"),
+                                fieldWithPath("data.listDto.[].createdAt").description("빵집 최초 등록일"),
+                                fieldWithPath("data.listDto.[].modifiedAt").description("빵집 마지막 수정일"),
+                                fieldWithPath("data.listDto.[].status")
                                         .description("빵집 게시상태 (" +
                                                 "POSTING(\"게시중\"),\n" +
-                                                "UNPOSTING(\"미게시\"))"),
-                                fieldWithPath("data.totalNum").description("빵집 갯수")
+                                                "UNPOSTING(\"미게시\"))")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -238,16 +242,20 @@ class AdminControllerTest extends ControllerTest {
                                 parameterWithName("page").description("페이지 번호")
                         ),
                         responseFields(
-                                fieldWithPath("data.bakeryList").description("빵집 리스트"),
-                                fieldWithPath("data.bakeryList.[].bakeryId").description("빵집 고유 번호"),
-                                fieldWithPath("data.bakeryList.[].name").description("빵집 이름"),
-                                fieldWithPath("data.bakeryList.[].createdAt").description("빵집 최초 등록일"),
-                                fieldWithPath("data.bakeryList.[].modifiedAt").description("빵집 마지막 수정일"),
-                                fieldWithPath("data.bakeryList.[].status")
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.listDto").description("빵집 리스트"),
+                                fieldWithPath("data.listDto.[].bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.listDto.[].name").description("빵집 이름"),
+                                fieldWithPath("data.listDto.[].createdAt").description("빵집 최초 등록일"),
+                                fieldWithPath("data.listDto.[].modifiedAt").description("빵집 마지막 수정일"),
+                                fieldWithPath("data.listDto.[].status")
                                         .description("빵집 게시 상태 (" +
                                                 "POSTING(\"게시중\"),\n" +
-                                                "UNPOSTING(\"미게시\"))"),
-                                fieldWithPath("data.totalNum").description("빵집 갯수")
+                                                "UNPOSTING(\"미게시\"))")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -287,7 +295,7 @@ class AdminControllerTest extends ControllerTest {
                 .fileUpload("/admin/bakery")
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
                 .file(new MockMultipartFile("breadImageList", null, "image/png", (InputStream) null))
-                .file(request).accept(MediaType.APPLICATION_JSON)
+                .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/add",
@@ -327,7 +335,7 @@ class AdminControllerTest extends ControllerTest {
     void updateBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         String object = objectMapper.writeValueAsString(UpdateBakeryRequest.builder()
-                .bakeryId(bakery.getId()).name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).breadList(Arrays.asList(
                         UpdateBakeryRequest.UpdateBreadRequest.builder()
@@ -355,7 +363,6 @@ class AdminControllerTest extends ControllerTest {
                                         "(request의 빵 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
                         ),
                         requestPartFields("request",
-                                fieldWithPath("bakeryId").description("빵집 고유 번호"),
                                 fieldWithPath("name").description("빵집 이름"),
                                 fieldWithPath("address").description("빵집 도로명 주소"),
                                 fieldWithPath("latitude").description("빵집 위도"),
@@ -393,11 +400,13 @@ class AdminControllerTest extends ControllerTest {
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
-                                fieldWithPath("data.numberOfElements").description("현재 slice 이미지 갯수"),
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
                                 fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
-                                fieldWithPath("data.imageList").description("빵집 리뷰 이미지 리스트"),
-                                fieldWithPath("data.imageList.[].imageId").description("빵집 리뷰 이미지 고유 번호"),
-                                fieldWithPath("data.imageList.[].image").description("빵집 리뷰 이미지")
+                                fieldWithPath("data.listDto").description("빵집 리뷰 이미지 리스트"),
+                                fieldWithPath("data.listDto.[].imageId").description("빵집 리뷰 이미지 고유 번호"),
+                                fieldWithPath("data.listDto.[].image").description("빵집 리뷰 이미지")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -430,19 +439,23 @@ class AdminControllerTest extends ControllerTest {
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
-                                fieldWithPath("data.bakeryAddReportList").description("빵집 제보 리스트"),
-                                fieldWithPath("data.bakeryAddReportList.[].reportId").description("빵집 제보 고유 번호"),
-                                fieldWithPath("data.bakeryAddReportList.[].nickName").description("빵집 제보 유저 닉네임"),
-                                fieldWithPath("data.bakeryAddReportList.[].bakeryName").description("빵집 이름"),
-                                fieldWithPath("data.bakeryAddReportList.[].location").description("빵집 위치"),
-                                fieldWithPath("data.bakeryAddReportList.[].content").description("빵집 제보 내용"),
-                                fieldWithPath("data.bakeryAddReportList.[].createdAt").description("빵집 제보 시간"),
-                                fieldWithPath("data.bakeryAddReportList.[].status")
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.listDto").description("빵집 제보 리스트"),
+                                fieldWithPath("data.listDto.[].reportId").description("빵집 제보 고유 번호"),
+                                fieldWithPath("data.listDto.[].nickName").description("빵집 제보 유저 닉네임"),
+                                fieldWithPath("data.listDto.[].bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.listDto.[].location").description("빵집 위치"),
+                                fieldWithPath("data.listDto.[].content").description("빵집 제보 내용"),
+                                fieldWithPath("data.listDto.[].createdAt").description("빵집 제보 시간"),
+                                fieldWithPath("data.listDto.[].status")
                                         .description("빵집 제보 처리 상태 " +
                                                 "(BEFORE_REFLECT(\"검토전\"),\n" +
                                                 "NOT_REFLECT(\"미반영\"),\n" +
-                                                "REFLECT(\"반영완료\"))"),
-                                fieldWithPath("data.totalNum").description("빵집 제보 갯수")
+                                                "REFLECT(\"반영완료\"))")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -511,10 +524,15 @@ class AdminControllerTest extends ControllerTest {
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
-                                fieldWithPath("data.reviewReportList").description("리뷰 신고 리스트"),
-                                fieldWithPath("data.reviewReportList.[].reviewReportId").description("리뷰 신고 고유 번호"),
-                                fieldWithPath("data.reviewReportList.[].reporterNickName").description("신고자 닉네임"),
-                                fieldWithPath("data.reviewReportList.[].reason")
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.listDto").description("리뷰 신고 리스트"),
+                                fieldWithPath("data.listDto.[].reviewReportId").description("리뷰 신고 고유 번호"),
+                                fieldWithPath("data.listDto.[].reporterNickName").description("신고자 닉네임"),
+                                fieldWithPath("data.listDto.[].reason")
                                         .description("리뷰 신고 이유 (" +
                                                 "IRRELEVANT_CONTENT(\"리뷰와 관계없는 내용\"),\n" +
                                                 "INAPPROPRIATE_CONTENT(\"음란성, 욕설 등 부적절한 내용\"),\n" +
@@ -522,15 +540,14 @@ class AdminControllerTest extends ControllerTest {
                                                 "UNFIT_CONTENT(\"리뷰 작성 취지에 맞지 않는 내용(복사글 등)\"),\n" +
                                                 "COPYRIGHT_THEFT(\"저작권 도용 의심(사진 등)\"),\n" +
                                                 "ETC(\"기타(하단 내용 작성)\"))"),
-                                fieldWithPath("data.reviewReportList.[].respondentNickName").description("피신고자 닉네임"),
-                                fieldWithPath("data.reviewReportList.[].reportedReviewId").description("신고된 리뷰 고유 번호"),
-                                fieldWithPath("data.reviewReportList.[].content").description("리뷰 신고 내용"),
-                                fieldWithPath("data.reviewReportList.[].createdAt").description("리뷰 신고 시간"),
-                                fieldWithPath("data.reviewReportList.[].status")
+                                fieldWithPath("data.listDto.[].respondentNickName").description("피신고자 닉네임"),
+                                fieldWithPath("data.listDto.[].reportedReviewId").description("신고된 리뷰 고유 번호"),
+                                fieldWithPath("data.listDto.[].content").description("리뷰 신고 내용"),
+                                fieldWithPath("data.listDto.[].createdAt").description("리뷰 신고 시간"),
+                                fieldWithPath("data.listDto.[].status")
                                         .description("리뷰 게시 상태" +
                                                 "(BLOCK,\n" +
-                                                "UNBLOCK)"),
-                                fieldWithPath("data.totalNum").description("리뷰 신고 갯수")
+                                                "UNBLOCK)")
                         )
                 ))
                 .andExpect(status().isOk());

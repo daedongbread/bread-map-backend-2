@@ -536,4 +536,13 @@ public class ExceptionAdvice {
     public ErrorResponse adminJoinException(AdminJoinException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    /**
+     * 관리자 빵집 추가에서 빵집 주소가 유효하지 않을 때
+     */
+    @ExceptionHandler(BakeryAddressException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse bakeryAddressException(BakeryAddressException e) {
+        return new ErrorResponse(e.getMessage());
+    }
 }
