@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.utils;
 
+import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
@@ -114,6 +115,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected NoticeTokenRepository noticeTokenRepository;
+
+    @Autowired
+    protected AdminRepository adminRepository;
 
     @Autowired
     protected UserService userService;

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.admin;
 
+import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.review.*;
@@ -38,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AdminControllerTest extends ControllerTest {
-    private User admin;
+    private Admin admin;
     private User user;
     private Bakery bakery;
     private Bread bread;
@@ -49,13 +50,13 @@ class AdminControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        admin = User.builder()
-                .email("adminId").nickName("adminNickName").roleType(RoleType.ADMIN)
-                .username(passwordEncoder.encode("password")).build();
-        userRepository.save(admin);
-        token = jwtTokenProvider.createJwtToken(admin.getUsername(), admin.getRoleType().getCode());
+        admin = Admin.builder()
+                .email("email").password(passwordEncoder.encode("password")).roleType(RoleType.ADMIN)
+                .build();
+        adminRepository.save(admin);
+        token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + admin.getUsername(),
+                .set("ADMIN-RT:" + admin.getId(),
                         token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
@@ -105,12 +106,13 @@ class AdminControllerTest extends ControllerTest {
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
+        adminRepository.deleteAllInBatch();
     }
 
     @Test
     void adminLogin() throws Exception {
         String object = objectMapper.writeValueAsString(AdminLoginRequest.builder()
-                .adminId("adminId").password("password").build());
+                .email("email").password("password").build());
 
         ResultActions result = mockMvc.perform(post("/admin/login")
                 .content(object)
@@ -122,7 +124,7 @@ class AdminControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("adminId").description("관리자 아이디"),
+                                fieldWithPath("email").description("관리자 이메일"),
                                 fieldWithPath("password").description("관리자 비밀번호")
                         ),
                         responseFields(

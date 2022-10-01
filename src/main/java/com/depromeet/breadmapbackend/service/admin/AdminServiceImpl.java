@@ -1,20 +1,21 @@
 package com.depromeet.breadmapbackend.service.admin;
 
+import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundException;
+import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryIdAlreadyException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.exception.AdminJoinException;
+import com.depromeet.breadmapbackend.domain.admin.exception.AdminJoinException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
@@ -53,7 +54,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -67,6 +67,7 @@ public class AdminServiceImpl implements AdminService{
     private final BreadRepository breadRepository;
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
@@ -91,17 +92,25 @@ public class AdminServiceImpl implements AdminService{
     @Value("${spring.jwt.admin}")
     private String JWT_ADMIN_KEY;
 
-    @Value("${spring.redis.key.refresh}")
-    private String REDIS_KEY_REFRESH;
-
     @Transactional
     public void adminJoin(AdminJoinRequest request) {
-        if(userRepository.findByEmail(request.getAdminId()).isPresent()) throw new AdminJoinException();
+        if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AdminJoinException();
         if(!request.getSecret().equals(JWT_ADMIN_KEY)) throw new AdminJoinException();
-        User admin = User.builder().email(request.getAdminId())
-                .username(passwordEncoder.encode(request.getPassword()))
-                .roleType(RoleType.ADMIN).build();
-        userRepository.save(admin);
+        Admin admin = Admin.builder().email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword())).build();
+        adminRepository.save(admin);
+    }
+
+    @Transactional
+    public JwtToken adminLogin(AdminLoginRequest request) {
+        Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(AdminNotFoundException::new);
+        if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) throw new UserNotFoundException();
+
+        JwtToken adminToken = jwtTokenProvider.createJwtToken(admin.getEmail(), "ROLE_ADMIN");
+        redisTemplate.opsForValue()
+                .set("ADMIN-RT:" + admin.getId(),
+                        adminToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+        return adminToken;
     }
 
     @Transactional
@@ -110,34 +119,18 @@ public class AdminServiceImpl implements AdminService{
 
         String accessToken = request.getAccessToken();
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-        String username = authentication.getName();
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        String email = authentication.getName();
+        Admin admin = adminRepository.findByEmail(email).orElseThrow(AdminNotFoundException::new);
 
-        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + user.getUsername());
+        String refreshToken = redisTemplate.opsForValue().get("ADMIN-RT:" + admin.getId());
         if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
-//        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
-//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
 
-        JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
+        JwtToken reissueToken = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + user.getUsername(),
+                .set("ADMIN-RT:" + admin.getId(),
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-//        refreshToken.updateToken(reissueToken.getRefreshToken());
 
         return reissueToken;
-    }
-
-    @Transactional
-    public JwtToken adminLogin(AdminLoginRequest request) {
-        User user = userRepository.findByEmail(request.getAdminId()).orElseThrow(UserNotFoundException::new);
-        log.info("PW : " + user.getUsername());
-        if (!passwordEncoder.matches(request.getPassword(), user.getUsername())) throw new UserNotFoundException();
-
-        JwtToken adminToken = jwtTokenProvider.createJwtToken(user.getUsername(), "ROLE_ADMIN");
-        redisTemplate.opsForValue()
-                .set("RT:" + user.getId(),
-                        adminToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        return adminToken;
     }
 
     @Transactional(readOnly = true)
