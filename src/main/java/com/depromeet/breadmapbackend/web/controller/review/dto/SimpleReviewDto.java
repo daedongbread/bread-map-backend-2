@@ -17,7 +17,7 @@ public class SimpleReviewDto {
     public SimpleReviewDto(Review review) {
         this.id = review.getId();
         if (review.getImageList().isEmpty()) this.image = null;
-        else this.image = review.getImageList().get(0);
+        else this.image = review.getImageList().get(0).getImage();
         this.rating = Math.floor(
                 review.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue)
                         .average().orElse(0) * 10) / 10.0;

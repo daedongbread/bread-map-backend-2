@@ -4,7 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
-import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
@@ -183,7 +183,7 @@ public class BakeryServiceImpl implements BakeryService {
 
         if(file.isEmpty()) throw new ImageNotExistException();
 
-        String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.BAKERY_DELETE_REPORT_IMAGE, bakeryId);
+        String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_DELETE_REPORT_IMAGE, bakeryId);
         String image = s3Uploader.upload(file, imagePath);
 
         BakeryDeleteReport bakeryDeleteReport = BakeryDeleteReport.builder().bakery(bakery).image(image).build();
@@ -208,7 +208,7 @@ public class BakeryServiceImpl implements BakeryService {
 
         if (files.size() > 10) throw new ImageNumExceedException();
         for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.BREAD_ADD_REPORT_IMAGE, bakeryId);
+            String imagePath = fileConverter.parseFileInfo(file, ImageType.BREAD_ADD_REPORT_IMAGE, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
             breadAddReport.addImage(image);
         }

@@ -9,7 +9,7 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.SortTypeWrongExcept
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
-import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
@@ -115,7 +115,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional
-    public void addReview(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
+    public void addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
@@ -144,13 +144,23 @@ public class ReviewServiceImpl implements ReviewService {
             breadRatingRepository.save(breadRating);
             review.addRating(breadRating);
         });
+    }
+
+    @Transactional
+    public void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        Review review = reviewRepository.findByIdAndUser(reviewId, user)
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+        Bakery bakery = review.getBakery();
 
         if (files.size() > 10) throw new ImageNumExceedException();
-//        파일 없을 때, parseFileInfo에서 content-type??
         for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageFolderPath.REVIEW_IMAGE, bakeryId);
+            if (file == null || file.isEmpty()) continue;
+            String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
             String image = s3Uploader.upload(file, imagePath);
-            review.addImage(image);
+            ReviewImage reviewImage = ReviewImage.builder()
+                    .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
+            review.addImage(reviewImage);
         }
     }
 
@@ -158,7 +168,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void removeReview(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                /*.filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK))*/.orElseThrow(ReviewNotFoundException::new);
         reviewRepository.delete(review);
 //        review.useChange();
     }

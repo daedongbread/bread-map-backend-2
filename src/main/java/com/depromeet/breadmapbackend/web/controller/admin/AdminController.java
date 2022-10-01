@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -66,7 +67,6 @@ public class AdminController {
         return new ApiResponse<>(adminService.getBakeryLatitudeLongitude(address));
     }
 
-
     @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBakery(
@@ -83,6 +83,14 @@ public class AdminController {
             @RequestPart(required = false) MultipartFile bakeryImage,
             @RequestPart List<MultipartFile> breadImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
+    }
+
+    @GetMapping("/bakery/{bakeryId}/image")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBakeryReviewImageListDto> getBakeryReviewImages(
+            @PathVariable Long bakeryId,
+            @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId ,pageable));
     }
 
     @DeleteMapping("/bakery/{bakeryId}")
