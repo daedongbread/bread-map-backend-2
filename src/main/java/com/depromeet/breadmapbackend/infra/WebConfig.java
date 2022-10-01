@@ -15,7 +15,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("index.html")
+        registry.addResourceHandler("/docs/**")
                 .addResourceLocations("classpath:/static/docs/")
                 .setCachePeriod(20);
     }
