@@ -295,7 +295,7 @@ class AdminControllerTest extends ControllerTest {
                 .fileUpload("/admin/bakery")
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
                 .file(new MockMultipartFile("breadImageList", null, "image/png", (InputStream) null))
-                .file(request).accept(MediaType.APPLICATION_JSON)
+                .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/add",
@@ -335,7 +335,7 @@ class AdminControllerTest extends ControllerTest {
     void updateBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         String object = objectMapper.writeValueAsString(UpdateBakeryRequest.builder()
-                .bakeryId(bakery.getId()).name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).breadList(Arrays.asList(
                         UpdateBakeryRequest.UpdateBreadRequest.builder()
@@ -363,7 +363,6 @@ class AdminControllerTest extends ControllerTest {
                                         "(request의 빵 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
                         ),
                         requestPartFields("request",
-                                fieldWithPath("bakeryId").description("빵집 고유 번호"),
                                 fieldWithPath("name").description("빵집 이름"),
                                 fieldWithPath("address").description("빵집 도로명 주소"),
                                 fieldWithPath("latitude").description("빵집 위도"),

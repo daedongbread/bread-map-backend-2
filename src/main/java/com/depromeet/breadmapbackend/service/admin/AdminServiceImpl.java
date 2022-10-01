@@ -542,9 +542,9 @@ public class AdminServiceImpl implements AdminService{
     @Transactional
     public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-        if(!bakeryId.equals(request.getBakeryId()) && bakeryRepository.findById(request.getBakeryId()).isPresent())
-            throw new BakeryIdAlreadyException();
-        bakery.update(request.getBakeryId(), request.getName(),
+//        if(!bakeryId.equals(request.getBakeryId()) && bakeryRepository.findById(request.getBakeryId()).isPresent())
+//            throw new BakeryIdAlreadyException();
+        bakery.update(bakeryId, request.getName(),
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(), request.getFacilityInfoList(), request.getStatus());
