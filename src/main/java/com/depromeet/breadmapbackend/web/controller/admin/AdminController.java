@@ -5,10 +5,12 @@ import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
+import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -26,17 +28,22 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    @PostMapping(value = "/join")
+    @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public void adminJoin(@RequestBody @Validated(ValidationSequence.class) AdminJoinRequest request) {
         adminService.adminJoin(request);
     }
 
-
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<JwtToken> adminLogin(@RequestBody @Validated(ValidationSequence.class) AdminLoginRequest request) {
         return new ApiResponse<>(adminService.adminLogin(request));
+    }
+
+    @PostMapping("/reissue")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<JwtToken> reissue(@RequestBody @Validated(ValidationSequence.class) ReissueRequest request) {
+        return new ApiResponse<>(adminService.reissue(request));
     }
 
     @GetMapping("/bakery/all")
@@ -66,7 +73,6 @@ public class AdminController {
         return new ApiResponse<>(adminService.getBakeryLatitudeLongitude(address));
     }
 
-
     @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBakery(
@@ -83,6 +89,14 @@ public class AdminController {
             @RequestPart(required = false) MultipartFile bakeryImage,
             @RequestPart List<MultipartFile> breadImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
+    }
+
+    @GetMapping("/bakery/{bakeryId}/image")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBakeryReviewImageListDto> getBakeryReviewImages(
+            @PathVariable Long bakeryId,
+            @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId ,pageable));
     }
 
     @DeleteMapping("/bakery/{bakeryId}")

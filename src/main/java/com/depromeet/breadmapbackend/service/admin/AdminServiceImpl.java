@@ -8,26 +8,29 @@ import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundExcep
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
-import com.depromeet.breadmapbackend.domain.common.FileConverter;
-import com.depromeet.breadmapbackend.domain.common.ImageFolderPath;
+import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
+import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.AdminJoinException;
-import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewReportRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
+import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.SimpleBakeryAddReportDto;
+import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,19 +38,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -68,6 +71,7 @@ public class AdminServiceImpl implements AdminService{
     private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
     private final FlagBakeryRepository flagBakeryRepository;
+    private final ReviewImageRepository reviewImageRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
 
@@ -84,6 +88,9 @@ public class AdminServiceImpl implements AdminService{
     @Value("${spring.jwt.admin}")
     private String JWT_ADMIN_KEY;
 
+    @Value("${spring.redis.key.refresh}")
+    private String REDIS_KEY_REFRESH;
+
     @Transactional
     public void adminJoin(AdminJoinRequest request) {
         if(userRepository.findByEmail(request.getAdminId()).isPresent()) throw new AdminJoinException();
@@ -92,6 +99,29 @@ public class AdminServiceImpl implements AdminService{
                 .username(passwordEncoder.encode(request.getPassword()))
                 .roleType(RoleType.ADMIN).build();
         userRepository.save(admin);
+    }
+
+    @Transactional
+    public JwtToken reissue(ReissueRequest request) {
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
+
+        String accessToken = request.getAccessToken();
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + user.getUsername());
+        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
+//        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
+//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
+
+        JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
+        redisTemplate.opsForValue()
+                .set(REDIS_KEY_REFRESH + user.getUsername(),
+                        reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+//        refreshToken.updateToken(reissueToken.getRefreshToken());
+
+        return reissueToken;
     }
 
     @Transactional
@@ -487,8 +517,8 @@ public class AdminServiceImpl implements AdminService{
                 .build();
         bakeryRepository.save(bakery);
 
-        if(!bakeryImage.isEmpty()) {
-            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageFolderPath.bakeryImage, bakery.getId());
+        if(bakeryImage != null && !bakeryImage.isEmpty()) {
+            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageType.BAKERY_IMAGE, bakery.getId());
             String image = s3Uploader.upload(bakeryImage, imagePath);
             bakery.updateImage(image);
         }
@@ -502,8 +532,8 @@ public class AdminServiceImpl implements AdminService{
             breadRepository.save(bread);
 
             MultipartFile breadImage = breadImageList.get(i);
-            if(!breadImage.isEmpty()) {
-                String imagePath = fileConverter.parseFileInfo(breadImage, ImageFolderPath.breadImage, bread.getId());
+            if(breadImage != null && !breadImage.isEmpty()) {
+                String imagePath = fileConverter.parseFileInfo(breadImage, ImageType.BREAD_IMAGE, bread.getId());
                 String image = s3Uploader.upload(breadImage, imagePath);
                 bread.updateImage(image);
             }
@@ -520,9 +550,9 @@ public class AdminServiceImpl implements AdminService{
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(), request.getFacilityInfoList(), request.getStatus());
 
-        if(!bakeryImage.isEmpty()) {
+        if(bakeryImage != null && !bakeryImage.isEmpty()) {
             if(bakery.getImage() != null) s3Uploader.deleteFileS3(bakery.getImage());
-            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageFolderPath.bakeryImage, bakery.getId());
+            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageType.BAKERY_IMAGE, bakery.getId());
             String image = s3Uploader.upload(bakeryImage, imagePath);
             bakery.updateImage(image);
         }
@@ -535,22 +565,30 @@ public class AdminServiceImpl implements AdminService{
             bread.update(updateBreadRequest.getName(), updateBreadRequest.getPrice());
 
             MultipartFile breadImage = breadImageList.get(i);
-            if(!breadImage.isEmpty()) {
+            if(breadImage != null && !breadImage.isEmpty()) {
                 s3Uploader.deleteFileS3(bread.getImage());
-                String imagePath = fileConverter.parseFileInfo(breadImage, ImageFolderPath.breadImage, bread.getId());
+                String imagePath = fileConverter.parseFileInfo(breadImage, ImageType.BREAD_IMAGE, bread.getId());
                 String image = s3Uploader.upload(breadImage, imagePath);
                 bread.updateImage(image);
             }
         }
     }
 
+    @Transactional(readOnly = true)
+    public AdminBakeryReviewImageListDto getBakeryReviewImages(Long bakeryId, Pageable pageable) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        return AdminBakeryReviewImageListDto.builder()
+                .images(reviewImageRepository.findSliceByBakery(bakery, pageable)).build();
+    }
+
     @Transactional
-    public void deleteBakery(Long bakeryId) {
+    public void deleteBakery(Long bakeryId) { // TODO : casacade
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         flagBakeryRepository.deleteByBakery(bakery);
         bakeryDeleteReportRepository.deleteByBakery(bakery);
         bakeryUpdateReportRepository.deleteByBakery(bakery);
         breadAddReportRepository.deleteByBakery(bakery);
+        reviewImageRepository.deleteByBakery(bakery);
         reviewRepository.findByBakery(bakery).forEach(reviewReportRepository::deleteByReview);
         bakeryRepository.deleteById(bakeryId);
     }

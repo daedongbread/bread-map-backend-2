@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.controller.review.dto;
 
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewComment;
+import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class ReviewDetailDto {
         this.reviewNum = reviewNum;
         this.followerNum = followerNum;
         this.breadRatingDtoList = review.getRatings().stream().map(BreadRatingDto::new).collect(Collectors.toList());
-        this.imageList = review.getImageList();
+        this.imageList = review.getImageList().stream().map(ReviewImage::getImage).collect(Collectors.toList());
         this.content = review.getContent();
         this.likeNum = review.getLikes().size();
         this.commentNum = (int) review.getComments().stream().filter(reviewComment -> reviewComment.getUser() != null).count();

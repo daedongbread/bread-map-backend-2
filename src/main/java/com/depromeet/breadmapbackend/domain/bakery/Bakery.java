@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import com.depromeet.breadmapbackend.domain.common.FacilityInfoListConverter;
+import com.depromeet.breadmapbackend.domain.common.converter.FacilityInfoListConverter;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;

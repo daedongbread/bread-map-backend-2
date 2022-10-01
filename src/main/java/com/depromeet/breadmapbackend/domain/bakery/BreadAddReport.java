@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.StringListConverter;
+import com.depromeet.breadmapbackend.domain.common.converter.StringListConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

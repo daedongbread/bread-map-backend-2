@@ -4,12 +4,14 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -72,7 +74,7 @@ class UserControllerTest extends ControllerTest {
         
         Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1")
-                .image("testImage").status(BakeryStatus.posting).build();
+                .image("testImage").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();
@@ -85,7 +87,8 @@ class UserControllerTest extends ControllerTest {
         flagBakeryRepository.save(flagBakery);
 
         Review review = Review.builder().user(user1).bakery(bakery).content("content1").build();
-        review.addImage("reviewImage1");
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
+        review.addImage(image);
         reviewRepository.save(review);
 
         BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
@@ -100,6 +103,7 @@ class UserControllerTest extends ControllerTest {
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
+        reviewImageRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
@@ -112,7 +116,7 @@ class UserControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void refresh() throws Exception {
+    void reissue() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(ReissueRequest.builder()
                 .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken()).build());

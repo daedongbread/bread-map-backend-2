@@ -9,12 +9,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class AdminReviewReportListDto {
-    private List<AdminReviewReportDto> reviewReportDtoList;
+    private List<AdminReviewReportDto> reviewReportList;
     private int totalNum;
 
     @Builder
     public AdminReviewReportListDto(List<AdminReviewReportDto> reviewReportDtoList, int totalNum) {
-        this.reviewReportDtoList = reviewReportDtoList;
+        this.reviewReportList = reviewReportDtoList;
         this.totalNum = totalNum;
     }
 }

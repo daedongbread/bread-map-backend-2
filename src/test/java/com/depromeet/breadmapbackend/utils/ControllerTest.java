@@ -68,6 +68,9 @@ public abstract class ControllerTest {
     protected ReviewRepository reviewRepository;
 
     @Autowired
+    protected ReviewImageRepository reviewImageRepository;
+
+    @Autowired
     protected BreadRatingRepository breadRatingRepository;
 
     @Autowired

@@ -9,12 +9,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class AdminUserListDto {
-    private List<AdminUserDto> userDtoList;
+    private List<AdminUserDto> userList;
     private int totalNum;
 
     @Builder
     public AdminUserListDto(List<AdminUserDto> userDtoList, int totalNum) {
-        this.userDtoList = userDtoList;
+        this.userList = userDtoList;
         this.totalNum = totalNum;
     }
 }

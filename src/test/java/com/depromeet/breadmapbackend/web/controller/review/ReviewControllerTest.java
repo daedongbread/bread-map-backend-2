@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -54,14 +55,15 @@ class ReviewControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.posting).build();
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
         bread1 = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
         bread2 = Bread.builder().bakery(bakery).name("bread2").price(4000).build();
         breadRepository.save(bread1);
         breadRepository.save(bread2);
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
-        review.addImage("image1");
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
+        review.addImage(image);
         reviewRepository.save(review);
         BreadRating rating = BreadRating.builder().bread(bread1).review(review).rating(4L).build();
         breadRatingRepository.save(rating);
@@ -87,6 +89,7 @@ class ReviewControllerTest extends ControllerTest {
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
+        reviewImageRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         breadRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
@@ -241,13 +244,9 @@ class ReviewControllerTest extends ControllerTest {
                         ReviewRequest.NoExistBreadRatingRequest.builder().breadName("fakeBread1").rating(5L).build(),
                         ReviewRequest.NoExistBreadRatingRequest.builder().breadName("fakeBread2").rating(4L).build()
                 )).content("review add test").build());
-        MockMultipartFile request =
-                new MockMultipartFile("request", "", "application/json", object.getBytes());
 
-        mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/review/{bakeryId}", bakery.getId())
-                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
-                .file(request).accept(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/review/{bakeryId}", bakery.getId())
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/add",
@@ -255,12 +254,7 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestParts(
-                                partWithName("request").description("리뷰 정보"),
-                                partWithName("files").description("리뷰 이미지들")
-                        ),
-                        requestPartBody("request"),
-                        requestPartFields("request",
+                        requestFields(
                                 fieldWithPath("breadRatingList").description("리뷰 빵 점수 리스트"),
                                 fieldWithPath("breadRatingList.[].breadId").description("리뷰 빵 고유 번호"),
                                 fieldWithPath("breadRatingList.[].rating").description("리뷰 빵 점수"),
@@ -268,6 +262,26 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("noExistBreadRatingRequestList.[].breadName").description("빵집에 없는 빵 이름"),
                                 fieldWithPath("noExistBreadRatingRequestList.[].rating").description("빵집에 없는 빵 점수"),
                                 fieldWithPath("content").description("리뷰 내용")
+                        )
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+//    @Transactional
+    void addReviewImage() throws Exception {
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/review/{reviewId}/image", review.getId())
+                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("review/add/image",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
+                        requestParts(
+                                partWithName("files").description("리뷰 이미지들")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -283,9 +297,7 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 고유 번호")
-                        )
+                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
     }
@@ -330,9 +342,7 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 고유 번호")
-                        )
+                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호"))
                 ))
                 .andExpect(status().isCreated());
     }
@@ -347,9 +357,7 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 고유 번호")
-                        )
+                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
     }
@@ -364,9 +372,7 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("reviewId").description("리뷰 고유 번호")
-                        ),
+                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
                         responseFields(
                                 fieldWithPath("data.[].id").description("리뷰 고유 번호"),
                                 fieldWithPath("data.[].userId").description("유저 고유 번호"),
@@ -405,9 +411,7 @@ class ReviewControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(
-                                parameterWithName("reviewId").description("빵집 고유 번호")
-                        ),
+                        pathParameters(parameterWithName("reviewId").description("빵집 고유 번호")),
                         requestFields(
                                 fieldWithPath("content").description("리뷰 댓글 내용"),
                                 fieldWithPath("parentCommentId").description("리뷰 댓글의 부모 댓글 고유 번호 (리뷰에 단 댓글일 땐 0)")
