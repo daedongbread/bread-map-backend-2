@@ -11,6 +11,7 @@ import com.depromeet.breadmapbackend.web.controller.admin.dto.AddBakeryRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminLoginRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryReportStatusRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryRequest;
+import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -52,6 +54,9 @@ class AdminControllerTest extends ControllerTest {
                 .username(passwordEncoder.encode("password")).build();
         userRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getUsername(), admin.getRoleType().getCode());
+        redisTemplate.opsForValue()
+                .set(REDIS_KEY_REFRESH + admin.getUsername(),
+                        token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
         userRepository.save(user);
@@ -128,6 +133,39 @@ class AdminControllerTest extends ControllerTest {
                 ))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+//    @Transactional
+    void reissue() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(ReissueRequest.builder()
+                .accessToken(token.getAccessToken()).refreshToken(token.getRefreshToken()).build());
+
+        // when
+        ResultActions result = mockMvc.perform(post("/admin/reissue")
+                .content(object)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andDo(print())
+                .andDo(document("admin/reissue",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("accessToken").description("엑세스 토큰"),
+                                fieldWithPath("refreshToken").description("리프레시 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.accessToken").description("엑세스 토큰"),
+                                fieldWithPath("data.refreshToken").description("리프레시 토큰"),
+                                fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
+                        )
+                ))
+                .andExpect(status().isCreated());
+    }
+
 
     @Test
     void getAllBakeryList() throws Exception {

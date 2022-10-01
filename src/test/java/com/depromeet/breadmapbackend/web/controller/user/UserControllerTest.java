@@ -116,7 +116,7 @@ class UserControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void refresh() throws Exception {
+    void reissue() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(ReissueRequest.builder()
                 .accessToken(token1.getAccessToken()).refreshToken(token1.getRefreshToken()).build());
