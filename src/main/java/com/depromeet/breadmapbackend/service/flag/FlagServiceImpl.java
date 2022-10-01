@@ -37,7 +37,7 @@ public class FlagServiceImpl implements FlagService {
     private final UserRepository userRepository;
     private final BakeryRepository bakeryRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleFlagDto> findSimpleFlags(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return flagRepository.findByUser(user).stream()
@@ -46,7 +46,7 @@ public class FlagServiceImpl implements FlagService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<FlagDto> findFlags(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return flagRepository.findByUser(user).stream()
@@ -58,7 +58,7 @@ public class FlagServiceImpl implements FlagService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addFlag(String username, FlagRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(flagRepository.findByUserAndName(user, request.getName()).isPresent()) throw new FlagAlreadyException();
@@ -68,7 +68,7 @@ public class FlagServiceImpl implements FlagService {
         user.addFlag(flag);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removeFlag(String username, Long flagId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
@@ -78,7 +78,7 @@ public class FlagServiceImpl implements FlagService {
         flagRepository.delete(flag);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateFlag(String username, Long flagId, FlagRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
@@ -88,7 +88,7 @@ public class FlagServiceImpl implements FlagService {
         flag.updateFlag(request.getName(), request.getColor());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<FlagBakeryCardDto> findBakeryByFlag(String username, Long flagId) {
         Flag flag = flagRepository.findById(flagId).orElseThrow(FlagNotFoundException::new);
         return flagBakeryRepository.findByFlag(flag).stream()
@@ -108,7 +108,7 @@ public class FlagServiceImpl implements FlagService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addBakeryToFlag(String username, Long flagId, Long bakeryId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
@@ -132,7 +132,7 @@ public class FlagServiceImpl implements FlagService {
         flag.addFlagBakery(flagBakery);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removeBakeryToFlag(String username, Long flagId, Long flagBakeryId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);

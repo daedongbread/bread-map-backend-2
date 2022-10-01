@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Value("${spring.redis.key.access}")
     private String REDIS_KEY_ACCESS;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
         if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
 
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
         return reissueToken;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ProfileDto profile(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Integer followingNum = followRepository.countByToUser(user);
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
                 .userFlagDtoList(userFlagDtoList).userReviewDtoList(userReviewDtoList).build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateNickName(String username, UpdateNickNameRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if (userRepository.findByNickName(request.getNickName()).isEmpty()) {
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void logout(LogoutRequest request) {
         String accessToken = request.getAccessToken();
         if (!jwtTokenProvider.verifyToken(accessToken)) throw new TokenValidFailedException();
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteUser(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
         redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void follow(String username, FollowRequest request) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
         eventPublisher.publishEvent(FollowEvent.builder().userId(toUser.getId()).fromUserId(fromUser.getId()).build());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void unfollow(String username, FollowRequest request) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
         followRepository.delete(follow);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleUserDto> followerList(String username) {
         User toUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return followRepository.findByToUser(toUser).stream()
@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleUserDto> followingList(String username) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return followRepository.findByToUser(fromUser).stream()
@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleUserDto> blockList(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void block(String username, BlockRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User userToBlock = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -241,7 +241,7 @@ public class UserServiceImpl implements UserService {
         blockUserRepository.save(blockUser);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void unblock(String username, BlockRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User userToUnblock = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);

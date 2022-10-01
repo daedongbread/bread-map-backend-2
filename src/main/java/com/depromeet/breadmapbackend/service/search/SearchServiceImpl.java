@@ -36,7 +36,7 @@ public class SearchServiceImpl implements SearchService {
     @Value("${spring.redis.key.recent}")
     private String REDIS_KEY_RECENT;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> autoComplete(String word, Double latitude, Double longitude) {
         return bakeryRepository.findByNameStartsWith(word).stream()
                 .map(bakery -> SearchDto.builder()
@@ -51,7 +51,7 @@ public class SearchServiceImpl implements SearchService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> search(String username, String word, Double latitude, Double longitude) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
 
@@ -73,20 +73,20 @@ public class SearchServiceImpl implements SearchService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<String> recentKeywords(String username) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
         return new ArrayList<>(Objects.requireNonNull(
                 redisTemplate.opsForZSet().reverseRange(REDIS_KEY_RECENT + username, 0, -1)));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeyword(String username, String keyword) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
         redisTemplate.opsForZSet().remove(REDIS_KEY_RECENT + username, keyword);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeywordAll(String username) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
         redisTemplate.delete(REDIS_KEY_RECENT + username);

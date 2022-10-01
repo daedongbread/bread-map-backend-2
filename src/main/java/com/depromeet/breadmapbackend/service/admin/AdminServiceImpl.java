@@ -92,7 +92,7 @@ public class AdminServiceImpl implements AdminService{
     @Value("${spring.jwt.admin}")
     private String JWT_ADMIN_KEY;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void adminJoin(AdminJoinRequest request) {
         if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AdminJoinException();
         if(!request.getSecret().equals(JWT_ADMIN_KEY)) throw new AdminJoinException();
@@ -101,7 +101,7 @@ public class AdminServiceImpl implements AdminService{
         adminRepository.save(admin);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public JwtToken adminLogin(AdminLoginRequest request) {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(AdminNotFoundException::new);
         if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) throw new UserNotFoundException();
@@ -113,7 +113,7 @@ public class AdminServiceImpl implements AdminService{
         return adminToken;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
         if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
 
@@ -133,13 +133,13 @@ public class AdminServiceImpl implements AdminService{
         return reissueToken;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable) {
         Page<Bakery> all = bakeryRepository.findAll(pageable);
         return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminBakeryDto getBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         List<AdminBreadDto> menu = breadRepository.findByBakery(bakery).stream()
@@ -148,13 +148,13 @@ public class AdminServiceImpl implements AdminService{
         return AdminBakeryDto.builder().bakery(bakery).menu(menu).build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable) {
         Page<Bakery> all = bakeryRepository.findByNameContains(name, pageable);
         return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -495,7 +495,7 @@ public class AdminServiceImpl implements AdminService{
         return Long.valueOf(bakeryId);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException {
         Long bakeryId = createBakeryId(request.getAddress());
         Bakery bakery = Bakery.builder()
@@ -532,7 +532,7 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 //        if(!bakeryId.equals(request.getBakeryId()) && bakeryRepository.findById(request.getBakeryId()).isPresent())
@@ -566,14 +566,14 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Slice<ReviewImage> reviewImageSlice = reviewImageRepository.findSliceByBakery(bakery, pageable);
         return SliceResponseDto.of(reviewImageSlice, AdminBakeryReviewImageDto::new);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteBakery(Long bakeryId) { // TODO : casacade
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         flagBakeryRepository.deleteByBakery(bakery);
@@ -585,37 +585,37 @@ public class AdminServiceImpl implements AdminService{
         bakeryRepository.deleteById(bakeryId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable) {
         Page<BakeryAddReport> all = bakeryAddReportRepository.findAll(pageable);
         return PageResponseDto.of(all, SimpleBakeryAddReportDto::new);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryAddReportDto getBakeryReport(Long reportId) {
         BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
         return BakeryAddReportDto.builder().bakeryAddReport(bakeryAddReport).build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateBakeryAddReportStatus(Long reportId, UpdateBakeryReportStatusRequest request) {
         BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
         bakeryAddReport.updateStatus(request.getStatus());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable) {
         Page<ReviewReport> all = reviewReportRepository.findAll(pageable);
         return PageResponseDto.of(all, AdminReviewReportDto::new);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateReviewStatus(Long reportId) {
         ReviewReport reviewReport = reviewReportRepository.findById(reportId).orElseThrow(ReviewReportNotFoundException::new);
         reviewReport.getReview().useChange();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminUserListDto getUserList(Pageable pageable) {
         Page<User> all = userRepository.findAll(pageable);
         List<AdminUserDto> dtoList = all.stream().map(AdminUserDto::new).collect(Collectors.toList());
@@ -623,8 +623,8 @@ public class AdminServiceImpl implements AdminService{
         return AdminUserListDto.builder().userDtoList(dtoList).totalNum(totalNum).build();
     }
 
-    @Transactional
-    public void changeUserBlock(Long userId) {
+    @Transactional(rollbackFor = Exception.class)
+        public void changeUserBlock(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.changeBlock();
     }
