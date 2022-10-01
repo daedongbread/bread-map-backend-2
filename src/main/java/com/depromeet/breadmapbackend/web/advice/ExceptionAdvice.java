@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.web.advice;
 
+import com.depromeet.breadmapbackend.domain.admin.exception.AdminJoinException;
+import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.*;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
@@ -534,6 +536,24 @@ public class ExceptionAdvice {
     @ExceptionHandler(AdminJoinException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse adminJoinException(AdminJoinException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 관리자 빵집 추가에서 빵집 주소가 유효하지 않을 때
+     */
+    @ExceptionHandler(BakeryAddressException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse bakeryAddressException(BakeryAddressException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * 관리자가 존재하지 않을 때
+     */
+    @ExceptionHandler(AdminNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse adminNotFoundException(AdminNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

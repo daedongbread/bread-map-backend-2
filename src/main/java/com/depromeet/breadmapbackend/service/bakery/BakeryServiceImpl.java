@@ -52,7 +52,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> findBakeryList
             (Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
 
@@ -82,7 +82,7 @@ public class BakeryServiceImpl implements BakeryService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryFilterCardDto> findBakeryListByFilter
             (String username, Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
 
@@ -124,7 +124,7 @@ public class BakeryServiceImpl implements BakeryService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryDto findBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         bakery.addViews();
@@ -158,7 +158,7 @@ public class BakeryServiceImpl implements BakeryService {
                 .info(info).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BreadDto> findBreadList(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         return breadRepository.findByBakery(bakery).stream()
@@ -169,7 +169,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
@@ -177,7 +177,7 @@ public class BakeryServiceImpl implements BakeryService {
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
@@ -190,7 +190,7 @@ public class BakeryServiceImpl implements BakeryService {
         bakeryDeleteReportRepository.save(bakeryDeleteReport);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
@@ -199,7 +199,7 @@ public class BakeryServiceImpl implements BakeryService {
         bakeryAddReportRepository.save(bakeryAddReport);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void breadAddReport(Long bakeryId, BreadReportRequest request, List<MultipartFile> files) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
@@ -215,7 +215,7 @@ public class BakeryServiceImpl implements BakeryService {
         breadAddReportRepository.save(breadAddReport);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleBreadDto> findSimpleBreadList(Long bakeryId) { // 순서?
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         return breadRepository.findByBakery(bakery).stream()
@@ -223,7 +223,7 @@ public class BakeryServiceImpl implements BakeryService {
                 .map(SimpleBreadDto::new).collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleBreadDto> searchSimpleBreadList(Long bakeryId, String name) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         return breadRepository.findByBakeryAndNameStartsWith(bakery, name).stream()

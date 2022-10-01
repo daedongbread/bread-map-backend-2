@@ -50,7 +50,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final S3Uploader s3Uploader;
     private final ApplicationEventPublisher eventPublisher;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Comparator<ReviewDto> comparing;
@@ -70,7 +70,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
         Comparator<ReviewDto> comparing;
@@ -90,7 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReviewDetailDto getReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
@@ -114,7 +114,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
@@ -146,7 +146,7 @@ public class ReviewServiceImpl implements ReviewService {
         });
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
@@ -164,7 +164,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removeReview(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
@@ -173,7 +173,7 @@ public class ReviewServiceImpl implements ReviewService {
 //        review.useChange();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reviewLike(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findById(reviewId)
@@ -188,7 +188,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .reviewId(reviewId).reviewContent(review.getContent()).build());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reviewUnlike(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findById(reviewId)
@@ -198,7 +198,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.minusLike(reviewLike);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewCommentDto> getReviewCommentList(Long reviewId) {
         if(reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
@@ -207,7 +207,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .stream().map(ReviewCommentDto::new).collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addReviewComment(String username, Long reviewId, ReviewCommentRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findById(reviewId)
@@ -235,7 +235,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void removeReviewComment(String username, Long reviewId, Long commentId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user)
@@ -277,7 +277,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reviewCommentLike(String username, Long reviewId, Long commentId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(reviewRepository.findById(reviewId)
@@ -292,7 +292,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .commentId(reviewComment.getId()).commentContent(reviewComment.getContent()).build());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reviewCommentUnlike(String username, Long reviewId, Long commentId) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(reviewRepository.findById(reviewId)
@@ -304,7 +304,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewCommentLikeRepository.delete(reviewCommentLike);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void reviewReport(String username, Long reviewId, ReviewReportRequest request) {
         User reporter = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);

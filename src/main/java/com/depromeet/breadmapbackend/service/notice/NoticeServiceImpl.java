@@ -47,7 +47,7 @@ public class NoticeServiceImpl implements NoticeService{
     private String reportImage = "noticeImage/report.jpg";
     private String flagImage = "noticeImage/flag.jpg";
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addNoticeToken(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent())
@@ -56,7 +56,7 @@ public class NoticeServiceImpl implements NoticeService{
         noticeTokenRepository.save(noticeToken);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateNoticeToken(String username, UpdateNoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getOldDeviceToken()).isPresent()) {
@@ -65,7 +65,7 @@ public class NoticeServiceImpl implements NoticeService{
         } else throw new NoticeTokenNotFoundException();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteNoticeToken(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
@@ -74,7 +74,7 @@ public class NoticeServiceImpl implements NoticeService{
         } else throw new NoticeTokenNotFoundException();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public NoticeTokenAlarmDto getNoticeTokenAlarm(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
@@ -83,7 +83,7 @@ public class NoticeServiceImpl implements NoticeService{
         } else throw new NoticeTokenNotFoundException();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateNoticeTokenAlarm(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
@@ -196,7 +196,7 @@ public class NoticeServiceImpl implements NoticeService{
 //        noticeRepository.save(notice);
 //    }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<NoticeDto> getTodayNoticeList(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -210,7 +210,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<NoticeDto> getWeekNoticeList(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
@@ -227,7 +227,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<NoticeDto> getBeforeNoticeList(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
