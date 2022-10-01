@@ -24,11 +24,13 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
+import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.SimpleBakeryAddReportDto;
+import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +88,9 @@ public class AdminServiceImpl implements AdminService{
     @Value("${spring.jwt.admin}")
     private String JWT_ADMIN_KEY;
 
+    @Value("${spring.redis.key.refresh}")
+    private String REDIS_KEY_REFRESH;
+
     @Transactional
     public void adminJoin(AdminJoinRequest request) {
         if(userRepository.findByEmail(request.getAdminId()).isPresent()) throw new AdminJoinException();
@@ -93,6 +99,29 @@ public class AdminServiceImpl implements AdminService{
                 .username(passwordEncoder.encode(request.getPassword()))
                 .roleType(RoleType.ADMIN).build();
         userRepository.save(admin);
+    }
+
+    @Transactional
+    public JwtToken reissue(ReissueRequest request) {
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
+
+        String accessToken = request.getAccessToken();
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + user.getUsername());
+        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
+//        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
+//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
+
+        JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
+        redisTemplate.opsForValue()
+                .set(REDIS_KEY_REFRESH + user.getUsername(),
+                        reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+//        refreshToken.updateToken(reissueToken.getRefreshToken());
+
+        return reissueToken;
     }
 
     @Transactional
