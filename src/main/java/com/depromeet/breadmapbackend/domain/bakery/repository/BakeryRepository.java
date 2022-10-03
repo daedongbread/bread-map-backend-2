@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetween(Double leftLatitude, Double rightLatitude, Double downLongitude, Double upLongitude);
     @Query(value = "select b from Bakery b", countQuery = "select count(*) from Bakery")
-    Page<Bakery> findAll(Pageable pageable);
+    Page<Bakery> findPageAll(Pageable pageable);
 //    Integer countAllByNameEqualsAndStreetAddressEquals(String name, String streetAddress);
     List<Bakery> findByNameStartsWith(String name);
     @Query(value = "select b from Bakery b where b.name like %?1%", countQuery = "select count(b) from Bakery b where b.name like %?1%")

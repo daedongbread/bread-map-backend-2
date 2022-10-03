@@ -14,13 +14,11 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getUsername() {
-        log.info("username");
         return attributes.get("id").toString();
     }
 
     @Override
     public String getNickName() {
-        log.info("nickName");
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
         if (properties == null) {
@@ -32,13 +30,11 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        log.info("email");
         return (String) attributes.get("account_email");
     }
 
     @Override
     public String getImageUrl() {
-        log.info("image");
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
         if (properties == null) {
