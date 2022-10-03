@@ -121,9 +121,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByNickName(request.getNickName()).isEmpty()) {
             user.updateNickName(request.getNickName());
         }
-        else {
-            if(!user.getNickName().equals(request.getNickName())) throw new NickNameAlreadyException();
-        }
+        else throw new NickNameAlreadyException();
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -135,7 +135,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable) {
-        Page<Bakery> all = bakeryRepository.findAll(pageable);
+        Page<Bakery> all = bakeryRepository.findPageAll(pageable);
         return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 
@@ -587,7 +587,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable) {
-        Page<BakeryAddReport> all = bakeryAddReportRepository.findAll(pageable);
+        Page<BakeryAddReport> all = bakeryAddReportRepository.findPageAll(pageable);
         return PageResponseDto.of(all, SimpleBakeryAddReportDto::new);
     }
 
@@ -605,7 +605,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable) {
-        Page<ReviewReport> all = reviewReportRepository.findAll(pageable);
+        Page<ReviewReport> all = reviewReportRepository.findPageAll(pageable);
         return PageResponseDto.of(all, AdminReviewReportDto::new);
     }
 
@@ -617,7 +617,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<AdminUserDto> getUserList(Pageable pageable) {
-        Page<User> all = userRepository.findAll(pageable);
+        Page<User> all = userRepository.findPageAll(pageable);
         return PageResponseDto.of(all, AdminUserDto::new);
     }
 
