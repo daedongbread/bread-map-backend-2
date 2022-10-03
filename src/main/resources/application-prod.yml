@@ -8,6 +8,8 @@ spring:
     password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 50
+      idle-timeout: 300
+      max-lifeitme: 300
   jpa:
     hibernate:
       ddl-auto: update
