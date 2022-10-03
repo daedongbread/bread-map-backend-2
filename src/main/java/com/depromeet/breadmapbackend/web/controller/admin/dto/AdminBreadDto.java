@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AdminBreadDto {
+    private Long breadId;
     private String name;
     private Integer price;
     private String image;
 
     @Builder
     public AdminBreadDto(Bread bread) {
+        this.breadId = bread.getId();
         this.name = bread.getName();
         this.price = bread.getPrice();
         this.image = bread.getImage();

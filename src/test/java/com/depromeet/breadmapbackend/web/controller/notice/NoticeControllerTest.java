@@ -206,17 +206,17 @@ class NoticeControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(fieldWithPath("deviceToken").description("디바이스 토큰")),
                         responseFields(
-                                fieldWithPath("data.todayNoticeDtoList").description("오늘 알람 리스트"),
-                                fieldWithPath("data.todayNoticeDtoList.[].image").description("오늘 알람 이미지"),
-                                fieldWithPath("data.todayNoticeDtoList.[].fromUserId").description("오늘 알람 발신 유저 고유 번호 " +
+                                fieldWithPath("data.todayNoticeList").description("오늘 알람 리스트"),
+                                fieldWithPath("data.todayNoticeList.[].image").description("오늘 알람 이미지"),
+                                fieldWithPath("data.todayNoticeList.[].fromUserId").description("오늘 알람 발신 유저 고유 번호 " +
                                         "(제보 빵집/빵 추가, 즐겨찾기 빵집 관리자 글 업데이트 알림 땐 null)"),
-                                fieldWithPath("data.todayNoticeDtoList.[].title").description("오늘 알람 제목"),
-                                fieldWithPath("data.todayNoticeDtoList.[].contentId").description("오늘 알람 내용 고유 번호 " +
+                                fieldWithPath("data.todayNoticeList.[].title").description("오늘 알람 제목"),
+                                fieldWithPath("data.todayNoticeList.[].contentId").description("오늘 알람 내용 고유 번호 " +
                                         "(리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 빵 아이디 or 빵집 관리자 글 아이디)"),
-                                fieldWithPath("data.todayNoticeDtoList.[].content").description("오늘 알람 세부 내용 (팔로우 알람일 땐 null)"),
-                                fieldWithPath("data.todayNoticeDtoList.[].createdAt").description("오늘 알람 생성일"),
-                                fieldWithPath("data.weekNoticeDtoList").description("이번주 알람 리스트"),
-                                fieldWithPath("data.beforeNoticeDtoList").description("지난 알람 리스트")
+                                fieldWithPath("data.todayNoticeList.[].content").description("오늘 알람 세부 내용 (팔로우 알람일 땐 null)"),
+                                fieldWithPath("data.todayNoticeList.[].createdAt").description("오늘 알람 생성일"),
+                                fieldWithPath("data.weekNoticeList").description("이번주 알람 리스트"),
+                                fieldWithPath("data.beforeNoticeList").description("지난 알람 리스트")
                         )
                 ))
                 .andExpect(status().isOk());

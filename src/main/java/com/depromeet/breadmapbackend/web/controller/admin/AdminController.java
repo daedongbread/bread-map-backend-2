@@ -141,7 +141,7 @@ public class AdminController {
 
     @GetMapping("/user/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AdminUserListDto> getUserList(
+    public ApiResponse<PageResponseDto<AdminUserDto>> getUserList(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ApiResponse<>(adminService.getUserList(pageable));
     }

@@ -9,14 +9,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class NoticeListDto {
-    private List<NoticeDto> todayNoticeDtoList;
-    private List<NoticeDto> weekNoticeDtoList;
-    private List<NoticeDto> beforeNoticeDtoList;
+    private List<NoticeDto> todayNoticeList;
+    private List<NoticeDto> weekNoticeList;
+    private List<NoticeDto> beforeNoticeList;
 
     @Builder
-    public NoticeListDto(List<NoticeDto> todayNoticeDtoList, List<NoticeDto> weekNoticeDtoList, List<NoticeDto> beforeNoticeDtoList) {
-        this.todayNoticeDtoList = todayNoticeDtoList;
-        this.weekNoticeDtoList = weekNoticeDtoList;
-        this.beforeNoticeDtoList = beforeNoticeDtoList;
+    public NoticeListDto(List<NoticeDto> todayNoticeList, List<NoticeDto> weekNoticeList, List<NoticeDto> beforeNoticeList) {
+        this.todayNoticeList = todayNoticeList;
+        this.weekNoticeList = weekNoticeList;
+        this.beforeNoticeList = beforeNoticeList;
     }
 }

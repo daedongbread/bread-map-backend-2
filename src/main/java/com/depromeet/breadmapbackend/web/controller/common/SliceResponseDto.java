@@ -17,7 +17,7 @@ public class SliceResponseDto <D> {
     private int numberOfElements; // 현제 페이지 데이터 수
     private int size; // 페이지 크기
     private boolean hasNext; // 다음 slice 존재 여부
-    private List<D> listDto;
+    private List<D> contents;
 
 
     public static <E, D> SliceResponseDto<D> of(Slice<E> entity, Function<E, D> makeDto) {
