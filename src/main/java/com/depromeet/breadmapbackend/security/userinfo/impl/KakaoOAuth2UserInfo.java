@@ -1,9 +1,11 @@
 package com.depromeet.breadmapbackend.security.userinfo.impl;
 
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfo;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+@Slf4j
 public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     public KakaoOAuth2UserInfo(Map<String, Object> attributes) {

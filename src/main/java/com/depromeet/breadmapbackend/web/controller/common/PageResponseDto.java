@@ -18,7 +18,7 @@ public class PageResponseDto<D> {
     private int size; // 페이지 크기
     private long totalElements; // 전체 데이터 수
     private int totalPages; // 전체 페이지 수
-    private List<D> listDto;
+    private List<D> contents;
 
     public static <E, D> PageResponseDto<D> of(Page<E> entity, Function<E, D> makeDto) {
         List<D> dto = convertToDto(entity, makeDto);

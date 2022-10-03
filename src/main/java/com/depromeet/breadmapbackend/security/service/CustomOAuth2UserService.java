@@ -14,6 +14,7 @@ import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfo;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -28,10 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth 2 로그인 성공 이후 사용자 정보를 가져올 때의 설정
     private final UserRepository userRepository;
     private final FlagRepository flagRepository;
     private final StringRedisTemplate redisTemplate;
@@ -41,6 +43,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private String REDIS_KEY_DELETE;
 
     @Override
+    // oAuth2UserRequest 에는 access token 과 같은 정보들
+    // 서드파티에 사용자 정보를 요청할 수 있는 access token
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -78,7 +82,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             int num = rand.nextInt(9999) + 1;
 
             nickName = adjective + breadName + num;
-        } while (userRepository.findByNickName(nickName).isEmpty());
+            log.info("nn : " + nickName);
+        } while (userRepository.findByNickName(nickName).isPresent());
         return nickName;
     }
 
@@ -86,7 +91,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = User.builder()
                 .username(providerType.name() + "_" + oAuth2UserInfo.getUsername())
                 .nickName(createNickName())
-//                .nickName(oAuth2UserInfo.getNickName())
                 .email(oAuth2UserInfo.getEmail())
                 .providerType(providerType)
                 .roleType(RoleType.USER)

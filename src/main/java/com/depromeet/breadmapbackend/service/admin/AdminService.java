@@ -30,6 +30,6 @@ public interface AdminService {
     void updateBakeryAddReportStatus(Long reportId, UpdateBakeryReportStatusRequest request);
     PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable);
     void updateReviewStatus(Long reportId);
-    AdminUserListDto getUserList(Pageable pageable);
+    PageResponseDto<AdminUserDto> getUserList(Pageable pageable);
     void changeUserBlock(Long userId);
 }
