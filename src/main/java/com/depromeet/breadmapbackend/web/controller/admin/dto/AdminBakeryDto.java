@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.web.controller.admin.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,26 +16,35 @@ public class AdminBakeryDto {
     private String image;
 
     private String address;
+    private Double longitude;
+    private Double latitude;
+
     private String hours;
     private String websiteURL;
     private String instagramURL;
     private String facebookURL;
     private String blogURL;
     private String phoneNumber;
+    private List<FacilityInfo> facilityInfoList;
+    private BakeryStatus status;
 
-    private List<AdminBreadDto> menu;
+    private List<AdminBreadDto> breadList;
 
     @Builder
-    public AdminBakeryDto(Bakery bakery, List<AdminBreadDto> menu) {
+    public AdminBakeryDto(Bakery bakery, List<AdminBreadDto> breadList) {
         this.name = bakery.getName();
         this.image = bakery.getImage();
         this.address = bakery.getAddress();
+        this.latitude = bakery.getLatitude();
+        this.longitude = bakery.getLongitude();
         this.hours = bakery.getHours();
         this.websiteURL = bakery.getWebsiteURL();
         this.instagramURL = bakery.getInstagramURL();
         this.facebookURL = bakery.getFacebookURL();
         this.blogURL = bakery.getBlogURL();
         this.phoneNumber = bakery.getPhoneNumber();
-        this.menu = menu;
+        this.facilityInfoList = bakery.getFacilityInfoList();
+        this.status = bakery.getStatus();
+        this.breadList = breadList;
     }
 }

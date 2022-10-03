@@ -49,7 +49,7 @@ operation::admin/bakery/location[snippets='http-request,request-headers,request-
 === 빵집 추가 API [POST]
 operation::admin/bakery/add[snippets='http-request,request-headers,request-parts,request-part-request-fields,http-response']
 
-=== 빵집 수정 API [PATCH]
+=== 빵집 수정 API [POST]
 operation::admin/bakery/update[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
 
 === 빵집 리뷰 이미지 조회 API [GET]

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -27,11 +27,11 @@ public class BreadRating extends BaseEntity{
 //    @JoinColumn(name = "bakery_id")
 //    private Bakery bakery;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "bread_id")
     private Bread bread;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
 

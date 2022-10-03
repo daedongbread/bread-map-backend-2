@@ -53,8 +53,8 @@ public class NoticeController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<NoticeListDto> getNoticeList(@CurrentUser String username) { // TODO : 병렬처리
         return new ApiResponse<>(NoticeListDto.builder()
-                .todayNoticeDtoList(noticeService.getTodayNoticeList(username))
-                .weekNoticeDtoList(noticeService.getWeekNoticeList(username))
-                .beforeNoticeDtoList(noticeService.getBeforeNoticeList(username)).build());
+                .todayNoticeList(noticeService.getTodayNoticeList(username))
+                .weekNoticeList(noticeService.getWeekNoticeList(username))
+                .beforeNoticeList(noticeService.getBeforeNoticeList(username)).build());
     }
 }

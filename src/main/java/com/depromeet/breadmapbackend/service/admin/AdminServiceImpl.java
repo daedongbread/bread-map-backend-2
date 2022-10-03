@@ -142,10 +142,10 @@ public class AdminServiceImpl implements AdminService{
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminBakeryDto getBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-        List<AdminBreadDto> menu = breadRepository.findByBakery(bakery).stream()
+        List<AdminBreadDto> breadList = breadRepository.findByBakery(bakery).stream()
                 .filter(Bread::isTrue)
                 .map(AdminBreadDto::new).collect(Collectors.toList());
-        return AdminBakeryDto.builder().bakery(bakery).menu(menu).build();
+        return AdminBakeryDto.builder().bakery(bakery).breadList(breadList).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -616,15 +616,13 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public AdminUserListDto getUserList(Pageable pageable) {
+    public PageResponseDto<AdminUserDto> getUserList(Pageable pageable) {
         Page<User> all = userRepository.findAll(pageable);
-        List<AdminUserDto> dtoList = all.stream().map(AdminUserDto::new).collect(Collectors.toList());
-        int totalNum = (int) all.getTotalElements();
-        return AdminUserListDto.builder().userDtoList(dtoList).totalNum(totalNum).build();
+        return PageResponseDto.of(all, AdminUserDto::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
-        public void changeUserBlock(Long userId) {
+    public void changeUserBlock(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.changeBlock();
     }

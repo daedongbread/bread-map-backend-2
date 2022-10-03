@@ -14,6 +14,7 @@ import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfo;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -28,10 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth 2 로그인 성공 이후 사용자 정보를 가져올 때의 설정
     private final UserRepository userRepository;
     private final FlagRepository flagRepository;
     private final StringRedisTemplate redisTemplate;
