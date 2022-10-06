@@ -25,7 +25,7 @@ public class ReviewCommentDto {
 
     private Integer likeNum;
 
-    private List<ReviewCommentDto> commentDtoList;
+    private List<ReviewCommentDto> commentList;
 
     @Builder
     public ReviewCommentDto(ReviewComment reviewComment) {
@@ -51,6 +51,6 @@ public class ReviewCommentDto {
         this.content = reviewComment.getContent();
         this.createdAt = reviewComment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.likeNum = reviewComment.getLikes().size();
-        this.commentDtoList = reviewComment.getChildList().stream().map(ReviewCommentDto::new).collect(Collectors.toList());
+        this.commentList = reviewComment.getChildList().stream().map(ReviewCommentDto::new).collect(Collectors.toList());
     }
 }

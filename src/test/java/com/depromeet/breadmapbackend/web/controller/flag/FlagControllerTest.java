@@ -2,13 +2,13 @@ package com.depromeet.breadmapbackend.web.controller.flag;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
-import com.depromeet.breadmapbackend.domain.review.BreadRating;
+import com.depromeet.breadmapbackend.domain.product.ProductType;
+import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -56,27 +56,27 @@ class FlagControllerTest extends ControllerTest {
         flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
-        Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
+        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
 
-        breadRepository.save(bread);
+        productRepository.save(product);
 
         Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
 
-        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
-        breadRatingRepository.save(rating);
+        ReviewProductRating rating = ReviewProductRating.builder().product(product).review(review).rating(4L).build();
+        reviewProductRatingRepository.save(rating);
     }
 
     @AfterEach
     public void setDown() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
+        reviewProductRatingRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }

@@ -1,7 +1,8 @@
-package com.depromeet.breadmapbackend.domain.bakery;
+package com.depromeet.breadmapbackend.domain.product;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.review.BreadRating;
+import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,15 +12,18 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Bread extends BaseEntity {
+public class Product extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private ProductType productType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bakery_id")
@@ -29,19 +33,20 @@ public class Bread extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer price;
+    private String price;
 
     private String image;
 
-    @OneToMany(mappedBy = "bread", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BreadRating> breadRatingList = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewProductRating> reviewProductRatingList = new ArrayList<>();
 
     @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
     @ColumnDefault("true")
     private boolean isTrue;
 
     @Builder
-    private Bread(String name, Integer price, Bakery bakery, String image, Boolean isTrue) {
+    private Product(ProductType productType, String name, String price, Bakery bakery, String image, Boolean isTrue) {
+        this.productType = productType;
         this.name = name;
         this.price = price;
         this.bakery = bakery;
@@ -52,11 +57,13 @@ public class Bread extends BaseEntity {
 //        bakery.getBreadList().add(this);
     }
 
+    public void updateType(ProductType productType) { this.productType = productType; }
+
     public void updateName(String name) {
         if(!this.name.equals(name)) this.name = name;
     }
 
-    public void updatePrice(Integer price) {
+    public void updatePrice(String price) {
         if(!this.price.equals(price)) this.price = price;
     }
 
@@ -64,7 +71,7 @@ public class Bread extends BaseEntity {
         this.image = image;
     }
 
-    public void update(String name, Integer price) {
+    public void update(String name, String price) {
         this.name = name;
         this.price = price;
     }

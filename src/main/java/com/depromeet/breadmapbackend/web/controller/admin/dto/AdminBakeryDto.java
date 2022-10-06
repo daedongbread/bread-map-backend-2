@@ -28,10 +28,10 @@ public class AdminBakeryDto {
     private List<FacilityInfo> facilityInfoList;
     private BakeryStatus status;
 
-    private List<AdminBreadDto> breadList;
+    private List<AdminProductDto> productList;
 
     @Builder
-    public AdminBakeryDto(Bakery bakery, List<AdminBreadDto> breadList) {
+    public AdminBakeryDto(Bakery bakery, List<AdminProductDto> productList) {
         this.name = bakery.getName();
         this.image = bakery.getImage();
         this.address = bakery.getAddress();
@@ -45,6 +45,6 @@ public class AdminBakeryDto {
         this.phoneNumber = bakery.getPhoneNumber();
         this.facilityInfoList = bakery.getFacilityInfoList();
         this.status = bakery.getStatus();
-        this.breadList = breadList;
+        this.productList = productList;
     }
 }

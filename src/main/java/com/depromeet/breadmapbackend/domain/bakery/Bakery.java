@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.converter.FacilityInfoListConverter;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
@@ -50,7 +51,7 @@ public class Bakery extends BaseEntity {
     private BakeryStatus status;
 
     @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Bread> breadList = new ArrayList<>();
+    private List<Product> productList = new ArrayList<>();
 
     @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();

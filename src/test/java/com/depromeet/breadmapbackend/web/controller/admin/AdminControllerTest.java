@@ -3,6 +3,8 @@ package com.depromeet.breadmapbackend.web.controller.admin;
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
+import com.depromeet.breadmapbackend.domain.product.Product;
+import com.depromeet.breadmapbackend.domain.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -42,7 +44,7 @@ class AdminControllerTest extends ControllerTest {
     private Admin admin;
     private User user;
     private Bakery bakery;
-    private Bread bread;
+    private Product product;
     private Review review;
     private BakeryAddReport bakeryAddReport;
     private JwtToken token;
@@ -67,8 +69,8 @@ class AdminControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
-        breadRepository.save(bread);
+        product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        productRepository.save(product);
 
         bakeryAddReport = BakeryAddReport.builder().user(user).content("test content").location("test location")
                 .name("test Report").build();
@@ -79,8 +81,8 @@ class AdminControllerTest extends ControllerTest {
         review.addImage(image);
         reviewRepository.save(review);
 
-        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
-        breadRatingRepository.save(rating);
+        ReviewProductRating rating = ReviewProductRating.builder().product(product).review(review).rating(4L).build();
+        reviewProductRatingRepository.save(rating);
 
         reviewReport = ReviewReport.builder()
                 .reporter(user).review(review).reason(ReviewReportReason.COPYRIGHT_THEFT).content("content").build();
@@ -92,18 +94,18 @@ class AdminControllerTest extends ControllerTest {
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
-        breadAddReportRepository.deleteAllInBatch();
+        productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
         followRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
+        reviewProductRatingRepository.deleteAllInBatch();
         reviewReportRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
         reviewImageRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
         adminRepository.deleteAllInBatch();
@@ -232,11 +234,11 @@ class AdminControllerTest extends ControllerTest {
                                                 "BOOKING(\"예약\"))"),
                                 fieldWithPath("data.status").description("빵집 게시 상태 (" +
                                         "POSTING(\"게시중\"), UNPOSTING(\"미게시\"))"),
-                                fieldWithPath("data.breadList").description("빵집 메뉴"),
-                                fieldWithPath("data.breadList.[].breadId").description("빵 고유 번호"),
-                                fieldWithPath("data.breadList.[].name").description("빵 이름"),
-                                fieldWithPath("data.breadList.[].price").description("빵 가격"),
-                                fieldWithPath("data.breadList.[].image").description("빵 이미지")
+                                fieldWithPath("data.productList").description("빵집 메뉴"),
+                                fieldWithPath("data.productList.[].productId").description("상품 고유 번호"),
+                                fieldWithPath("data.productList.[].name").description("상품 이름"),
+                                fieldWithPath("data.productList.[].price").description("상품 가격"),
+                                fieldWithPath("data.productList.[].image").description("상품 이미지")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -300,15 +302,16 @@ class AdminControllerTest extends ControllerTest {
         String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
                 .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
-                .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).breadList(Arrays.asList(
-                        AddBakeryRequest.AddBreadRequest.builder().name("testBread").price(12000).build()
+                .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
+                        AddBakeryRequest.AddProductRequest.builder()
+                                .productType(ProductType.BREAD).productName("testBread").price("12000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/admin/bakery")
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
-                .file(new MockMultipartFile("breadImageList", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
                 .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -317,10 +320,10 @@ class AdminControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParts(
-                                partWithName("request").description("빵 정보"),
+                                partWithName("request").description("빵집 정보"),
                                 partWithName("bakeryImage").description("빵집 이미지"),
-                                partWithName("breadImageList").description("빵 이미지 " +
-                                        "(request의 빵 갯수와 반드시 같아야 하며 없는 이미지는 \"\"로 넘겨야 함)")
+                                partWithName("productImageList").description("상품 이미지 " +
+                                        "(request의 상품 갯수와 반드시 같아야 하며 없는 이미지는 \"\"로 넘겨야 함)")
                         ),
                         requestPartFields("request",
                                 fieldWithPath("name").description("빵집 이름"),
@@ -334,8 +337,10 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("websiteURL").description("빵집 홈페이지"),
                                 fieldWithPath("phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
-                                fieldWithPath("breadList.[].name").description("빵 이름"),
-                                fieldWithPath("breadList.[].price").description("빵 가격"),
+                                fieldWithPath("productList").description("상품 리스트"),
+                                fieldWithPath("productList.[].productType").description("상품 타입"),
+                                fieldWithPath("productList.[].productName").description("상품 이름"),
+                                fieldWithPath("productList.[].price").description("상품 가격"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
                                                 "POSTING(\"게시중\"),\n" +
@@ -351,16 +356,16 @@ class AdminControllerTest extends ControllerTest {
         String object = objectMapper.writeValueAsString(UpdateBakeryRequest.builder()
                 .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
-                .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).breadList(Arrays.asList(
-                        UpdateBakeryRequest.UpdateBreadRequest.builder()
-                                .breadId(bread.getId()).name("testBread").price(12000).build()
+                .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
+                        UpdateBakeryRequest.UpdateProductRequest.builder()
+                                .productId(product.getId()).productName("testBread").price("12000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/admin/bakery/{bakeryId}", bakery.getId())
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
-                .file(new MockMultipartFile("breadImageList", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -371,10 +376,10 @@ class AdminControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParts(
-                                partWithName("request").description("빵 정보"),
+                                partWithName("request").description("빵집 정보"),
                                 partWithName("bakeryImage").description("빵집 이미지"),
-                                partWithName("breadImageList").description("빵 이미지 " +
-                                        "(request의 빵 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
+                                partWithName("productImageList").description("상품 이미지 " +
+                                        "(request의 상품 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
                         ),
                         requestPartFields("request",
                                 fieldWithPath("name").description("빵집 이름"),
@@ -388,9 +393,9 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("websiteURL").description("빵집 홈페이지"),
                                 fieldWithPath("phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
-                                fieldWithPath("breadList.[].breadId").description("빵 고유 번호"),
-                                fieldWithPath("breadList.[].name").description("빵 이름"),
-                                fieldWithPath("breadList.[].price").description("빵 가격"),
+                                fieldWithPath("productList.[].productId").description("상품 고유 번호"),
+                                fieldWithPath("productList.[].productName").description("상품 이름"),
+                                fieldWithPath("productList.[].price").description("상품 가격"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
                                                 "POSTING(\"게시중\"),\n" +

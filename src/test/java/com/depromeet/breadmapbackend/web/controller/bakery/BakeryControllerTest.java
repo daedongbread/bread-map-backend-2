@@ -2,11 +2,12 @@ package com.depromeet.breadmapbackend.web.controller.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -14,7 +15,7 @@ import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BreadReportRequest;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.ProductReportRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,20 +60,20 @@ class BakeryControllerTest extends ControllerTest {
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
 
-        Bread bread1 = Bread.builder().bakery(bakery1).name("bread1").price(3000).build();
-        Bread bread2 = Bread.builder().bakery(bakery2).name("bread2").price(4000).build();
-        breadRepository.save(bread1);
-        breadRepository.save(bread2);
+        Product product1 = Product.builder().bakery(bakery1).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        Product product2 = Product.builder().bakery(bakery2).productType(ProductType.BREAD).name("bread2").price("4000").build();
+        productRepository.save(product1);
+        productRepository.save(product2);
 
         Review review1 = Review.builder().user(user).bakery(bakery1).content("content1").build();
         Review review2 = Review.builder().user(user).bakery(bakery2).content("content1").build();
         reviewRepository.save(review1);
         reviewRepository.save(review2);
 
-        BreadRating rating1 = BreadRating.builder().bread(bread1).review(review1).rating(4L).build();
-        BreadRating rating2 = BreadRating.builder().bread(bread2).review(review2).rating(4L).build();
-        breadRatingRepository.save(rating1);
-        breadRatingRepository.save(rating2);
+        ReviewProductRating rating1 = ReviewProductRating.builder().product(product1).review(review1).rating(4L).build();
+        ReviewProductRating rating2 = ReviewProductRating.builder().product(product2).review(review2).rating(4L).build();
+        reviewProductRatingRepository.save(rating1);
+        reviewProductRatingRepository.save(rating2);
 
         ReviewLike reviewLike = ReviewLike.builder().review(review1).user(user).build();
         reviewLikeRepository.save(reviewLike);
@@ -91,15 +92,15 @@ class BakeryControllerTest extends ControllerTest {
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
-        breadAddReportRepository.deleteAllInBatch();
+        productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
+        reviewProductRatingRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
@@ -211,12 +212,12 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.info.blogURL").description("빵집 블로그"),
                                 fieldWithPath("data.info.phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("data.menu").description("빵집 메뉴"),
-                                fieldWithPath("data.menu.[].id").description("빵 고유번호"),
-                                fieldWithPath("data.menu.[].name").description("빵 이름"),
-                                fieldWithPath("data.menu.[].rating").description("빵 평점"),
-                                fieldWithPath("data.menu.[].reviewNum").description("빵 리뷰 수"),
-                                fieldWithPath("data.menu.[].price").description("빵 가격"),
-                                fieldWithPath("data.menu.[].image").description("빵 이미지"),
+                                fieldWithPath("data.menu.[].id").description("상품 고유번호"),
+                                fieldWithPath("data.menu.[].name").description("상품 이름"),
+                                fieldWithPath("data.menu.[].rating").description("상품 평점"),
+                                fieldWithPath("data.menu.[].reviewNum").description("상품 리뷰 수"),
+                                fieldWithPath("data.menu.[].price").description("상품 가격"),
+                                fieldWithPath("data.menu.[].image").description("상품 이미지"),
 //                                fieldWithPath("data.review").description("빵집 리뷰"),
 //                                fieldWithPath("data.review.[].id").description("리뷰 고유 번호"),
 //                                fieldWithPath("data.review.[].userId").description("유저 고유 번호"),
@@ -246,11 +247,11 @@ class BakeryControllerTest extends ControllerTest {
     }
 
     @Test
-    void findBreadList() throws Exception {
-        mockMvc.perform(get("/bakery/{bakeryId}/bread", bakery1.getId())
+    void findProductList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/product", bakery1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("bakery/bread",
+                .andDo(document("bakery/product",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
@@ -258,12 +259,12 @@ class BakeryControllerTest extends ControllerTest {
                                 parameterWithName("bakeryId").description("빵집 고유 번호")
                         ),
                         responseFields(
-                                fieldWithPath("data.[].id").description("빵 고유번호"),
-                                fieldWithPath("data.[].name").description("빵 이름"),
-                                fieldWithPath("data.[].rating").description("빵 평점"),
-                                fieldWithPath("data.[].reviewNum").description("빵 리뷰 수"),
-                                fieldWithPath("data.[].price").description("빵 가격"),
-                                fieldWithPath("data.[].image").description("빵 이미지")
+                                fieldWithPath("data.[].id").description("상품 고유번호"),
+                                fieldWithPath("data.[].name").description("상품 이름"),
+                                fieldWithPath("data.[].rating").description("상품 평점"),
+                                fieldWithPath("data.[].reviewNum").description("상품 리뷰 수"),
+                                fieldWithPath("data.[].price").description("상품 가격"),
+                                fieldWithPath("data.[].image").description("상품 이미지")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -332,8 +333,8 @@ class BakeryControllerTest extends ControllerTest {
     }
 
     @Test
-    void breadAddReport() throws Exception {
-        String object = objectMapper.writeValueAsString(BreadReportRequest.builder().name("newBread").price(4000).build());
+    void productAddReport() throws Exception {
+        String object = objectMapper.writeValueAsString(ProductReportRequest.builder().name("newBread").price("4000").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
 
@@ -343,60 +344,60 @@ class BakeryControllerTest extends ControllerTest {
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("bakery/report/bread",
+                .andDo(document("bakery/report/product",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParts(
-                                partWithName("request").description("제보 빵 정보"),
-                                partWithName("files").description("제보 빵 이미지들")
+                                partWithName("request").description("제보 상품 정보"),
+                                partWithName("files").description("제보 상품 이미지들")
                         ),
                         requestPartBody("request"),
                         requestPartFields("request",
-                                fieldWithPath("name").description("제보 빵 이름"),
-                                fieldWithPath("price").description("제보 빵 가격")
+                                fieldWithPath("name").description("제보 상품 이름"),
+                                fieldWithPath("price").description("제보 상품 가격")
                         )
                 ))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    void findSimpleBreadList() throws Exception {
-        mockMvc.perform(get("/bakery/{bakeryId}/review/bread", bakery1.getId())
+    void findSimpleProductList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/review/product", bakery1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("bakery/review/bread",
+                .andDo(document("bakery/review/product",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         responseFields(
-                                fieldWithPath("data.[].id").description("빵 고유 번호"),
-                                fieldWithPath("data.[].name").description("빵 이름"),
-                                fieldWithPath("data.[].price").description("빵 가격"),
-                                fieldWithPath("data.[].image").description("빵 이미지")
+                                fieldWithPath("data.[].id").description("상품 고유 번호"),
+                                fieldWithPath("data.[].name").description("상품 이름"),
+                                fieldWithPath("data.[].price").description("상품 가격"),
+                                fieldWithPath("data.[].image").description("상품 이미지")
                         )
                 ))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void searchSimpleBreadList() throws Exception {
-        mockMvc.perform(get("/bakery/{bakeryId}/review/bread/search?name=bread", bakery1.getId())
+    void searchSimpleProductList() throws Exception {
+        mockMvc.perform(get("/bakery/{bakeryId}/review/product/search?name=bread", bakery1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("bakery/review/bread/search",
+                .andDo(document("bakery/review/product/search",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(parameterWithName("name").description("검색 키워드")),
                         responseFields(
-                                fieldWithPath("data.[].id").description("빵 고유 번호"),
-                                fieldWithPath("data.[].name").description("빵 이름"),
-                                fieldWithPath("data.[].price").description("빵 가격"),
-                                fieldWithPath("data.[].image").description("빵 이미지")
+                                fieldWithPath("data.[].id").description("상품 고유 번호"),
+                                fieldWithPath("data.[].name").description("상품 이름"),
+                                fieldWithPath("data.[].price").description("상품 가격"),
+                                fieldWithPath("data.[].image").description("상품 이미지")
                         )
                 ))
                 .andExpect(status().isOk());

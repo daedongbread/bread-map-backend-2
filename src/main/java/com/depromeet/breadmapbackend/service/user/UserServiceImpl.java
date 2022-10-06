@@ -97,14 +97,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Integer followingNum = followRepository.countByToUser(user);
         Integer followerNum = followRepository.countByFromUser(user);
-        List<UserFlagDto> userFlagDtoList = flagRepository.findByUser(user).stream()
+        List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
                 .map(flag -> UserFlagDto.builder()
                         .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
                         .flagImageList(flag.getFlagBakeryList().stream().limit(3)
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
                                 .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
-        List<UserReviewDto> userReviewDtoList = reviewRepository.findByUser(user)
+        List<UserReviewDto> userReviewList = reviewRepository.findByUser(user)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
                 .map(UserReviewDto::new)
                 .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
         return ProfileDto.builder().user(user)
                 .followingNum(followingNum).followerNum(followerNum)
-                .userFlagDtoList(userFlagDtoList).userReviewDtoList(userReviewDtoList).build();
+                .userFlagList(userFlagList).userReviewList(userReviewList).build();
     }
 
     @Transactional(rollbackFor = Exception.class)

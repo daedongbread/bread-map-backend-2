@@ -1,13 +1,11 @@
 package com.depromeet.breadmapbackend.web.controller.review.dto;
 
 import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewComment;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +25,7 @@ public class ReviewDetailDto {
     private Integer reviewNum;
     private Integer followerNum;
 
-    private List<BreadRatingDto> breadRatingDtoList;
+    private List<ProductRatingDto> productRatingList;
     private List<String> imageList;
     private String content;
 
@@ -52,7 +50,7 @@ public class ReviewDetailDto {
         this.nickName = review.getUser().getNickName();
         this.reviewNum = reviewNum;
         this.followerNum = followerNum;
-        this.breadRatingDtoList = review.getRatings().stream().map(BreadRatingDto::new).collect(Collectors.toList());
+        this.productRatingList = review.getRatings().stream().map(ProductRatingDto::new).collect(Collectors.toList());
         this.imageList = review.getImageList().stream().map(ReviewImage::getImage).collect(Collectors.toList());
         this.content = review.getContent();
         this.likeNum = review.getLikes().size();

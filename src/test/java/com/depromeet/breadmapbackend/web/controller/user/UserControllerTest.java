@@ -2,14 +2,15 @@ package com.depromeet.breadmapbackend.web.controller.user;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
-import com.depromeet.breadmapbackend.domain.review.BreadRating;
+import com.depromeet.breadmapbackend.domain.product.ProductType;
+import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
@@ -23,7 +24,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collections;
@@ -80,8 +80,8 @@ class UserControllerTest extends ControllerTest {
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
-        Bread bread = Bread.builder().bakery(bakery).name("bread1").price(3000).build();
-        breadRepository.save(bread);
+        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        productRepository.save(product);
 
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
         flagBakeryRepository.save(flagBakery);
@@ -91,21 +91,21 @@ class UserControllerTest extends ControllerTest {
         review.addImage(image);
         reviewRepository.save(review);
 
-        BreadRating rating = BreadRating.builder().bread(bread).review(review).rating(4L).build();
-        breadRatingRepository.save(rating);
+        ReviewProductRating rating = ReviewProductRating.builder().product(product).review(review).rating(4L).build();
+        reviewProductRatingRepository.save(rating);
     }
 
     @AfterEach
     public void setDown() {
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
-        breadRatingRepository.deleteAllInBatch();
+        reviewProductRatingRepository.deleteAllInBatch();
         reviewCommentLikeRepository.deleteAllInBatch();
         reviewCommentRepository.deleteAllInBatch();
         reviewLikeRepository.deleteAllInBatch();
         reviewImageRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
-        breadRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         followRepository.deleteAllInBatch();
         blockUserRepository.deleteAllInBatch();
@@ -162,23 +162,23 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.nickName").description("유저 닉네임"),
                                 fieldWithPath("data.followerNum").description("유저 팔로워 수"),
                                 fieldWithPath("data.followingNum").description("유저 팔로잉 수"),
-                                fieldWithPath("data.userFlagDtoList").description("유저 깃발 리스트"),
-                                fieldWithPath("data.userFlagDtoList.[].flagId").description("유저 깃발 고유번호"),
-                                fieldWithPath("data.userFlagDtoList.[].name").description("유저 깃발 이름"),
-                                fieldWithPath("data.userFlagDtoList.[].color").description("유저 깃발 색깔"),
-                                fieldWithPath("data.userFlagDtoList.[].flagImageList").description("유저 깃발 이미지 리스트"),
-                                fieldWithPath("data.userReviewDtoList").description("유저 리뷰 리스트"),
-                                fieldWithPath("data.userReviewDtoList.[].id").description("유저 리뷰 고유 번호"),
-                                fieldWithPath("data.userReviewDtoList.[].bakeryName").description("유저 빵집 이름"),
-                                fieldWithPath("data.userReviewDtoList.[].bakeryAddress").description("유저 빵집 주소"),
-                                fieldWithPath("data.userReviewDtoList.[].breadRatingDtoList").description("유저 리뷰 빵 점수 리스트"),
-                                fieldWithPath("data.userReviewDtoList.[].breadRatingDtoList.[].breadName").description("유저 리뷰 빵 이름"),
-                                fieldWithPath("data.userReviewDtoList.[].breadRatingDtoList.[].rating").description("유저 리뷰 빵 점수"),
-                                fieldWithPath("data.userReviewDtoList.[].imageList").description("유저 리뷰 이미지"),
-                                fieldWithPath("data.userReviewDtoList.[].content").description("유저 리뷰 내용"),
-                                fieldWithPath("data.userReviewDtoList.[].likeNum").description("유저 리뷰 좋아요 수"),
-                                fieldWithPath("data.userReviewDtoList.[].commentNum").description("유저 리뷰 댓글 수"),
-                                fieldWithPath("data.userReviewDtoList.[].createdAt").description("유저 리뷰 생성일")
+                                fieldWithPath("data.userFlagList").description("유저 깃발 리스트"),
+                                fieldWithPath("data.userFlagList.[].flagId").description("유저 깃발 고유번호"),
+                                fieldWithPath("data.userFlagList.[].name").description("유저 깃발 이름"),
+                                fieldWithPath("data.userFlagList.[].color").description("유저 깃발 색깔"),
+                                fieldWithPath("data.userFlagList.[].flagImageList").description("유저 깃발 이미지 리스트"),
+                                fieldWithPath("data.userReviewList").description("유저 리뷰 리스트"),
+                                fieldWithPath("data.userReviewList.[].id").description("유저 리뷰 고유 번호"),
+                                fieldWithPath("data.userReviewList.[].bakeryName").description("유저 빵집 이름"),
+                                fieldWithPath("data.userReviewList.[].bakeryAddress").description("유저 빵집 주소"),
+                                fieldWithPath("data.userReviewList.[].productRatingList").description("유저 리뷰 상품 점수 리스트"),
+                                fieldWithPath("data.userReviewList.[].productRatingList.[].productName").description("유저 리뷰 상품 이름"),
+                                fieldWithPath("data.userReviewList.[].productRatingList.[].rating").description("유저 리뷰 상품 점수"),
+                                fieldWithPath("data.userReviewList.[].imageList").description("유저 리뷰 이미지"),
+                                fieldWithPath("data.userReviewList.[].content").description("유저 리뷰 내용"),
+                                fieldWithPath("data.userReviewList.[].likeNum").description("유저 리뷰 좋아요 수"),
+                                fieldWithPath("data.userReviewList.[].commentNum").description("유저 리뷰 댓글 수"),
+                                fieldWithPath("data.userReviewList.[].createdAt").description("유저 리뷰 생성일")
                         )
                 ))
                 .andExpect(status().isOk());
