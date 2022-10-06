@@ -46,6 +46,6 @@ public class AddBakeryRequest {
         @NotBlank(message = "상품 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private String productName;
         @NotBlank(message = "가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-        private Integer price;
+        private String price;
     }
 }

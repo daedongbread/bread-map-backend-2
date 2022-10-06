@@ -115,7 +115,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addReview(String username, Long bakeryId, ReviewRequest request) {
+    public ReviewAddDto addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
@@ -138,13 +138,15 @@ public class ReviewServiceImpl implements ReviewService {
                 throw new ProductAlreadyException();
             Product product = Product.builder().productType(noExistBreadRatingRequest.getProductType())
                     .name(noExistBreadRatingRequest.getProductName())
-                    .price(0).bakery(bakery).image(null).isTrue(false).build();
+                    .price("0").bakery(bakery).image(null).isTrue(false).build();
             productRepository.save(product);
             ReviewProductRating reviewProductRating = ReviewProductRating.builder()
                     .product(product).review(review).rating(noExistBreadRatingRequest.getRating()).build();
             reviewProductRatingRepository.save(reviewProductRating);
             review.addRating(reviewProductRating);
         });
+
+        return ReviewAddDto.builder().reviewId(review.getId()).build();
     }
 
     @Transactional(rollbackFor = Exception.class)

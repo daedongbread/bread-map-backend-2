@@ -28,13 +28,13 @@ public class ProductAddReport extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer price;
+    private String price;
 
     @Convert(converter = StringListConverter.class)
     private List<String> images = new ArrayList<>();
 
     @Builder
-    public ProductAddReport(Bakery bakery, String name, Integer price) {
+    public ProductAddReport(Bakery bakery, String name, String price) {
         this.bakery = bakery;
         this.name = name;
         this.price = price;

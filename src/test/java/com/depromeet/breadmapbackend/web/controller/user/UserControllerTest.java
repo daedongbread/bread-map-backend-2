@@ -80,7 +80,7 @@ class UserControllerTest extends ControllerTest {
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
-        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
 
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();

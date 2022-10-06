@@ -69,7 +69,7 @@ class AdminControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
 
         bakeryAddReport = BakeryAddReport.builder().user(user).content("test content").location("test location")
@@ -304,7 +304,7 @@ class AdminControllerTest extends ControllerTest {
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         AddBakeryRequest.AddProductRequest.builder()
-                                .productType(ProductType.BREAD).productName("testBread").price(12000).build()
+                                .productType(ProductType.BREAD).productName("testBread").price("12000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
@@ -358,7 +358,7 @@ class AdminControllerTest extends ControllerTest {
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         UpdateBakeryRequest.UpdateProductRequest.builder()
-                                .productId(product.getId()).productName("testBread").price(12000).build()
+                                .productId(product.getId()).productName("testBread").price("12000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 

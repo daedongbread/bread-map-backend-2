@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class AdminProductDto {
     private Long productId;
     private String name;
-    private Integer price;
+    private String price;
     private String image;
 
     @Builder

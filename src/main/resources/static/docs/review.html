@@ -528,7 +528,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/1/simple?sort=latest HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -626,7 +626,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 422
+Content-Length: 423
 
 {
   "data" : [ {
@@ -636,15 +636,15 @@ Content-Length: 422
     "nickName" : "nickname",
     "reviewNum" : 1,
     "followerNum" : 0,
-    "breadRatingDtoList" : [ {
-      "breadName" : "product1",
+    "productRatingList" : [ {
+      "productName" : "bread1",
       "rating" : 4
     } ],
     "imageList" : [ "image1" ],
     "content" : "content1",
     "likeNum" : 1,
     "commentNum" : 2,
-    "createdAt" : "2022.10.04",
+    "createdAt" : "2022.10.07",
     "averageRating" : 4.0
   } ]
 }</code></pre>
@@ -700,19 +700,19 @@ Content-Length: 422
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].breadRatingDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].productRatingList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수 리스트</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].breadRatingDtoList.[].breadName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].productRatingList.[].productName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].breadRatingDtoList.[].rating</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].productRatingList.[].rating</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].imageList</code></p></td>
@@ -756,7 +756,7 @@ Content-Length: 422
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/1/all?sort=latest HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE5LCJleHAiOjE2NjQ4MjU1MTl9.-DBSXbuaSYzJC6idi5lvUtxJanPRHu4U3svdDhh5jHY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkzLCJleHAiOjE2NjUwNzM2OTN9.ucJiJJLDJOC44ihag40j1K93vjVc3MQPqqZyfnlqfeM
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -854,7 +854,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 422
+Content-Length: 423
 
 {
   "data" : [ {
@@ -864,15 +864,15 @@ Content-Length: 422
     "nickName" : "nickname",
     "reviewNum" : 1,
     "followerNum" : 0,
-    "breadRatingDtoList" : [ {
-      "breadName" : "product1",
+    "productRatingList" : [ {
+      "productName" : "bread1",
       "rating" : 4
     } ],
     "imageList" : [ "image1" ],
     "content" : "content1",
     "likeNum" : 1,
     "commentNum" : 2,
-    "createdAt" : "2022.10.04",
+    "createdAt" : "2022.10.07",
     "averageRating" : 4.0
   } ]
 }</code></pre>
@@ -928,19 +928,19 @@ Content-Length: 422
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].breadRatingDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].productRatingList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수 리스트</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].breadRatingDtoList.[].breadName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].productRatingList.[].productName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].breadRatingDtoList.[].rating</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].productRatingList.[].rating</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].imageList</code></p></td>
@@ -984,7 +984,7 @@ Content-Length: 422
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/57 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE5LCJleHAiOjE2NjQ4MjU1MTl9.-DBSXbuaSYzJC6idi5lvUtxJanPRHu4U3svdDhh5jHY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkzLCJleHAiOjE2NjUwNzM2OTN9.ucJiJJLDJOC44ihag40j1K93vjVc3MQPqqZyfnlqfeM
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1061,7 +1061,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1265
+Content-Length: 1260
 
 {
   "data" : {
@@ -1074,15 +1074,15 @@ Content-Length: 1265
     "nickName" : "nickname",
     "reviewNum" : 1,
     "followerNum" : 0,
-    "breadRatingDtoList" : [ {
-      "breadName" : "product1",
+    "productRatingList" : [ {
+      "productName" : "bread1",
       "rating" : 4
     } ],
     "imageList" : [ "image1" ],
     "content" : "content1",
     "likeNum" : 1,
     "commentNum" : 2,
-    "createdAt" : "2022.10.04",
+    "createdAt" : "2022.10.07",
     "comments" : [ {
       "id" : 39,
       "userId" : 57,
@@ -1090,18 +1090,18 @@ Content-Length: 1265
       "nickName" : "nickname",
       "commentNickName" : null,
       "content" : "comment1",
-      "createdAt" : "2022.10.04",
+      "createdAt" : "2022.10.07",
       "likeNum" : 1,
-      "commentDtoList" : [ {
+      "commentList" : [ {
         "id" : 40,
         "userId" : 57,
         "userImage" : null,
         "nickName" : "nickname",
         "commentNickName" : "nickname",
         "content" : "comment1",
-        "createdAt" : "2022.10.04",
+        "createdAt" : "2022.10.07",
         "likeNum" : 0,
-        "commentDtoList" : [ ]
+        "commentList" : [ ]
       } ]
     } ],
     "userOtherReviews" : [ {
@@ -1183,19 +1183,19 @@ Content-Length: 1265
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.breadRatingDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productRatingList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수 리스트</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.breadRatingDtoList.[].breadName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productRatingList.[].productName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.breadRatingDtoList.[].rating</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productRatingList.[].rating</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.imageList</code></p></td>
@@ -1268,57 +1268,57 @@ Content-Length: 1265
 <td class="tableblock halign-left valign-top"><p class="tableblock">댓글 좋아요 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[]</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 대댓글 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 고유 번호</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].userId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].userImage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].userImage</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].nickName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].commentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].commentNickName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 내용</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].createdAt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 생성일</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].likeNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].likeNum</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 좋아요 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentDtoList.[].commentDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.comments.[].commentList.[].commentList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 리스트</p></td>
 </tr>
@@ -1376,23 +1376,25 @@ Content-Length: 1265
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
-Content-Length: 317
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
+Content-Length: 389
 Host: localhost:8080
 
 {
-  "breadRatingList" : [ {
-    "breadId" : 61,
+  "productRatingList" : [ {
+    "productId" : 61,
     "rating" : 5
   }, {
-    "breadId" : 62,
+    "productId" : 62,
     "rating" : 4
   } ],
-  "noExistBreadRatingRequestList" : [ {
-    "breadName" : "fakeBread1",
+  "noExistProductRatingRequestList" : [ {
+    "productType" : "BREAD",
+    "productName" : "fakeBread1",
     "rating" : 5
   }, {
-    "breadName" : "fakeBread2",
+    "productType" : "BREAD",
+    "productName" : "fakeBread2",
     "rating" : 4
   } ],
   "content" : "review add test"
@@ -1478,40 +1480,46 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>breadRatingList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productRatingList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수 리스트</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>breadRatingList.[].breadId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productRatingList.[].productId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 고유 번호</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 고유 번호</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>breadRatingList.[].rating</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productRatingList.[].rating</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵 점수</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistBreadRatingRequestList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 빵 점수 리스트</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 점수 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistBreadRatingRequestList.[].breadName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].productType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 빵 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 타입</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistBreadRatingRequestList.[].rating</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].productName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].rating</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 빵 점수</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 점수</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
@@ -1531,13 +1539,48 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: DENY</code></pre>
+X-Frame-Options: DENY
+Content-Length: 44
+
+{
+  "data" : {
+    "reviewId" : 55
+  }
+}</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_리뷰_추가_api_post_response_fields"><a class="link" href="#_리뷰_추가_api_post_response_fields">Response fields</a></h4>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1549,11 +1592,11 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/60/image HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE5LCJleHAiOjE2NjQ4MjU1MTl9.-DBSXbuaSYzJC6idi5lvUtxJanPRHu4U3svdDhh5jHY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkzLCJleHAiOjE2NjUwNzM2OTN9.ucJiJJLDJOC44ihag40j1K93vjVc3MQPqqZyfnlqfeM
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=92f3e99b-1306-42dd-8b7e-1db4606dd682.png
+Content-Disposition: form-data; name=files; filename=a12ba445-1731-447a-81a1-cf91c2a1ecaf.png
 Content-Type: image/png
 
 test
@@ -1664,7 +1707,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/51 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1751,7 +1794,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/48/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1838,7 +1881,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/50/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1925,7 +1968,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /review/52/comment HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2002,7 +2045,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 524
+Content-Length: 518
 
 {
   "data" : [ {
@@ -2012,18 +2055,18 @@ Content-Length: 524
     "nickName" : "nickname",
     "commentNickName" : null,
     "content" : "comment1",
-    "createdAt" : "2022.10.04",
+    "createdAt" : "2022.10.07",
     "likeNum" : 1,
-    "commentDtoList" : [ {
+    "commentList" : [ {
       "id" : 32,
       "userId" : 53,
       "userImage" : null,
       "nickName" : "nickname",
       "commentNickName" : "nickname",
       "content" : "comment1",
-      "createdAt" : "2022.10.04",
+      "createdAt" : "2022.10.07",
       "likeNum" : 0,
-      "commentDtoList" : [ ]
+      "commentList" : [ ]
     } ]
   } ]
 }</code></pre>
@@ -2089,52 +2132,52 @@ Content-Length: 524
 <td class="tableblock halign-left valign-top"><p class="tableblock">댓글 좋아요 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 리스트</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 고유 번호</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].userId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].userImage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].userImage</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].nickName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].commentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].commentNickName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 내용</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].createdAt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 생성일</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].likeNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].likeNum</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 좋아요 수</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentDtoList.[].commentDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].commentList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 리스트</p></td>
 </tr>
@@ -2159,7 +2202,7 @@ Content-Length: 524
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/59/comment HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE5LCJleHAiOjE2NjQ4MjU1MTl9.-DBSXbuaSYzJC6idi5lvUtxJanPRHu4U3svdDhh5jHY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkzLCJleHAiOjE2NjUwNzM2OTN9.ucJiJJLDJOC44ihag40j1K93vjVc3MQPqqZyfnlqfeM
 Content-Length: 71
 Host: localhost:8080
 
@@ -2288,7 +2331,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/61/comment/48 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE5LCJleHAiOjE2NjQ4MjU1MTl9.-DBSXbuaSYzJC6idi5lvUtxJanPRHu4U3svdDhh5jHY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkzLCJleHAiOjE2NjUwNzM2OTN9.ucJiJJLDJOC44ihag40j1K93vjVc3MQPqqZyfnlqfeM
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2380,7 +2423,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/46/comment/22/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2472,7 +2515,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /review/56/comment/37/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE5LCJleHAiOjE2NjQ4MjU1MTl9.-DBSXbuaSYzJC6idi5lvUtxJanPRHu4U3svdDhh5jHY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkzLCJleHAiOjE2NjUwNzM2OTN9.ucJiJJLDJOC44ihag40j1K93vjVc3MQPqqZyfnlqfeM
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2565,7 +2608,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /review/49/report HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE4LCJleHAiOjE2NjQ4MjU1MTh9.2GzURJNXaHYFeEHFOTHft56kF-3uXueEKhh3L6Cm2xQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY1MDcwMDkyLCJleHAiOjE2NjUwNzM2OTJ9.kkGDkTFhvshfApnUwtRK7ynO0qk7G97XinpTmdzHecs
 Accept: application/json
 Content-Length: 64
 Host: localhost:8080
@@ -2694,7 +2737,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-10-01 18:04:28 +0900
+Last updated 2022-10-07 00:25:28 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

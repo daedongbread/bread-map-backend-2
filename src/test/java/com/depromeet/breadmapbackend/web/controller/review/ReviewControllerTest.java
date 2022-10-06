@@ -58,8 +58,8 @@ class ReviewControllerTest extends ControllerTest {
         bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
-        product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
-        product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price(4000).build();
+        product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price("4000").build();
         productRepository.save(product1);
         productRepository.save(product2);
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
@@ -266,6 +266,9 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
                                 fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
                                 fieldWithPath("content").description("리뷰 내용")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.reviewId").description("리뷰 고유 번호")
                         )
                 ))
                 .andExpect(status().isCreated());
