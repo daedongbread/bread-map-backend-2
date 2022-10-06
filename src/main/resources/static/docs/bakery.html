@@ -952,7 +952,7 @@ Content-Length: 564
     },
     "menu" : [ {
       "id" : 27,
-      "name" : "bread1",
+      "name" : "product1",
       "rating" : 4.0,
       "reviewNum" : 1,
       "price" : 3000,
@@ -1103,7 +1103,7 @@ BOOKING("예약"))</p></td>
 <h4 id="_빵집_빵_리스트_조회_api_get_http_request"><a class="link" href="#_빵집_빵_리스트_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/bread HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/product HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE1LCJleHAiOjE2NjQ4MjU1MTV9.dfhO2398HEtFSqiv_sDylods1lJ8Vm3u_5yaXyz4QGs
 Host: localhost:8080</code></pre>
 </div>
@@ -1114,7 +1114,7 @@ Host: localhost:8080</code></pre>
 <div class="sect4">
 <h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/bakery/{bakeryId}/bread</p>
+<p>/bakery/{bakeryId}/product</p>
 </div>
 </div>
 <div class="sect4">
@@ -1162,7 +1162,7 @@ Content-Length: 151
 {
   "data" : [ {
     "id" : 21,
-    "name" : "bread1",
+    "name" : "product1",
     "rating" : 4.0,
     "reviewNum" : 1,
     "price" : 3000,
@@ -1745,7 +1745,7 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰용_빵_간단_리스트_조회_api_get_http_request"><a class="link" href="#_리뷰용_빵_간단_리스트_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/bread HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/product HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE2LCJleHAiOjE2NjQ4MjU1MTZ9.4Eta_81LNnDa4BmJFId8liGBpHHgMKcSzcz9Vg_Jhks
 Host: localhost:8080</code></pre>
 </div>
@@ -1780,7 +1780,7 @@ Host: localhost:8080</code></pre>
 <div class="sect4">
 <h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/bakery/{bakeryId}/review/bread</p>
+<p>/bakery/{bakeryId}/review/product</p>
 </div>
 </div>
 <div class="sect4">
@@ -1828,7 +1828,7 @@ Content-Length: 108
 {
   "data" : [ {
     "id" : 35,
-    "name" : "bread1",
+    "name" : "product1",
     "price" : 3000,
     "image" : null
   } ]
@@ -1885,7 +1885,7 @@ Content-Length: 108
 <h4 id="_리뷰용_빵_검색_api_get_http_request"><a class="link" href="#_리뷰용_빵_검색_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/bread/search?name=bread HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/product/search?name=product HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjY0ODIxOTE2LCJleHAiOjE2NjQ4MjU1MTZ9.4Eta_81LNnDa4BmJFId8liGBpHHgMKcSzcz9Vg_Jhks
 Host: localhost:8080</code></pre>
 </div>
@@ -1920,7 +1920,7 @@ Host: localhost:8080</code></pre>
 <div class="sect4">
 <h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/bakery/{bakeryId}/review/bread/search</p>
+<p>/bakery/{bakeryId}/review/product/search</p>
 </div>
 </div>
 <div class="sect4">
@@ -1989,7 +1989,7 @@ Content-Length: 108
 {
   "data" : [ {
     "id" : 33,
-    "name" : "bread1",
+    "name" : "product1",
     "price" : 3000,
     "image" : null
   } ]

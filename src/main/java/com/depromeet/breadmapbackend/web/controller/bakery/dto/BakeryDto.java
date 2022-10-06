@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
-import com.depromeet.breadmapbackend.web.controller.review.dto.ReviewDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class BakeryDto {
     private BakeryInfo info;
-    private List<BreadDto> menu;
-//    private List<ReviewDto> review;
+    private List<ProductDto> menu;
     private List<FacilityInfo> facilityInfoList;
 
     @Builder
-    public BakeryDto(BakeryInfo info, List<BreadDto> menu, /*List<ReviewDto> review, */List<FacilityInfo> facilityInfoList) {
+    public BakeryDto(BakeryInfo info, List<ProductDto> menu, /*List<ReviewDto> review, */List<FacilityInfo> facilityInfoList) {
         this.info = info;
         this.menu = menu;
-//        this.review = review;
         this.facilityInfoList = facilityInfoList;
     }
 }

@@ -5,7 +5,7 @@ import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.SimpleBreadDto;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.SimpleProductDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,10 +46,10 @@ public class BakeryController {
         return new ApiResponse<>(bakeryService.findBakery(bakeryId));
     }
 
-    @GetMapping("/{bakeryId}/bread")
+    @GetMapping("/{bakeryId}/product")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<BreadDto>> findBreadList(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryService.findBreadList(bakeryId));
+    public ApiResponse<List<ProductDto>> findProductList(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryService.findProductList(bakeryId));
     }
 
     @PostMapping("/report/{bakeryId}/update")
@@ -72,20 +72,20 @@ public class BakeryController {
 
     @PostMapping("/report/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void breadAddReport(@PathVariable Long bakeryId, @RequestPart BreadReportRequest request,
-                               @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        bakeryService.breadAddReport(bakeryId, request, files);
+    public void productAddReport(@PathVariable Long bakeryId, @RequestPart ProductReportRequest request,
+                                 @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+        bakeryService.productAddReport(bakeryId, request, files);
     }
 
-    @GetMapping("/{bakeryId}/review/bread")
+    @GetMapping("/{bakeryId}/review/product")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleBreadDto>> findSimpleBreadList(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryService.findSimpleBreadList(bakeryId));
+    public ApiResponse<List<SimpleProductDto>> findSimpleProductList(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryService.findSimpleProductList(bakeryId));
     }
 
-    @GetMapping("/{bakeryId}/review/bread/search")
+    @GetMapping("/{bakeryId}/review/product/search")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleBreadDto>> searchSimpleBreadList(@PathVariable Long bakeryId, @RequestParam String name) {
-        return new ApiResponse<>(bakeryService.searchSimpleBreadList(bakeryId, name));
+    public ApiResponse<List<SimpleProductDto>> searchSimpleProductList(@PathVariable Long bakeryId, @RequestParam String name) {
+        return new ApiResponse<>(bakeryService.searchSimpleProductList(bakeryId, name));
     }
 }

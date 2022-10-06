@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.review.dto;
 
+import com.depromeet.breadmapbackend.domain.product.ProductType;
 import com.depromeet.breadmapbackend.web.advice.ValidationGroups;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewRequest {
-    private List<BreadRatingRequest> breadRatingList;
-    private List<NoExistBreadRatingRequest> noExistBreadRatingRequestList;
+    private List<ProductRatingRequest> productRatingList;
+    private List<NoExistProductRatingRequest> noExistProductRatingRequestList;
     @NotBlank(message = "내용은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private String content;
 
@@ -23,9 +24,9 @@ public class ReviewRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class BreadRatingRequest {
-        @NotBlank(message = "빵 고유 번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-        private Long breadId;
+    public static class ProductRatingRequest {
+        @NotBlank(message = "상품 고유 번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private Long productId;
         @NotBlank(message = "점수는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private Long rating;
     }
@@ -34,8 +35,11 @@ public class ReviewRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class NoExistBreadRatingRequest {
-        private String breadName;
+    public static class NoExistProductRatingRequest {
+        private ProductType productType;
+        @NotBlank(message = "상품 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private String productName;
+        @NotBlank(message = "점수는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private Long rating;
     }
 }

@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.converter.StringListConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,7 +46,7 @@ public class Review extends BaseEntity {
     private ReviewStatus status;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BreadRating> ratings = new ArrayList<>();
+    private List<ReviewProductRating> ratings = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewLike> likes = new ArrayList<>();
@@ -80,8 +79,8 @@ public class Review extends BaseEntity {
         this.imageList.add(reviewImage);
     }
 
-    public void addRating(BreadRating breadRating){
-        this.ratings.add(breadRating);
+    public void addRating(ReviewProductRating reviewProductRating){
+        this.ratings.add(reviewProductRating);
     }
 
     public void plusLike(ReviewLike reviewLike){ this.likes.add(reviewLike); }

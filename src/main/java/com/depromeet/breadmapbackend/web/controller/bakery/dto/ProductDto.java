@@ -1,13 +1,13 @@
 package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BreadDto {
+public class ProductDto {
     private Long id;
     private String name;
     private Double rating;
@@ -16,12 +16,12 @@ public class BreadDto {
     private String image;
 
     @Builder
-    public BreadDto(Bread bread, Double rating, Integer reviewNum) {
-        this.id = bread.getId();
-        this.name = bread.getName();
+    public ProductDto(Product product, Double rating, Integer reviewNum) {
+        this.id = product.getId();
+        this.name = product.getName();
         this.rating = rating;
         this.reviewNum = reviewNum;
-        this.price = bread.getPrice();
-        this.image = bread.getImage();
+        this.price = product.getPrice();
+        this.image = product.getImage();
     }
 }

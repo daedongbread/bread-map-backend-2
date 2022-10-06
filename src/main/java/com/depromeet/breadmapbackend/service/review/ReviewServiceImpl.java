@@ -1,13 +1,13 @@
 package com.depromeet.breadmapbackend.service.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BreadAlreadyException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.SortTypeWrongException;
+import com.depromeet.breadmapbackend.domain.product.exception.ProductAlreadyException;
+import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
+import com.depromeet.breadmapbackend.domain.bakery.exception.BakerySortTypeWrongException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.repository.BreadRepository;
+import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
@@ -39,8 +39,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final BakeryRepository bakeryRepository;
-    private final BreadRepository breadRepository;
-    private final BreadRatingRepository breadRatingRepository;
+    private final ProductRepository productRepository;
+    private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
@@ -57,7 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new SortTypeWrongException();
+        else throw new BakerySortTypeWrongException();
 
         return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
@@ -77,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new SortTypeWrongException();
+        else throw new BakerySortTypeWrongException();
 
         return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
@@ -123,26 +123,27 @@ public class ReviewServiceImpl implements ReviewService {
                 .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
         reviewRepository.save(review);
 
-        request.getBreadRatingList().forEach(breadRatingRequest -> {
-            Bread bread = breadRepository.findById(breadRatingRequest.getBreadId()).orElseThrow(BreadNotFoundException::new);
-            if(breadRatingRepository.findByBreadAndReview(bread, review).isEmpty()) {
-                BreadRating breadRating = BreadRating.builder()
-                        .bread(bread).review(review).rating(breadRatingRequest.getRating()).build();
-                breadRatingRepository.save(breadRating);
-                review.addRating(breadRating);
+        request.getProductRatingList().forEach(breadRatingRequest -> {
+            Product product = productRepository.findById(breadRatingRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+            if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
+                ReviewProductRating reviewProductRating = ReviewProductRating.builder()
+                        .product(product).review(review).rating(breadRatingRequest.getRating()).build();
+                reviewProductRatingRepository.save(reviewProductRating);
+                review.addRating(reviewProductRating);
             }
         });
 
-        request.getNoExistBreadRatingRequestList().forEach(noExistBreadRatingRequest -> {
-            if(breadRepository.findByName(noExistBreadRatingRequest.getBreadName()).isPresent())
-                throw new BreadAlreadyException();
-            Bread bread = Bread.builder().name(noExistBreadRatingRequest.getBreadName())
+        request.getNoExistProductRatingRequestList().forEach(noExistBreadRatingRequest -> {
+            if(productRepository.findByName(noExistBreadRatingRequest.getProductName()).isPresent())
+                throw new ProductAlreadyException();
+            Product product = Product.builder().productType(noExistBreadRatingRequest.getProductType())
+                    .name(noExistBreadRatingRequest.getProductName())
                     .price(0).bakery(bakery).image(null).isTrue(false).build();
-            breadRepository.save(bread);
-            BreadRating breadRating = BreadRating.builder()
-                    .bread(bread).review(review).rating(noExistBreadRatingRequest.getRating()).build();
-            breadRatingRepository.save(breadRating);
-            review.addRating(breadRating);
+            productRepository.save(product);
+            ReviewProductRating reviewProductRating = ReviewProductRating.builder()
+                    .product(product).review(review).rating(noExistBreadRatingRequest.getRating()).build();
+            reviewProductRatingRepository.save(reviewProductRating);
+            review.addRating(reviewProductRating);
         });
     }
 

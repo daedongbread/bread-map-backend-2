@@ -2,9 +2,7 @@ package com.depromeet.breadmapbackend.web.controller.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
-import com.depromeet.breadmapbackend.domain.review.BreadRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
@@ -13,7 +11,6 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import java.util.Collections;
 

@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BreadRating extends BaseEntity{
+public class ReviewProductRating extends BaseEntity{
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
@@ -28,8 +28,8 @@ public class BreadRating extends BaseEntity{
 //    private Bakery bakery;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "bread_id")
-    private Bread bread;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "review_id")
@@ -39,10 +39,10 @@ public class BreadRating extends BaseEntity{
     private Long rating;
 
     @Builder
-    private BreadRating(/*User user, Bakery bakery, */Bread bread, Review review, Long rating) {
+    private ReviewProductRating(/*User user, Bakery bakery, */Product product, Review review, Long rating) {
 //        this.user = user;
 //        this.bakery = bakery;
-        this.bread = bread;
+        this.product = product;
         this.review = review;
         this.rating = rating;
 //        this.bread.getBreadRatingList().add(this);

@@ -9,6 +9,8 @@ import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
+import com.depromeet.breadmapbackend.domain.product.exception.ProductAlreadyException;
+import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
@@ -254,18 +256,18 @@ public class ExceptionAdvice {
     /**
      * 빵이 존재하지 않을 때
      */
-    @ExceptionHandler(BreadNotFoundException.class)
+    @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse breadNotFoundException(BreadNotFoundException e) {
+    public ErrorResponse breadNotFoundException(ProductNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     /**
      * 이미 존재하는 빵일 때
      */
-    @ExceptionHandler(BreadAlreadyException.class)
+    @ExceptionHandler(ProductAlreadyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse breadAlreadyException(BreadAlreadyException e) {
+    public ErrorResponse breadAlreadyException(ProductAlreadyException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -407,9 +409,9 @@ public class ExceptionAdvice {
     /**
      * 정렬 조건이 틀렸을 때
      */
-    @ExceptionHandler(SortTypeWrongException.class)
+    @ExceptionHandler(BakerySortTypeWrongException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse sortTypeWrongException(SortTypeWrongException e) {
+    public ErrorResponse sortTypeWrongException(BakerySortTypeWrongException e) {
         return new ErrorResponse(e.getMessage());
     }
 

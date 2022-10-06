@@ -209,10 +209,10 @@ class NoticeControllerTest extends ControllerTest {
                                 fieldWithPath("data.todayNoticeList").description("오늘 알람 리스트"),
                                 fieldWithPath("data.todayNoticeList.[].image").description("오늘 알람 이미지"),
                                 fieldWithPath("data.todayNoticeList.[].fromUserId").description("오늘 알람 발신 유저 고유 번호 " +
-                                        "(제보 빵집/빵 추가, 즐겨찾기 빵집 관리자 글 업데이트 알림 땐 null)"),
+                                        "(제보 빵집/상품 추가, 즐겨찾기 빵집 관리자 글 업데이트 알림 땐 null)"),
                                 fieldWithPath("data.todayNoticeList.[].title").description("오늘 알람 제목"),
                                 fieldWithPath("data.todayNoticeList.[].contentId").description("오늘 알람 내용 고유 번호 " +
-                                        "(리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 빵 아이디 or 빵집 관리자 글 아이디)"),
+                                        "(리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 상품 아이디 or 빵집 관리자 글 아이디)"),
                                 fieldWithPath("data.todayNoticeList.[].content").description("오늘 알람 세부 내용 (팔로우 알람일 땐 null)"),
                                 fieldWithPath("data.todayNoticeList.[].createdAt").description("오늘 알람 생성일"),
                                 fieldWithPath("data.weekNoticeList").description("이번주 알람 리스트"),

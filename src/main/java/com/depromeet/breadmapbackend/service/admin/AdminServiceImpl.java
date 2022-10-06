@@ -5,10 +5,10 @@ import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundExcepti
 import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
-import com.depromeet.breadmapbackend.domain.bakery.Bread;
+import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BreadNotFoundException;
+import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
@@ -16,6 +16,8 @@ import com.depromeet.breadmapbackend.domain.admin.exception.AdminJoinException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
+import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
@@ -25,7 +27,6 @@ import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
@@ -64,14 +65,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService{
-    private final BreadRepository breadRepository;
+    private final ProductRepository productRepository;
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
-    private final BreadAddReportRepository breadAddReportRepository;
+    private final ProductAddReportRepository productAddReportRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
     private final FlagBakeryRepository flagBakeryRepository;
@@ -142,10 +143,10 @@ public class AdminServiceImpl implements AdminService{
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminBakeryDto getBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-        List<AdminBreadDto> breadList = breadRepository.findByBakery(bakery).stream()
-                .filter(Bread::isTrue)
-                .map(AdminBreadDto::new).collect(Collectors.toList());
-        return AdminBakeryDto.builder().bakery(bakery).breadList(breadList).build();
+        List<AdminProductDto> productList = productRepository.findByBakery(bakery).stream()
+                .filter(Product::isTrue)
+                .map(AdminProductDto::new).collect(Collectors.toList());
+        return AdminBakeryDto.builder().bakery(bakery).productList(productList).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -496,7 +497,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException {
+    public void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
         Long bakeryId = createBakeryId(request.getAddress());
         Bakery bakery = Bakery.builder()
                 .id(bakeryId).name(request.getName())
@@ -515,25 +516,25 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getBreadList().size() != breadImageList.size()) throw new ImageNumMatchException();
-        if (breadImageList.size() > 10) throw new ImageNumExceedException();
-        for(int i = 0; i < request.getBreadList().size(); i++) {
-            AddBakeryRequest.AddBreadRequest addBreadRequest = request.getBreadList().get(i);
-            Bread bread = Bread.builder().bakery(bakery)
-                    .name(addBreadRequest.getName()).price(addBreadRequest.getPrice()).build();
-            breadRepository.save(bread);
+        if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
+        if (productImageList.size() > 10) throw new ImageNumExceedException();
+        for(int i = 0; i < request.getProductList().size(); i++) {
+            AddBakeryRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
+            Product product = Product.builder().bakery(bakery).productType(addProductRequest.getProductType())
+                    .name(addProductRequest.getProductName()).price(addProductRequest.getPrice()).build();
+            productRepository.save(product);
 
-            MultipartFile breadImage = breadImageList.get(i);
-            if(breadImage != null && !breadImage.isEmpty()) {
-                String imagePath = fileConverter.parseFileInfo(breadImage, ImageType.BREAD_IMAGE, bread.getId());
-                String image = s3Uploader.upload(breadImage, imagePath);
-                bread.updateImage(image);
+            MultipartFile productImage = productImageList.get(i);
+            if(productImage != null && !productImage.isEmpty()) {
+                String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
+                String image = s3Uploader.upload(productImage, imagePath);
+                product.updateImage(image);
             }
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException {
+    public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 //        if(!bakeryId.equals(request.getBakeryId()) && bakeryRepository.findById(request.getBakeryId()).isPresent())
 //            throw new BakeryIdAlreadyException();
@@ -549,19 +550,19 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getBreadList().size() != breadImageList.size()) throw new ImageNumMatchException();
-        if (breadImageList.size() > 10) throw new ImageNumExceedException();
-        for(int i = 0; i < request.getBreadList().size(); i++) {
-            UpdateBakeryRequest.UpdateBreadRequest updateBreadRequest = request.getBreadList().get(i);
-            Bread bread = breadRepository.findById(updateBreadRequest.getBreadId()).orElseThrow(BreadNotFoundException::new);
-            bread.update(updateBreadRequest.getName(), updateBreadRequest.getPrice());
+        if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
+        if (productImageList.size() > 10) throw new ImageNumExceedException();
+        for(int i = 0; i < request.getProductList().size(); i++) {
+            UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
+            Product product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+            product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
 
-            MultipartFile breadImage = breadImageList.get(i);
-            if(breadImage != null && !breadImage.isEmpty()) {
-                s3Uploader.deleteFileS3(bread.getImage());
-                String imagePath = fileConverter.parseFileInfo(breadImage, ImageType.BREAD_IMAGE, bread.getId());
-                String image = s3Uploader.upload(breadImage, imagePath);
-                bread.updateImage(image);
+            MultipartFile productImage = productImageList.get(i);
+            if(productImage != null && !productImage.isEmpty()) {
+                s3Uploader.deleteFileS3(product.getImage());
+                String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
+                String image = s3Uploader.upload(productImage, imagePath);
+                product.updateImage(image);
             }
         }
     }
@@ -579,7 +580,7 @@ public class AdminServiceImpl implements AdminService{
         flagBakeryRepository.deleteByBakery(bakery);
         bakeryDeleteReportRepository.deleteByBakery(bakery);
         bakeryUpdateReportRepository.deleteByBakery(bakery);
-        breadAddReportRepository.deleteByBakery(bakery);
+        productAddReportRepository.deleteByBakery(bakery);
         reviewImageRepository.deleteByBakery(bakery);
         reviewRepository.findByBakery(bakery).forEach(reviewReportRepository::deleteByReview);
         bakeryRepository.deleteById(bakeryId);

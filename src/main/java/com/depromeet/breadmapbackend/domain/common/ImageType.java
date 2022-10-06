@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ImageType {
     BAKERY_IMAGE("bakeryImage"),
-    BREAD_IMAGE("breadImage"),
+    PRODUCT_IMAGE("productImage"),
     REVIEW_IMAGE("reviewImage"),
     BAKERY_DELETE_REPORT_IMAGE("bakeryDeleteReportImage"),
-    BREAD_ADD_REPORT_IMAGE("breadAddReportImage");
+    PRODUCT_ADD_REPORT_IMAGE("productAddReportImage");
 
     private final String code;
 }
