@@ -8,7 +8,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
-import com.depromeet.breadmapbackend.domain.review.BreadRating;
+import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
@@ -99,7 +99,7 @@ public class FlagServiceImpl implements FlagService {
 //                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
                         .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
                                 .stream().map(br -> {
-                                    return Arrays.stream(br.getRatings().stream().map(BreadRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
+                                    return Arrays.stream(br.getRatings().stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
                                 }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
                         .reviewNum(flagBakery.getBakery().getReviewList().size())
                         .simpleReviewList(flagBakery.getBakery().getReviewList().stream()

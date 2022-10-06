@@ -31,7 +31,7 @@ public class UpdateBakeryRequest {
     private String blogURL;
     private String phoneNumber;
     private List<FacilityInfo> facilityInfoList;
-    private List<UpdateBreadRequest> breadList;
+    private List<UpdateProductRequest> productList;
 //    @NotBlank(message = "게시상태는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private BakeryStatus status;
 
@@ -39,12 +39,12 @@ public class UpdateBakeryRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class UpdateBreadRequest {
-        @NotBlank(message = "빵 고유 번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-        private Long breadId;
-        @NotBlank(message = "빵 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-        private String name;
+    public static class UpdateProductRequest {
+        @NotBlank(message = "상품 고유 번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private Long productId;
+        @NotBlank(message = "상품 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private String productName;
         @NotBlank(message = "가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-        private Integer price;
+        private String price;
     }
 }

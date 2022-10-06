@@ -21,8 +21,8 @@ public interface AdminService {
     AdminBakeryDto getBakery(Long bakeryId);
     PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable);
     BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException;
-    void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException;
-    void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> breadImageList) throws IOException;
+    void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
+    void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable);
     void deleteBakery(Long bakeryId);
     PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable);

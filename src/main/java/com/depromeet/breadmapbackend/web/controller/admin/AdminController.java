@@ -80,8 +80,8 @@ public class AdminController {
     public void addBakery(
             @RequestPart AddBakeryRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart List<MultipartFile> breadImageList) throws IOException {
-        adminService.addBakery(request, bakeryImage, breadImageList);
+            @RequestPart List<MultipartFile> productImageList) throws IOException {
+        adminService.addBakery(request, bakeryImage, productImageList);
     }
 
     @PostMapping("/bakery/{bakeryId}")
@@ -89,8 +89,8 @@ public class AdminController {
     public void updateBakery(
             @PathVariable Long bakeryId, @RequestPart UpdateBakeryRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart List<MultipartFile> breadImageList) throws IOException {
-        adminService.updateBakery(bakeryId, request, bakeryImage, breadImageList);
+            @RequestPart List<MultipartFile> productImageList) throws IOException {
+        adminService.updateBakery(bakeryId, request, bakeryImage, productImageList);
     }
 
     @GetMapping("/bakery/{bakeryId}/image")

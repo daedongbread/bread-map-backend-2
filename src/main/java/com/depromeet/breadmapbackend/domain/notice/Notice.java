@@ -32,7 +32,7 @@ public class Notice extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    private Long contentId; // 리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 빵 아이디 or 빵집 관리자 글 아이디
+    private Long contentId; // 리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 상품 아이디 or 빵집 관리자 글 아이디
 
     private String content;
 

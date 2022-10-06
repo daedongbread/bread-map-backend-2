@@ -16,17 +16,17 @@ public class ProfileDto {
     private Integer followingNum;
     private Integer followerNum;
 
-    private List<UserFlagDto> userFlagDtoList;
-    private List<UserReviewDto> userReviewDtoList;
+    private List<UserFlagDto> userFlagList;
+    private List<UserReviewDto> userReviewList;
 
     @Builder
-    public ProfileDto(User user, Integer followingNum, Integer followerNum, List<UserFlagDto> userFlagDtoList, List<UserReviewDto> userReviewDtoList) {
+    public ProfileDto(User user, Integer followingNum, Integer followerNum, List<UserFlagDto> userFlagList, List<UserReviewDto> userReviewList) {
         this.userId = user.getId();
         this.userImage = user.getProfileImageUrl();
         this.nickName = user.getNickName();
         this.followingNum = followingNum;
         this.followerNum = followerNum;
-        this.userFlagDtoList = userFlagDtoList;
-        this.userReviewDtoList = userReviewDtoList;
+        this.userFlagList = userFlagList;
+        this.userReviewList = userReviewList;
     }
 }

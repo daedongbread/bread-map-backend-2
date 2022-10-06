@@ -43,8 +43,8 @@ public class ReviewController {
 
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
-        reviewService.addReview(username, bakeryId, request);
+    public ApiResponse<ReviewAddDto> addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
+        return new ApiResponse<>(reviewService.addReview(username, bakeryId, request));
     }
 
     @PostMapping("/{reviewId}/image")

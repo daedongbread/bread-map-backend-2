@@ -1,5 +1,6 @@
-package com.depromeet.breadmapbackend.domain.bakery;
+package com.depromeet.breadmapbackend.domain.product;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.converter.StringListConverter;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BreadAddReport extends BaseEntity {
+public class ProductAddReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,13 +28,13 @@ public class BreadAddReport extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer price;
+    private String price;
 
     @Convert(converter = StringListConverter.class)
     private List<String> images = new ArrayList<>();
 
     @Builder
-    public BreadAddReport(Bakery bakery, String name, Integer price) {
+    public ProductAddReport(Bakery bakery, String name, String price) {
         this.bakery = bakery;
         this.name = name;
         this.price = price;

@@ -6,13 +6,14 @@ import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
+import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
+import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
-import com.depromeet.breadmapbackend.security.token.RefreshTokenRepository;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
@@ -63,7 +64,7 @@ public abstract class ControllerTest {
     protected BakeryRepository bakeryRepository;
 
     @Autowired
-    protected BreadRepository breadRepository;
+    protected ProductRepository productRepository;
 
     @Autowired
     protected ReviewRepository reviewRepository;
@@ -72,7 +73,7 @@ public abstract class ControllerTest {
     protected ReviewImageRepository reviewImageRepository;
 
     @Autowired
-    protected BreadRatingRepository breadRatingRepository;
+    protected ReviewProductRatingRepository reviewProductRatingRepository;
 
     @Autowired
     protected ReviewLikeRepository reviewLikeRepository;
@@ -102,7 +103,7 @@ public abstract class ControllerTest {
     protected BakeryAddReportRepository bakeryAddReportRepository;
 
     @Autowired
-    protected BreadAddReportRepository breadAddReportRepository;
+    protected ProductAddReportRepository productAddReportRepository;
 
     @Autowired
     protected ReviewReportRepository reviewReportRepository;
