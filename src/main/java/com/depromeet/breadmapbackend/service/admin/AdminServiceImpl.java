@@ -27,6 +27,10 @@ import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.feign.client.SgisClient;
+import com.depromeet.breadmapbackend.infra.feign.dto.SgisTranscoordDto;
+import com.depromeet.breadmapbackend.infra.feign.dto.SgisTokenDto;
+import com.depromeet.breadmapbackend.infra.feign.dto.SgisGeocodeDto;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
@@ -37,7 +41,6 @@ import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,13 +53,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -79,6 +79,7 @@ public class AdminServiceImpl implements AdminService{
     private final ReviewImageRepository reviewImageRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
+    private final SgisClient sgisClient;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -156,59 +157,15 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
+        SgisTokenDto token = sgisClient.getToken(SGIS_CONSUMER_KEY, SGIS_CONSUMER_SECRET);
+        SgisGeocodeDto geocode = sgisClient.getGeocode(token.getResult().getAccessToken(), address);
+        SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
+                5179, 4326, geocode.getResult().getResultdata().get(0).getX(), geocode.getResult().getResultdata().get(0).getY());
 
-        String auth_url = "https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json";
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(auth_url);
-        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.TEMPLATE_AND_VALUES);
-        WebClient webClient = WebClient.builder().uriBuilderFactory(factory).baseUrl(auth_url).build();
-        Map accessResponse = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("consumer_key", SGIS_CONSUMER_KEY)
-                        .queryParam("consumer_secret", SGIS_CONSUMER_SECRET)
-                        .build())
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-        log.info("RAS : " + accessResponse);
-        Map map = mapper.convertValue(accessResponse.get("result"), Map.class);
-        String accessToken = (String) map.get("accessToken");
-
-        String geocode_url = "https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json";
-        factory = new DefaultUriBuilderFactory(geocode_url);
-        webClient = WebClient.builder().uriBuilderFactory(factory).baseUrl(geocode_url).build();
-        Map geoResponse = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("accessToken", accessToken)
-                        .queryParam("address", address)
-                        .build())
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-        map = mapper.convertValue(geoResponse.get("result"), Map.class);
-        map = mapper.convertValue(((List<String>) map.get("resultdata")).get(0), Map.class);
-        String x = (String) map.get("x");
-        String y = (String) map.get("y");
-
-        String trans_url = "https://sgisapi.kostat.go.kr/OpenAPI3/transformation/transcoord.json";
-        factory = new DefaultUriBuilderFactory(trans_url);
-        webClient = WebClient.builder().uriBuilderFactory(factory).baseUrl(trans_url).build();
-        Map transResponse = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("accessToken", accessToken)
-                        .queryParam("src", 5179)
-                        .queryParam("dst", 4326)
-                        .queryParam("posX", x)
-                        .queryParam("posY", y)
-                        .build())
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-        map = mapper.convertValue(transResponse.get("result"), Map.class);
-        Double posX = (Double) map.get("posX");
-        Double posY = (Double) map.get("posY");
-        return BakeryLocationDto.builder().latitude(posY).longitude(posX).build();
+        Double latitude = transcoord.getResult().getPosY();
+        Double longitude = transcoord.getResult().getPosX();
+        return BakeryLocationDto.builder().latitude(latitude).longitude(longitude).build();
     }
 
     private Long createBakeryId(String address) {

@@ -13,6 +13,7 @@ import com.depromeet.breadmapbackend.domain.product.exception.ProductAlreadyExce
 import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.*;
+import com.depromeet.breadmapbackend.infra.feign.exception.SgisFeignException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
@@ -556,6 +557,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(AdminNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse adminNotFoundException(AdminNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * Sgis Feign Exception
+     */
+    @ExceptionHandler(SgisFeignException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse sgisFeignException(SgisFeignException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
