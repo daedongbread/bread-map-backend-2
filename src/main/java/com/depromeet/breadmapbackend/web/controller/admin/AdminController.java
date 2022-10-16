@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -71,7 +70,7 @@ public class AdminController {
 
     @GetMapping("/bakery/location")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<BakeryLocationDto> getBakeryLatitudeLongitude(@RequestParam String address) throws JsonProcessingException {
+    public ApiResponse<BakeryLocationDto> getBakeryLatitudeLongitude(@RequestParam String address) {
         return new ApiResponse<>(adminService.getBakeryLatitudeLongitude(address));
     }
 
@@ -80,7 +79,7 @@ public class AdminController {
     public void addBakery(
             @RequestPart AddBakeryRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart List<MultipartFile> productImageList) throws IOException {
+            @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
         adminService.addBakery(request, bakeryImage, productImageList);
     }
 
@@ -89,8 +88,15 @@ public class AdminController {
     public void updateBakery(
             @PathVariable Long bakeryId, @RequestPart UpdateBakeryRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart List<MultipartFile> productImageList) throws IOException {
+            @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, productImageList);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}/product/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(
+            @PathVariable Long bakeryId, @PathVariable Long productId) {
+        adminService.deleteProduct(bakeryId, productId);
     }
 
     @GetMapping("/bakery/{bakeryId}/image")

@@ -81,7 +81,7 @@ class AdminControllerTest extends ControllerTest {
         review.addImage(image);
         reviewRepository.save(review);
 
-        ReviewProductRating rating = ReviewProductRating.builder().product(product).review(review).rating(4L).build();
+        ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
 
         reviewReport = ReviewReport.builder()
@@ -338,7 +338,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
                                 fieldWithPath("productList").description("상품 리스트"),
-                                fieldWithPath("productList.[].productType").description("상품 타입"),
+                                fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
                                 fieldWithPath("status")
@@ -358,13 +358,17 @@ class AdminControllerTest extends ControllerTest {
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         UpdateBakeryRequest.UpdateProductRequest.builder()
-                                .productId(product.getId()).productName("testBread").price("12000").build()
+                                .productId(product.getId()).productType(ProductType.BREAD)
+                                .productName("testBread").price("12000").build(),//,
+                        UpdateBakeryRequest.UpdateProductRequest.builder()
+                                .productType(ProductType.BREAD).productName("newBread").price("10000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/admin/bakery/{bakeryId}", bakery.getId())
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
                 .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -393,7 +397,8 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("websiteURL").description("빵집 홈페이지"),
                                 fieldWithPath("phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
-                                fieldWithPath("productList.[].productId").description("상품 고유 번호"),
+                                fieldWithPath("productList.[].productId").optional().description("상품 고유 번호 (새로운 빵 추가시 제외)"),
+                                fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
                                 fieldWithPath("status")
@@ -401,6 +406,22 @@ class AdminControllerTest extends ControllerTest {
                                                 "POSTING(\"게시중\"),\n" +
                                                 "UNPOSTING(\"미게시\"))")
                         )
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteProduct() throws Exception {
+        mockMvc.perform(delete("/admin/bakery/{bakeryId}/product/{productId}", bakery.getId(), product.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/delete/product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("productId").description("상품 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
     }
