@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import lombok.AccessLevel;
@@ -23,9 +24,9 @@ public class ReviewProductRating extends BaseEntity{
 //    @JoinColumn(name = "user_id")
 //    private User user;
 //
-//    @ManyToOne(fetch = LAZY)
-//    @JoinColumn(name = "bakery_id")
-//    private Bakery bakery;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "bakery_id")
+    private Bakery bakery;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
@@ -39,9 +40,9 @@ public class ReviewProductRating extends BaseEntity{
     private Long rating;
 
     @Builder
-    private ReviewProductRating(/*User user, Bakery bakery, */Product product, Review review, Long rating) {
+    private ReviewProductRating(/*User user,*/Bakery bakery, Product product, Review review, Long rating) {
 //        this.user = user;
-//        this.bakery = bakery;
+        this.bakery = bakery;
         this.product = product;
         this.review = review;
         this.rating = rating;

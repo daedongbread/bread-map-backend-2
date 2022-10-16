@@ -126,7 +126,7 @@ public class ReviewServiceImpl implements ReviewService {
         request.getProductRatingList().forEach(breadRatingRequest -> {
             Product product = productRepository.findById(breadRatingRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
             if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
-                ReviewProductRating reviewProductRating = ReviewProductRating.builder()
+                ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
                         .product(product).review(review).rating(breadRatingRequest.getRating()).build();
                 reviewProductRatingRepository.save(reviewProductRating);
                 review.addRating(reviewProductRating);
@@ -140,7 +140,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .name(noExistBreadRatingRequest.getProductName())
                     .price("0").bakery(bakery).image(null).isTrue(false).build();
             productRepository.save(product);
-            ReviewProductRating reviewProductRating = ReviewProductRating.builder()
+            ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
                     .product(product).review(review).rating(noExistBreadRatingRequest.getRating()).build();
             reviewProductRatingRepository.save(reviewProductRating);
             review.addRating(reviewProductRating);

@@ -22,6 +22,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewImageRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewReportRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -40,7 +41,6 @@ import com.depromeet.breadmapbackend.web.controller.admin.dto.SimpleBakeryAddRep
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,6 +77,7 @@ public class AdminServiceImpl implements AdminService{
     private final ReviewRepository reviewRepository;
     private final FlagBakeryRepository flagBakeryRepository;
     private final ReviewImageRepository reviewImageRepository;
+    private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
     private final SgisClient sgisClient;
@@ -511,8 +512,15 @@ public class AdminServiceImpl implements AdminService{
         if (productImageList.size() > 10) throw new ImageNumExceedException();
         for(int i = 0; i < request.getProductList().size(); i++) {
             UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
-            Product product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
-            product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
+            Product product;
+            if(updateProductRequest.getProductId() == null) {
+                product = Product.builder()
+                        .productType(updateProductRequest.getProductType()).bakery(bakery)
+                        .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
+            } else {
+                product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+                product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
+            }
 
             MultipartFile productImage = productImageList.get(i);
             if(productImage != null && !productImage.isEmpty()) {
@@ -522,6 +530,14 @@ public class AdminServiceImpl implements AdminService{
                 product.updateImage(image);
             }
         }
+    }
+
+    @Transactional
+    public void deleteProduct(Long bakeryId, Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        s3Uploader.deleteFileS3(product.getImage());
+        reviewProductRatingRepository.deleteByProductId(productId);
+        productRepository.delete(product);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -539,6 +555,7 @@ public class AdminServiceImpl implements AdminService{
         bakeryUpdateReportRepository.deleteByBakery(bakery);
         productAddReportRepository.deleteByBakery(bakery);
         reviewImageRepository.deleteByBakery(bakery);
+        reviewProductRatingRepository.deleteByBakeryId(bakeryId);
         reviewRepository.findByBakery(bakery).forEach(reviewReportRepository::deleteByReview);
         bakeryRepository.deleteById(bakeryId);
     }

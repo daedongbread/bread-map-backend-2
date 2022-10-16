@@ -13,4 +13,6 @@ public interface ReviewProductRatingRepository extends JpaRepository<ReviewProdu
     Double findProductAvgRating(Long productId);
     Integer countByProductId(Long productId);
     Optional<ReviewProductRating> findByProductAndReview(Product product, Review review);
+    void deleteByProductId(Long productId);
+    void deleteByBakeryId(Long bakeryId);
 }

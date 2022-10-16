@@ -70,8 +70,8 @@ class BakeryControllerTest extends ControllerTest {
         reviewRepository.save(review1);
         reviewRepository.save(review2);
 
-        ReviewProductRating rating1 = ReviewProductRating.builder().product(product1).review(review1).rating(4L).build();
-        ReviewProductRating rating2 = ReviewProductRating.builder().product(product2).review(review2).rating(4L).build();
+        ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery1).product(product1).review(review1).rating(4L).build();
+        ReviewProductRating rating2 = ReviewProductRating.builder().bakery(bakery1).product(product2).review(review2).rating(4L).build();
         reviewProductRatingRepository.save(rating1);
         reviewProductRatingRepository.save(rating2);
 

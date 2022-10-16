@@ -91,7 +91,7 @@ class UserControllerTest extends ControllerTest {
         review.addImage(image);
         reviewRepository.save(review);
 
-        ReviewProductRating rating = ReviewProductRating.builder().product(product).review(review).rating(4L).build();
+        ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
     }
 

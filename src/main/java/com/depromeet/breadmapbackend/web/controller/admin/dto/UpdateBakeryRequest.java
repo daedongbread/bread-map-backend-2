@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.controller.admin.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.product.ProductType;
 import com.depromeet.breadmapbackend.web.advice.ValidationGroups;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,11 +41,9 @@ public class UpdateBakeryRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdateProductRequest {
-        @NotBlank(message = "상품 고유 번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private Long productId;
-        @NotBlank(message = "상품 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private ProductType productType;
         private String productName;
-        @NotBlank(message = "가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private String price;
     }
 }
