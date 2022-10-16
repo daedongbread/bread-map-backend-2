@@ -5,9 +5,7 @@ import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,9 +18,10 @@ public interface AdminService {
     PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable);
     AdminBakeryDto getBakery(Long bakeryId);
     PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable);
-    BakeryLocationDto getBakeryLatitudeLongitude(String address) throws JsonProcessingException;
+    BakeryLocationDto getBakeryLatitudeLongitude(String address);
     void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
+    void deleteProduct(Long bakeryId, Long productId);
     SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable);
     void deleteBakery(Long bakeryId);
     PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable);
