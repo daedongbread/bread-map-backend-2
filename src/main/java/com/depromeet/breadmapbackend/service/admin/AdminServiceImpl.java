@@ -474,19 +474,21 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
-        if (productImageList.size() > 10) throw new ImageNumExceedException();
-        for(int i = 0; i < request.getProductList().size(); i++) {
-            AddBakeryRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
-            Product product = Product.builder().bakery(bakery).productType(addProductRequest.getProductType())
-                    .name(addProductRequest.getProductName()).price(addProductRequest.getPrice()).build();
-            productRepository.save(product);
+        if(request.getProductList() != null && productImageList != null && request.getProductList().size() != 0) {
+            if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
+            if (productImageList.size() > 10) throw new ImageNumExceedException();
+            for(int i = 0; i < request.getProductList().size(); i++) {
+                AddBakeryRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
+                Product product = Product.builder().bakery(bakery).productType(addProductRequest.getProductType())
+                        .name(addProductRequest.getProductName()).price(addProductRequest.getPrice()).build();
+                productRepository.save(product);
 
-            MultipartFile productImage = productImageList.get(i);
-            if(productImage != null && !productImage.isEmpty()) {
-                String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
-                String image = s3Uploader.upload(productImage, imagePath);
-                product.updateImage(image);
+                MultipartFile productImage = productImageList.get(i);
+                if(productImage != null && !productImage.isEmpty()) {
+                    String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
+                    String image = s3Uploader.upload(productImage, imagePath);
+                    product.updateImage(image);
+                }
             }
         }
     }
