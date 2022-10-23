@@ -45,5 +45,6 @@ public class UpdateBakeryRequest {
         private ProductType productType;
         private String productName;
         private String price;
+        private String existedImage;
     }
 }
