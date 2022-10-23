@@ -312,7 +312,7 @@ class AdminControllerTest extends ControllerTest {
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/admin/bakery")
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
-                .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("productImageList", "newImage", "image/png", (InputStream) null))
                 .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -360,7 +360,7 @@ class AdminControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         UpdateBakeryRequest.UpdateProductRequest.builder()
                                 .productId(product.getId()).productType(ProductType.BREAD)
-                                .productName("testBread").price("12000").build(),//,
+                                .productName("testBread").price("12000").existedImage("image").build(),//,
                         UpdateBakeryRequest.UpdateProductRequest.builder()
                                 .productType(ProductType.BREAD).productName("newBread").price("10000").build()
                 )).build());
@@ -370,7 +370,7 @@ class AdminControllerTest extends ControllerTest {
                 .fileUpload("/admin/bakery/{bakeryId}", bakery.getId())
                 .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
                 .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
-                .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("productImageList", "newImage", "image/png", (InputStream) null))
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -402,6 +402,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
+                                fieldWithPath("productList.[].existedImage").optional().description("상품 기존 이미지 (없으면 null)"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
                                                 "POSTING(\"게시중\"),\n" +
