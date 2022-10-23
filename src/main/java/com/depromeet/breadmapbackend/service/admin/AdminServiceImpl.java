@@ -510,26 +510,28 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
-        if (productImageList.size() > 10) throw new ImageNumExceedException();
-        for(int i = 0; i < request.getProductList().size(); i++) {
-            UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
-            Product product;
-            if(updateProductRequest.getProductId() == null) {
-                product = Product.builder()
-                        .productType(updateProductRequest.getProductType()).bakery(bakery)
-                        .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
-            } else {
-                product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
-                product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
-            }
+        if(request.getProductList() != null && productImageList != null && request.getProductList().size() != 0) {
+            if (request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
+            if (productImageList.size() > 10) throw new ImageNumExceedException();
+            for (int i = 0; i < request.getProductList().size(); i++) {
+                UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
+                Product product;
+                if (updateProductRequest.getProductId() == null) {
+                    product = Product.builder()
+                            .productType(updateProductRequest.getProductType()).bakery(bakery)
+                            .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
+                } else {
+                    product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+                    product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
+                }
 
-            MultipartFile productImage = productImageList.get(i);
-            if(productImage != null && !productImage.isEmpty()) {
-                s3Uploader.deleteFileS3(product.getImage());
-                String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
-                String image = s3Uploader.upload(productImage, imagePath);
-                product.updateImage(image);
+                MultipartFile productImage = productImageList.get(i);
+                if (productImage != null && !productImage.isEmpty()) {
+                    s3Uploader.deleteFileS3(product.getImage());
+                    String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
+                    String image = s3Uploader.upload(productImage, imagePath);
+                    product.updateImage(image);
+                }
             }
         }
     }

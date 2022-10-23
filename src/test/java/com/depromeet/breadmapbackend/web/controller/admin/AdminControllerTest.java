@@ -203,7 +203,7 @@ class AdminControllerTest extends ControllerTest {
     }
 
     @Test
-    void getBakeryDetail() throws Exception {
+    void getBakery() throws Exception {
         mockMvc.perform(get("/admin/bakery/{bakeryId}", bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -236,7 +236,8 @@ class AdminControllerTest extends ControllerTest {
                                         "POSTING(\"게시중\"), UNPOSTING(\"미게시\"))"),
                                 fieldWithPath("data.productList").description("빵집 메뉴"),
                                 fieldWithPath("data.productList.[].productId").description("상품 고유 번호"),
-                                fieldWithPath("data.productList.[].name").description("상품 이름"),
+                                fieldWithPath("data.productList.[].productType").description("상품 타입"),
+                                fieldWithPath("data.productList.[].productName").description("상품 이름"),
                                 fieldWithPath("data.productList.[].price").description("상품 가격"),
                                 fieldWithPath("data.productList.[].image").description("상품 이미지")
                         )
