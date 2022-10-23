@@ -145,7 +145,7 @@ public class BakeryServiceImpl implements BakeryService {
         List<ProductDto> menu = productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
-                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId())*10)/10.0, //TODO
+                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
                         reviewProductRatingRepository.countByProductId(product.getId()))).limit(3).collect(Collectors.toList());
 
 //        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
@@ -168,7 +168,7 @@ public class BakeryServiceImpl implements BakeryService {
         return productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
-                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId())*10)/10.0, //TODO
+                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
                         reviewProductRatingRepository.countByProductId(product.getId()))).limit(3).collect(Collectors.toList());
 
     }

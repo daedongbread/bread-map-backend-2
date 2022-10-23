@@ -474,7 +474,7 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getProductList() != null && productImageList != null && request.getProductList().size() != 0) {
+        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
             if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
             if (productImageList.size() > 10) throw new ImageNumExceedException();
             for(int i = 0; i < request.getProductList().size(); i++) {
@@ -483,8 +483,8 @@ public class AdminServiceImpl implements AdminService{
                         .name(addProductRequest.getProductName()).price(addProductRequest.getPrice()).build();
                 productRepository.save(product);
 
-                MultipartFile productImage = productImageList.get(i);
-                if(productImage != null && !productImage.isEmpty()) {
+                if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) {
+                    MultipartFile productImage = productImageList.get(i);
                     String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
                     String image = s3Uploader.upload(productImage, imagePath);
                     product.updateImage(image);
@@ -510,26 +510,40 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
-        if (productImageList.size() > 10) throw new ImageNumExceedException();
-        for(int i = 0; i < request.getProductList().size(); i++) {
-            UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
-            Product product;
-            if(updateProductRequest.getProductId() == null) {
-                product = Product.builder()
-                        .productType(updateProductRequest.getProductType()).bakery(bakery)
-                        .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
-            } else {
-                product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
-                product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
-            }
+        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
+            if (request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
+            if (productImageList.size() > 10) throw new ImageNumExceedException();
+            for (int i = 0; i < request.getProductList().size(); i++) {
+                UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
+                Product product;
+                if (updateProductRequest.getProductId() == null) { // 새로운 product 일 때
+                    product = Product.builder()
+                            .productType(updateProductRequest.getProductType()).bakery(bakery)
+                            .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
+                } else { // 기존 product 일 때
+                    product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+                    product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
+                }
 
-            MultipartFile productImage = productImageList.get(i);
-            if(productImage != null && !productImage.isEmpty()) {
-                s3Uploader.deleteFileS3(product.getImage());
-                String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
-                String image = s3Uploader.upload(productImage, imagePath);
-                product.updateImage(image);
+                if(request.getProductList().get(i).getExistedImage() != null) { // 기존 product가 이미지를 가지고 있을 때
+                    log.info("D : " + request.getProductList().get(i).getExistedImage());
+                    if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 업데이트 할 때. 기존 이미지 삭제 후 새 이미지 등록
+                        log.info("I : " + productImageList.get(i));
+                        MultipartFile productImage = productImageList.get(i);
+                        s3Uploader.deleteFileS3(product.getImage());
+                        String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
+                        String image = s3Uploader.upload(productImage, imagePath);
+                        product.updateImage(image);
+                    }
+                }
+                else {  // 기존 product가 이미지를 가지고 있지 않을 때
+                    if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 새로운 사진을 등록할 때
+                        MultipartFile productImage = productImageList.get(i);
+                        String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
+                        String image = s3Uploader.upload(productImage, imagePath);
+                        product.updateImage(image);
+                    }
+                }
             }
         }
     }

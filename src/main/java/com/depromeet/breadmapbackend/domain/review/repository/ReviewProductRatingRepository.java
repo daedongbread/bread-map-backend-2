@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ReviewProductRatingRepository extends JpaRepository<ReviewProductRating, Long> {
     @Query("SELECT AVG(rpr.rating) FROM ReviewProductRating rpr WHERE rpr.product.id = ?1")
-    Double findProductAvgRating(Long productId);
+    Optional<Double> findProductAvgRating(Long productId);
     Integer countByProductId(Long productId);
     Optional<ReviewProductRating> findByProductAndReview(Product product, Review review);
     void deleteByProductId(Long productId);
