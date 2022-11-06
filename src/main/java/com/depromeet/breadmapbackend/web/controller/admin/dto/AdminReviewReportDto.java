@@ -19,7 +19,7 @@ public class AdminReviewReportDto {
     private Long reportedReviewId;
     private String content;
     private String createdAt;
-    private ReviewStatus status;
+    private boolean isBlock;
 
     @Builder
     public AdminReviewReportDto(ReviewReport reviewReport) {
@@ -30,6 +30,6 @@ public class AdminReviewReportDto {
         this.reportedReviewId = reviewReport.getReview().getId();
         this.content = reviewReport.getContent();
         this.createdAt = reviewReport.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.status = reviewReport.getReview().getStatus();
+        this.isBlock = reviewReport.getIsBlock();
     }
 }

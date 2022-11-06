@@ -33,11 +33,18 @@ public class ReviewReport extends BaseEntity {
 
     private String content;
 
+    private Boolean isBlock;
+
     @Builder
     public ReviewReport(User reporter, Review review, ReviewReportReason reason, String content) {
         this.reporter = reporter;
         this.review = review;
         this.reason = reason;
         this.content = content;
+        this.isBlock = false;
+    }
+
+    public void changeBlock() {
+        this.isBlock = !this.isBlock;
     }
 }

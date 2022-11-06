@@ -47,7 +47,14 @@ public class AdminController {
         return new ApiResponse<>(adminService.reissue(request));
     }
 
-    @GetMapping("/bakery/all")
+    @GetMapping("/bar")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBarDto> getAdminBar() {
+        return new ApiResponse<>(adminService.getAdminBar());
+    }
+    
+
+    @GetMapping("/bakery")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {

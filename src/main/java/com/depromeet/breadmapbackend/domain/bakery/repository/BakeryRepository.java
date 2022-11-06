@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.repository;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,5 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     List<Bakery> findByNameStartsWith(String name);
     @Query(value = "select b from Bakery b where b.name like %?1%", countQuery = "select count(b) from Bakery b where b.name like %?1%")
     Page<Bakery> findByNameContains(String name, Pageable pageable);
+    Long countByStatus(BakeryStatus status);
 }

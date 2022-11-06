@@ -78,5 +78,5 @@ firebase:
   scope: FIREBASE_SCOPE
 
 sgis:
-  key: sgisKey
-  secret: sgisSecret
+  key: SGIS_KEY
+  secret: SGIS_SECRET

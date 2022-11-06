@@ -5,6 +5,8 @@ import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundExcepti
 import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReportStatus;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
@@ -134,6 +136,15 @@ public class AdminServiceImpl implements AdminService{
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         return reissueToken;
+    }
+
+    @Transactional(readOnly = true)
+    public AdminBarDto getAdminBar() {
+        Integer bakeryReportCount = Math.toIntExact(bakeryAddReportRepository.countByStatus(BakeryAddReportStatus.BEFORE_REFLECT));
+        Integer bakeryCount = Math.toIntExact(bakeryRepository.countByStatus(BakeryStatus.UNPOSTING));
+        Integer reviewReportCount = Math.toIntExact(reviewReportRepository.countByIsBlock(false));
+        return AdminBarDto.builder()
+                .bakeryReportCount(bakeryReportCount).bakeryCount(bakeryCount).reviewReportCount(reviewReportCount).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -604,6 +615,7 @@ public class AdminServiceImpl implements AdminService{
     public void updateReviewStatus(Long reportId) {
         ReviewReport reviewReport = reviewReportRepository.findById(reportId).orElseThrow(ReviewReportNotFoundException::new);
         reviewReport.getReview().useChange();
+        reviewReport.changeBlock();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

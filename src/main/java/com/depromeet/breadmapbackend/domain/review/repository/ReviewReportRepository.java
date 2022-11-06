@@ -11,4 +11,5 @@ public interface ReviewReportRepository extends JpaRepository<ReviewReport, Long
     @Query(value = "select r from ReviewReport r", countQuery = "select count(*) from ReviewReport")
     Page<ReviewReport> findPageAll(Pageable pageable);
     void deleteByReview(Review review);
+    Long countByIsBlock(Boolean isBlock);
 }
