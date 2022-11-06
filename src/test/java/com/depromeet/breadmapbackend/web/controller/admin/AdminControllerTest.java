@@ -170,10 +170,28 @@ class AdminControllerTest extends ControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    void getAdminBar() throws Exception {
+        mockMvc.perform(get("/admin/bar")
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bar",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        responseFields(
+                                fieldWithPath("data.bakeryReportCount").description("`검토전`인 빵집 제보 수"),
+                                fieldWithPath("data.bakeryCount").description("`미게시`인 빵집 수"),
+                                fieldWithPath("data.reviewReportCount").description("숨김 처리하지 않은 리뷰 신고 수")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
 
     @Test
     void getAllBakeryList() throws Exception {
-        mockMvc.perform(get("/admin/bakery/all?page=0")
+        mockMvc.perform(get("/admin/bakery?page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/all",
@@ -586,10 +604,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents.[].reportedReviewId").description("신고된 리뷰 고유 번호"),
                                 fieldWithPath("data.contents.[].content").description("리뷰 신고 내용"),
                                 fieldWithPath("data.contents.[].createdAt").description("리뷰 신고 시간"),
-                                fieldWithPath("data.contents.[].status")
-                                        .description("리뷰 게시 상태" +
-                                                "(BLOCK,\n" +
-                                                "UNBLOCK)")
+                                fieldWithPath("data.contents.[].block").description("리뷰 차단 여부")
                         )
                 ))
                 .andExpect(status().isOk());
