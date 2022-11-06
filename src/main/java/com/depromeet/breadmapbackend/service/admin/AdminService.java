@@ -15,6 +15,7 @@ public interface AdminService {
     void adminJoin(AdminJoinRequest request);
     JwtToken adminLogin(AdminLoginRequest request);
     JwtToken reissue(ReissueRequest reissueRequest);
+    AdminBarDto getAdminBar();
     PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable);
     AdminBakeryDto getBakery(Long bakeryId);
     PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable);

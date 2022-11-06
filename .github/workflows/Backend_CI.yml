@@ -11,9 +11,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
     - name: Set up JDK 11
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v2
       with:
+        distribution: 'adopt'
         java-version: 11
 
     - name: Setting application.yml
@@ -23,6 +25,16 @@ jobs:
       env:
         sgis.key: ${{ secrets.SGIS_KEY }}
         sgis.secret: ${{ secrets.SGIS_SECRET }}
+
+    - name: Cache gradle modules
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
     - name: Build with Gradle
       run: |
