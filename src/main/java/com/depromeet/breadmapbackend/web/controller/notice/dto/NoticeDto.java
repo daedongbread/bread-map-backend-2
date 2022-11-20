@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class NoticeDto {
@@ -12,10 +14,10 @@ public class NoticeDto {
     private String title;
     private Long contentId;
     private String content;
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @Builder
-    public NoticeDto(String image, Long fromUserId, String title, Long contentId, String content, String createdAt) {
+    public NoticeDto(String image, Long fromUserId, String title, Long contentId, String content, LocalDateTime createdAt) {
         this.image = image;
         this.fromUserId = fromUserId;
         this.title = title;
