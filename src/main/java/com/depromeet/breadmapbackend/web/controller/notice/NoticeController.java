@@ -25,18 +25,6 @@ public class NoticeController {
         noticeService.addNoticeToken(username, request);
     }
 
-    @PatchMapping("/token")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateNoticeToken(@CurrentUser String username, @RequestBody UpdateNoticeTokenRequest request) {
-        noticeService.updateNoticeToken(username, request);
-    }
-
-    @DeleteMapping("/token")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteNoticeToken(@CurrentUser String username, @RequestBody NoticeTokenRequest request) {
-        noticeService.deleteNoticeToken(username, request);
-    }
-
     @GetMapping("/token/alarm")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<NoticeTokenAlarmDto> getNoticeTokenAlarm(@CurrentUser String username, @RequestBody NoticeTokenRequest request) {

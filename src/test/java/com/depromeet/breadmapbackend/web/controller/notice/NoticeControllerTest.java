@@ -81,59 +81,6 @@ class NoticeControllerTest extends ControllerTest {
     }
 
     @Test
-    void updateNoticeToken() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(UpdateNoticeTokenRequest.builder()
-                .oldDeviceToken(noticeToken.getDeviceToken()).newDeviceToken("newDeviceToken").build());
-
-        // when
-        ResultActions result = mockMvc.perform(patch("/notice/token")
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("notice/token/update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(
-                                fieldWithPath("oldDeviceToken").description("이전 디바이스 토큰"),
-                                fieldWithPath("newDeviceToken").description("새 디바이스 토큰")
-                        )
-                ))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void deleteNoticeToken() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(
-                NoticeTokenRequest.builder().deviceToken(noticeToken.getDeviceToken()).build());
-
-        // when
-        ResultActions result = mockMvc.perform(delete("/notice/token")
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("notice/token/delete",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰"))
-                ))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
     void getNoticeTokenAlarm() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(

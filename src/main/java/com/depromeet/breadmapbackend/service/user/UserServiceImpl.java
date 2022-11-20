@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.service.user;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
+import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
@@ -133,8 +134,7 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
 
         // 알람 가지 않게 처리
-        NoticeToken noticeToken = noticeTokenRepository.findByDeviceToken(request.getDeviceToken()).orElseThrow(NoticeTokenNotFoundException::new);
-        noticeTokenRepository.delete(noticeToken);
+        eventPublisher.publishEvent(new NoticeTokenDeleteEvent(username, request.getDeviceToken()));
 
         // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
         if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_REFRESH + username))) {
