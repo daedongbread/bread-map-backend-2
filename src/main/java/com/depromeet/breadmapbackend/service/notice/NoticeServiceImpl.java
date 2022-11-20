@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.service.notice;
 
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
+import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
@@ -20,7 +21,6 @@ import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeDto;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.UpdateNoticeTokenRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -42,6 +42,8 @@ public class NoticeServiceImpl implements NoticeService{
     private final UserRepository userRepository;
     private final NoticeTokenRepository noticeTokenRepository;
 
+    private final FcmService fcmService;
+
     private String commentImage = "noticeImage/comment.jpg";
     private String likeImage = "noticeImage/like.jpg";
     private String reportImage = "noticeImage/report.jpg";
@@ -56,20 +58,12 @@ public class NoticeServiceImpl implements NoticeService{
         noticeTokenRepository.save(noticeToken);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void updateNoticeToken(String username, UpdateNoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getOldDeviceToken()).isPresent()) {
-            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, request.getOldDeviceToken()).get();
-            noticeToken.updateDeviceToken(request.getNewDeviceToken());
-        } else throw new NoticeTokenNotFoundException();
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteNoticeToken(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
-            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get();
+    @Async
+    @TransactionalEventListener
+    public void deleteNoticeToken(NoticeTokenDeleteEvent event) {
+        User user = userRepository.findByUsername(event.getUsername()).orElseThrow(UserNotFoundException::new);
+        if(noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).isPresent()) {
+            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).get();
             noticeTokenRepository.delete(noticeToken);
         } else throw new NoticeTokenNotFoundException();
     }
@@ -97,11 +91,13 @@ public class NoticeServiceImpl implements NoticeService{
     public void addFollowNotice(FollowEvent event) { // 팔로우 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(UserNotFoundException::new);
+        // TODO : User 정보로 NoticeToken들 가져오기
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title(fromUser.getNickName() + "님이 회원님을 팔로우하기 시작했어요")
                 .type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice);
+//        fcmService.sendMessageTo(event.g(), ); // TODO : for로 메시지 보내기... 근데 단체로 보내기 있지 않나
     }
 
     @Async
@@ -206,7 +202,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .map(notice -> NoticeDto.builder()
                         .image(noticeImage(notice)).title(notice.getTitle()).fromUserId(notice.getFromUser().getId())
                         .contentId(notice.getContentId()).content(notice.getContent())
-                        .createdAt(createAt(notice.getCreatedAt())).build())
+                        .createdAt(notice.getCreatedAt()).build())
                 .collect(Collectors.toList());
     }
 
@@ -223,7 +219,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .map(notice -> NoticeDto.builder()
                         .image(noticeImage(notice)).title(notice.getTitle()).fromUserId(notice.getFromUser().getId())
                         .contentId(notice.getContentId()).content(notice.getContent())
-                        .createdAt(createAt(notice.getCreatedAt())).build())
+                        .createdAt(notice.getCreatedAt()).build())
                 .collect(Collectors.toList());
     }
 
@@ -237,7 +233,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .map(notice -> NoticeDto.builder()
                         .image(noticeImage(notice)).title(notice.getTitle()).fromUserId(notice.getFromUser().getId())
                         .contentId(notice.getContentId()).content(notice.getContent())
-                        .createdAt(createAt(notice.getCreatedAt())).build())
+                        .createdAt(notice.getCreatedAt()).build())
                 .collect(Collectors.toList());
     }
 

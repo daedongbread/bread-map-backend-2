@@ -86,6 +86,7 @@ firebase:
   url: ${FIREBASE_URL}
   path: ${FIREBASE_PATH}
   scope: ${FIREBASE_SCOPE}
+  projectId: ${FIREBASE_PROJECTID}
 
 sgis:
   key: ${SGIS_KEY}
