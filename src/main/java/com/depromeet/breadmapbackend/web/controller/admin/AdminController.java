@@ -120,7 +120,7 @@ public class AdminController {
         adminService.deleteBakery(bakeryId);
     }
 
-    @GetMapping("/bakery/report/all")
+    @GetMapping("/bakery/report")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryReportList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -139,7 +139,7 @@ public class AdminController {
         adminService.updateBakeryAddReportStatus(reportId, request);
     }
 
-    @GetMapping("/review/report/all")
+    @GetMapping("/review/report")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminReviewReportDto>> getReviewReportList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -152,7 +152,7 @@ public class AdminController {
         adminService.updateReviewStatus(reportId);
     }
 
-    @GetMapping("/user/all")
+    @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminUserDto>> getUserList(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {

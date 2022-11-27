@@ -489,7 +489,7 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void getBakeryReportList() throws Exception {
-        mockMvc.perform(get("/admin/bakery/report/all?page=0")
+        mockMvc.perform(get("/admin/bakery/report?page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakeryReport/all",
@@ -574,7 +574,7 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void getReviewReportList() throws Exception {
-        mockMvc.perform(get("/admin/review/report/all?page=0")
+        mockMvc.perform(get("/admin/review/report?page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/reviewReport/all",
@@ -627,7 +627,7 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void getUserList() throws Exception {
-        mockMvc.perform(get("/admin/user/all?page=0")
+        mockMvc.perform(get("/admin/user?page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/user/all",
