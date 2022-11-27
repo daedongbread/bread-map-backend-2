@@ -123,28 +123,32 @@ public class ReviewServiceImpl implements ReviewService {
                 .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
         reviewRepository.save(review);
 
-        request.getProductRatingList().forEach(breadRatingRequest -> {
-            Product product = productRepository.findById(breadRatingRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
-            if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
+        if(request.getProductRatingList() != null) {
+            request.getProductRatingList().forEach(productRatingRequest -> {
+                Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+                if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
+                    ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
+                            .product(product).review(review).rating(productRatingRequest.getRating()).build();
+                    reviewProductRatingRepository.save(reviewProductRating);
+                    review.addRating(reviewProductRating);
+                }
+            });
+        }
+
+        if(request.getNoExistProductRatingRequestList() != null) {
+            request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
+                if(productRepository.findByName(noExistProductRatingRequest.getProductName()).isPresent())
+                    throw new ProductAlreadyException();
+                Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
+                        .name(noExistProductRatingRequest.getProductName())
+                        .price("0").bakery(bakery).image(null).isTrue(false).build();
+                productRepository.save(product);
                 ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
-                        .product(product).review(review).rating(breadRatingRequest.getRating()).build();
+                        .product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
                 reviewProductRatingRepository.save(reviewProductRating);
                 review.addRating(reviewProductRating);
-            }
-        });
-
-        request.getNoExistProductRatingRequestList().forEach(noExistBreadRatingRequest -> {
-            if(productRepository.findByName(noExistBreadRatingRequest.getProductName()).isPresent())
-                throw new ProductAlreadyException();
-            Product product = Product.builder().productType(noExistBreadRatingRequest.getProductType())
-                    .name(noExistBreadRatingRequest.getProductName())
-                    .price("0").bakery(bakery).image(null).isTrue(false).build();
-            productRepository.save(product);
-            ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
-                    .product(product).review(review).rating(noExistBreadRatingRequest.getRating()).build();
-            reviewProductRatingRepository.save(reviewProductRating);
-            review.addRating(reviewProductRating);
-        });
+            });
+        }
 
         return ReviewAddDto.builder().reviewId(review.getId()).build();
     }
