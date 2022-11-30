@@ -17,7 +17,7 @@ public class SimpleUserDto {
     @Builder
     public SimpleUserDto(User user, Integer reviewNum, Integer followerNum) {
         this.userId = user.getId();
-        this.userImage = user.getProfileImageUrl();
+        this.userImage = user.getImage();
         this.nickName = user.getNickName();
         this.reviewNum = reviewNum;
         this.followerNum = followerNum;

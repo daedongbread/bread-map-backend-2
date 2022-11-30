@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    private String profileImageUrl; //TODO : 이름 변경
+    private String image;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flag> flagList = new ArrayList<>();
@@ -46,14 +46,14 @@ public class User extends BaseEntity {
 
     @Builder
     private User(String username, String nickName, String email, Gender gender,
-                 ProviderType providerType, RoleType roleType, String profileImageUrl) {
+                 ProviderType providerType, RoleType roleType, String image) {
         this.username = username;
         this.nickName = nickName;
         this.email = email;
         this.gender = gender;
         this.providerType = providerType;
         this.roleType = roleType;
-        this.profileImageUrl = profileImageUrl;
+        this.image = image;
         this.status = UserStatus.UNBLOCK;
     }
 
@@ -61,8 +61,8 @@ public class User extends BaseEntity {
         this.nickName = nickName;
     }
 
-    public void updateProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void updateImage(String image) {
+        this.image = image;
     }
 
     public void addFlag(Flag flag) {

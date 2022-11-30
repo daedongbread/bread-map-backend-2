@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -33,11 +35,12 @@ public class UserController {
         return new ApiResponse<>(userService.profile(username, userId));
     }
 
-    @PatchMapping("/nickname")
+    @PostMapping("/nickname")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateNickName(@CurrentUser String username,
-                               @RequestBody @Validated(ValidationSequence.class) UpdateNickNameRequest request) {
-        userService.updateNickName(username, request);
+                               @RequestPart @Validated(ValidationSequence.class) UpdateNickNameRequest request,
+                               @RequestPart(required = false) MultipartFile file) throws IOException {
+        userService.updateNickName(username, request, file);
     }
 
     @PostMapping("/logout")

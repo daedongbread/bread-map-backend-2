@@ -27,7 +27,7 @@ public class ProfileDto {
             List<UserFlagDto> userFlagList, List<UserReviewDto> userReviewList,
             Boolean isMe, Boolean isFollow) {
         this.userId = user.getId();
-        this.userImage = user.getProfileImageUrl();
+        this.userImage = user.getImage();
         this.nickName = user.getNickName();
         this.followingNum = followingNum;
         this.followerNum = followerNum;
