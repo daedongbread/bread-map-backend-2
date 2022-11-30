@@ -149,7 +149,7 @@ class UserControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void profile() throws Exception {
-        mockMvc.perform(get("/user/profile")
+        mockMvc.perform(get("/user/{userId}/profile", user1.getId())
                 .header("Authorization", "Bearer " + token1.getAccessToken()))
                 .andDo(print())
                 .andDo(document("user/profile",
@@ -162,6 +162,8 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.nickName").description("유저 닉네임"),
                                 fieldWithPath("data.followerNum").description("유저 팔로워 수"),
                                 fieldWithPath("data.followingNum").description("유저 팔로잉 수"),
+                                fieldWithPath("data.isMe").description("본인 여부"),
+                                fieldWithPath("data.isFollow").description("유저 팔로우 여부"),
                                 fieldWithPath("data.userFlagList").description("유저 깃발 리스트"),
                                 fieldWithPath("data.userFlagList.[].flagId").description("유저 깃발 고유번호"),
                                 fieldWithPath("data.userFlagList.[].name").description("유저 깃발 이름"),

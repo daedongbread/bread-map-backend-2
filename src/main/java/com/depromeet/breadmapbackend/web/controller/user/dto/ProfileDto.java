@@ -15,12 +15,17 @@ public class ProfileDto {
     private String nickName;
     private Integer followingNum;
     private Integer followerNum;
+    private Boolean isMe;
+    private Boolean isFollow;
 
     private List<UserFlagDto> userFlagList;
     private List<UserReviewDto> userReviewList;
 
     @Builder
-    public ProfileDto(User user, Integer followingNum, Integer followerNum, List<UserFlagDto> userFlagList, List<UserReviewDto> userReviewList) {
+    public ProfileDto(
+            User user, Integer followingNum, Integer followerNum,
+            List<UserFlagDto> userFlagList, List<UserReviewDto> userReviewList,
+            Boolean isMe, Boolean isFollow) {
         this.userId = user.getId();
         this.userImage = user.getProfileImageUrl();
         this.nickName = user.getNickName();
@@ -28,5 +33,7 @@ public class ProfileDto {
         this.followerNum = followerNum;
         this.userFlagList = userFlagList;
         this.userReviewList = userReviewList;
+        this.isMe = isMe;
+        this.isFollow = isFollow;
     }
 }

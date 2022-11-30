@@ -94,26 +94,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ProfileDto profile(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Integer followingNum = followRepository.countByToUser(user);
-        Integer followerNum = followRepository.countByFromUser(user);
-        List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
+    public ProfileDto profile(String username, Long userId) {
+        User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User other = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Boolean isMe = me.equals(other);
+        Integer followingNum = followRepository.countByToUser(other);
+        Integer followerNum = followRepository.countByFromUser(other);
+        Boolean isFollow = followRepository.findByFromUserAndToUser(me, other).isPresent();
+        List<UserFlagDto> userFlagList = flagRepository.findByUser(other).stream()
                 .map(flag -> UserFlagDto.builder()
                         .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
                         .flagImageList(flag.getFlagBakeryList().stream().limit(3)
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
                                 .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
-        List<UserReviewDto> userReviewList = reviewRepository.findByUser(user)
+        List<UserReviewDto> userReviewList = reviewRepository.findByUser(other)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
                 .map(UserReviewDto::new)
                 .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
                 .collect(Collectors.toList());
 
-        return ProfileDto.builder().user(user)
+        return ProfileDto.builder().user(other)
                 .followingNum(followingNum).followerNum(followerNum)
-                .userFlagList(userFlagList).userReviewList(userReviewList).build();
+                .userFlagList(userFlagList).userReviewList(userReviewList)
+                .isMe(isMe).isFollow(isFollow).build();
     }
 
     @Transactional(rollbackFor = Exception.class)

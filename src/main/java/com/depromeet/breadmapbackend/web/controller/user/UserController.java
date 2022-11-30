@@ -27,10 +27,10 @@ public class UserController {
         return new ApiResponse<>(userService.reissue(request));
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/{userId}/profile")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ProfileDto> profile(@CurrentUser String username) {
-        return new ApiResponse<>(userService.profile(username));
+    public ApiResponse<ProfileDto> profile(@CurrentUser String username, @PathVariable Long userId) {
+        return new ApiResponse<>(userService.profile(username, userId));
     }
 
     @PatchMapping("/nickname")
