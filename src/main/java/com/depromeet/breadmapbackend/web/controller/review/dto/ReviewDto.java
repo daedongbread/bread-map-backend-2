@@ -34,7 +34,7 @@ public class ReviewDto {
     public ReviewDto(Review review, Integer reviewNum, Integer followerNum) {
         this.id = review.getId();
         this.userId = review.getUser().getId();
-        this.userImage = review.getUser().getProfileImageUrl();
+        this.userImage = review.getUser().getImage();
         this.nickName = review.getUser().getNickName();
         this.reviewNum = reviewNum; //TODO : User에 List<Review>?
         this.followerNum = followerNum;
