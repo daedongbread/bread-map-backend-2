@@ -3,13 +3,15 @@ package com.depromeet.breadmapbackend.service.user;
 
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
     JwtToken reissue(ReissueRequest reissueRequest);
-    ProfileDto profile(String username);
-    void updateNickName(String username, UpdateNickNameRequest request);
+    ProfileDto profile(String username, Long userId);
+    void updateNickName(String username, UpdateNickNameRequest request, MultipartFile file) throws IOException;
     void logout(LogoutRequest reissueRequest);
     void deleteUser(String username);
     void follow(String username, FollowRequest request);

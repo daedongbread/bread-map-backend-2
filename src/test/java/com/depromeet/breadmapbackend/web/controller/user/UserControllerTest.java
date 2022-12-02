@@ -24,9 +24,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -36,7 +39,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,7 +87,7 @@ class UserControllerTest extends ControllerTest {
         Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
 
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user1).build();
         flagBakeryRepository.save(flagBakery);
 
         Review review = Review.builder().user(user1).bakery(bakery).content("content1").build();
@@ -149,7 +153,7 @@ class UserControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void profile() throws Exception {
-        mockMvc.perform(get("/user/profile")
+        mockMvc.perform(get("/user/{userId}/profile", user1.getId())
                 .header("Authorization", "Bearer " + token1.getAccessToken()))
                 .andDo(print())
                 .andDo(document("user/profile",
@@ -162,6 +166,8 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.nickName").description("유저 닉네임"),
                                 fieldWithPath("data.followerNum").description("유저 팔로워 수"),
                                 fieldWithPath("data.followingNum").description("유저 팔로잉 수"),
+                                fieldWithPath("data.isMe").description("본인 여부"),
+                                fieldWithPath("data.isFollow").description("유저 팔로우 여부"),
                                 fieldWithPath("data.userFlagList").description("유저 깃발 리스트"),
                                 fieldWithPath("data.userFlagList.[].flagId").description("유저 깃발 고유번호"),
                                 fieldWithPath("data.userFlagList.[].name").description("유저 깃발 이름"),
@@ -188,11 +194,15 @@ class UserControllerTest extends ControllerTest {
     void updateNickName() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("testNickName3").build());
+        MockMultipartFile request =
+                new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         // when
-        ResultActions result = mockMvc.perform(patch("/user/nickname")
+        ResultActions result = mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload(("/user/nickname"))
+                .file(new MockMultipartFile("file", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token1.getAccessToken())
-                .content(object)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -203,7 +213,12 @@ class UserControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(
+                        requestParts(
+                                partWithName("request").description("변경 닉네임 정보"),
+                                partWithName("file").description("변경 유저 이미지")
+                        ),
+                        requestPartBody("request"),
+                        requestPartFields("request",
                                 fieldWithPath("nickName").description("변경할 닉네임")
                         )
                 ))

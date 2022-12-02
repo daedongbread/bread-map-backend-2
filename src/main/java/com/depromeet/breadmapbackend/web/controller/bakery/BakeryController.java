@@ -33,7 +33,7 @@ public class BakeryController {
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<BakeryFilterCardDto>> findBakeryListByFilter(
+    public ApiResponse<List<BakeryCardDto>> findBakeryListByFilter(
             @CurrentUser String username, @RequestParam BakerySortType sort,
             @RequestParam Double latitude, @RequestParam Double longitude,
             @RequestParam Double latitudeDelta, @RequestParam Double longitudeDelta) {

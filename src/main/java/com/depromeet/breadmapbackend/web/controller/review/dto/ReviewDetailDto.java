@@ -46,7 +46,7 @@ public class ReviewDetailDto {
         this.bakeryAddress = review.getBakery().getAddress();
         this.id = review.getId();
         this.userId = review.getUser().getId();
-        this.userImage = review.getUser().getProfileImageUrl();
+        this.userImage = review.getUser().getImage();
         this.nickName = review.getUser().getNickName();
         this.reviewNum = reviewNum;
         this.followerNum = followerNum;

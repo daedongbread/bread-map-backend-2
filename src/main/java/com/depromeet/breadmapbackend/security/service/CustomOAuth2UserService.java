@@ -58,8 +58,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
 
         User user = null;
         if (userRepository.findByUsername(username).isPresent()) {
-            user = userRepository.findByUsername(username).get();
-            updateUser(user, oAuth2UserInfo);
+//            user = userRepository.findByUsername(username).get();
+//            updateUser(user, oAuth2UserInfo);
         } else {
             user = createUser(oAuth2UserInfo, providerType);
         }
@@ -94,7 +94,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
                 .email(oAuth2UserInfo.getEmail())
                 .providerType(providerType)
                 .roleType(RoleType.USER)
-                .profileImageUrl(oAuth2UserInfo.getImageUrl())
+                .image(oAuth2UserInfo.getImageUrl())
                 .build();
 
         Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
@@ -108,15 +108,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
         return user;
     }
 
-    private User updateUser(User user, OAuth2UserInfo oAuth2UserInfo) {
+//    private User updateUser(User user, OAuth2UserInfo oAuth2UserInfo) {
 //        if (oAuth2UserInfo.getNickName() != null && !user.getUsername().equals(oAuth2UserInfo.getNickName())) {
 //            user.updateNickName(oAuth2UserInfo.getNickName());
 //        }
 
-        if (oAuth2UserInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(oAuth2UserInfo.getImageUrl())) {
-            user.updateProfileImageUrl(oAuth2UserInfo.getImageUrl());
-        }
-        return user;
-    }
+//        if (oAuth2UserInfo.getImageUrl() != null && !user.getImage().equals(oAuth2UserInfo.getImageUrl())) {
+//            user.updateImage(oAuth2UserInfo.getImageUrl());
+//        }
+//        return user;
+//    }
 
 }

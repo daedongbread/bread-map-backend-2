@@ -10,7 +10,8 @@ public enum ImageType {
     PRODUCT_IMAGE("productImage"),
     REVIEW_IMAGE("reviewImage"),
     BAKERY_DELETE_REPORT_IMAGE("bakeryDeleteReportImage"),
-    PRODUCT_ADD_REPORT_IMAGE("productAddReportImage");
+    PRODUCT_ADD_REPORT_IMAGE("productAddReportImage"),
+    USER_IMAGE("userImage");
 
     private final String code;
 }

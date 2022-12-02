@@ -32,7 +32,7 @@ public class ReviewCommentDto {
         this.id = reviewComment.getId();
         if(reviewComment.getUser() != null) {
             this.userId = reviewComment.getUser().getId();
-            this.userImage = reviewComment.getUser().getProfileImageUrl();
+            this.userImage = reviewComment.getUser().getImage();
             this.nickName = reviewComment.getUser().getNickName();
         }
         else {

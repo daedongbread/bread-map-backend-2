@@ -135,7 +135,8 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].simpleReviewList.[].id").description("빵집 리뷰 아이디"),
                                 fieldWithPath("data.[].simpleReviewList.[].content").description("빵집 리뷰 내용"),
                                 fieldWithPath("data.[].distance").description("빵집까지 거리"),
-                                fieldWithPath("data.[].popularNum").description("빵집 인기수")
+                                fieldWithPath("data.[].popularNum").description("빵집 인기수"),
+                                fieldWithPath("data.[].color").description("빵집 깃발 색깔 (오렌지 색)")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -147,7 +148,7 @@ class BakeryControllerTest extends ControllerTest {
         Flag flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery1).build();
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery1).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
         mockMvc.perform(get("/bakery/filter?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")

@@ -253,7 +253,7 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     private String noticeImage(Notice notice) {
-        if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getProfileImageUrl();
+        if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getImage();
         else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
             return commentImage;
         else if(notice.getType().equals(NoticeType.REVIEW_LIKE) || notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))

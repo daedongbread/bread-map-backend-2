@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.service.user;
 
+import com.depromeet.breadmapbackend.domain.common.ImageType;
+import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
@@ -23,6 +25,7 @@ import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +37,9 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -60,6 +65,8 @@ public class UserServiceImpl implements UserService {
     private final BlockUserRepository blockUserRepository;
     private final StringRedisTemplate redisTemplate;
     private final ApplicationEventPublisher eventPublisher;
+    private final FileConverter fileConverter;
+    private final S3Uploader s3Uploader;
 
     @Value("${spring.redis.key.delete}")
     private String REDIS_KEY_DELETE;
@@ -94,35 +101,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ProfileDto profile(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Integer followingNum = followRepository.countByToUser(user);
-        Integer followerNum = followRepository.countByFromUser(user);
-        List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
+    public ProfileDto profile(String username, Long userId) {
+        User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User other = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Boolean isMe = me.equals(other);
+        Integer followingNum = followRepository.countByToUser(other);
+        Integer followerNum = followRepository.countByFromUser(other);
+        Boolean isFollow = followRepository.findByFromUserAndToUser(me, other).isPresent();
+        List<UserFlagDto> userFlagList = flagRepository.findByUser(other).stream()
                 .map(flag -> UserFlagDto.builder()
                         .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
                         .flagImageList(flag.getFlagBakeryList().stream().limit(3)
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
                                 .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
-        List<UserReviewDto> userReviewList = reviewRepository.findByUser(user)
+        List<UserReviewDto> userReviewList = reviewRepository.findByUser(other)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
                 .map(UserReviewDto::new)
                 .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
                 .collect(Collectors.toList());
 
-        return ProfileDto.builder().user(user)
+        return ProfileDto.builder().user(other)
                 .followingNum(followingNum).followerNum(followerNum)
-                .userFlagList(userFlagList).userReviewList(userReviewList).build();
+                .userFlagList(userFlagList).userReviewList(userReviewList)
+                .isMe(isMe).isFollow(isFollow).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateNickName(String username, UpdateNickNameRequest request) {
+    public void updateNickName(String username, UpdateNickNameRequest request, MultipartFile file) throws IOException {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if (userRepository.findByNickName(request.getNickName()).isEmpty()) {
             user.updateNickName(request.getNickName());
         }
         else throw new NickNameAlreadyException();
+
+        if (!file.isEmpty()) {
+            String imagePath = fileConverter.parseFileInfo(file, ImageType.USER_IMAGE, user.getId());
+            String image = s3Uploader.upload(file, imagePath);
+            user.updateImage(image);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
