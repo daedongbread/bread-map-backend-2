@@ -20,11 +20,11 @@ public class ReviewImage extends BaseEntity {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 

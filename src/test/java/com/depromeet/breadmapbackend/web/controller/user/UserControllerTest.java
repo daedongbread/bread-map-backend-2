@@ -87,7 +87,7 @@ class UserControllerTest extends ControllerTest {
         Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
 
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user1).build();
         flagBakeryRepository.save(flagBakery);
 
         Review review = Review.builder().user(user1).bakery(bakery).content("content1").build();

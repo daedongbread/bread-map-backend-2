@@ -29,7 +29,7 @@ public class BakeryAddReport extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BakeryAddReportStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 

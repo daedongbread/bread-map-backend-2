@@ -8,6 +8,9 @@ import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
 import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.flag.exception.FlagBakeryNotFoundException;
+import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.product.ProductAddReport;
@@ -49,6 +52,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final FlagRepositorySupport flagRepositorySupport;
+    private final FlagBakeryRepository flagBakeryRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
@@ -81,49 +85,44 @@ public class BakeryServiceImpl implements BakeryService {
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
+                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
+                        .color(FlagColor.ORANGE)
+                        .build())
                 .sorted(comparing)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<BakeryFilterCardDto> findBakeryListByFilter
+    public List<BakeryCardDto> findBakeryListByFilter
             (String username, Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
 
-        Comparator<BakeryFilterCardDto> comparing;
-        if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryFilterCardDto::getDistance);
-        else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryFilterCardDto::getPopularNum).reversed();
+        Comparator<BakeryCardDto> comparing;
+        if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
+        else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new BakerySortTypeWrongException();
 
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        List<Bakery> bakeryList = bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude - latitudeDelta / 2, latitude + latitudeDelta / 2, longitude - longitudeDelta / 2, longitude + longitudeDelta / 2).stream()
-                .filter(bakery -> flagRepositorySupport.existFlagBakeryByUserAndBakery(user, bakery))
-                .collect(Collectors.toList());
-
-        List<BakeryFilterCardDto> bakeryFilterCardDtoList = new ArrayList<>();
-        for(Bakery b : bakeryList) {
-            FlagBakery flagBakery = flagRepositorySupport.findFlagBakeryByUserAndBakery(user, b);
-            Bakery bakery = flagBakery.getBakery();
-            bakeryFilterCardDtoList.add(BakeryFilterCardDto.builder()
-                    .bakery(bakery)
-                    .rating(Math.floor(bakery.getReviewList()
-                            .stream().map(br -> Math.floor(br.getRatings()
-                                    .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
-                                    .orElse(0)*10)/ 10.0).collect(Collectors.toList())
-                            .stream().mapToDouble(Double::doubleValue)
-                            .average().orElse(0)*10)/10.0)
-                    .reviewNum(bakery.getReviewList().size())
-                    .simpleReviewList(bakery.getReviewList().stream()
-                            .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
-                            .limit(3).collect(Collectors.toList()))
-                    .distance(Math.floor(acos(cos(toRadians(latitude))
-                            * cos(toRadians(bakery.getLatitude()))
-                            * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                            + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
-                    .color(flagBakery.getFlag().getColor()).build());
-        }
-        return bakeryFilterCardDtoList.stream()
+        return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
+                .map(bakery -> BakeryCardDto.builder()
+                        .bakery(bakery)
+                        .rating(Math.floor(bakery.getReviewList()
+                                .stream().map(br -> Math.floor(br.getRatings()
+                                        .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
+                                        .orElse(0)*10)/ 10.0).collect(Collectors.toList())
+                                .stream().mapToDouble(Double::doubleValue)
+                                .average().orElse(0)*10)/10.0)
+                        .reviewNum(bakery.getReviewList().size())
+                        .simpleReviewList(bakery.getReviewList().stream()
+                                .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
+                                .limit(3).collect(Collectors.toList()))
+                        .distance(floor(acos(cos(toRadians(latitude))
+                                * cos(toRadians(bakery.getLatitude()))
+                                * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
+                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
+                        .color(flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).isPresent() ?
+                                flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).get().getColor():FlagColor.ORANGE)
+                        .build())
                 .sorted(comparing)
                 .collect(Collectors.toList());
     }
