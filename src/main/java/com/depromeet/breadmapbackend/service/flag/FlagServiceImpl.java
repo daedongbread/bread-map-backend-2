@@ -113,20 +113,19 @@ public class FlagServiceImpl implements FlagService {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
 
-        List<Flag> flagList = flagRepository.findByUser(user);
-        for(Flag f : flagList) {
-            if(flagBakeryRepository.findBakeryByFlag(f).contains(bakery)) {
-                FlagBakery flagBakery = flagBakeryRepository.findByFlagAndBakery(f, bakery).get();
-                if(flagBakery.getFlag().getName().equals("가봤어요")) bakery.minusFlagNum();
-                f.removeFlagBakery(flagBakery);
-                flagBakeryRepository.delete(flagBakery);
-                break;
-            }
+        Flag flag = flagRepository.findById(flagId).orElseThrow(FlagNotFoundException::new);
+
+        if(flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).isPresent()) throw new FlagBakeryAlreadyException();
+
+        if(flagBakeryRepository.findByBakeryAndUser(bakery, user).isPresent()) {
+            FlagBakery flagBakery = flagBakeryRepository.findByBakeryAndUser(bakery, user).get();
+            if(flagBakery.getFlag().getName().equals("가봤어요")) bakery.minusFlagNum();
+            flagBakery.getFlag().removeFlagBakery(flagBakery);
+            flagBakeryRepository.delete(flagBakery); // TODO : 수정 가능할듯
         }
 
-        Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
-
+        FlagBakery flagBakery = FlagBakery.builder()
+                .flag(flag).bakery(bakery).user(user).color(flag.getColor()).build();
         if(flag.getName().equals("가봤어요")) bakery.addFlagNum();
         flagBakeryRepository.save(flagBakery);
         flag.addFlagBakery(flagBakery);

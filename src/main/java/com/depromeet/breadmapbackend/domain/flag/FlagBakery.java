@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.flag;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,9 +26,19 @@ public class FlagBakery extends BaseEntity {
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private FlagColor color;
+
     @Builder
-    public FlagBakery(Flag flag, Bakery bakery) {
+    public FlagBakery(Flag flag, Bakery bakery, User user, FlagColor color) {
         this.flag = flag;
         this.bakery = bakery;
+        this.user = user;
+        this.color = color;
     }
 }
