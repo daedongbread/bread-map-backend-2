@@ -30,15 +30,10 @@ public class FlagBakery extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
-    private FlagColor color;
-
     @Builder
-    public FlagBakery(Flag flag, Bakery bakery, User user, FlagColor color) {
+    public FlagBakery(Flag flag, Bakery bakery, User user) {
         this.flag = flag;
         this.bakery = bakery;
         this.user = user;
-        this.color = color;
     }
 }

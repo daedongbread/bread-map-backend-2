@@ -125,7 +125,7 @@ public class FlagServiceImpl implements FlagService {
         }
 
         FlagBakery flagBakery = FlagBakery.builder()
-                .flag(flag).bakery(bakery).user(user).color(flag.getColor()).build();
+                .flag(flag).bakery(bakery).user(user).build();
         if(flag.getName().equals("가봤어요")) bakery.addFlagNum();
         flagBakeryRepository.save(flagBakery);
         flag.addFlagBakery(flagBakery);

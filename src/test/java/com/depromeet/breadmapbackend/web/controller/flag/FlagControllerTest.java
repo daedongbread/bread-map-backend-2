@@ -113,7 +113,7 @@ class FlagControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findFlags() throws Exception {
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
         mockMvc.perform(get("/flag")
@@ -230,7 +230,7 @@ class FlagControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findBakeryByFlag() throws Exception {
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
         mockMvc.perform(get("/flag/{flagId}", flag.getId())
@@ -277,7 +277,7 @@ class FlagControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void removeBakeryToFlag() throws Exception {
-        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).build();
+        FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
         mockMvc.perform(delete("/flag/{flagId}/{flagBakeryId}", flag.getId(), flagBakery.getId())

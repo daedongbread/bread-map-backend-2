@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface BakeryService {
     List<BakeryCardDto> findBakeryList(Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
-    List<BakeryFilterCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
+    List<BakeryCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
     BakeryDto findBakery(Long bakeryId);
     List<ProductDto> findProductList(Long bakeryId);
     void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request);
