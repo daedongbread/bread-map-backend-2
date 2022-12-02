@@ -24,15 +24,15 @@ public class ReviewProductRating extends BaseEntity{
 //    @JoinColumn(name = "user_id")
 //    private User user;
 //
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, optional = false)
     @JoinColumn(name = "review_id")
     private Review review;
 
