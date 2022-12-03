@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.security.token;
 
+import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
 import io.jsonwebtoken.*;
@@ -80,7 +81,7 @@ public class JwtTokenProvider {
         } catch (IllegalArgumentException e) {
             log.error("잘못된 토큰입니다.");
         }
-        return false;
+        throw new CAuthenticationEntryPointException();
     }
 
     private Claims parseClaims(String token) {
@@ -99,7 +100,7 @@ public class JwtTokenProvider {
 
         // 권한 정보가 없음
         if (claims.get(ROLES) == null) {
-            throw new CAuthenticationEntryPointException();
+            throw new CAccessDeniedException();
         }
 
         Collection<? extends GrantedAuthority> authorities =
