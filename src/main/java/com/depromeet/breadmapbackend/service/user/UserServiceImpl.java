@@ -101,10 +101,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ProfileDto profile(String username, Long userId) {
+    public ProfileDto myProfile(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        Integer followingNum = followRepository.countByToUser(user);
+        Integer followerNum = followRepository.countByFromUser(user);
+
+        List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
+                .map(flag -> UserFlagDto.builder()
+                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
+                        .flagImageList(flag.getFlagBakeryList().stream().limit(3)
+                                .map(flagBakery -> flagBakery.getBakery().getImage())
+                                .collect(Collectors.toList())).build())
+                .collect(Collectors.toList());
+        List<UserReviewDto> userReviewList = reviewRepository.findByUser(user)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(UserReviewDto::new)
+                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
+                .collect(Collectors.toList());
+
+        return ProfileDto.builder().user(user)
+                .followingNum(followingNum).followerNum(followerNum)
+                .userFlagList(userFlagList).userReviewList(userReviewList).isFollow(false).build();
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ProfileDto otherProfile(String username, Long userId) {
         User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User other = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Boolean isMe = me.equals(other);
         Integer followingNum = followRepository.countByToUser(other);
         Integer followerNum = followRepository.countByFromUser(other);
         Boolean isFollow = followRepository.findByFromUserAndToUser(me, other).isPresent();
@@ -123,8 +147,7 @@ public class UserServiceImpl implements UserService {
 
         return ProfileDto.builder().user(other)
                 .followingNum(followingNum).followerNum(followerNum)
-                .userFlagList(userFlagList).userReviewList(userReviewList)
-                .isMe(isMe).isFollow(isFollow).build();
+                .userFlagList(userFlagList).userReviewList(userReviewList).isFollow(isFollow).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
