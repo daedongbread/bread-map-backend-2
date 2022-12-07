@@ -10,10 +10,7 @@ import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFound
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
@@ -55,6 +52,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final FollowRepository followRepository;
     private final ReviewRepository reviewRepository;
+    private final ReviewImageRepository reviewImageRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
@@ -101,10 +99,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ProfileDto profile(String username, Long userId) {
+    public ProfileDto myProfile(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+
+        Integer followingNum = followRepository.countByToUser(user);
+        Integer followerNum = followRepository.countByFromUser(user);
+
+        List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
+                .map(flag -> UserFlagDto.builder()
+                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
+                        .flagImageList(flag.getFlagBakeryList().stream().limit(3)
+                                .map(flagBakery -> flagBakery.getBakery().getImage())
+                                .collect(Collectors.toList())).build())
+                .collect(Collectors.toList());
+        List<UserReviewDto> userReviewList = reviewRepository.findByUser(user)
+                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
+                .map(UserReviewDto::new)
+                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
+                .collect(Collectors.toList());
+
+        return ProfileDto.builder().user(user)
+                .followingNum(followingNum).followerNum(followerNum)
+                .userFlagList(userFlagList).userReviewList(userReviewList).isFollow(false).build();
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ProfileDto otherProfile(String username, Long userId) {
         User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User other = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Boolean isMe = me.equals(other);
         Integer followingNum = followRepository.countByToUser(other);
         Integer followerNum = followRepository.countByFromUser(other);
         Boolean isFollow = followRepository.findByFromUserAndToUser(me, other).isPresent();
@@ -123,8 +145,7 @@ public class UserServiceImpl implements UserService {
 
         return ProfileDto.builder().user(other)
                 .followingNum(followingNum).followerNum(followerNum)
-                .userFlagList(userFlagList).userReviewList(userReviewList)
-                .isMe(isMe).isFollow(isFollow).build();
+                .userFlagList(userFlagList).userReviewList(userReviewList).isFollow(isFollow).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -173,7 +194,8 @@ public class UserServiceImpl implements UserService {
         reviewCommentLikeRepository.deleteByUser(user);
         reviewCommentRepository.deleteByUser(user);
         reviewLikeRepository.deleteByUser(user);
-        reviewRepository.findByUser(user);
+        reviewRepository.findByUser(user).forEach(reviewImageRepository::deleteByReview);
+        reviewRepository.deleteByUser(user);
 
         noticeTokenRepository.deleteByUser(user);
         noticeRepository.deleteByUser(user);
@@ -191,9 +213,9 @@ public class UserServiceImpl implements UserService {
 
         redisTemplate.delete(Arrays.asList(REDIS_KEY_ACCESS + username, REDIS_KEY_REFRESH + username));
 
-        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
-        redisDeleteUser.set(REDIS_KEY_DELETE + username, username);
-        redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
+//        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
+//        redisDeleteUser.set(REDIS_KEY_DELETE + username, username);
+//        redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
     }
 
     @Transactional(rollbackFor = Exception.class)
