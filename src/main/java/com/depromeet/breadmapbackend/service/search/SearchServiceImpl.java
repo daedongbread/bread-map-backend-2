@@ -57,8 +57,8 @@ public class SearchServiceImpl implements SearchService {
 
         ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
-        redisRecentSearch.add(REDIS_KEY_RECENT + username, word, Double.parseDouble(time));
-        redisRecentSearch.removeRange(REDIS_KEY_RECENT + username, -(10 + 1), -(10 + 1));
+        redisRecentSearch.add(REDIS_KEY_RECENT + ":" + username, word, Double.parseDouble(time));
+        redisRecentSearch.removeRange(REDIS_KEY_RECENT + ":" + username, -(10 + 1), -(10 + 1));
 
         return bakeryRepository.findByNameStartsWith(word).stream()
                 .map(bakery -> SearchDto.builder()
@@ -77,18 +77,18 @@ public class SearchServiceImpl implements SearchService {
     public List<String> recentKeywords(String username) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
         return new ArrayList<>(Objects.requireNonNull(
-                redisTemplate.opsForZSet().reverseRange(REDIS_KEY_RECENT + username, 0, -1)));
+                redisTemplate.opsForZSet().reverseRange(REDIS_KEY_RECENT + ":" + username, 0, -1)));
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeyword(String username, String keyword) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
-        redisTemplate.opsForZSet().remove(REDIS_KEY_RECENT + username, keyword);
+        redisTemplate.opsForZSet().remove(REDIS_KEY_RECENT + ":" + username, keyword);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeywordAll(String username) {
         if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
-        redisTemplate.delete(REDIS_KEY_RECENT + username);
+        redisTemplate.delete(REDIS_KEY_RECENT + ":" + username);
     }
 }

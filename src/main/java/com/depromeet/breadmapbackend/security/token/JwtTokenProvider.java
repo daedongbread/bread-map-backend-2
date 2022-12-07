@@ -81,7 +81,7 @@ public class JwtTokenProvider {
         } catch (IllegalArgumentException e) {
             log.error("잘못된 토큰입니다.");
         }
-        throw new CAuthenticationEntryPointException();
+        return false;
     }
 
     private Claims parseClaims(String token) {

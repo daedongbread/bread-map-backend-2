@@ -57,6 +57,9 @@ public abstract class ControllerTest {
     @Value("${spring.redis.key.refresh}")
     protected String REDIS_KEY_REFRESH;
 
+    @Value("${spring.redis.key.adminRefresh}")
+    protected String REDIS_KEY_ADMIN_REFRESH;
+
     @Autowired
     protected UserRepository userRepository;
 

@@ -43,7 +43,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         JwtToken jwtToken = jwtTokenProvider.createJwtToken(username, roleType.getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + username,
+                .set(REDIS_KEY_REFRESH + ":" + username,
                         jwtToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         ObjectMapper objectMapper = new ObjectMapper();

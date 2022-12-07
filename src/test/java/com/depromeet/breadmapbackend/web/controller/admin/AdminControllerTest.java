@@ -58,7 +58,7 @@ class AdminControllerTest extends ControllerTest {
         adminRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set("ADMIN-RT:" + admin.getId(),
+                .set(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId(),
                         token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();

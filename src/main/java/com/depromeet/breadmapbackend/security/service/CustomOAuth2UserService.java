@@ -54,7 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
 
         String username = providerType.name() + "_" + oAuth2UserInfo.getUsername();
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_DELETE + username))) throw new RejoinException();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_DELETE + ":" + username))) throw new RejoinException();
 
         User user = null;
         if (userRepository.findByUsername(username).isPresent()) {
