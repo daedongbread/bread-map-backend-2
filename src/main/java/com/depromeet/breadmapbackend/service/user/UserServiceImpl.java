@@ -10,10 +10,7 @@ import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFound
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewCommentRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
+import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
@@ -55,6 +52,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final FollowRepository followRepository;
     private final ReviewRepository reviewRepository;
+    private final ReviewImageRepository reviewImageRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewCommentLikeRepository reviewCommentLikeRepository;
@@ -196,7 +194,8 @@ public class UserServiceImpl implements UserService {
         reviewCommentLikeRepository.deleteByUser(user);
         reviewCommentRepository.deleteByUser(user);
         reviewLikeRepository.deleteByUser(user);
-        reviewRepository.findByUser(user);
+        reviewRepository.findByUser(user).forEach(reviewImageRepository::deleteByReview);
+        reviewRepository.deleteByUser(user);
 
         noticeTokenRepository.deleteByUser(user);
         noticeRepository.deleteByUser(user);
@@ -214,9 +213,9 @@ public class UserServiceImpl implements UserService {
 
         redisTemplate.delete(Arrays.asList(REDIS_KEY_ACCESS + username, REDIS_KEY_REFRESH + username));
 
-        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
-        redisDeleteUser.set(REDIS_KEY_DELETE + username, username);
-        redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
+//        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
+//        redisDeleteUser.set(REDIS_KEY_DELETE + username, username);
+//        redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
     }
 
     @Transactional(rollbackFor = Exception.class)
