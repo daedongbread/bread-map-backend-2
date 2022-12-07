@@ -200,9 +200,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .filter(notice -> ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now()) < 1)
                 .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
                 .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).title(notice.getTitle()).fromUserId(notice.getFromUser().getId())
-                        .contentId(notice.getContentId()).content(notice.getContent())
-                        .createdAt(notice.getCreatedAt()).build())
+                        .image(noticeImage(notice)).notice(notice).build())
                 .collect(Collectors.toList());
     }
 
@@ -217,9 +215,7 @@ public class NoticeServiceImpl implements NoticeService{
                 })
                 .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
                 .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).title(notice.getTitle()).fromUserId(notice.getFromUser().getId())
-                        .contentId(notice.getContentId()).content(notice.getContent())
-                        .createdAt(notice.getCreatedAt()).build())
+                        .image(noticeImage(notice)).notice(notice).build())
                 .collect(Collectors.toList());
     }
 
@@ -231,25 +227,8 @@ public class NoticeServiceImpl implements NoticeService{
                 .filter(notice -> 7 <= ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now()))
                 .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
                 .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).title(notice.getTitle()).fromUserId(notice.getFromUser().getId())
-                        .contentId(notice.getContentId()).content(notice.getContent())
-                        .createdAt(notice.getCreatedAt()).build())
+                        .image(noticeImage(notice)).notice(notice).build())
                 .collect(Collectors.toList());
-    }
-
-    private String createAt(LocalDateTime createdAt) {
-        LocalDateTime now = LocalDateTime.now();
-        if (createdAt.isAfter(now)) throw new NoticeDateException();
-
-        long day = ChronoUnit.DAYS.between(createdAt, now);
-        if (day >= 7) return createdAt.getMonthValue() + "월 " + createdAt.getDayOfMonth() + "일";
-        else if (day >= 1) return day + "일 전";
-
-        long hour = ChronoUnit.HOURS.between(createdAt, now);
-        if (1 <= hour && hour < 24)  return hour + "시간 전";
-
-        long minute = ChronoUnit.MINUTES.between(createdAt, now);
-        return minute + "분전";
     }
 
     private String noticeImage(Notice notice) {
@@ -264,5 +243,4 @@ public class NoticeServiceImpl implements NoticeService{
             return flagImage;
         else throw new NoticeTypeWrongException();
     }
-
 }

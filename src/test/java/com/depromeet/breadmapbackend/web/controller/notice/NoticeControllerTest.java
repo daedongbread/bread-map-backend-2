@@ -162,6 +162,7 @@ class NoticeControllerTest extends ControllerTest {
                                         "(리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 상품 아이디 or 빵집 관리자 글 아이디)"),
                                 fieldWithPath("data.todayNoticeList.[].content").description("오늘 알람 세부 내용 (팔로우 알람일 땐 null)"),
                                 fieldWithPath("data.todayNoticeList.[].createdAt").description("오늘 알람 생성일"),
+                                fieldWithPath("data.todayNoticeList.[].noticeType").description("오늘 알람 타입"),
                                 fieldWithPath("data.weekNoticeList").description("이번주 알람 리스트"),
                                 fieldWithPath("data.beforeNoticeList").description("지난 알람 리스트")
                         )
