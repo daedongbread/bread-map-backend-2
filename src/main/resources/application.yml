@@ -21,10 +21,11 @@ spring:
     host: localhost
     port: 6379
     key:
-      delete: "delete:"
-      recent: "recent:"
-      access: "access:"
-      refresh: "refresh:"
+      delete: delete
+      recent: recent
+      access: access
+      refresh: refresh
+      adminRefresh: adminRefresh
   jpa:
     open-in-view: false
   security:
