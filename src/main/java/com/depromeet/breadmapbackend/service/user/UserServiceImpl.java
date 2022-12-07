@@ -84,14 +84,14 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + user.getUsername());
+        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + ":" + user.getUsername());
         if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
 //        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
 //        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + user.getUsername(),
+                .set(REDIS_KEY_REFRESH + ":" + user.getUsername(),
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 //        refreshToken.updateToken(reissueToken.getRefreshToken());
 
@@ -175,8 +175,8 @@ public class UserServiceImpl implements UserService {
         eventPublisher.publishEvent(new NoticeTokenDeleteEvent(username, request.getDeviceToken()));
 
         // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_REFRESH + username))) {
-            redisTemplate.delete(REDIS_KEY_REFRESH + username);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_REFRESH + ":" + username))) {
+            redisTemplate.delete(REDIS_KEY_REFRESH + ":" + username);
         }
 
         // 해당 Access Token 남은 유효시간 가지고 와서 BlackList 로 저장하기
@@ -211,11 +211,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
 
-        redisTemplate.delete(Arrays.asList(REDIS_KEY_ACCESS + username, REDIS_KEY_REFRESH + username));
+        redisTemplate.delete(Arrays.asList(REDIS_KEY_ACCESS + ":" + username, REDIS_KEY_REFRESH + ":" + username));
 
 //        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
-//        redisDeleteUser.set(REDIS_KEY_DELETE + username, username);
-//        redisTemplate.expire(REDIS_KEY_DELETE + username, 7, TimeUnit.DAYS);
+//        redisDeleteUser.set(REDIS_KEY_DELETE + ":" + username, username);
+//        redisTemplate.expire(REDIS_KEY_DELETE + ":" + username, 7, TimeUnit.DAYS);
     }
 
     @Transactional(rollbackFor = Exception.class)

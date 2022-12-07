@@ -21,10 +21,11 @@ spring:
     host: localhost
     port: 6379
     key:
-      delete: "delete:"
-      recent: "recent:"
-      access: "access:"
-      refresh: "refresh:"
+      delete: delete
+      recent: recent
+      access: access
+      refresh: refresh
+      adminRefresh: adminRefresh
   jpa:
     open-in-view: false
   security:
@@ -79,5 +80,5 @@ firebase:
   projectId: FIREBASE_PROJECTID
 
 sgis:
-  key: 19d650af0ba14aa3a02c
-  secret: 3dfe3c41a43140ba8e2d
+  key: SGIS_KEY
+  secret: SGIS_SECRET

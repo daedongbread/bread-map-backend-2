@@ -97,6 +97,9 @@ public class AdminServiceImpl implements AdminService{
     @Value("${spring.jwt.admin}")
     private String JWT_ADMIN_KEY;
 
+    @Value("${spring.redis.key.adminRefresh}")
+    private String REDIS_KEY_ADMIN_REFRESH;
+
     @Transactional(rollbackFor = Exception.class)
     public void adminJoin(AdminJoinRequest request) {
         if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AdminJoinException();
@@ -113,7 +116,7 @@ public class AdminServiceImpl implements AdminService{
 
         JwtToken adminToken = jwtTokenProvider.createJwtToken(admin.getEmail(), "ROLE_ADMIN");
         redisTemplate.opsForValue()
-                .set("ADMIN-RT:" + admin.getId(),
+                .set(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId(),
                         adminToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
         return adminToken;
     }
@@ -127,12 +130,12 @@ public class AdminServiceImpl implements AdminService{
         String email = authentication.getName();
         Admin admin = adminRepository.findByEmail(email).orElseThrow(AdminNotFoundException::new);
 
-        String refreshToken = redisTemplate.opsForValue().get("ADMIN-RT:" + admin.getId());
+        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId());
         if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set("ADMIN-RT:" + admin.getId(),
+                .set(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId(),
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         return reissueToken;
