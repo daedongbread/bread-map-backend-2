@@ -17,19 +17,28 @@ import com.depromeet.breadmapbackend.domain.review.ReviewLikeEvent;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
+import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminSimpleBakeryDto;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,13 +50,14 @@ public class NoticeServiceImpl implements NoticeService{
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
     private final NoticeTokenRepository noticeTokenRepository;
+    private final FollowRepository followRepository;
 
     private final FcmService fcmService;
 
-    private String commentImage = "noticeImage/comment.jpg";
-    private String likeImage = "noticeImage/like.jpg";
-    private String reportImage = "noticeImage/report.jpg";
-    private String flagImage = "noticeImage/flag.jpg";
+    private String COMMENT_IMAGE = "noticeImage/defaultComment.jpg";
+    private String LIKE_IMAGE = "noticeImage/defaultLike.jpg";
+    private String REPORT_IMAGE = "noticeImage/defaultReport.jpg";
+    private String FLAG_IMAGE = "noticeImage/defaultFlag.jpg";
 
     @Transactional(rollbackFor = Exception.class)
     public void addNoticeToken(String username, NoticeTokenRequest request) {
@@ -108,7 +118,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 리뷰에 " + fromUser.getNickName() + "님이 댓글을 달았어요!")
-                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰
+                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
@@ -122,7 +132,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 리뷰를 " + fromUser.getNickName() + "님이 좋아해요!")
-                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰
+                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_LIKE).build();
         noticeRepository.save(notice);
@@ -136,7 +146,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 댓글에 " + fromUser.getNickName() + "님이 대댓글을 달았어요!")
-                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글
+                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.RECOMMENT).build();
         noticeRepository.save(notice);
@@ -150,7 +160,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 댓글을 " + fromUser.getNickName() + "님이 좋아해요!")
-                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 제목
+                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.REVIEW_COMMENT_LIKE).build();
         noticeRepository.save(notice);
@@ -193,54 +203,61 @@ public class NoticeServiceImpl implements NoticeService{
 //    }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<NoticeDto> getTodayNoticeList(String username) {
+    public PageResponseDto<NoticeDto> getTodayNoticeList(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        return noticeRepository.findByUser(user).stream()
-                .filter(notice -> ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now()) < 1)
-                .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
-                .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).notice(notice).build())
-                .collect(Collectors.toList());
+        Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtAfter(
+                user, LocalDateTime.now().with(LocalTime.MIN), pageable);
+
+        return PageResponseDto.of(all,
+                all.getContent().stream().map(notice -> NoticeDto.builder()
+                        .image(noticeImage(notice))
+                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+                        .notice(notice).build())
+                        .collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<NoticeDto> getWeekNoticeList(String username) {
+    public PageResponseDto<NoticeDto> getWeekNoticeList(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        return noticeRepository.findByUser(user).stream()
-                .filter(notice -> {
-                    long day = ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now());
-                    return 1 <= day && day < 7;
-                })
-                .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
-                .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).notice(notice).build())
-                .collect(Collectors.toList());
+        Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtBetween(
+                user, LocalDateTime.now().with(LocalTime.MIN).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
+                LocalDateTime.now().minusDays(1).with(LocalTime.MAX), pageable);
+
+        return PageResponseDto.of(all,
+                all.getContent().stream().map(notice -> NoticeDto.builder()
+                        .image(noticeImage(notice))
+                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+                        .notice(notice).build())
+                        .collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<NoticeDto> getBeforeNoticeList(String username) {
+    public PageResponseDto<NoticeDto> getBeforeNoticeList(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        return noticeRepository.findByUser(user).stream()
-                .filter(notice -> 7 <= ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now()))
-                .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
-                .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).notice(notice).build())
-                .collect(Collectors.toList());
+        Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtBefore(
+                user, LocalDateTime.now().with(LocalTime.MAX).with(TemporalAdjusters.previous(DayOfWeek.SUNDAY)), pageable);
+
+        return PageResponseDto.of(all,
+                all.getContent().stream().map(notice -> NoticeDto.builder()
+                        .image(noticeImage(notice))
+                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+                        .notice(notice).build())
+                        .collect(Collectors.toList()));
     }
 
     private String noticeImage(Notice notice) {
         if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getImage();
         else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
-            return commentImage;
+            return COMMENT_IMAGE;
         else if(notice.getType().equals(NoticeType.REVIEW_LIKE) || notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))
-            return likeImage;
+            return LIKE_IMAGE;
         else if(notice.getType().equals(NoticeType.ADD_BAKERY) || notice.getType().equals(NoticeType.ADD_PRODUCT))
-            return reportImage;
+            return REPORT_IMAGE;
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
-            return flagImage;
+            return FLAG_IMAGE;
         else throw new NoticeTypeWrongException();
     }
 }

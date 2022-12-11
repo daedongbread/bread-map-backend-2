@@ -456,8 +456,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_유저_탈퇴_api_delete">유저 탈퇴 API [DELETE]</a></li>
 <li><a href="#_팔로우_api_post">팔로우 API [POST]</a></li>
 <li><a href="#_언팔로우_api_delete">언팔로우 API [DELETE]</a></li>
-<li><a href="#_팔로워_리스트_조회_get">팔로워 리스트 조회 [GET]</a></li>
-<li><a href="#_팔로잉_리스트_조회_get">팔로잉 리스트 조회 [GET]</a></li>
+<li><a href="#_본인_팔로워_리스트_조회_get">본인 팔로워 리스트 조회 [GET]</a></li>
+<li><a href="#_본인_팔로잉_리스트_조회_get">본인 팔로잉 리스트 조회 [GET]</a></li>
+<li><a href="#_타인_팔로워_리스트_조회_get">타인 팔로워 리스트 조회 [GET]</a></li>
+<li><a href="#_타인_팔로잉_리스트_조회_get">타인 팔로잉 리스트 조회 [GET]</a></li>
 <li><a href="#_차단_리스트_조회_get">차단 리스트 조회 [GET]</a></li>
 <li><a href="#_차단_api_post">차단 API [POST]</a></li>
 <li><a href="#_차단_해제_api_delete">차단 해제 API [DELETE]</a></li>
@@ -523,8 +525,8 @@ Content-Length: 339
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.C8I6wbTcxkEbjoULliFLZOU_4qvb_J8lib0gcc_pHLM",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzE2MzI4NjN9.whqv80OctS6p8sUWLHZcL3Wa1LkmLrNQixw8v1rhfsg"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNTAsImV4cCI6MTY3MDc2MTc1MH0.SZRqSRj7_Zhe8tu2gqap6muOJdfXiy4RJVqAiTErM_U",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzE5Njc3NTB9.2kMdUROKOvICgMbzq4WyNL_2sHbqYcoEiWdeAYpWY_Q"
 }</code></pre>
 </div>
 </div>
@@ -584,8 +586,8 @@ Content-Length: 403
 
 {
   "data" : {
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.C8I6wbTcxkEbjoULliFLZOU_4qvb_J8lib0gcc_pHLM",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzE2MzI4NjN9.whqv80OctS6p8sUWLHZcL3Wa1LkmLrNQixw8v1rhfsg",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNTAsImV4cCI6MTY3MDc2MTc1MH0.SZRqSRj7_Zhe8tu2gqap6muOJdfXiy4RJVqAiTErM_U",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzE5Njc3NTB9.2kMdUROKOvICgMbzq4WyNL_2sHbqYcoEiWdeAYpWY_Q",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -637,7 +639,7 @@ Content-Length: 403
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/me HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjIsImV4cCI6MTY3MDQyNjg2Mn0.7PJtKrtgXFU5xMdXwObxcBFij6_FCnDVjfBQ_ZevO5M
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDgsImV4cCI6MTY3MDc2MTc0OH0.pmqZju4Ve-W8tWKi03aLmn44S_rAjeCgObuo9o8UBKg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -685,20 +687,20 @@ Content-Length: 724
 
 {
   "data" : {
-    "userId" : 65,
+    "userId" : 68,
     "userImage" : null,
     "nickName" : "testNickName1",
-    "followingNum" : 0,
+    "followingNum" : 1,
     "followerNum" : 1,
     "isFollow" : false,
     "userFlagList" : [ {
-      "flagId" : 11,
+      "flagId" : 12,
       "name" : "testFlagName",
       "color" : "ORANGE",
       "flagImageList" : [ "testImage" ]
     } ],
     "userReviewList" : [ {
-      "id" : 74,
+      "id" : 75,
       "bakeryName" : "bakery1",
       "bakeryAddress" : "address",
       "productRatingList" : [ {
@@ -709,7 +711,7 @@ Content-Length: 724
       "content" : "content1",
       "likeNum" : 0,
       "commentNum" : 0,
-      "createdAt" : "2022-12-07T23:27:42.560781"
+      "createdAt" : "2022-12-11T20:29:08.869428"
     } ]
   }
 }</code></pre>
@@ -860,8 +862,8 @@ Content-Length: 724
 <h4 id="_타인_프로필_조회_api_get_http_request"><a class="link" href="#_타인_프로필_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/86 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.gwxEGUFj87lsW5CSKJ14IDDPh56gK6-FO6GWRNn2T_g
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/92 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.OT3XRuxbU3w6fGFdNKm39C10feIwLUHKVzfCR5eSKT4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -909,20 +911,20 @@ Content-Length: 723
 
 {
   "data" : {
-    "userId" : 86,
+    "userId" : 92,
     "userImage" : null,
     "nickName" : "testNickName1",
-    "followingNum" : 0,
+    "followingNum" : 1,
     "followerNum" : 1,
-    "isFollow" : false,
+    "isFollow" : true,
     "userFlagList" : [ {
-      "flagId" : 18,
+      "flagId" : 20,
       "name" : "testFlagName",
       "color" : "ORANGE",
       "flagImageList" : [ "testImage" ]
     } ],
     "userReviewList" : [ {
-      "id" : 81,
+      "id" : 83,
       "bakeryName" : "bakery1",
       "bakeryAddress" : "address",
       "productRatingList" : [ {
@@ -933,7 +935,7 @@ Content-Length: 723
       "content" : "content1",
       "likeNum" : 0,
       "commentNum" : 0,
-      "createdAt" : "2022-12-07T23:27:43.24678"
+      "createdAt" : "2022-12-11T20:29:09.850422"
     } ]
   }
 }</code></pre>
@@ -1087,11 +1089,11 @@ Content-Length: 723
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/nickname HTTP/1.1
 Content-Type: application/json;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.C8I6wbTcxkEbjoULliFLZOU_4qvb_J8lib0gcc_pHLM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNTAsImV4cCI6MTY3MDc2MTc1MH0.SZRqSRj7_Zhe8tu2gqap6muOJdfXiy4RJVqAiTErM_U
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=file; filename=d0368fc3-e157-48bd-ac2b-0f41a2414e6b.png
+Content-Disposition: form-data; name=file; filename=5ea4b660-69b6-4d15-97f7-0bbc60c17e5d.png
 Content-Type: image/png
 
 test
@@ -1184,14 +1186,14 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjIsImV4cCI6MTY3MDQyNjg2Mn0.7PJtKrtgXFU5xMdXwObxcBFij6_FCnDVjfBQ_ZevO5M
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.xT6kHmtkD978cgQnoYUSWYhlkTx408ZUch5eoylPXmA
 Accept: application/json
 Content-Length: 374
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjIsImV4cCI6MTY3MDQyNjg2Mn0.7PJtKrtgXFU5xMdXwObxcBFij6_FCnDVjfBQ_ZevO5M",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzE2MzI4NjJ9.9vpi_Kzankibyhk4KTtj9uDKa22zz3-h9Ksl0aX7iRs",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.xT6kHmtkD978cgQnoYUSWYhlkTx408ZUch5eoylPXmA",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzE5Njc3NDl9.F6x1-AuEHMI9jpXtbaHD2NdMs-MOvVd9UJmdQSO-Yn0",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>
@@ -1288,7 +1290,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.gwxEGUFj87lsW5CSKJ14IDDPh56gK6-FO6GWRNn2T_g
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNTAsImV4cCI6MTY3MDc2MTc1MH0.ROLA5WPNIKISTDcKQEwOA5P79O19TfclZ0KD-Nx1ahA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1344,12 +1346,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/follow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjIsImV4cCI6MTY3MDQyNjg2Mn0.ka2Vv6ANEPNuqIH_opN2aekgOLxNxUV-n4FZYf20OqM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.OT3XRuxbU3w6fGFdNKm39C10feIwLUHKVzfCR5eSKT4
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 71
+  "userId" : 74
 }</code></pre>
 </div>
 </div>
@@ -1435,12 +1437,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user/unfollow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjIsImV4cCI6MTY3MDQyNjg2Mn0.7PJtKrtgXFU5xMdXwObxcBFij6_FCnDVjfBQ_ZevO5M
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.xT6kHmtkD978cgQnoYUSWYhlkTx408ZUch5eoylPXmA
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 78
+  "userId" : 84
 }</code></pre>
 </div>
 </div>
@@ -1518,19 +1520,19 @@ X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_팔로워_리스트_조회_get"><a class="link" href="#_팔로워_리스트_조회_get">팔로워 리스트 조회 [GET]</a></h3>
+<h3 id="_본인_팔로워_리스트_조회_get"><a class="link" href="#_본인_팔로워_리스트_조회_get">본인 팔로워 리스트 조회 [GET]</a></h3>
 <div class="sect3">
-<h4 id="_팔로워_리스트_조회_get_http_request"><a class="link" href="#_팔로워_리스트_조회_get_http_request">Example Request</a></h4>
+<h4 id="_본인_팔로워_리스트_조회_get_http_request"><a class="link" href="#_본인_팔로워_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/follower HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjIsImV4cCI6MTY3MDQyNjg2Mn0.ka2Vv6ANEPNuqIH_opN2aekgOLxNxUV-n4FZYf20OqM
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/71/follower HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDgsImV4cCI6MTY3MDc2MTc0OH0.1q7beHZxmxRZMenpbXescUGDBIKx23JnFP0zgoXmLUI
 Host: localhost:8080</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_팔로워_리스트_조회_get_request_headers"><a class="link" href="#_팔로워_리스트_조회_get_request_headers">Request headers</a></h4>
+<h4 id="_본인_팔로워_리스트_조회_get_request_headers"><a class="link" href="#_본인_팔로워_리스트_조회_get_request_headers">Request headers</a></h4>
 <div class="sect4">
 <h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
 <table class="tableblock frame-all grid-all stretch">
@@ -1554,7 +1556,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_팔로워_리스트_조회_get_http_response"><a class="link" href="#_팔로워_리스트_조회_get_http_response">Example Response</a></h4>
+<h4 id="_본인_팔로워_리스트_조회_get_http_response"><a class="link" href="#_본인_팔로워_리스트_조회_get_http_response">Example Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1568,15 +1570,16 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 152
+Content-Length: 177
 
 {
   "data" : [ {
-    "userId" : 68,
+    "userId" : 72,
     "userImage" : null,
-    "nickName" : "testNickName1",
-    "reviewNum" : 1,
-    "followerNum" : 0
+    "nickName" : "testNickName2",
+    "reviewNum" : 0,
+    "followerNum" : 1,
+    "isFollow" : false
   } ]
 }</code></pre>
 </div>
@@ -1584,19 +1587,19 @@ Content-Length: 152
 </div>
 </div>
 <div class="sect2">
-<h3 id="_팔로잉_리스트_조회_get"><a class="link" href="#_팔로잉_리스트_조회_get">팔로잉 리스트 조회 [GET]</a></h3>
+<h3 id="_본인_팔로잉_리스트_조회_get"><a class="link" href="#_본인_팔로잉_리스트_조회_get">본인 팔로잉 리스트 조회 [GET]</a></h3>
 <div class="sect3">
-<h4 id="_팔로잉_리스트_조회_get_http_request"><a class="link" href="#_팔로잉_리스트_조회_get_http_request">Example Request</a></h4>
+<h4 id="_본인_팔로잉_리스트_조회_get_http_request"><a class="link" href="#_본인_팔로잉_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/following HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.gwxEGUFj87lsW5CSKJ14IDDPh56gK6-FO6GWRNn2T_g
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNTAsImV4cCI6MTY3MDc2MTc1MH0.ROLA5WPNIKISTDcKQEwOA5P79O19TfclZ0KD-Nx1ahA
 Host: localhost:8080</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_팔로잉_리스트_조회_get_request_headers"><a class="link" href="#_팔로잉_리스트_조회_get_request_headers">Request headers</a></h4>
+<h4 id="_본인_팔로잉_리스트_조회_get_request_headers"><a class="link" href="#_본인_팔로잉_리스트_조회_get_request_headers">Request headers</a></h4>
 <div class="sect4">
 <h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
 <table class="tableblock frame-all grid-all stretch">
@@ -1620,7 +1623,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_팔로잉_리스트_조회_get_http_response"><a class="link" href="#_팔로잉_리스트_조회_get_http_response">Example Response</a></h4>
+<h4 id="_본인_팔로잉_리스트_조회_get_http_response"><a class="link" href="#_본인_팔로잉_리스트_조회_get_http_response">Example Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1634,15 +1637,150 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 152
+Content-Length: 177
 
 {
   "data" : [ {
-    "userId" : 99,
+    "userId" : 107,
+    "userImage" : null,
+    "nickName" : "testNickName1",
+    "reviewNum" : 1,
+    "followerNum" : 1,
+    "isFollow" : true
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_타인_팔로워_리스트_조회_get"><a class="link" href="#_타인_팔로워_리스트_조회_get">타인 팔로워 리스트 조회 [GET]</a></h3>
+<div class="sect3">
+<h4 id="_타인_팔로워_리스트_조회_get_http_request"><a class="link" href="#_타인_팔로워_리스트_조회_get_http_request">Example Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/follower HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDgsImV4cCI6MTY3MDc2MTc0OH0.1q7beHZxmxRZMenpbXescUGDBIKx23JnFP0zgoXmLUI
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_타인_팔로워_리스트_조회_get_request_headers"><a class="link" href="#_타인_팔로워_리스트_조회_get_request_headers">Request headers</a></h4>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_타인_팔로워_리스트_조회_get_http_response"><a class="link" href="#_타인_팔로워_리스트_조회_get_http_response">Example Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 176
+
+{
+  "data" : [ {
+    "userId" : 65,
+    "userImage" : null,
+    "nickName" : "testNickName1",
+    "reviewNum" : 1,
+    "followerNum" : 1,
+    "isFollow" : true
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_타인_팔로잉_리스트_조회_get"><a class="link" href="#_타인_팔로잉_리스트_조회_get">타인 팔로잉 리스트 조회 [GET]</a></h3>
+<div class="sect3">
+<h4 id="_타인_팔로잉_리스트_조회_get_http_request"><a class="link" href="#_타인_팔로잉_리스트_조회_get_http_request">Example Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/80/following HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.OT3XRuxbU3w6fGFdNKm39C10feIwLUHKVzfCR5eSKT4
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_타인_팔로잉_리스트_조회_get_request_headers"><a class="link" href="#_타인_팔로잉_리스트_조회_get_request_headers">Request headers</a></h4>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_타인_팔로잉_리스트_조회_get_http_response"><a class="link" href="#_타인_팔로잉_리스트_조회_get_http_response">Example Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 177
+
+{
+  "data" : [ {
+    "userId" : 81,
     "userImage" : null,
     "nickName" : "testNickName2",
     "reviewNum" : 0,
-    "followerNum" : 1
+    "followerNum" : 1,
+    "isFollow" : false
   } ]
 }</code></pre>
 </div>
@@ -1656,7 +1794,7 @@ Content-Length: 152
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/block HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.C8I6wbTcxkEbjoULliFLZOU_4qvb_J8lib0gcc_pHLM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.xT6kHmtkD978cgQnoYUSWYhlkTx408ZUch5eoylPXmA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1704,7 +1842,7 @@ Content-Length: 160
 
 {
   "data" : [ {
-    "userId" : 91,
+    "userId" : 97,
     "userImage" : null,
     "nickName" : "testBlockUserNickName",
     "reviewNum" : 0,
@@ -1724,12 +1862,12 @@ Content-Length: 160
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/block HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.C8I6wbTcxkEbjoULliFLZOU_4qvb_J8lib0gcc_pHLM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.xT6kHmtkD978cgQnoYUSWYhlkTx408ZUch5eoylPXmA
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 84
+  "userId" : 90
 }</code></pre>
 </div>
 </div>
@@ -1815,12 +1953,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user/block HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA0MjMyNjMsImV4cCI6MTY3MDQyNjg2M30.C8I6wbTcxkEbjoULliFLZOU_4qvb_J8lib0gcc_pHLM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzA3NTgxNDksImV4cCI6MTY3MDc2MTc0OX0.xT6kHmtkD978cgQnoYUSWYhlkTx408ZUch5eoylPXmA
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 82
+  "userId" : 88
 }</code></pre>
 </div>
 </div>
@@ -1903,7 +2041,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-12-06 01:09:10 +0900
+Last updated 2022-12-11 18:18:12 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

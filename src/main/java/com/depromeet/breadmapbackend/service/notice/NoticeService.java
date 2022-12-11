@@ -6,9 +6,11 @@ import com.depromeet.breadmapbackend.domain.review.ReviewCommentEvent;
 import com.depromeet.breadmapbackend.domain.review.ReviewCommentLikeEvent;
 import com.depromeet.breadmapbackend.domain.review.ReviewLikeEvent;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public interface NoticeService {
     void addReviewLikeNotice(ReviewLikeEvent event);
     void addRecommentNotice(RecommentEvent event);
     void addReviewCommentLikeNotice(ReviewCommentLikeEvent event);
-    List<NoticeDto> getTodayNoticeList(String username);
-    List<NoticeDto> getWeekNoticeList(String username);
-    List<NoticeDto> getBeforeNoticeList(String username);
+    PageResponseDto<NoticeDto> getTodayNoticeList(String username, Pageable pageable);
+    PageResponseDto<NoticeDto> getWeekNoticeList(String username, Pageable pageable);
+    PageResponseDto<NoticeDto> getBeforeNoticeList(String username, Pageable pageable);
 }

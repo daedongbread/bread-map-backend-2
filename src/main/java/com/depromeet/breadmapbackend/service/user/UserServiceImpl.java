@@ -234,31 +234,65 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SimpleUserDto> followerList(String username) {
+    public List<FollowUserDto> myFollowerList(String username) { // 나를 팔로우한 사람
         User toUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return followRepository.findByToUser(toUser).stream()
-                .map(follow -> new SimpleUserDto(follow.getFromUser(),
+                .map(follow -> new FollowUserDto(
+                        follow.getFromUser(),
                         reviewRepository.countByUser(follow.getFromUser()),
-                        followRepository.countByToUser(follow.getFromUser())))
+                        followRepository.countByToUser(follow.getFromUser()),
+                        followRepository.findByFromUserAndToUser(follow.getFromUser(), toUser).isPresent()
+                ))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SimpleUserDto> followingList(String username) {
+    public List<FollowUserDto> myFollowingList(String username) { // 내가 팔로우한 사람
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        return followRepository.findByToUser(fromUser).stream()
-                .map(follow -> new SimpleUserDto(follow.getToUser(),
+        return followRepository.findByFromUser(fromUser).stream()
+                .map(follow -> new FollowUserDto(
+                        follow.getToUser(),
                         reviewRepository.countByUser(follow.getToUser()),
-                        followRepository.countByToUser(follow.getToUser())))
+                        followRepository.countByToUser(follow.getToUser()),
+                        followRepository.findByFromUserAndToUser(fromUser, follow.getToUser()).isPresent()
+                ))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SimpleUserDto> blockList(String username) {
+    public List<FollowUserDto> otherFollowerList(String username, Long userId) { // 타인을 팔로우한 사람
+        User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User toUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return followRepository.findByToUser(toUser).stream()
+                .map(follow -> new FollowUserDto(
+                        follow.getFromUser(),
+                        reviewRepository.countByUser(follow.getFromUser()),
+                        followRepository.countByToUser(follow.getFromUser()),
+                        followRepository.findByFromUserAndToUser(me, follow.getFromUser()).isPresent()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<FollowUserDto> otherFollowingList(String username, Long userId) { // 타인이 팔로우한 사람
+        User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User fromUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return followRepository.findByFromUser(fromUser).stream()
+                .map(follow -> new FollowUserDto(
+                        follow.getToUser(),
+                        reviewRepository.countByUser(follow.getToUser()),
+                        followRepository.countByToUser(follow.getToUser()),
+                        followRepository.findByFromUserAndToUser(me, follow.getToUser()).isPresent()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<BlockUserDto> blockList(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         return blockUserRepository.findByUser(user).stream()
-                .map(blockUser -> new SimpleUserDto(blockUser.getBlockUser(),
+                .map(blockUser -> new BlockUserDto(blockUser.getBlockUser(),
                         reviewRepository.countByUser(blockUser.getBlockUser()),
                         followRepository.countByToUser(blockUser.getBlockUser())))
                 .collect(Collectors.toList());
