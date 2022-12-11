@@ -55,15 +55,15 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.TMP_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.TMP_AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
     - name: Force new deploy ECS service
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: aws ecs update-service --cluster main --service api-server-service --force-new-deployment
+        AWS_ACCESS_KEY_ID: ${{ secrets.TMP_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.TMP_AWS_SECRET_ACCESS_KEY }}
+      run: aws ecs update-service --cluster tmp-cluster --service tmp-service --force-new-deployment
     
     - name: CD notification to Slack
       uses: 8398a7/action-slack@v3
