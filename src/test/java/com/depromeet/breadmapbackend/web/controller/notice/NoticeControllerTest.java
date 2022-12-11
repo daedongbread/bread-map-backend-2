@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.web.controller.notice;
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
+import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
@@ -30,7 +31,6 @@ class NoticeControllerTest extends ControllerTest {
     private User fromUser;
     private JwtToken token;
     private NoticeToken noticeToken;
-    private Notice notice;
 
     @BeforeEach
     public void setup() {
@@ -43,15 +43,22 @@ class NoticeControllerTest extends ControllerTest {
         noticeToken = NoticeToken.builder().user(user).deviceToken("deviceToken").build();
         noticeTokenRepository.save(noticeToken);
 
-        notice = Notice.builder().user(user).fromUser(fromUser).
+        Follow follow = Follow.builder().fromUser(fromUser).toUser(user).build();
+        followRepository.save(follow);
+
+        Notice notice1 = Notice.builder().user(user).fromUser(fromUser).
                 title("title1").contentId(1L).content("content1").type(NoticeType.REVIEW_COMMENT).build();
-        noticeRepository.save(notice);
+        Notice notice2 = Notice.builder().user(user).fromUser(fromUser).
+                title("title2").type(NoticeType.FOLLOW).build();
+        noticeRepository.save(notice1);
+        noticeRepository.save(notice2);
     }
 
     @AfterEach
     public void setDown() {
         noticeTokenRepository.deleteAllInBatch();
         noticeRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
@@ -154,13 +161,16 @@ class NoticeControllerTest extends ControllerTest {
                         requestFields(fieldWithPath("deviceToken").description("디바이스 토큰")),
                         responseFields(
                                 fieldWithPath("data.todayNoticeList").description("오늘 알람 리스트"),
-                                fieldWithPath("data.todayNoticeList.[].image").description("오늘 알람 이미지"),
-                                fieldWithPath("data.todayNoticeList.[].fromUserId").description("오늘 알람 발신 유저 고유 번호 " +
-                                        "(제보 빵집/상품 추가, 즐겨찾기 빵집 관리자 글 업데이트 알림 땐 null)"),
+                                fieldWithPath("data.todayNoticeList.[].noticeId").description("오늘 알람 아이디"),
+                                fieldWithPath("data.todayNoticeList.[].image").description("오늘 알람 이미지").optional(),
+                                fieldWithPath("data.todayNoticeList.[].fromUserId").description("오늘 알람 발신 유저 고유 번호"),
+                                fieldWithPath("data.todayNoticeList.[].fromUserNickName").description("오늘 알람 발신 유저 닉네임"),
                                 fieldWithPath("data.todayNoticeList.[].title").description("오늘 알람 제목"),
-                                fieldWithPath("data.todayNoticeList.[].contentId").description("오늘 알람 내용 고유 번호 " +
-                                        "(리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 상품 아이디 or 빵집 관리자 글 아이디)"),
-                                fieldWithPath("data.todayNoticeList.[].content").description("오늘 알람 세부 내용 (팔로우 알람일 땐 null)"),
+                                fieldWithPath("data.todayNoticeList.[].contentId").description("오늘 알람 내용의 고유 번호 : " +
+                                        "(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디, 팔로우/팔로잉 알람일 땐 null)").optional(),
+                                fieldWithPath("data.todayNoticeList.[].content").description("오늘 알람 세부 내용 : " +
+                                        "(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
+                                fieldWithPath("data.todayNoticeList.[].isFollow").description("오늘 알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
                                 fieldWithPath("data.todayNoticeList.[].createdAt").description("오늘 알람 생성일"),
                                 fieldWithPath("data.todayNoticeList.[].noticeType").description("오늘 알람 타입"),
                                 fieldWithPath("data.weekNoticeList").description("이번주 알람 리스트"),

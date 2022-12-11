@@ -17,6 +17,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewLikeEvent;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
+import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
@@ -41,6 +42,7 @@ public class NoticeServiceImpl implements NoticeService{
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
     private final NoticeTokenRepository noticeTokenRepository;
+    private final FollowRepository followRepository;
 
     private final FcmService fcmService;
 
@@ -108,7 +110,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 리뷰에 " + fromUser.getNickName() + "님이 댓글을 달았어요!")
-                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰
+                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
@@ -122,7 +124,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 리뷰를 " + fromUser.getNickName() + "님이 좋아해요!")
-                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰
+                // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_LIKE).build();
         noticeRepository.save(notice);
@@ -136,7 +138,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 댓글에 " + fromUser.getNickName() + "님이 대댓글을 달았어요!")
-                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글
+                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.RECOMMENT).build();
         noticeRepository.save(notice);
@@ -150,7 +152,7 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 댓글을 " + fromUser.getNickName() + "님이 좋아해요!")
-                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 제목
+                // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.REVIEW_COMMENT_LIKE).build();
         noticeRepository.save(notice);
@@ -200,7 +202,9 @@ public class NoticeServiceImpl implements NoticeService{
                 .filter(notice -> ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now()) < 1)
                 .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
                 .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).notice(notice).build())
+                        .image(noticeImage(notice))
+                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+                        .notice(notice).build())
                 .collect(Collectors.toList());
     }
 
@@ -215,7 +219,9 @@ public class NoticeServiceImpl implements NoticeService{
                 })
                 .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
                 .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).notice(notice).build())
+                        .image(noticeImage(notice))
+                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+                        .notice(notice).build())
                 .collect(Collectors.toList());
     }
 
@@ -227,7 +233,9 @@ public class NoticeServiceImpl implements NoticeService{
                 .filter(notice -> 7 <= ChronoUnit.DAYS.between(notice.getCreatedAt(), LocalDateTime.now()))
                 .sorted(Comparator.comparing(Notice::getCreatedAt).reversed())
                 .map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice)).notice(notice).build())
+                        .image(noticeImage(notice))
+                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+                        .notice(notice).build())
                 .collect(Collectors.toList());
     }
 
