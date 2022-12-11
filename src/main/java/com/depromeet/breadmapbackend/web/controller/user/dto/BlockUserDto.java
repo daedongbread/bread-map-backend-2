@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SimpleUserDto {
+public class BlockUserDto {
     private Long userId;
     private String userImage;
     private String nickName;
@@ -15,7 +15,7 @@ public class SimpleUserDto {
     private Integer followerNum;
 
     @Builder
-    public SimpleUserDto(User user, Integer reviewNum, Integer followerNum) {
+    public BlockUserDto(User user, Integer reviewNum, Integer followerNum) {
         this.userId = user.getId();
         this.userImage = user.getImage();
         this.nickName = user.getNickName();

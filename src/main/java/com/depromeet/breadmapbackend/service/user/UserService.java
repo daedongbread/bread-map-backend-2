@@ -17,9 +17,11 @@ public interface UserService {
     void deleteUser(String username);
     void follow(String username, FollowRequest request);
     void unfollow(String username, FollowRequest request);
-    List<SimpleUserDto> followerList(String username);
-    List<SimpleUserDto> followingList(String username);
-    List<SimpleUserDto> blockList(String username);
+    List<FollowUserDto> myFollowerList(String username);
+    List<FollowUserDto> myFollowingList(String username);
+    List<FollowUserDto> otherFollowerList(String username, Long userId);
+    List<FollowUserDto> otherFollowingList(String username, Long userId);
+    List<BlockUserDto> blockList(String username);
     void block(String username, BlockRequest request);
     void unblock(String username, BlockRequest request);
 }
