@@ -23,6 +23,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -139,42 +141,36 @@ class NoticeControllerTest extends ControllerTest {
     }
 
     @Test
-    void getNoticeList() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(
-                NoticeTokenRequest.builder().deviceToken(noticeToken.getDeviceToken()).build());
-
-        // when
-        ResultActions result = mockMvc.perform(get("/notice")
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
+    void getTodayNoticeList() throws Exception {
+        mockMvc.perform(get("/notice/today?page=0")
+                .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("notice",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰")),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호")),
                         responseFields(
-                                fieldWithPath("data.todayNoticeList").description("오늘 알람 리스트"),
-                                fieldWithPath("data.todayNoticeList.[].noticeId").description("오늘 알람 아이디"),
-                                fieldWithPath("data.todayNoticeList.[].image").description("오늘 알람 이미지").optional(),
-                                fieldWithPath("data.todayNoticeList.[].fromUserId").description("오늘 알람 발신 유저 고유 번호"),
-                                fieldWithPath("data.todayNoticeList.[].fromUserNickName").description("오늘 알람 발신 유저 닉네임"),
-                                fieldWithPath("data.todayNoticeList.[].title").description("오늘 알람 제목"),
-                                fieldWithPath("data.todayNoticeList.[].contentId").description("오늘 알람 내용의 고유 번호 : " +
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("오늘 알람 리스트"),
+                                fieldWithPath("data.contents").description("오늘 알람 리스트"),
+                                fieldWithPath("data.contents.[].noticeId").description("오늘 알람 아이디"),
+                                fieldWithPath("data.contents.[].image").description("오늘 알람 이미지").optional(),
+                                fieldWithPath("data.contents.[].fromUserId").description("오늘 알람 발신 유저 고유 번호"),
+                                fieldWithPath("data.contents.[].fromUserNickName").description("오늘 알람 발신 유저 닉네임"),
+                                fieldWithPath("data.contents.[].title").description("오늘 알람 제목"),
+                                fieldWithPath("data.contents.[].contentId").description("오늘 알람 내용의 고유 번호 : " +
                                         "(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디, 팔로우/팔로잉 알람일 땐 null)").optional(),
-                                fieldWithPath("data.todayNoticeList.[].content").description("오늘 알람 세부 내용 : " +
+                                fieldWithPath("data.contents.[].content").description("오늘 알람 세부 내용 : " +
                                         "(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
-                                fieldWithPath("data.todayNoticeList.[].isFollow").description("오늘 알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
-                                fieldWithPath("data.todayNoticeList.[].createdAt").description("오늘 알람 생성일"),
-                                fieldWithPath("data.todayNoticeList.[].noticeType").description("오늘 알람 타입"),
-                                fieldWithPath("data.weekNoticeList").description("이번주 알람 리스트"),
-                                fieldWithPath("data.beforeNoticeList").description("지난 알람 리스트")
+                                fieldWithPath("data.contents.[].isFollow").description("오늘 알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
+                                fieldWithPath("data.contents.[].createdAt").description("오늘 알람 생성일"),
+                                fieldWithPath("data.contents.[].noticeType").description("오늘 알람 타입")
                         )
                 ))
                 .andExpect(status().isOk());
