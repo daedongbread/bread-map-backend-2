@@ -75,19 +75,31 @@ public class UserController {
 
     @GetMapping("/follower")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleUserDto>> followerList(@CurrentUser String username) {
-        return new ApiResponse<>(userService.followerList(username));
+    public ApiResponse<List<FollowUserDto>> myFollowerList(@CurrentUser String username) {
+        return new ApiResponse<>(userService.myFollowerList(username));
     }
 
     @GetMapping("/following")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleUserDto>> followingList(@CurrentUser String username) {
-        return new ApiResponse<>(userService.followingList(username));
+    public ApiResponse<List<FollowUserDto>> myFollowingList(@CurrentUser String username) {
+        return new ApiResponse<>(userService.myFollowingList(username));
+    }
+
+    @GetMapping("/{userId}/follower")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<FollowUserDto>> otherFollowerList(@CurrentUser String username, @PathVariable Long userId) {
+        return new ApiResponse<>(userService.otherFollowerList(username, userId));
+    }
+
+    @GetMapping("/{userId}/following")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<FollowUserDto>> otherFollowingList(@CurrentUser String username, @PathVariable Long userId) {
+        return new ApiResponse<>(userService.otherFollowingList(username, userId));
     }
 
     @GetMapping("/block")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleUserDto>> blockList(@CurrentUser String username) {
+    public ApiResponse<List<BlockUserDto>> blockList(@CurrentUser String username) {
         return new ApiResponse<>(userService.blockList(username));
     }
 
