@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.review;
 
-import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -29,6 +29,14 @@ public class PageResponseDto<D> {
                 entity.getTotalPages(), dto);
     }
 
+    public static <E, D> PageResponseDto<D> of(Page<E> entity, List<D> contents) {
+        return new PageResponseDto<> (entity.getNumber(),
+                entity.getNumberOfElements(),
+                entity.getSize(),
+                entity.getTotalElements(),
+                entity.getTotalPages(), contents);
+    }
+
     private static <E, D> List<D> convertToDto(Page<E> entity, Function<E, D> makeDto) {
         return entity.getContent().stream()
                 .map(e -> makeDto.apply(e))

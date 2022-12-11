@@ -29,11 +29,22 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "fromUser_id")
     private User fromUser;
 
+    /*
+     알림 주 내용
+     */
     @Column(nullable = false)
     private String title;
 
-    private Long contentId; // 리뷰 아이디 or 댓글 아이디 or 빵집 아이디 or 상품 아이디 or 빵집 관리자 글 아이디
+    /*
+     내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디
+     팔로우/팔로잉 알람은 null
+     */
+    private Long contentId;
 
+    /*
+     내가 쓴 리뷰 내용(디자인엔 제목으로 나와있음) or 내가 쓴 댓글 내용
+     팔로우/팔로잉 알람은 null
+     */
     private String content;
 
     @Column(nullable = false)

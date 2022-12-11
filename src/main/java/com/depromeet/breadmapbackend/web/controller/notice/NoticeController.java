@@ -3,12 +3,13 @@ package com.depromeet.breadmapbackend.web.controller.notice;
 import com.depromeet.breadmapbackend.service.notice.NoticeService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeListDto;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.UpdateNoticeTokenRequest;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
+import com.depromeet.breadmapbackend.web.controller.notice.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,12 +38,27 @@ public class NoticeController {
         noticeService.updateNoticeTokenAlarm(username, request);
     }
 
-    @GetMapping
+    @GetMapping("/today")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<NoticeListDto> getNoticeList(@CurrentUser String username) { // TODO : 병렬처리
-        return new ApiResponse<>(NoticeListDto.builder()
-                .todayNoticeList(noticeService.getTodayNoticeList(username))
-                .weekNoticeList(noticeService.getWeekNoticeList(username))
-                .beforeNoticeList(noticeService.getBeforeNoticeList(username)).build());
+    public ApiResponse<PageResponseDto<NoticeDto>> getTodayNoticeList(
+            @CurrentUser String username,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(noticeService.getTodayNoticeList(username, pageable));
+    }
+
+    @GetMapping("/week")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<NoticeDto>> getWeekNoticeList(
+            @CurrentUser String username,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(noticeService.getWeekNoticeList(username, pageable));
+    }
+
+    @GetMapping("/before")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<NoticeDto>> getBeforeNoticeList(
+            @CurrentUser String username,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(noticeService.getBeforeNoticeList(username, pageable));
     }
 }
