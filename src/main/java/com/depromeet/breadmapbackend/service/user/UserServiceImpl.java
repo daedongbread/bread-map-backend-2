@@ -151,7 +151,8 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByNickName(request.getNickName()).isEmpty()) {
             user.updateNickName(request.getNickName());
         }
-        else throw new NickNameAlreadyException();
+        else if (!user.equals(userRepository.findByNickName(request.getNickName()).get()))
+            throw new NickNameAlreadyException();
 
         if (!file.isEmpty()) {
             String imagePath = fileConverter.parseFileInfo(file, ImageType.USER_IMAGE, user.getId());
