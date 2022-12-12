@@ -33,7 +33,7 @@ operation::user/me[snippets='http-request,request-headers,http-response,response
 operation::user/profile[snippets='http-request,request-headers,http-response,response-fields']
 
 === 닉네임 업데이트 API [PATCH]
-operation::user/nickname[snippets='http-request,request-headers,request-fields,http-response']
+operation::user/nickname[snippets='http-request,request-headers,request-parts,request-part-request-fields,http-response']
 
 === 로그아웃 API [POST]
 operation::user/logout[snippets='http-request,request-headers,request-fields,http-response']
