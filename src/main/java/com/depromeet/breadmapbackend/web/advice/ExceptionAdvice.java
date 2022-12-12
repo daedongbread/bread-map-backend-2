@@ -318,6 +318,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 올바르지 않은 깃발 색깔일 때
+     */
+    @ExceptionHandler(FlagColorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse flagColorException(FlagColorException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 존재하지 않은 리뷰일 때
      */
     @ExceptionHandler(ReviewNotFoundException.class)

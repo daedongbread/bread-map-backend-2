@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.service.flag;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
@@ -62,6 +63,7 @@ public class FlagServiceImpl implements FlagService {
     public void addFlag(String username, FlagRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if(flagRepository.findByUserAndName(user, request.getName()).isPresent()) throw new FlagAlreadyException();
+        if(request.getColor().equals(FlagColor.GRAY)) throw new FlagColorException();
 
         Flag flag = Flag.builder().user(user).name(request.getName()).color(request.getColor()).build();
         flagRepository.save(flag);
@@ -84,6 +86,7 @@ public class FlagServiceImpl implements FlagService {
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(FlagNotFoundException::new);
 
         if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new FlagUnEditException();
+        if(request.getColor().equals(FlagColor.GRAY)) throw new FlagColorException();
 
         flag.updateFlag(request.getName(), request.getColor());
     }

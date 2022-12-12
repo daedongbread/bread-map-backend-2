@@ -16,6 +16,7 @@ public enum FlagColor {
     PURPLE("보라색"),
     RED("빨간색"),
     PINK("핑크색"),
+    GRAY("회색"),
     ;
 
     private final String code;
