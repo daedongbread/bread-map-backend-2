@@ -351,7 +351,7 @@ class UserControllerTest extends ControllerTest {
         mockMvc.perform(get("/user/follower")
                 .header("Authorization", "Bearer " + token2.getAccessToken()))
                 .andDo(print())
-                .andDo(document("user/follower",
+                .andDo(document("user/me/follower",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
@@ -395,7 +395,7 @@ class UserControllerTest extends ControllerTest {
         mockMvc.perform(get("/user/{userId}/follower", user1.getId())
                 .header("Authorization", "Bearer " + token2.getAccessToken()))
                 .andDo(print())
-                .andDo(document("user/me/follower",
+                .andDo(document("user/follower",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
