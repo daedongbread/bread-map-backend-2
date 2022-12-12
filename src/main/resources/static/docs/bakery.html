@@ -508,7 +508,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery?sort=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQxLCJleHAiOjE2NzA4MTY0NDF9.oIHq_NdxKk24P1XaU9oroN7Wl-DBoLRoKjjvlwaX8_s
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQzLCJleHAiOjE2NzA4Mjc5NDN9.Oh4WduD7wfp0JR7MijFIABAOjSbrB0U8zQDiHEVhb2I
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -705,7 +705,7 @@ Content-Length: 752
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/filter?sort=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQzLCJleHAiOjE2NzA4MTY0NDN9.dsoeqOBomGOGK4fdEkgGLK9opiDQF-QBrO9FO6tgE8U
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQ1LCJleHAiOjE2NzA4Mjc5NDV9.Zz23EUA7JGJYwcAfso1TXntaIXg3qsDOVlr8u_RP1ug
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -762,7 +762,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 752
+Content-Length: 750
 
 {
   "data" : [ {
@@ -796,7 +796,7 @@ Content-Length: 752
     } ],
     "distance" : 165.0,
     "popularNum" : 1,
-    "color" : "ORANGE"
+    "color" : "GRAY"
   } ]
 }</code></pre>
 </div>
@@ -888,7 +888,7 @@ Content-Length: 752
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].color</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 깃발 색깔</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 깃발 색깔 (지정하지 않은 경우 회색)</p></td>
 </tr>
 </tbody>
 </table>
@@ -902,7 +902,7 @@ Content-Length: 752
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQzLCJleHAiOjE2NzA4MTY0NDN9.dsoeqOBomGOGK4fdEkgGLK9opiDQF-QBrO9FO6tgE8U
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQ0LCJleHAiOjE2NzA4Mjc5NDR9.ZQeoAQUcHOs8CsV7CXGmkPVQ8xHA1dHyUbDjo3APLj4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1124,7 +1124,7 @@ BOOKING("예약"))</p></td>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/product HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQzLCJleHAiOjE2NzA4MTY0NDN9.dsoeqOBomGOGK4fdEkgGLK9opiDQF-QBrO9FO6tgE8U
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQ1LCJleHAiOjE2NzA4Mjc5NDV9.Zz23EUA7JGJYwcAfso1TXntaIXg3qsDOVlr8u_RP1ug
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1250,7 +1250,7 @@ Content-Length: 153
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1/update HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQyLCJleHAiOjE2NzA4MTY0NDJ9.eZ8l9gsC4XfyhQ30rzhDsbMjH1hyle3WIYdjE47FmUU
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQzLCJleHAiOjE2NzA4Mjc5NDN9.Oh4WduD7wfp0JR7MijFIABAOjSbrB0U8zQDiHEVhb2I
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -1385,11 +1385,11 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1/delete HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQyLCJleHAiOjE2NzA4MTY0NDJ9.eZ8l9gsC4XfyhQ30rzhDsbMjH1hyle3WIYdjE47FmUU
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQzLCJleHAiOjE2NzA4Mjc5NDN9.Oh4WduD7wfp0JR7MijFIABAOjSbrB0U8zQDiHEVhb2I
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=file; filename=0d81a826-fc9b-4e64-a7e8-ceffc39ada07.png
+Content-Disposition: form-data; name=file; filename=6e81fb1e-c73d-46a2-9689-5d4f6543e32a.png
 Content-Type: image/png
 
 test
@@ -1498,7 +1498,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/add HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQzLCJleHAiOjE2NzA4MTY0NDN9.dsoeqOBomGOGK4fdEkgGLK9opiDQF-QBrO9FO6tgE8U
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQ1LCJleHAiOjE2NzA4Mjc5NDV9.Zz23EUA7JGJYwcAfso1TXntaIXg3qsDOVlr8u_RP1ug
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -1604,11 +1604,11 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQzLCJleHAiOjE2NzA4MTY0NDN9.dsoeqOBomGOGK4fdEkgGLK9opiDQF-QBrO9FO6tgE8U
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQ1LCJleHAiOjE2NzA4Mjc5NDV9.Zz23EUA7JGJYwcAfso1TXntaIXg3qsDOVlr8u_RP1ug
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=f60def7e-fa9d-4936-8e28-8d9dc23e985e.png
+Content-Disposition: form-data; name=files; filename=2f5a1568-8fcc-4ee5-b074-98d2ffd24c2c.png
 Content-Type: image/png
 
 test
@@ -1754,7 +1754,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/product HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQyLCJleHAiOjE2NzA4MTY0NDJ9.eZ8l9gsC4XfyhQ30rzhDsbMjH1hyle3WIYdjE47FmUU
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQzLCJleHAiOjE2NzA4Mjc5NDN9.Oh4WduD7wfp0JR7MijFIABAOjSbrB0U8zQDiHEVhb2I
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1891,7 +1891,7 @@ Content-Length: 110
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/product/search?name=bread HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODEyODQzLCJleHAiOjE2NzA4MTY0NDN9.dsoeqOBomGOGK4fdEkgGLK9opiDQF-QBrO9FO6tgE8U
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjcwODI0MzQ1LCJleHAiOjE2NzA4Mjc5NDV9.Zz23EUA7JGJYwcAfso1TXntaIXg3qsDOVlr8u_RP1ug
 Host: localhost:8080</code></pre>
 </div>
 </div>
