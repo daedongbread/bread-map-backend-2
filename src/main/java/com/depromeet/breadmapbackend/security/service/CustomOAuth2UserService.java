@@ -82,7 +82,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
             int num = rand.nextInt(9999) + 1;
 
             nickName = adjective + breadName + num;
-            log.info("nn : " + nickName);
         } while (userRepository.findByNickName(nickName).isPresent());
         return nickName;
     }

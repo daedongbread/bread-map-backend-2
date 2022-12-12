@@ -179,7 +179,7 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].simpleReviewList.[].content").description("빵집 리뷰 내용"),
                                 fieldWithPath("data.[].distance").description("빵집까지 거리"),
                                 fieldWithPath("data.[].popularNum").description("빵집 인기수"),
-                                fieldWithPath("data.[].color").description("빵집 깃발 색깔")
+                                fieldWithPath("data.[].color").description("빵집 깃발 색깔 (지정하지 않은 경우 회색)")
                         )
                 ))
                 .andExpect(status().isOk());

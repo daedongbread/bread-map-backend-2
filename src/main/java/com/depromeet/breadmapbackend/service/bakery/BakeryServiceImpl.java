@@ -121,7 +121,7 @@ public class BakeryServiceImpl implements BakeryService {
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
                                 + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
                         .color(flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).isPresent() ?
-                                flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).get().getColor():FlagColor.ORANGE)
+                                flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).get().getColor():FlagColor.GRAY)
                         .build())
                 .sorted(comparing)
                 .collect(Collectors.toList());
