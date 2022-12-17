@@ -26,6 +26,7 @@ import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenReques
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -54,10 +55,17 @@ public class NoticeServiceImpl implements NoticeService{
 
     private final FcmService fcmService;
 
-    private String COMMENT_IMAGE = "noticeImage/defaultComment.jpg";
-    private String LIKE_IMAGE = "noticeImage/defaultLike.jpg";
-    private String REPORT_IMAGE = "noticeImage/defaultReport.jpg";
-    private String FLAG_IMAGE = "noticeImage/defaultFlag.jpg";
+    @Value("${cloud.aws.s3.default-path.comment}")
+    private String defaultCommentImage;
+
+    @Value("${cloud.aws.s3.default-path.like}")
+    private String defaultLikeImage;
+
+    @Value("${cloud.aws.s3.default-path.report}")
+    private String defaultReportImage;
+
+    @Value("${cloud.aws.s3.default-path.flag}")
+    private String defaultFlagImage;
 
     @Transactional(rollbackFor = Exception.class)
     public void addNoticeToken(String username, NoticeTokenRequest request) {
@@ -68,7 +76,7 @@ public class NoticeServiceImpl implements NoticeService{
         noticeTokenRepository.save(noticeToken);
     }
 
-    @Async
+    @Async("notice")
     @TransactionalEventListener
     public void deleteNoticeToken(NoticeTokenDeleteEvent event) {
         User user = userRepository.findByUsername(event.getUsername()).orElseThrow(UserNotFoundException::new);
@@ -96,7 +104,7 @@ public class NoticeServiceImpl implements NoticeService{
         } else throw new NoticeTokenNotFoundException();
     }
 
-    @Async
+    @Async("notice")
     @TransactionalEventListener
     public void addFollowNotice(FollowEvent event) { // 팔로우 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -105,12 +113,13 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title(fromUser.getNickName() + "님이 회원님을 팔로우하기 시작했어요")
+                .contentId(fromUser.getId())
                 .type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice);
-//        fcmService.sendMessageTo(event.g(), ); // TODO : for로 메시지 보내기... 근데 단체로 보내기 있지 않나
+//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
-    @Async
+    @Async("notice")
     @TransactionalEventListener
     public void addReviewCommentNotice(ReviewCommentEvent event) { // 내 리뷰 댓글 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -122,9 +131,10 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
+//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
-    @Async
+    @Async("notice")
     @TransactionalEventListener
     public void addReviewLikeNotice(ReviewLikeEvent event) { // 내 리뷰 좋아요 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -136,9 +146,10 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_LIKE).build();
         noticeRepository.save(notice);
+//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
-    @Async
+    @Async("notice")
     @TransactionalEventListener
     public void addRecommentNotice(RecommentEvent event) { // 내 대댓글 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -150,9 +161,10 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.RECOMMENT).build();
         noticeRepository.save(notice);
+//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
-    @Async
+    @Async("notice")
     @TransactionalEventListener
     public void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) { // 내 댓글 좋아요 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -164,9 +176,10 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.REVIEW_COMMENT_LIKE).build();
         noticeRepository.save(notice);
+//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
-//    @Async
+//    @Async("notice")
 //    @TransactionalEventListener
 //    public void addReportBakeryAddNotice(ReportBakeryAdd event) { // 제보한 빵집 추가 알람
 //        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -178,7 +191,7 @@ public class NoticeServiceImpl implements NoticeService{
 //        noticeRepository.save(notice);
 //    }
 //
-//    @Async
+//    @Async("notice")
 //    @TransactionalEventListener
 //    public void addReportBreadAddNotice(ReportBreadAddEvent event) { // 제보한 빵 추가 알람
 //        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -190,7 +203,7 @@ public class NoticeServiceImpl implements NoticeService{
 //        noticeRepository.save(notice);
 //    }
 //
-//    @Async
+//    @Async("notice")
 //    @TransactionalEventListener
 //    public void addFlagBakeryAdminNoticeNotice(FlagBakeryAdminEvent event) { // 즐겨찾기 한 빵집 관리자 글 업데이트
 //        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
@@ -251,13 +264,13 @@ public class NoticeServiceImpl implements NoticeService{
     private String noticeImage(Notice notice) {
         if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getImage();
         else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
-            return COMMENT_IMAGE;
+            return defaultCommentImage;
         else if(notice.getType().equals(NoticeType.REVIEW_LIKE) || notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))
-            return LIKE_IMAGE;
+            return defaultLikeImage;
         else if(notice.getType().equals(NoticeType.ADD_BAKERY) || notice.getType().equals(NoticeType.ADD_PRODUCT))
-            return REPORT_IMAGE;
+            return defaultReportImage;
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
-            return FLAG_IMAGE;
+            return defaultFlagImage;
         else throw new NoticeTypeWrongException();
     }
 }

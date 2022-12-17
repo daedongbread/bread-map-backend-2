@@ -165,7 +165,7 @@ class NoticeControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents.[].fromUserNickName").description("오늘 알람 발신 유저 닉네임"),
                                 fieldWithPath("data.contents.[].title").description("오늘 알람 제목"),
                                 fieldWithPath("data.contents.[].contentId").description("오늘 알람 내용의 고유 번호 : " +
-                                        "(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디, 팔로우/팔로잉 알람일 땐 null)").optional(),
+                                        "(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)").optional(),
                                 fieldWithPath("data.contents.[].content").description("오늘 알람 세부 내용 : " +
                                         "(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
                                 fieldWithPath("data.contents.[].isFollow").description("오늘 알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
