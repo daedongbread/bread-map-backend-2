@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ReviewReportRepository extends JpaRepository<ReviewReport, Long> {
-    @Query(value = "select r from ReviewReport r", countQuery = "select count(*) from ReviewReport")
+    @Query(value = "select * from review_report", countQuery = "select count(*) from review_report", nativeQuery = true)
     Page<ReviewReport> findPageAll(Pageable pageable);
     void deleteByReview(Review review);
     Long countByIsBlock(Boolean isBlock);

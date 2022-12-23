@@ -265,7 +265,7 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void searchBakeryList() throws Exception {
-        mockMvc.perform(get("/admin/bakery/search?name=bak&page=0")
+        mockMvc.perform(get("/admin/bakery/search?name=ake&page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/search",

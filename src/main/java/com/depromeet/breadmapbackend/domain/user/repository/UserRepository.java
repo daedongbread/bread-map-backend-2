@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
-    @Query(value = "select u from User u", countQuery = "select count(*) from User")
+    @Query(value = "select * from user", countQuery = "select count(*) from user", nativeQuery = true)
     Page<User> findPageAll(Pageable pageable);
     Optional<User> findByNickName(String nickName);
     Optional<User> findByEmail(String email);
