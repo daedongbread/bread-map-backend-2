@@ -111,6 +111,9 @@ public class S3Uploader {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(file.getBytes());
             }
+            catch (IOException e) {
+                removeNewFile(convertFile);
+            }
             return Optional.of(convertFile);
         }
         return Optional.empty();
