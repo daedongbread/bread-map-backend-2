@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService {
         else if (!user.equals(userRepository.findByNickName(request.getNickName()).get()))
             throw new NickNameAlreadyException();
 
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             String imagePath = fileConverter.parseFileInfo(file, ImageType.USER_IMAGE, user.getId());
             String image = s3Uploader.upload(file, imagePath);
             user.updateImage(image);
