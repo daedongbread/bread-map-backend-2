@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.advice;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.depromeet.breadmapbackend.domain.admin.exception.AdminJoinException;
 import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
@@ -575,6 +576,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(SgisFeignException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse sgisFeignException(SgisFeignException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
+     * AWS S3 Exception
+     */
+    @ExceptionHandler(AmazonS3Exception.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse amazonS3Exception(AmazonS3Exception e) {
         return new ErrorResponse(e.getMessage());
     }
 }

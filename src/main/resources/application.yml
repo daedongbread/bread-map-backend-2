@@ -89,5 +89,5 @@ firebase:
       review: FIREBASE_MESSAGE_PATH_REVIEW
 
 sgis:
-  key: 19d650af0ba14aa3a02c
-  secret: 3dfe3c41a43140ba8e2d
+  key: SGIS_KEY
+  secret: SGIS_SECRET

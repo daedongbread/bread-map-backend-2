@@ -27,9 +27,10 @@ public class S3Uploader {
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {
         log.info("upload file : " + multipartFile);
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        upload(uploadFile, fileName);
+//        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
+//                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+//        upload(uploadFile, fileName);
+        newUpload(multipartFile, fileName);
         return CLOUD_FRONT_DOMAIN_NAME + "/" + fileName;
     }
 
@@ -40,9 +41,26 @@ public class S3Uploader {
         return uploadImageUrl;
     }
 
+    // S3로 파일 업로드하기
+    private String newUpload(MultipartFile multipartFile, String fileName) throws IOException {
+        return newPutS3(multipartFile, fileName); // s3로 업로드
+    }
+
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        log.info("File putS3 success");
+        return amazonS3Client.getUrl(bucket, fileName).toString();
+    }
+
+    // S3로 업로드
+    private String newPutS3(MultipartFile multipartFile, String fileName) throws IOException {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(multipartFile.getContentType());
+        metadata.setContentLength(multipartFile.getSize());
+        amazonS3Client.putObject(
+                new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), metadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
         log.info("File putS3 success");
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
@@ -110,9 +128,6 @@ public class S3Uploader {
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(file.getBytes());
-            }
-            catch (IOException e) {
-                removeNewFile(convertFile);
             }
             return Optional.of(convertFile);
         }
