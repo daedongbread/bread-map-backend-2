@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
+import com.depromeet.breadmapbackend.web.controller.common.PageableSortConverter;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,8 +58,8 @@ public class AdminController {
     @GetMapping("/bakery")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getBakeryList(pageable));
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryList(PageableSortConverter.convertSort(pageable)));
     }
 
     @GetMapping("/bakery/{bakeryId}")
@@ -71,8 +72,8 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
             @RequestParam String name,
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.searchBakeryList(name, pageable));
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.searchBakeryList(name, PageableSortConverter.convertSort(pageable)));
     }
 
     @GetMapping("/bakery/location")
@@ -110,8 +111,8 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<SliceResponseDto<AdminBakeryReviewImageDto>> getBakeryReviewImages(
             @PathVariable Long bakeryId,
-            @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId ,pageable));
+            @PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId, PageableSortConverter.convertSort(pageable)));
     }
 
     @DeleteMapping("/bakery/{bakeryId}")
@@ -123,8 +124,8 @@ public class AdminController {
     @GetMapping("/bakery/report")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryReportList(
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getBakeryReportList(pageable));
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getBakeryReportList(PageableSortConverter.convertSort(pageable)));
     }
 
     @GetMapping("/bakery/report/{reportId}")
@@ -142,8 +143,8 @@ public class AdminController {
     @GetMapping("/review/report")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminReviewReportDto>> getReviewReportList(
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getReviewReportList(pageable));
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getReviewReportList(PageableSortConverter.convertSort(pageable)));
     }
 
     @PatchMapping("/review/report/{reportId}")
@@ -155,8 +156,8 @@ public class AdminController {
     @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminUserDto>> getUserList(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getUserList(pageable));
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ApiResponse<>(adminService.getUserList(PageableSortConverter.convertSort(pageable)));
     }
 
     @PatchMapping("/user/{userId}/block")

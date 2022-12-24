@@ -36,8 +36,7 @@ public class Notice extends BaseEntity {
     private String title;
 
     /*
-     내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디
-     팔로우/팔로잉 알람은 null
+     내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 유저 아이디
      */
     private Long contentId;
 

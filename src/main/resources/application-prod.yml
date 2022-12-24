@@ -74,6 +74,11 @@ cloud:
       static: ${S3_REGION}
     s3:
       bucket: ${S3_BUCKET}
+      default-path:
+        comment: ${S3_DEFAULT_COMMENT}
+        like: ${S3_DEFAULT_LIKE}
+        report: ${S3_DEFAULT_REPORT}
+        flag: ${S3_DEFAULT_FLAG}
     stack:
       auto: false
     cloudFront:
@@ -88,6 +93,10 @@ firebase:
   path: ${FIREBASE_PATH}
   scope: ${FIREBASE_SCOPE}
   projectId: ${FIREBASE_PROJECTID}
+  message:
+    path:
+      user: ${FIREBASE_MESSAGE_PATH_USER}
+      review: ${FIREBASE_MESSAGE_PATH_REVIEW}
 
 sgis:
   key: ${SGIS_KEY}
