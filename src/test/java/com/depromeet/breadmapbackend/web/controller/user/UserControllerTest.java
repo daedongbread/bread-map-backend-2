@@ -233,7 +233,7 @@ class UserControllerTest extends ControllerTest {
     @Test
     void updateNickName() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("testNickName3").build());
+        String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("testtest").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
 
