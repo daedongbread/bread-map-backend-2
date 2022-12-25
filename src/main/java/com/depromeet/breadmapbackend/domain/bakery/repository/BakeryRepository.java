@@ -17,7 +17,7 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     Page<Bakery> findPageAll(Pageable pageable);
 //    Integer countAllByNameEqualsAndStreetAddressEquals(String name, String streetAddress);
     List<Bakery> findByNameStartsWith(String name);
-    @Query(value = "select * from bakery b where b.name like %:name%", countQuery = "select count(*) from bakery b where b.name like '%' || :name || '%'", nativeQuery = true)
+    @Query(value = "select * from bakery b where b.name like %:name%", countQuery = "select count(*) from bakery b where b.name like %:name%", nativeQuery = true)
     Page<Bakery> findByNameContains(@Param("name") String name, Pageable pageable);
     Long countByStatus(BakeryStatus status);
 }
