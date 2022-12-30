@@ -418,6 +418,15 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 본인을 팔로우/언팔로우 했을 때
+     */
+    @ExceptionHandler(InvalidFollowException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse invalidFollowException(InvalidFollowException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    /**
      * 정렬 조건이 틀렸을 때
      */
     @ExceptionHandler(BakerySortTypeWrongException.class)

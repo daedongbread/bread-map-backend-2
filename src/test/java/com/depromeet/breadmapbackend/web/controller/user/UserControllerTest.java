@@ -329,18 +329,36 @@ class UserControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void unfollow() throws Exception {
+    void deleteFollower() throws Exception {
         String object = objectMapper.writeValueAsString(FollowRequest.builder().userId(user2.getId()).build());
 
-        mockMvc.perform(delete("/user/unfollow")
-                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + token1.getAccessToken()))
+        mockMvc.perform(delete("/user/follower")
+                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token1.getAccessToken()))
                 .andDo(print())
-                .andDo(document("user/unfollow",
+                .andDo(document("user/delete/follower",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("userId").description("언팔로우할 유저 고유번호"))
+                        requestFields(fieldWithPath("userId").description("삭제한 팔로잉 유저 고유번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+//    @Transactional
+    void deleteFollowing() throws Exception {
+        String object = objectMapper.writeValueAsString(FollowRequest.builder().userId(user2.getId()).build());
+
+        mockMvc.perform(delete("/user/following")
+                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token1.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/delete/following",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(fieldWithPath("userId").description("삭제한 팔로워 유저 고유번호"))
                 ))
                 .andExpect(status().isNoContent());
     }
@@ -361,7 +379,8 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].nickName").description("팔로워 유저 닉네임"),
                                 fieldWithPath("data.[].reviewNum").description("팔로워 유저 리뷰 수"),
                                 fieldWithPath("data.[].followerNum").description("팔로워 유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("팔로워 유저 팔로우 여부")
+                                fieldWithPath("data.[].isFollow").description("팔로워 유저 팔로우 여부"),
+                                fieldWithPath("data.[].isMe").description("팔로워 유저 본인 여부 : 항상 false")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -383,7 +402,8 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].nickName").description("팔로잉 유저 닉네임"),
                                 fieldWithPath("data.[].reviewNum").description("팔로잉 유저 리뷰 수"),
                                 fieldWithPath("data.[].followerNum").description("팔로잉 유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("팔로잉 유저 팔로우 여부")
+                                fieldWithPath("data.[].isFollow").description("팔로잉 유저 팔로우 여부"),
+                                fieldWithPath("data.[].isMe").description("팔로잉 유저 본인 여부 : 항상 false")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -405,7 +425,8 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].nickName").description("팔로워 유저 닉네임"),
                                 fieldWithPath("data.[].reviewNum").description("팔로워 유저 리뷰 수"),
                                 fieldWithPath("data.[].followerNum").description("팔로워 유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("팔로워 유저 팔로우 여부")
+                                fieldWithPath("data.[].isFollow").description("팔로워 유저 팔로우 여부"),
+                                fieldWithPath("data.[].isMe").description("팔로워 유저 본인 여부")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -427,7 +448,8 @@ class UserControllerTest extends ControllerTest {
                                 fieldWithPath("data.[].nickName").description("팔로잉 유저 닉네임"),
                                 fieldWithPath("data.[].reviewNum").description("팔로잉 유저 리뷰 수"),
                                 fieldWithPath("data.[].followerNum").description("팔로잉 유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("팔로잉 유저 팔로우 여부")
+                                fieldWithPath("data.[].isFollow").description("팔로잉 유저 팔로우 여부"),
+                                fieldWithPath("data.[].isMe").description("팔로잉 유저 본인 여부")
                         )
                 ))
                 .andExpect(status().isOk());
