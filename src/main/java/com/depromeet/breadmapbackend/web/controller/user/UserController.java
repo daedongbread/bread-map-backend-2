@@ -67,10 +67,16 @@ public class UserController {
         userService.follow(username, request);
     }
 
-    @DeleteMapping("/unfollow")
+    @DeleteMapping("/follower")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unfollow(@CurrentUser String username, @RequestBody FollowRequest request) {
-        userService.unfollow(username, request);
+    public void deleteFollower(@CurrentUser String username, @RequestBody FollowRequest request) {
+        userService.deleteFollower(username, request);
+    }
+
+    @DeleteMapping("/following")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFollowing(@CurrentUser String username, @RequestBody FollowRequest request) {
+        userService.deleteFollowing(username, request);
     }
 
     @GetMapping("/follower")

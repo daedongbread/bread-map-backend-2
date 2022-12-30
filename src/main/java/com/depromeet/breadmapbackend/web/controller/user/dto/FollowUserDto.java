@@ -14,14 +14,16 @@ public class FollowUserDto {
     private Integer reviewNum;
     private Integer followerNum;
     private Boolean isFollow;
+    private Boolean isMe;
 
     @Builder
-    public FollowUserDto(User user, Integer reviewNum, Integer followerNum, Boolean isFollow) {
+    public FollowUserDto(User user, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe) {
         this.userId = user.getId();
         this.userImage = user.getImage();
         this.nickName = user.getNickName();
         this.reviewNum = reviewNum;
         this.followerNum = followerNum;
         this.isFollow = isFollow;
+        this.isMe = isMe;
     }
 }
