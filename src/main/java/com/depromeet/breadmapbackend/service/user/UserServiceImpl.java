@@ -98,9 +98,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ProfileDto myProfile(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-
-        Integer followingNum = followRepository.countByToUser(user);
-        Integer followerNum = followRepository.countByFromUser(user);
+        Integer followingNum = followRepository.countByFromUser(user);
+        Integer followerNum = followRepository.countByToUser(user);
 
         List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
                 .map(flag -> UserFlagDto.builder()
@@ -124,8 +123,8 @@ public class UserServiceImpl implements UserService {
     public ProfileDto otherProfile(String username, Long userId) {
         User me = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User other = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Integer followingNum = followRepository.countByToUser(other);
-        Integer followerNum = followRepository.countByFromUser(other);
+        Integer followingNum = followRepository.countByFromUser(other);
+        Integer followerNum = followRepository.countByToUser(other);
         Boolean isFollow = followRepository.findByFromUserAndToUser(me, other).isPresent();
         List<UserFlagDto> userFlagList = flagRepository.findByUser(other).stream()
                 .map(flag -> UserFlagDto.builder()
@@ -220,6 +219,7 @@ public class UserServiceImpl implements UserService {
     public void follow(String username, FollowRequest request) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        if(fromUser.equals(toUser)) throw new InvalidFollowException();
         if(followRepository.findByFromUserAndToUser(fromUser, toUser).isPresent()) throw new FollowAlreadyException();
         Follow follow = Follow.builder().fromUser(fromUser).toUser(toUser).build();
         followRepository.save(follow);
@@ -227,9 +227,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void unfollow(String username, FollowRequest request) {
+    public void deleteFollower(String username, FollowRequest request) { // 나를 팔로우한 사람 삭제
+        User fromUser = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        User toUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        if(fromUser.equals(toUser)) throw new InvalidFollowException();
+        Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser).orElseThrow(FollowNotFoundException::new);
+        followRepository.delete(follow);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFollowing(String username, FollowRequest request) { // 내가 팔로우한 사람 삭제
         User fromUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException::new);
+        if(fromUser.equals(toUser)) throw new InvalidFollowException();
         Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser).orElseThrow(FollowNotFoundException::new);
         followRepository.delete(follow);
     }
@@ -242,7 +252,8 @@ public class UserServiceImpl implements UserService {
                         follow.getFromUser(),
                         reviewRepository.countByUser(follow.getFromUser()),
                         followRepository.countByToUser(follow.getFromUser()),
-                        followRepository.findByFromUserAndToUser(follow.getFromUser(), toUser).isPresent()
+                        followRepository.findByFromUserAndToUser(follow.getFromUser(), toUser).isPresent(),
+                        false
                 ))
                 .collect(Collectors.toList());
     }
@@ -255,7 +266,8 @@ public class UserServiceImpl implements UserService {
                         follow.getToUser(),
                         reviewRepository.countByUser(follow.getToUser()),
                         followRepository.countByToUser(follow.getToUser()),
-                        followRepository.findByFromUserAndToUser(fromUser, follow.getToUser()).isPresent()
+                        followRepository.findByFromUserAndToUser(fromUser, follow.getToUser()).isPresent(),
+                        false
                 ))
                 .collect(Collectors.toList());
     }
@@ -269,7 +281,8 @@ public class UserServiceImpl implements UserService {
                         follow.getFromUser(),
                         reviewRepository.countByUser(follow.getFromUser()),
                         followRepository.countByToUser(follow.getFromUser()),
-                        followRepository.findByFromUserAndToUser(me, follow.getFromUser()).isPresent()
+                        followRepository.findByFromUserAndToUser(me, follow.getFromUser()).isPresent(),
+                        follow.getFromUser().equals(me)
                 ))
                 .collect(Collectors.toList());
     }
@@ -283,7 +296,8 @@ public class UserServiceImpl implements UserService {
                         follow.getToUser(),
                         reviewRepository.countByUser(follow.getToUser()),
                         followRepository.countByToUser(follow.getToUser()),
-                        followRepository.findByFromUserAndToUser(me, follow.getToUser()).isPresent()
+                        followRepository.findByFromUserAndToUser(me, follow.getToUser()).isPresent(),
+                        follow.getToUser().equals(me)
                 ))
                 .collect(Collectors.toList());
     }
