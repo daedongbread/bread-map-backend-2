@@ -2,22 +2,18 @@ package com.depromeet.breadmapbackend.web.advice;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.depromeet.breadmapbackend.domain.admin.exception.AdminJoinException;
-import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.exception.*;
 import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
 import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
 import com.depromeet.breadmapbackend.domain.product.exception.ProductAlreadyException;
-import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.infra.feign.exception.SgisFeignException;
 import com.depromeet.breadmapbackend.security.CAccessDeniedException;
 import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
-import com.depromeet.breadmapbackend.security.exception.RefreshTokenNotFoundException;
 import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
@@ -211,24 +207,6 @@ public class ExceptionAdvice {
     }
 
     /**
-     * refresh 토큰이 존재하지 않을 때
-     */
-    @ExceptionHandler(RefreshTokenNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-    
-    /**
-     * 유저가 존재하지 않을 때
-     */
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse userNotFoundException(UserNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
      * 닉네임이 이미 존재할 때
      */
     @ExceptionHandler(NickNameAlreadyException.class)
@@ -238,29 +216,11 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 빵집이 존재하지 않을 때
-     */
-    @ExceptionHandler(BakeryNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse bakeryNotFoundException(BakeryNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
      * 빵집 고유 번호가 이미 존재할 때
      */
     @ExceptionHandler(BakeryIdAlreadyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse bakeryIdAlreadyException(BakeryIdAlreadyException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 빵이 존재하지 않을 때
-     */
-    @ExceptionHandler(ProductNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse breadNotFoundException(ProductNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -282,14 +242,6 @@ public class ExceptionAdvice {
         return new ErrorResponse(e.getMessage());
     }
 
-    /**
-     * 존재하지 않은 리스트일 때
-     */
-    @ExceptionHandler(FlagNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse flagNotFoundException(FlagNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
 
     /**
      * 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
@@ -310,29 +262,11 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 해당 리스트에 없는 빵집일 때
-     */
-    @ExceptionHandler(FlagBakeryNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse flagBakeryNotFoundException(FlagBakeryNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
      * 올바르지 않은 깃발 색깔일 때
      */
     @ExceptionHandler(FlagColorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse flagColorException(FlagColorException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 존재하지 않은 리뷰일 때
-     */
-    @ExceptionHandler(ReviewNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse breadReviewNotFoundException(ReviewNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -364,15 +298,6 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 존재하지 않은 댓글일 때
-     */
-    @ExceptionHandler(ReviewCommentNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse reviewCommentNotFoundException(ReviewCommentNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
      * 이미 좋아요를 누른 댓글일 때
      */
     @ExceptionHandler(ReviewCommentLikeAlreadyException.class)
@@ -387,24 +312,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(ReviewCommentUnlikeAlreadyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse reviewCommentUnlikeAlreadyException(ReviewCommentUnlikeAlreadyException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 존재하지 않는 리뷰 신고일 때
-     */
-    @ExceptionHandler(ReviewReportNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse reviewReportNotFoundException(ReviewReportNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 팔로우가 되어 있지 않을 때
-     */
-    @ExceptionHandler(FollowNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse followNotFoundException(FollowNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -439,7 +346,7 @@ public class ExceptionAdvice {
      * 이미지가 존재하지 않을 때
      */
     @ExceptionHandler(ImageNotExistException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse imageNotExistException(ImageNotExistException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -481,15 +388,6 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 빵집 제보가 존재하지 않을 때
-     */
-    @ExceptionHandler(BakeryReportNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse bakeryReportNotFoundException(BakeryReportNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
      * 알림 날짜에 오류가 있을 때
      */
     @ExceptionHandler(NoticeDateException.class)
@@ -517,29 +415,11 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 알림 토큰이 존재하지 않을 때
-     */
-    @ExceptionHandler(NoticeTokenNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse noticeTokenNotFoundException(NoticeTokenNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
      * 이미 차단한 유저일 때
      */
     @ExceptionHandler(BlockAlreadyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse blockAlreadyException(BlockAlreadyException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 차단하지 않은 유저일 때
-     */
-    @ExceptionHandler(BlockNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse blockNotFoundException(BlockNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -567,15 +447,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(BakeryAddressException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse bakeryAddressException(BakeryAddressException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    /**
-     * 관리자가 존재하지 않을 때
-     */
-    @ExceptionHandler(AdminNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse adminNotFoundException(AdminNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
