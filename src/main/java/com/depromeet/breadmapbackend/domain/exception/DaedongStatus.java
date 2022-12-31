@@ -4,17 +4,29 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
 public enum DaedongStatus {
     // 400 BAD REQUEST
+    BAKERY_SORT_TYPE_EXCEPTION(BAD_REQUEST, 4, "bakery sort type is wrong"), // 빵집 정렬 조건이 틀렸을 때
+    FLAG_COLOR_EXCEPTION(BAD_REQUEST, 4, ""), // 올바르지 않은 깃발 색깔일 때
+    FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 4, ""), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
+    NOTICE_TYPE_EXCEPTION(BAD_REQUEST, 4, ""), // 알림 타입이 틀렸을 때
+    IMAGE_INVALID_EXCEPTION(BAD_REQUEST, 4, "image is invalid"), // 이미지가 유효하지 않을 때
+    IMAGE_NUM_UNMATCH_EXCEPTION(BAD_REQUEST, 4, ""), // 이미지 개수가 상품 개수와 일치하지 않을 때
+    IMAGE_NUM_EXCEED_EXCEPTION(BAD_REQUEST, 4, ""), // 이미지 개수가 초과될 때
+    ADMIN_KEY_EXCEPTION(BAD_REQUEST, 4, ""), // 관리자 회원가입에서 키가 틀렸을 때
 
     // 401 UNAUTHORIZED
+    CUSTOM_AUTHENTICATION_ENTRYPOINT_EXCEPTION(UNAUTHORIZED, 4, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
+    TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 4, "invalid token"), // access or refresh token이 유효하지 않을 때
 
     // 403 FORBIDDEN
+    CUSTOM_ACCESS_DENIED_EXCEPTION(FORBIDDEN, 4, "access denied"), // 권한이 없는 리소스를 요청한 경우 발생 시키는 예외
+    BLOCK_USER(FORBIDDEN, 40310, "blocked user"), // 차단된 유저일 떄
+    REJOIN_RESTRICT(FORBIDDEN, 40311, "rejoin is not possible within 7 days of withdrawal"), // 탈퇴한지 7일이 지나지 않았는데 재가입 시
 
     // 404 NOT FOUND
     USER_NOT_FOUND(NOT_FOUND, 40010, "user not found"), // 유저가 존재하지 않을 때
@@ -30,13 +42,30 @@ public enum DaedongStatus {
     ADMIN_NOT_FOUND(NOT_FOUND, 40090, "admin not found"), // 관리자가 존재하지 않을 때
     BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40091, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
     REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40092, "review report not found"), // 존재하지 않는 리뷰 신고일 때
-    ;
+
+
 
     // 409 CONFLICT
+    NICKNAME_DUPLICATE_EXCEPTION(CONFLICT, 40910, "nickname already exists"), // 유저 닉네임이 이미 존재할 때
+    FOLLOW_DUPLICATE_EXCEPTION(CONFLICT, 40911, "already follow user"), // 이미 팔로우가 되어 있을 때
+    SELF_FOLLOW_EXCEPTION(BAD_REQUEST, 40912, "self follow or unfollow exception"), // 본인을 팔로우/언팔로우 했을 때
+    BLOCK_DUPLICATE_EXCEPTION(CONFLICT, 40913, "already block user"), // 이미 차단한 유저일 때
+    PRODUCT_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 존재하는 상품일 때
+    FLAG_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 존재하는 리스트일 때
+    FLAG_BAKERY_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 해당 리스트에 등록된 빵집일 때
+    REVIEW_LIKE_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 좋아요를 누른 리뷰일 때
+    REVIEW_UNLIKE_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 좋아요를 취소한 리뷰일 때
+    REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 좋아요를 누른 댓글일 때
+    REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 이미 좋아요를 취소한 댓글일 때
+    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 4, ""), // 알림 토큰이 이미 존재할 때
+    ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 4, "d") // 관리자 이메일 중복일 때
+    ;
+
+
 
     // 500
 
-    private HttpStatus status;
+    private final HttpStatus status;
     private final Integer code;
     private final String description;
 }

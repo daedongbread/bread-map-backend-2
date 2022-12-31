@@ -4,15 +4,11 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.product.Product;
-import com.depromeet.breadmapbackend.domain.product.exception.ProductAlreadyException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakerySortTypeWrongException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.review.*;
-import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
@@ -56,7 +52,7 @@ public class ReviewServiceImpl implements ReviewService {
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
@@ -76,7 +72,7 @@ public class ReviewServiceImpl implements ReviewService {
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
@@ -137,7 +133,7 @@ public class ReviewServiceImpl implements ReviewService {
         if(request.getNoExistProductRatingRequestList() != null) {
             request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
                 if(productRepository.findByName(noExistProductRatingRequest.getProductName()).isPresent())
-                    throw new ProductAlreadyException();
+                    throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
                         .price("0").bakery(bakery).image(null).isTrue(false).build();
@@ -159,7 +155,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         Bakery bakery = review.getBakery();
 
-        if (files.size() > 10) throw new ImageNumExceedException();
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {
             if (file == null || file.isEmpty()) continue;
             String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
@@ -185,7 +181,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
-        if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new ReviewLikeAlreadyException();
+        if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new DaedongException(DaedongStatus.REVIEW_LIKE_DUPLICATE_EXCEPTION);
 
         ReviewLike reviewLike = ReviewLike.builder().review(review).user(user).build();
         review.plusLike(reviewLike);
@@ -200,7 +196,8 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
-        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review).orElseThrow(ReviewUnlikeAlreadyException::new);
+        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review)
+                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_UNLIKE_DUPLICATE_EXCEPTION));
         review.minusLike(reviewLike);
     }
 
@@ -290,7 +287,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
-        if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent()) throw new ReviewCommentLikeAlreadyException();
+        if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent())
+            throw new DaedongException(DaedongStatus.REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION);
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
         reviewComment.plusLike(reviewCommentLike);
         eventPublisher.publishEvent(ReviewCommentLikeEvent.builder()
@@ -305,7 +303,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
-        ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).orElseThrow(ReviewCommentUnlikeAlreadyException::new);
+        ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment)
+                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION));
         reviewComment.minusLike(reviewCommentLike);
         reviewCommentLikeRepository.delete(reviewCommentLike);
     }

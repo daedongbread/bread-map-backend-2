@@ -6,8 +6,6 @@ import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.RecommentEvent;
@@ -65,7 +63,7 @@ public class NoticeServiceImpl implements NoticeService{
     public void addNoticeToken(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent())
-            throw new NoticeTokenAlreadyException();
+            throw new DaedongException(DaedongStatus.NOTICE_TOKEN_DUPLICATE_EXCEPTION);
         NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
         noticeTokenRepository.save(noticeToken);
     }
@@ -265,6 +263,6 @@ public class NoticeServiceImpl implements NoticeService{
             return defaultReportImage;
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
             return defaultFlagImage;
-        else throw new NoticeTypeWrongException();
+        else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
     }
 }

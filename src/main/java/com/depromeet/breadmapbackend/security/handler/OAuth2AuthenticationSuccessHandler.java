@@ -1,11 +1,12 @@
 package com.depromeet.breadmapbackend.security.handler;
 
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserStatus;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
-import com.depromeet.breadmapbackend.security.exception.UserBlockException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +38,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         String username = userPrincipal.getUsername();
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(user.getStatus().equals(UserStatus.BLOCK)) throw new UserBlockException();
+        if(user.getStatus().equals(UserStatus.BLOCK)) throw new DaedongException(DaedongStatus.BLOCK_USER);
         RoleType roleType = hasAuthority(userPrincipal.getAuthorities(), RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
         JwtToken jwtToken = jwtTokenProvider.createJwtToken(username, roleType.getCode());

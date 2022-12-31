@@ -1,8 +1,9 @@
 package com.depromeet.breadmapbackend.service.notice;
 
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.google.api.core.ApiFuture;
@@ -86,6 +87,6 @@ public class FcmService {
 //            return "";
 //        else if(type.equals(NoticeType.FLAG_BAKERY_CHANGE) || type.equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
 //            return "";
-        else throw new NoticeTypeWrongException();
+        else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
     }
 }

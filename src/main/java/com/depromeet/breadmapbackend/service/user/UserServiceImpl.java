@@ -15,11 +15,9 @@ import com.depromeet.breadmapbackend.domain.user.BlockUser;
 import com.depromeet.breadmapbackend.domain.user.Follow;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.*;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
@@ -76,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
-        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         String accessToken = request.getAccessToken();
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
@@ -84,9 +82,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + ":" + user.getUsername());
-        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
+        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 //        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
-//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new TokenValidFailedException();
+//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
         redisTemplate.opsForValue()
@@ -149,11 +147,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateNickName(String username, UpdateNickNameRequest request, MultipartFile file) throws IOException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if (userRepository.findByNickName(request.getNickName()).isEmpty()) {
+        if (userRepository.findByNickName(request.getNickName()).isEmpty())
             user.updateNickName(request.getNickName());
-        }
         else if (!user.equals(userRepository.findByNickName(request.getNickName()).get()))
-            throw new NickNameAlreadyException();
+            throw new DaedongException(DaedongStatus.NICKNAME_DUPLICATE_EXCEPTION);
 
         if (file != null && !file.isEmpty()) {
             String imagePath = fileConverter.parseFileInfo(file, ImageType.USER_IMAGE, user.getId());
@@ -165,7 +162,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void logout(LogoutRequest request) {
         String accessToken = request.getAccessToken();
-        if (!jwtTokenProvider.verifyToken(accessToken)) throw new TokenValidFailedException();
+        if (!jwtTokenProvider.verifyToken(accessToken)) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         String username = authentication.getName();
@@ -221,8 +218,8 @@ public class UserServiceImpl implements UserService {
     public void follow(String username, FollowRequest request) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(fromUser.equals(toUser)) throw new InvalidFollowException();
-        if(followRepository.findByFromUserAndToUser(fromUser, toUser).isPresent()) throw new FollowAlreadyException();
+        if(fromUser.equals(toUser)) throw new DaedongException(DaedongStatus.SELF_FOLLOW_EXCEPTION);
+        if(followRepository.findByFromUserAndToUser(fromUser, toUser).isPresent()) throw new DaedongException(DaedongStatus.FOLLOW_DUPLICATE_EXCEPTION);
         Follow follow = Follow.builder().fromUser(fromUser).toUser(toUser).build();
         followRepository.save(follow);
         eventPublisher.publishEvent(FollowEvent.builder().userId(toUser.getId()).fromUserId(fromUser.getId()).build());
@@ -232,7 +229,7 @@ public class UserServiceImpl implements UserService {
     public void deleteFollower(String username, FollowRequest request) { // 나를 팔로우한 사람 삭제
         User fromUser = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User toUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(fromUser.equals(toUser)) throw new InvalidFollowException();
+        if(fromUser.equals(toUser)) throw new DaedongException(DaedongStatus.SELF_FOLLOW_EXCEPTION);
         Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser).orElseThrow(() -> new DaedongException(DaedongStatus.FOLLOW_NOT_FOUND));
         followRepository.delete(follow);
     }
@@ -241,7 +238,7 @@ public class UserServiceImpl implements UserService {
     public void deleteFollowing(String username, FollowRequest request) { // 내가 팔로우한 사람 삭제
         User fromUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(fromUser.equals(toUser)) throw new InvalidFollowException();
+        if(fromUser.equals(toUser)) throw new DaedongException(DaedongStatus.SELF_FOLLOW_EXCEPTION);
         Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser).orElseThrow(() -> new DaedongException(DaedongStatus.FOLLOW_NOT_FOUND));
         followRepository.delete(follow);
     }
@@ -319,8 +316,7 @@ public class UserServiceImpl implements UserService {
     public void block(String username, BlockRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User userToBlock = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(blockUserRepository.findByUserAndBlockUser(user, userToBlock).isPresent())
-            throw new BlockAlreadyException();
+        if(blockUserRepository.findByUserAndBlockUser(user, userToBlock).isPresent()) throw new DaedongException(DaedongStatus.BLOCK_DUPLICATE_EXCEPTION);
 
         BlockUser blockUser = BlockUser.builder().user(user).blockUser(userToBlock).build();
         blockUserRepository.save(blockUser);

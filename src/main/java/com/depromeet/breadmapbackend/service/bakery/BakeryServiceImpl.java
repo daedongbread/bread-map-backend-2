@@ -1,14 +1,11 @@
 package com.depromeet.breadmapbackend.service.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.*;
-import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
@@ -66,7 +63,7 @@ public class BakeryServiceImpl implements BakeryService {
         Comparator<BakeryCardDto> comparing;
         if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
         else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                 .map(bakery -> BakeryCardDto.builder()
@@ -98,7 +95,7 @@ public class BakeryServiceImpl implements BakeryService {
         Comparator<BakeryCardDto> comparing;
         if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
         else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
@@ -183,8 +180,6 @@ public class BakeryServiceImpl implements BakeryService {
     public void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
-        if(file.isEmpty()) throw new ImageNotExistException();
-
         String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_DELETE_REPORT_IMAGE, bakeryId);
         String image = s3Uploader.upload(file, imagePath);
 
@@ -208,7 +203,7 @@ public class BakeryServiceImpl implements BakeryService {
         ProductAddReport productAddReport = ProductAddReport.builder()
                 .bakery(bakery).name(request.getName()).price(request.getPrice()).build();
 
-        if (files.size() > 10) throw new ImageNumExceedException();
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageType.PRODUCT_ADD_REPORT_IMAGE, bakeryId);
             String image = s3Uploader.upload(file, imagePath);

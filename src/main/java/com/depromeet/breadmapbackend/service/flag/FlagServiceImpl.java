@@ -5,7 +5,6 @@ import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
-import com.depromeet.breadmapbackend.domain.flag.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
@@ -62,8 +61,8 @@ public class FlagServiceImpl implements FlagService {
     @Transactional(rollbackFor = Exception.class)
     public void addFlag(String username, FlagRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(flagRepository.findByUserAndName(user, request.getName()).isPresent()) throw new FlagAlreadyException();
-        if(request.getColor().equals(FlagColor.GRAY)) throw new FlagColorException();
+        if(flagRepository.findByUserAndName(user, request.getName()).isPresent()) throw new DaedongException(DaedongStatus.FLAG_DUPLICATE_EXCEPTION);
+        if(request.getColor().equals(FlagColor.GRAY)) throw new DaedongException(DaedongStatus.FLAG_COLOR_EXCEPTION);
 
         Flag flag = Flag.builder().user(user).name(request.getName()).color(request.getColor()).build();
         flagRepository.save(flag);
@@ -74,7 +73,7 @@ public class FlagServiceImpl implements FlagService {
     public void removeFlag(String username, Long flagId) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
-        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new FlagUnEditException();
+        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
 
         user.removeFlag(flag);
         flagRepository.delete(flag);
@@ -85,8 +84,8 @@ public class FlagServiceImpl implements FlagService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
 
-        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new FlagUnEditException();
-        if(request.getColor().equals(FlagColor.GRAY)) throw new FlagColorException();
+        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
+        if(request.getColor().equals(FlagColor.GRAY)) throw new DaedongException(DaedongStatus.FLAG_COLOR_EXCEPTION);
 
         flag.updateFlag(request.getName(), request.getColor());
     }
@@ -118,7 +117,7 @@ public class FlagServiceImpl implements FlagService {
 
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
 
-        if(flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).isPresent()) throw new FlagBakeryAlreadyException();
+        if(flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).isPresent()) throw new DaedongException(DaedongStatus.FLAG_BAKERY_DUPLICATE_EXCEPTION);
 
         if(flagBakeryRepository.findByBakeryAndUser(bakery, user).isPresent()) {
             FlagBakery flagBakery = flagBakeryRepository.findByBakeryAndUser(bakery, user).get();
