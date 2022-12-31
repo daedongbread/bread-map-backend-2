@@ -1,21 +1,16 @@
 package com.depromeet.breadmapbackend.service.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.product.Product;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
-import com.depromeet.breadmapbackend.domain.product.exception.ProductAlreadyException;
-import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakerySortTypeWrongException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
 import com.depromeet.breadmapbackend.domain.review.*;
-import com.depromeet.breadmapbackend.domain.review.exception.*;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
@@ -52,12 +47,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Comparator<ReviewDto> comparing;
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
@@ -72,12 +67,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Comparator<ReviewDto> comparing;
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
         else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
         else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return reviewRepository.findByBakery(bakery)
                 .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
@@ -93,7 +88,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReviewDetailDto getReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         review.addViews();
 
         List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUser(review.getUser()).stream()
@@ -116,8 +111,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public ReviewAddDto addReview(String username, Long bakeryId, ReviewRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         Review review = Review.builder()
                 .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
@@ -125,7 +120,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if(request.getProductRatingList() != null) {
             request.getProductRatingList().forEach(productRatingRequest -> {
-                Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+                Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
                 if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
                     ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
                             .product(product).review(review).rating(productRatingRequest.getRating()).build();
@@ -138,7 +133,7 @@ public class ReviewServiceImpl implements ReviewService {
         if(request.getNoExistProductRatingRequestList() != null) {
             request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
                 if(productRepository.findByName(noExistProductRatingRequest.getProductName()).isPresent())
-                    throw new ProductAlreadyException();
+                    throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
                         .price("0").bakery(bakery).image(null).isTrue(false).build();
@@ -155,12 +150,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         Bakery bakery = review.getBakery();
 
-        if (files.size() > 10) throw new ImageNumExceedException();
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {
             if (file == null || file.isEmpty()) continue;
             String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
@@ -173,20 +168,20 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void removeReview(String username, Long reviewId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
-                /*.filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK))*/.orElseThrow(ReviewNotFoundException::new);
+                /*.filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK))*/.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         reviewRepository.delete(review);
 //        review.useChange();
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void reviewLike(String username, Long reviewId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
-        if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new ReviewLikeAlreadyException();
+        if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new DaedongException(DaedongStatus.REVIEW_LIKE_DUPLICATE_EXCEPTION);
 
         ReviewLike reviewLike = ReviewLike.builder().review(review).user(user).build();
         review.plusLike(reviewLike);
@@ -197,18 +192,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void reviewUnlike(String username, Long reviewId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
-        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review).orElseThrow(ReviewUnlikeAlreadyException::new);
+        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review)
+                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_UNLIKE_DUPLICATE_EXCEPTION));
         review.minusLike(reviewLike);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewCommentDto> getReviewCommentList(Long reviewId) {
         if(reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
 
         return reviewCommentRepository.findByReviewIdAndParentIsNull(reviewId)
                 .stream().map(ReviewCommentDto::new).collect(Collectors.toList());
@@ -216,9 +212,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void addReviewComment(String username, Long reviewId, ReviewCommentRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         if(request.getParentCommentId().equals(0L)) { // 댓글
             ReviewComment reviewComment = ReviewComment.builder()
@@ -230,7 +226,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .reviewId(reviewId).reviewContent(review.getContent()).build());
 
         } else { // 대댓글
-            ReviewComment parentComment = reviewCommentRepository.findById(request.getParentCommentId()).orElseThrow(ReviewCommentNotFoundException::new);
+            ReviewComment parentComment = reviewCommentRepository.findById(request.getParentCommentId()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
             ReviewComment reviewComment = ReviewComment.builder()
                     .review(review).user(user).content(request.getContent()).parent(parentComment).build();
             reviewCommentRepository.save(reviewComment);
@@ -244,11 +240,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void removeReviewComment(String username, Long reviewId, Long commentId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user)
-                .orElseThrow(ReviewCommentNotFoundException::new);
+                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(ReviewNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         if(reviewComment.getParent() == null) { // 부모 댓글
             if(reviewComment.getChildList().isEmpty()) { // 자식 댓글이 없으면
@@ -286,12 +282,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void reviewCommentLike(String username, Long reviewId, Long commentId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
-        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(ReviewCommentNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
+        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
-        if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent()) throw new ReviewCommentLikeAlreadyException();
+        if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent())
+            throw new DaedongException(DaedongStatus.REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION);
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
         reviewComment.plusLike(reviewCommentLike);
         eventPublisher.publishEvent(ReviewCommentLikeEvent.builder()
@@ -301,20 +298,21 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(rollbackFor = Exception.class)
     public void reviewCommentUnlike(String username, Long reviewId, Long commentId) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new ReviewNotFoundException();
-        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(ReviewCommentNotFoundException::new);
+                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
+        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
-        ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).orElseThrow(ReviewCommentUnlikeAlreadyException::new);
+        ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment)
+                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION));
         reviewComment.minusLike(reviewCommentLike);
         reviewCommentLikeRepository.delete(reviewCommentLike);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void reviewReport(String username, Long reviewId, ReviewReportRequest request) {
-        User reporter = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
+        User reporter = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         ReviewReport reviewReport = ReviewReport.builder()
                 .reporter(reporter).review(review).reason(request.getReason()).content(request.getContent()).build();

@@ -1,16 +1,16 @@
 package com.depromeet.breadmapbackend.security.service;
 
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
-import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
-import com.depromeet.breadmapbackend.security.exception.RejoinException;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfo;
 import com.depromeet.breadmapbackend.security.userinfo.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -54,7 +53,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
 
         String username = providerType.name() + "_" + oAuth2UserInfo.getUsername();
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_DELETE + ":" + username))) throw new RejoinException();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_DELETE + ":" + username)))
+            throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
 
         User user = null;
         if (userRepository.findByUsername(username).isPresent()) {
