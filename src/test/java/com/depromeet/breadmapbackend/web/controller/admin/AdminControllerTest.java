@@ -52,9 +52,7 @@ class AdminControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        admin = Admin.builder()
-                .email("email").password(passwordEncoder.encode("password")).roleType(RoleType.ADMIN)
-                .build();
+        admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
         adminRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()

@@ -1,9 +1,8 @@
 package com.depromeet.breadmapbackend.service.search;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.search.dto.SearchDto;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +52,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> search(String username, String word, Double latitude, Double longitude) {
-        if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
+        if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
 
         ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
@@ -75,20 +74,20 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<String> recentKeywords(String username) {
-        if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
+        if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
         return new ArrayList<>(Objects.requireNonNull(
                 redisTemplate.opsForZSet().reverseRange(REDIS_KEY_RECENT + ":" + username, 0, -1)));
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeyword(String username, String keyword) {
-        if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
+        if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
         redisTemplate.opsForZSet().remove(REDIS_KEY_RECENT + ":" + username, keyword);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeywordAll(String username) {
-        if(userRepository.findByUsername(username).isEmpty()) throw new UserNotFoundException();
+        if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
         redisTemplate.delete(REDIS_KEY_RECENT + ":" + username);
     }
 }

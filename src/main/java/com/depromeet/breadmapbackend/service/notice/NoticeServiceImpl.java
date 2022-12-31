@@ -1,13 +1,11 @@
 package com.depromeet.breadmapbackend.service.notice;
 
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeDateException;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenAlreadyException;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTokenNotFoundException;
-import com.depromeet.breadmapbackend.domain.notice.exception.NoticeTypeWrongException;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.RecommentEvent;
@@ -16,10 +14,8 @@ import com.depromeet.breadmapbackend.domain.review.ReviewCommentLikeEvent;
 import com.depromeet.breadmapbackend.domain.review.ReviewLikeEvent;
 import com.depromeet.breadmapbackend.domain.user.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
-import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminSimpleBakeryDto;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
@@ -35,13 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,9 +61,9 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Transactional(rollbackFor = Exception.class)
     public void addNoticeToken(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent())
-            throw new NoticeTokenAlreadyException();
+            throw new DaedongException(DaedongStatus.NOTICE_TOKEN_DUPLICATE_EXCEPTION);
         NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
         noticeTokenRepository.save(noticeToken);
     }
@@ -79,36 +71,36 @@ public class NoticeServiceImpl implements NoticeService{
     @Async("notice")
     @TransactionalEventListener
     public void deleteNoticeToken(NoticeTokenDeleteEvent event) {
-        User user = userRepository.findByUsername(event.getUsername()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(event.getUsername()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).isPresent()) {
             NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).get();
             noticeTokenRepository.delete(noticeToken);
-        } else throw new NoticeTokenNotFoundException();
+        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public NoticeTokenAlarmDto getNoticeTokenAlarm(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
             NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get();
             return NoticeTokenAlarmDto.builder().isAlarmOn(noticeToken.isAlarmOn()).build();
-        } else throw new NoticeTokenNotFoundException();
+        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateNoticeTokenAlarm(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
             NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get();
             noticeToken.updateAlarm();
-        } else throw new NoticeTokenNotFoundException();
+        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
     }
 
     @Async("notice")
     @TransactionalEventListener
     public void addFollowNotice(FollowEvent event) { // 팔로우 알람
-        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
-        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         // TODO : User 정보로 NoticeToken들 가져오기
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
@@ -122,8 +114,8 @@ public class NoticeServiceImpl implements NoticeService{
     @Async("notice")
     @TransactionalEventListener
     public void addReviewCommentNotice(ReviewCommentEvent event) { // 내 리뷰 댓글 알람
-        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
-        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 리뷰에 " + fromUser.getNickName() + "님이 댓글을 달았어요!")
@@ -137,8 +129,8 @@ public class NoticeServiceImpl implements NoticeService{
     @Async("notice")
     @TransactionalEventListener
     public void addReviewLikeNotice(ReviewLikeEvent event) { // 내 리뷰 좋아요 알람
-        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
-        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 리뷰를 " + fromUser.getNickName() + "님이 좋아해요!")
@@ -152,8 +144,8 @@ public class NoticeServiceImpl implements NoticeService{
     @Async("notice")
     @TransactionalEventListener
     public void addRecommentNotice(RecommentEvent event) { // 내 대댓글 알람
-        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
-        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 댓글에 " + fromUser.getNickName() + "님이 대댓글을 달았어요!")
@@ -167,8 +159,8 @@ public class NoticeServiceImpl implements NoticeService{
     @Async("notice")
     @TransactionalEventListener
     public void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) { // 내 댓글 좋아요 알람
-        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
-        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
                 .title("내 댓글을 " + fromUser.getNickName() + "님이 좋아해요!")
@@ -182,7 +174,7 @@ public class NoticeServiceImpl implements NoticeService{
 //    @Async("notice")
 //    @TransactionalEventListener
 //    public void addReportBakeryAddNotice(ReportBakeryAdd event) { // 제보한 빵집 추가 알람
-//        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
+//        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 //        Notice notice = Notice.builder()
 //                .user(user).title("내가 제보한 빵집이 추가되었어요!")
 //                // contentId : 추가된 빵집 아이디, content : 추가된 빵집 이름
@@ -194,7 +186,7 @@ public class NoticeServiceImpl implements NoticeService{
 //    @Async("notice")
 //    @TransactionalEventListener
 //    public void addReportBreadAddNotice(ReportBreadAddEvent event) { // 제보한 빵 추가 알람
-//        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
+//        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 //        Notice notice = Notice.builder()
 //                .user(user).title("내가 제보한 빵이 추가되었어요!")
 //                // contentId : 추가된 빵 아이디, content : 추가된 빵집 이름 - 추가된 빵 이름
@@ -206,7 +198,7 @@ public class NoticeServiceImpl implements NoticeService{
 //    @Async("notice")
 //    @TransactionalEventListener
 //    public void addFlagBakeryAdminNoticeNotice(FlagBakeryAdminEvent event) { // 즐겨찾기 한 빵집 관리자 글 업데이트
-//        User user = userRepository.findById(event.getUserId()).orElseThrow(UserNotFoundException::new);
+//        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 //        Notice notice = Notice.builder()
 //                .user(user).title("관리자 글이 업데이트 됐어요!")
 //                // contentId : 빵집 관리자 글 아이디, content : 빵집 관리자 글 제목
@@ -217,7 +209,7 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<NoticeDto> getTodayNoticeList(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtAfter(
                 user, LocalDateTime.now().with(LocalTime.MIN), pageable);
@@ -232,7 +224,7 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<NoticeDto> getWeekNoticeList(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtBetween(
                 user, LocalDateTime.now().with(LocalTime.MIN).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
@@ -248,7 +240,7 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<NoticeDto> getBeforeNoticeList(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtBefore(
                 user, LocalDateTime.now().with(LocalTime.MAX).with(TemporalAdjusters.previous(DayOfWeek.SUNDAY)), pageable);
@@ -271,6 +263,6 @@ public class NoticeServiceImpl implements NoticeService{
             return defaultReportImage;
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
             return defaultFlagImage;
-        else throw new NoticeTypeWrongException();
+        else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
     }
 }

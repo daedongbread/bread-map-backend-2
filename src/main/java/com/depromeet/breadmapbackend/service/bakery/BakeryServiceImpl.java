@@ -1,15 +1,12 @@
 package com.depromeet.breadmapbackend.service.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.*;
-import com.depromeet.breadmapbackend.domain.bakery.exception.*;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.exception.ImageNotExistException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
-import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
-import com.depromeet.breadmapbackend.domain.flag.exception.FlagBakeryNotFoundException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.product.Product;
@@ -21,7 +18,6 @@ import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
@@ -67,7 +63,7 @@ public class BakeryServiceImpl implements BakeryService {
         Comparator<BakeryCardDto> comparing;
         if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
         else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                 .map(bakery -> BakeryCardDto.builder()
@@ -99,9 +95,9 @@ public class BakeryServiceImpl implements BakeryService {
         Comparator<BakeryCardDto> comparing;
         if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
         else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
-        else throw new BakerySortTypeWrongException();
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                 .map(bakery -> BakeryCardDto.builder()
@@ -129,7 +125,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryDto findBakery(Long bakeryId) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         bakery.addViews();
 
         BakeryInfo info = BakeryInfo.builder()
@@ -163,7 +159,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ProductDto> findProductList(Long bakeryId) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
@@ -174,7 +170,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(rollbackFor = Exception.class)
     public void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
                 .bakery(bakery).name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
@@ -182,9 +178,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(rollbackFor = Exception.class)
     public void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-
-        if(file.isEmpty()) throw new ImageNotExistException();
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_DELETE_REPORT_IMAGE, bakeryId);
         String image = s3Uploader.upload(file, imagePath);
@@ -195,7 +189,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(rollbackFor = Exception.class)
     public void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
                 .name(request.getName()).location(request.getLocation()).content(request.getContent())
                 .user(user).build();
@@ -204,12 +198,12 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(rollbackFor = Exception.class)
     public void productAddReport(Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         ProductAddReport productAddReport = ProductAddReport.builder()
                 .bakery(bakery).name(request.getName()).price(request.getPrice()).build();
 
-        if (files.size() > 10) throw new ImageNumExceedException();
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {
             String imagePath = fileConverter.parseFileInfo(file, ImageType.PRODUCT_ADD_REPORT_IMAGE, bakeryId);
             String image = s3Uploader.upload(file, imagePath);
@@ -220,7 +214,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleProductDto> findSimpleProductList(Long bakeryId) { // 순서?
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(SimpleProductDto::new).collect(Collectors.toList());
@@ -228,7 +222,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return productRepository.findByBakeryAndNameStartsWith(bakery, name).stream()
                 .filter(Product::isTrue)
                 .map(SimpleProductDto::new).collect(Collectors.toList());

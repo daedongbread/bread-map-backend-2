@@ -27,5 +27,5 @@ public class Admin extends BaseEntity {
 //    private String nickName;
 
     @Enumerated(EnumType.STRING)
-    private RoleType roleType = RoleType.ADMIN;
+    private final RoleType roleType = RoleType.ADMIN;
 }

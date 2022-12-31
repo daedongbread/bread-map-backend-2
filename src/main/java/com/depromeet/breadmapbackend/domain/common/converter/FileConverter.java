@@ -1,7 +1,8 @@
 package com.depromeet.breadmapbackend.domain.common.converter;
 
 import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.exception.ImageInvalidException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -15,7 +16,7 @@ public class FileConverter {
     public String parseFileInfo(MultipartFile multipartFile, ImageType imageType, Long id) {
         String contentType = multipartFile.getContentType();
         String originalFileExtension;
-        if (!StringUtils.hasText(contentType)) throw new ImageInvalidException();
+        if (!StringUtils.hasText(contentType)) throw new DaedongException(DaedongStatus.IMAGE_INVALID_EXCEPTION);
 
         if(contentType.contains("image/jpeg") || contentType.contains("image/jpg")){
             originalFileExtension = ".jpg";
@@ -25,7 +26,7 @@ public class FileConverter {
         }
         else if(contentType.contains("image/gif")) {
             originalFileExtension = ".gif";
-        } else throw new ImageInvalidException();
+        } else throw new DaedongException(DaedongStatus.IMAGE_INVALID_EXCEPTION);
 
         // 파일 이름
         String fileName = UUID.randomUUID() + originalFileExtension;

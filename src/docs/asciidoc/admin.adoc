@@ -12,6 +12,7 @@
 == APIs
 - 관리자 로그인 API
 - 토큰 재발급 API
+- 메뉴바 API
 - 빵집 전체 조회 API
 - 빵집 상세 조회 API
 - 빵집 검색 API
@@ -35,8 +36,11 @@ operation::admin/login[snippets='http-request,request-fields,http-response,respo
 === 토큰 재발급 API [POST]
 operation::admin/reissue[snippets='http-request,request-fields,http-response,response-fields']
 
+=== 메뉴바 API [GET]
+operation::admin/bar[snippets='http-request,request-headers,http-response,response-fields']
+
 === 빵집 전체 조회 API [GET]
-operation::admin/bakery/all[snippets='http-request,request-headers,http-response,response-fields']
+operation::admin/bakery/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 조회 API [GET]
 operation::admin/bakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']

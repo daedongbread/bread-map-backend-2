@@ -1,40 +1,32 @@
 package com.depromeet.breadmapbackend.service.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
-import com.depromeet.breadmapbackend.domain.admin.exception.AdminNotFoundException;
 import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReportStatus;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.product.Product;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryNotFoundException;
-import com.depromeet.breadmapbackend.domain.bakery.exception.BakeryReportNotFoundException;
-import com.depromeet.breadmapbackend.domain.product.exception.ProductNotFoundException;
 import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.admin.exception.AdminJoinException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumExceedException;
-import com.depromeet.breadmapbackend.domain.exception.ImageNumMatchException;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
-import com.depromeet.breadmapbackend.domain.review.exception.ReviewReportNotFoundException;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewReportRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.exception.UserNotFoundException;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.feign.client.SgisClient;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTranscoordDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTokenDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisGeocodeDto;
-import com.depromeet.breadmapbackend.security.exception.TokenValidFailedException;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
@@ -102,8 +94,8 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(rollbackFor = Exception.class)
     public void adminJoin(AdminJoinRequest request) {
-        if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AdminJoinException();
-        if(!request.getSecret().equals(JWT_ADMIN_KEY)) throw new AdminJoinException();
+        if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new DaedongException(DaedongStatus.ADMIN_EMAIL_DUPLICATE_EXCEPTION);
+        if(!request.getSecret().equals(JWT_ADMIN_KEY)) throw new DaedongException(DaedongStatus.ADMIN_KEY_EXCEPTION);
         Admin admin = Admin.builder().email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword())).build();
         adminRepository.save(admin);
@@ -111,8 +103,8 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken adminLogin(AdminLoginRequest request) {
-        Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(AdminNotFoundException::new);
-        if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) throw new UserNotFoundException();
+        Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
+        if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
 
         JwtToken adminToken = jwtTokenProvider.createJwtToken(admin.getEmail(), "ROLE_ADMIN");
         redisTemplate.opsForValue()
@@ -123,15 +115,15 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
-        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new TokenValidFailedException();
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         String accessToken = request.getAccessToken();
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         String email = authentication.getName();
-        Admin admin = adminRepository.findByEmail(email).orElseThrow(AdminNotFoundException::new);
+        Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
 
         String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId());
-        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new TokenValidFailedException();
+        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
@@ -158,7 +150,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminBakeryDto getBakery(Long bakeryId) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         List<AdminProductDto> productList = productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(AdminProductDto::new).collect(Collectors.toList());
@@ -489,8 +481,8 @@ public class AdminServiceImpl implements AdminService{
         }
 
         if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
-            if(request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
-            if (productImageList.size() > 10) throw new ImageNumExceedException();
+            if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
+            if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for(int i = 0; i < request.getProductList().size(); i++) {
                 AddBakeryRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
                 Product product = Product.builder().bakery(bakery).productType(addProductRequest.getProductType())
@@ -509,9 +501,8 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(rollbackFor = Exception.class)
     public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
-//        if(!bakeryId.equals(request.getBakeryId()) && bakeryRepository.findById(request.getBakeryId()).isPresent())
-//            throw new BakeryIdAlreadyException();
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+
         bakery.update(bakeryId, request.getName(),
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
@@ -525,8 +516,8 @@ public class AdminServiceImpl implements AdminService{
         }
 
         if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
-            if (request.getProductList().size() != productImageList.size()) throw new ImageNumMatchException();
-            if (productImageList.size() > 10) throw new ImageNumExceedException();
+            if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
+            if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for (int i = 0; i < request.getProductList().size(); i++) {
                 UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
                 Product product;
@@ -535,7 +526,7 @@ public class AdminServiceImpl implements AdminService{
                             .productType(updateProductRequest.getProductType()).bakery(bakery)
                             .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
                 } else { // 기존 product 일 때
-                    product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(ProductNotFoundException::new);
+                    product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
                     product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
                 }
 
@@ -564,7 +555,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional
     public void deleteProduct(Long bakeryId, Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
         s3Uploader.deleteFileS3(product.getImage());
         reviewProductRatingRepository.deleteByProductId(productId);
         productRepository.delete(product);
@@ -572,14 +563,14 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Slice<ReviewImage> reviewImageSlice = reviewImageRepository.findSliceByBakery(bakery, pageable);
         return SliceResponseDto.of(reviewImageSlice, AdminBakeryReviewImageDto::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteBakery(Long bakeryId) { // TODO : casacade
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(BakeryNotFoundException::new);
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         flagBakeryRepository.deleteByBakery(bakery);
         bakeryDeleteReportRepository.deleteByBakery(bakery);
         bakeryUpdateReportRepository.deleteByBakery(bakery);
@@ -598,13 +589,13 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryAddReportDto getBakeryReport(Long reportId) {
-        BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
+        BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_REPORT_NOT_FOUND));
         return BakeryAddReportDto.builder().bakeryAddReport(bakeryAddReport).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateBakeryAddReportStatus(Long reportId, UpdateBakeryReportStatusRequest request) {
-        BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(BakeryReportNotFoundException::new);
+        BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_REPORT_NOT_FOUND));
         bakeryAddReport.updateStatus(request.getStatus());
     }
 
@@ -616,7 +607,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(rollbackFor = Exception.class)
     public void updateReviewStatus(Long reportId) {
-        ReviewReport reviewReport = reviewReportRepository.findById(reportId).orElseThrow(ReviewReportNotFoundException::new);
+        ReviewReport reviewReport = reviewReportRepository.findById(reportId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_REPORT_NOT_FOUND));
         reviewReport.getReview().useChange();
         reviewReport.changeBlock();
     }
@@ -629,7 +620,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(rollbackFor = Exception.class)
     public void changeUserBlock(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         user.changeBlock();
     }
 }
