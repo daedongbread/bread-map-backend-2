@@ -19,6 +19,7 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
+import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -490,6 +491,33 @@ class UserControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(fieldWithPath("userId").description("차단 해제할 유저 고유번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getAlarmStatus() throws Exception {
+        mockMvc.perform(get("/user/alarm")
+                .header("Authorization", "Bearer " + token1.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/alarm",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        responseFields(fieldWithPath("data.alarmOn").description("유저 알람 상태"))
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateAlarmStatus() throws Exception {
+        mockMvc.perform(patch("/user/alarm")
+                .header("Authorization", "Bearer " + token1.getAccessToken()))
+                .andDo(print())
+                .andDo(document("user/alarm/update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token"))
                 ))
                 .andExpect(status().isNoContent());
     }

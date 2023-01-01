@@ -90,57 +90,6 @@ class NoticeControllerTest extends ControllerTest {
     }
 
     @Test
-    void getNoticeTokenAlarm() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(
-                NoticeTokenRequest.builder().deviceToken(noticeToken.getDeviceToken()).build());
-
-        // when
-        ResultActions result = mockMvc.perform(get("/notice/token/alarm")
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("notice/token/alarm",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰")),
-                        responseFields(fieldWithPath("data.alarmOn").description("알람 상태"))
-                ))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void updateNoticeTokenAlarm() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(
-                NoticeTokenRequest.builder().deviceToken(noticeToken.getDeviceToken()).build());
-
-        // when
-        ResultActions result = mockMvc.perform(patch("/notice/token/alarm")
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("notice/token/alarm/update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰"))
-                ))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
     void getTodayNoticeList() throws Exception {
         mockMvc.perform(get("/notice/today?page=0")
                 .header("Authorization", "Bearer " + token.getAccessToken()))

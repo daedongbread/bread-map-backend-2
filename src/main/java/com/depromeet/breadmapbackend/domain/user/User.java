@@ -44,6 +44,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @Column(nullable = false)
+    private Boolean isAlarmOn;
+
     @Builder
     private User(String username, String nickName, String email, Gender gender,
                  ProviderType providerType, RoleType roleType, String image) {
@@ -55,6 +58,7 @@ public class User extends BaseEntity {
         this.roleType = roleType;
         this.image = image;
         this.status = UserStatus.UNBLOCK;
+        this.isAlarmOn = true;
     }
 
     public void updateNickName(String nickName) {
@@ -76,12 +80,7 @@ public class User extends BaseEntity {
         else this.status = UserStatus.BLOCK;
     }
 
-//    @Override
-//    public boolean equals(Object object) {
-//        User user = (User) object;
-//        if (user.getUsername().equals(this.getUsername())) {
-//            return true;
-//        }
-//        return false;
-//    }
+    public void changeAlarm() {
+        this.isAlarmOn = !this.isAlarmOn.equals(true);
+    }
 }

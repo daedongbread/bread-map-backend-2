@@ -24,4 +24,6 @@ public interface UserService {
     List<BlockUserDto> blockList(String username);
     void block(String username, BlockRequest request);
     void unblock(String username, BlockRequest request);
+    AlarmDto getAlarmStatus(String username);
+    void updateAlarmStatus(String username);
 }
