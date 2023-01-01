@@ -8,6 +8,7 @@ import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -39,7 +40,7 @@ public class ExceptionAdvice {
     protected ErrorResponse defaultException(HttpServletRequest request, Exception e) {
         log.info(String.valueOf(e));
         e.printStackTrace();
-        return new ErrorResponse("Unknown error");
+        return new ErrorResponse(500, "unknown error");
     }
 
     /*
@@ -51,7 +52,7 @@ public class ExceptionAdvice {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             log.error("error field : \"{}\", value : \"{}\", message : \"{}\"", error.getField(), error.getRejectedValue(), error.getDefaultMessage());
         }
-        return new ErrorResponse("Request body's field is not valid");
+        return new ErrorResponse(400, "request body's field is not valid");
     }
 
     /*
@@ -63,7 +64,7 @@ public class ExceptionAdvice {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             log.error("error field : \"{}\", value : \"{}\", message : \"{}\"", error.getField(), error.getRejectedValue(), error.getDefaultMessage());
         }
-        return new ErrorResponse("Request part's field is not valid");
+        return new ErrorResponse(400, "request part's field is not valid");
     }
 
     /*
@@ -73,7 +74,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ErrorResponse missingServletRequestPartException(HttpServletRequest request, MissingServletRequestPartException e) {
         log.error("error field : \"{}\", message : \"{}\"", e.getRequestPartName(), e.getMessage());
-        return new ErrorResponse("Request part's file is missing.");
+        return new ErrorResponse(500, "request part's file is missing.");
     }
 
     /*
@@ -83,7 +84,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse requestBodyWrongException(HttpServletRequest request, HttpMessageNotReadableException e) {
         log.error(e.getMessage());
-        return new ErrorResponse("Request Body is wrong");
+        return new ErrorResponse(400, "request body is wrong");
     }
 
     /*
@@ -92,7 +93,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(ParseException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ErrorResponse parseException(HttpServletRequest request, ParseException e) {
-        return new ErrorResponse("Parse Exception");
+        return new ErrorResponse(500, "parse exception");
     }
 
     /*
@@ -105,7 +106,7 @@ public class ExceptionAdvice {
             log.error("error field : \"{}\", value : \"{}\", message : \"{}\"",
                     error.getPropertyPath().toString().split(".")[1], error.getInvalidValue(), error.getMessage());
         }
-        return new ErrorResponse("Path Variable or Query Parameter Not Valid");
+        return new ErrorResponse(400, "path variable or query parameter not valid");
     }
 
     /*
@@ -115,7 +116,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse pathVariableMissingException(HttpServletRequest request, MissingPathVariableException e) {
         log.error("error field : \"{}\", message : \"{}\"", e.getVariableName(), e.getMessage());
-        return new ErrorResponse("Path Variable is missing");
+        return new ErrorResponse(400, "path variable is missing");
     }
 
     /*
@@ -125,7 +126,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse pathVariableTypeMismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException e) {
         log.error("error field : \"{}\", value : \"{}\", message : \"{}\"", e.getName(), e.getValue(), e.getMessage());
-        return new ErrorResponse("Path Variable Type is mismatch");
+        return new ErrorResponse(400, "path variable type is mismatch");
     }
 
     /*
@@ -135,7 +136,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse pathVariableMissingException(HttpServletRequest request, MissingServletRequestParameterException e) {
         log.error("error field : \"{}\", message : \"{}\"", e.getParameterName(), e.getMessage());
-        return new ErrorResponse("Query Parameter is missing");
+        return new ErrorResponse(400, "query parameter is missing");
     }
 
     /*
@@ -145,7 +146,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     protected ErrorResponse signatureException(HttpServletRequest request, SignatureException e) {
         log.error("message : \"{}\"", e.getMessage());
-        return new ErrorResponse("JWT Signature Error");
+        return new ErrorResponse(409, "JWT signature error");
     }
 
     /*
@@ -155,7 +156,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorResponse wrongURLException(HttpServletRequest request, NoHandlerFoundException e) {
         log.error(e.getMessage());
-        return new ErrorResponse("Wrong URL");
+        return new ErrorResponse(404, "wrong URL");
     }
 
     /*
@@ -164,7 +165,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     protected ErrorResponse wrongMethodException(HttpServletRequest request, HttpRequestMethodNotSupportedException e) {
-        return new ErrorResponse("Wrong Method");
+        return new ErrorResponse(405, "wrong method");
     }
 
     /**
@@ -173,7 +174,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(SgisFeignException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse sgisFeignException(SgisFeignException e) {
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(400, e.getMessage());
     }
 
     /**
@@ -182,14 +183,19 @@ public class ExceptionAdvice {
     @ExceptionHandler(AmazonS3Exception.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse amazonS3Exception(AmazonS3Exception e) {
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(409, e.getMessage());
     }
 
     /**
      * Business Exception
      */
     @ExceptionHandler(DaedongException.class)
-    public ErrorResponse daedongException(DaedongException e) {
-        return new ErrorResponse(e.getMessage());
+    public ResponseEntity<ErrorResponse> daedongException(DaedongException e) {
+        return ResponseEntity
+                .status(e.getDaedongStatus().getStatus())
+                .body(new ErrorResponse(
+                        e.getDaedongStatus().getCode(),
+                        e.getDaedongStatus().getDescription()
+                ));
     }
 }
