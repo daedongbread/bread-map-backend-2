@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.web.controller.notice.dto;
+package com.depromeet.breadmapbackend.web.controller.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class NoticeTokenAlarmDto {
+public class AlarmDto {
     private boolean alarmOn; // TODO : isAlarmOn 이면 필드 2개
 
     @Builder
-    public NoticeTokenAlarmDto(boolean isAlarmOn) {
+    public AlarmDto(boolean isAlarmOn) {
         this.alarmOn = isAlarmOn;
     }
 }

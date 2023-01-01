@@ -17,9 +17,9 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenAlarmDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeDto;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,27 +78,9 @@ public class NoticeServiceImpl implements NoticeService{
         } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public NoticeTokenAlarmDto getNoticeTokenAlarm(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
-            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get();
-            return NoticeTokenAlarmDto.builder().isAlarmOn(noticeToken.isAlarmOn()).build();
-        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void updateNoticeTokenAlarm(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
-            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get();
-            noticeToken.updateAlarm();
-        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
-    }
-
     @Async("notice")
     @TransactionalEventListener
-    public void addFollowNotice(FollowEvent event) { // 팔로우 알람
+    public void addFollowNotice(FollowEvent event) throws FirebaseMessagingException { // 팔로우 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         // TODO : User 정보로 NoticeToken들 가져오기
@@ -108,12 +90,12 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(fromUser.getId())
                 .type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice);
-//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
     @TransactionalEventListener
-    public void addReviewCommentNotice(ReviewCommentEvent event) { // 내 리뷰 댓글 알람
+    public void addReviewCommentNotice(ReviewCommentEvent event) throws FirebaseMessagingException { // 내 리뷰 댓글 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
@@ -123,12 +105,12 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
-//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
     @TransactionalEventListener
-    public void addReviewLikeNotice(ReviewLikeEvent event) { // 내 리뷰 좋아요 알람
+    public void addReviewLikeNotice(ReviewLikeEvent event) throws FirebaseMessagingException { // 내 리뷰 좋아요 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
@@ -138,12 +120,12 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_LIKE).build();
         noticeRepository.save(notice);
-//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
     @TransactionalEventListener
-    public void addRecommentNotice(RecommentEvent event) { // 내 대댓글 알람
+    public void addRecommentNotice(RecommentEvent event) throws FirebaseMessagingException { // 내 대댓글 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
@@ -153,12 +135,12 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.RECOMMENT).build();
         noticeRepository.save(notice);
-//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
     @TransactionalEventListener
-    public void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) { // 내 댓글 좋아요 알람
+    public void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) throws FirebaseMessagingException { // 내 댓글 좋아요 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
@@ -168,7 +150,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.REVIEW_COMMENT_LIKE).build();
         noticeRepository.save(notice);
-//        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
 //    @Async("notice")

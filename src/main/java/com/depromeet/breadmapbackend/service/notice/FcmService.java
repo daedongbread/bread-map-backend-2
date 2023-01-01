@@ -41,8 +41,10 @@ public class FcmService {
     private String reviewPath;
 
     public void sendMessageTo(User user, String title, String content, Long contentId, NoticeType type) throws FirebaseMessagingException {
-        List<String> tokens = noticeTokenRepository.findByUser(user).stream()
-                .filter(NoticeToken::isAlarmOn).map(NoticeToken::getDeviceToken).collect(Collectors.toList());
+        if(!user.getIsAlarmOn()) return;
+
+        List<String> tokens = noticeTokenRepository.findByUser(user)
+                .stream().map(NoticeToken::getDeviceToken).collect(Collectors.toList());
 
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(new Notification(title, content))

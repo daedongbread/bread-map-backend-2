@@ -26,18 +26,6 @@ public class NoticeController {
         noticeService.addNoticeToken(username, request);
     }
 
-    @GetMapping("/token/alarm")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<NoticeTokenAlarmDto> getNoticeTokenAlarm(@CurrentUser String username, @RequestBody NoticeTokenRequest request) {
-        return new ApiResponse<>(noticeService.getNoticeTokenAlarm(username, request));
-    }
-
-    @PatchMapping("/token/alarm")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateNoticeTokenAlarm(@CurrentUser String username, @RequestBody NoticeTokenRequest request) {
-        noticeService.updateNoticeTokenAlarm(username, request);
-    }
-
     @GetMapping("/today")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<NoticeDto>> getTodayNoticeList(
