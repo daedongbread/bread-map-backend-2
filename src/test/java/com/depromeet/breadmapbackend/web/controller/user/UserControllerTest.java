@@ -329,36 +329,18 @@ class UserControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void deleteFollower() throws Exception {
+    void unfollow() throws Exception {
         String object = objectMapper.writeValueAsString(FollowRequest.builder().userId(user2.getId()).build());
 
-        mockMvc.perform(delete("/user/follower")
-                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + token1.getAccessToken()))
-                .andDo(print())
-                .andDo(document("user/delete/follower",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("userId").description("삭제한 팔로잉 유저 고유번호"))
-                ))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-//    @Transactional
-    void deleteFollowing() throws Exception {
-        String object = objectMapper.writeValueAsString(FollowRequest.builder().userId(user2.getId()).build());
-
-        mockMvc.perform(delete("/user/following")
+        mockMvc.perform(delete("/user/follow")
                 .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token1.getAccessToken()))
                 .andDo(print())
-                .andDo(document("user/delete/following",
+                .andDo(document("user/unfollow",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("userId").description("삭제한 팔로워 유저 고유번호"))
+                        requestFields(fieldWithPath("userId").description("언팔로우한 유저 고유번호"))
                 ))
                 .andExpect(status().isNoContent());
     }

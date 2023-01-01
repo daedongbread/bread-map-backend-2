@@ -16,8 +16,7 @@ public interface UserService {
     void logout(LogoutRequest reissueRequest);
     void deleteUser(String username);
     void follow(String username, FollowRequest request);
-    void deleteFollower(String username, FollowRequest request);
-    void deleteFollowing(String username, FollowRequest request);
+    void unfollow(String username, FollowRequest request);
     List<FollowUserDto> myFollowerList(String username);
     List<FollowUserDto> myFollowingList(String username);
     List<FollowUserDto> otherFollowerList(String username, Long userId);

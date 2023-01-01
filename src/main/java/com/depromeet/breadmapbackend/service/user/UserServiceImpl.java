@@ -226,16 +226,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteFollower(String username, FollowRequest request) { // 나를 팔로우한 사람 삭제
-        User fromUser = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        User toUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(fromUser.equals(toUser)) throw new DaedongException(DaedongStatus.SELF_FOLLOW_EXCEPTION);
-        Follow follow = followRepository.findByFromUserAndToUser(fromUser, toUser).orElseThrow(() -> new DaedongException(DaedongStatus.FOLLOW_NOT_FOUND));
-        followRepository.delete(follow);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteFollowing(String username, FollowRequest request) { // 내가 팔로우한 사람 삭제
+    public void unfollow(String username, FollowRequest request) {
         User fromUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User toUser = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(fromUser.equals(toUser)) throw new DaedongException(DaedongStatus.SELF_FOLLOW_EXCEPTION);
