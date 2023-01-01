@@ -16,8 +16,7 @@
 - 로그아웃 API
 - 유저 탈퇴 API
 - 팔로우 API
-- 팔로워 삭제 API
-- 팔로우 삭제 API
+- 언팔로우 API
 - 팔로워 리스트 조회 API
 - 팔로잉 리스트 조회 API
 - 차단 리스트 조회 API
@@ -45,11 +44,8 @@ operation::user/delete[snippets='http-request,request-headers,http-response']
 === 팔로우 API [POST]
 operation::user/follow[snippets='http-request,request-headers,request-fields,http-response']
 
-=== 팔로우 삭제 API [DELETE]
-operation::user/delete/follower[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 팔로잉 삭제 API [DELETE]
-operation::user/delete/following[snippets='http-request,request-headers,request-fields,http-response']
+=== 언팔로우 API [DELETE]
+operation::user/unfollow[snippets='http-request,request-headers,request-fields,http-response']
 
 === 본인 팔로워 리스트 조회 [GET]
 operation::user/me/follower[snippets='http-request,request-headers,http-response']
