@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.security;
 
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -10,51 +12,51 @@ import org.springframework.web.bind.annotation.*;
 public class ExceptionController {
     @GetMapping("/entryPoint")
     public ErrorResponse getEntrypointException() {
-        throw new CAuthenticationEntryPointException();
+        throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @PostMapping("/entryPoint")
     public ErrorResponse postEntrypointException() {
-        throw new CAuthenticationEntryPointException();
+        throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @PutMapping("/entryPoint")
     public ErrorResponse putEntrypointException() {
-        throw new CAuthenticationEntryPointException();
+        throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @PatchMapping("/entryPoint")
     public ErrorResponse patchEntrypointException() {
-        throw new CAuthenticationEntryPointException();
+        throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @DeleteMapping("/entryPoint")
     public ErrorResponse deleteEntrypointException() {
-        throw new CAuthenticationEntryPointException();
+        throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @GetMapping("/accessDenied")
     public ErrorResponse getAccessDeniedException() {
-        throw new CAccessDeniedException();
+        throw new DaedongException(DaedongStatus.CUSTOM_ACCESS_DENIED);
     }
 
     @PostMapping("/accessDenied")
     public ErrorResponse postAccessDeniedException() {
-        throw new CAccessDeniedException();
+        throw new DaedongException(DaedongStatus.CUSTOM_ACCESS_DENIED);
     }
 
     @PutMapping("/accessDenied")
     public ErrorResponse putAccessDeniedException() {
-        throw new CAccessDeniedException();
+        throw new DaedongException(DaedongStatus.CUSTOM_ACCESS_DENIED);
     }
 
     @PatchMapping("/accessDenied")
     public ErrorResponse patchAccessDeniedException() {
-        throw new CAccessDeniedException();
+        throw new DaedongException(DaedongStatus.CUSTOM_ACCESS_DENIED);
     }
 
     @DeleteMapping("/accessDenied")
     public ErrorResponse deleteAccessDeniedException() {
-        throw new CAccessDeniedException();
+        throw new DaedongException(DaedongStatus.CUSTOM_ACCESS_DENIED);
     }
 }
