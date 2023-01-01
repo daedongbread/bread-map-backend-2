@@ -95,6 +95,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
                 .roleType(RoleType.USER)
                 .image(oAuth2UserInfo.getImageUrl())
                 .build();
+        userRepository.save(user);
 
         Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
         Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
@@ -102,7 +103,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
         flagRepository.save(alreadyGo);
         user.addFlag(wantToGo);
         user.addFlag(alreadyGo);
-        userRepository.save(user);
 
         return user;
     }
