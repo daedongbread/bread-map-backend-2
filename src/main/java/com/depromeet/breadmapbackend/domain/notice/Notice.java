@@ -47,6 +47,7 @@ public class Notice extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private NoticeType type;
 
     @Builder
