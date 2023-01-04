@@ -449,8 +449,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_apis">APIs</a>
 <ul class="sectlevel2">
 <li><a href="#_알림_토큰_추가_api_post">알림 토큰 추가 API [POST]</a></li>
-<li><a href="#_알림_상태_조회_api_get">알림 상태 조회 API [GET]</a></li>
-<li><a href="#_알림_상태_변경_api_patch">알림 상태 변경 API [PATCH]</a></li>
 <li><a href="#_오늘_알림_조회_api_get">오늘 알림 조회 API [GET]</a></li>
 <li><a href="#_이번주_알림_조회_api_get">이번주 알림 조회 API [GET]</a></li>
 <li><a href="#_이번주_이전_알림_조회_api_get">이번주 이전 알림 조회 API [GET]</a></li>
@@ -467,18 +465,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul>
 <li>
 <p>알림 토큰 추가 API</p>
-</li>
-<li>
-<p>알림 토큰 수정 API</p>
-</li>
-<li>
-<p>알림 토큰 삭제 API</p>
-</li>
-<li>
-<p>알림 상태 조회 API</p>
-</li>
-<li>
-<p>알림 상태 변경 API</p>
 </li>
 <li>
 <p>오늘 알림 조회 API</p>
@@ -499,7 +485,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /notice/token HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY3MjU4NTkxMCwiZXhwIjoxNjcyNTg5NTEwfQ.5mrTinK6B9YMhATv8aAu0n8K-drY3mme28U-vRgexno
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY3Mjg0Mzg1OSwiZXhwIjoxNjcyODQ3NDU5fQ.m-KCQ-MMY9huJYwU47gU4HtnofVu6cNhyWffpZYna6Y
 Accept: application/json
 Content-Length: 40
 Host: localhost:8080
@@ -583,223 +569,6 @@ X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_알림_상태_조회_api_get"><a class="link" href="#_알림_상태_조회_api_get">알림 상태 조회 API [GET]</a></h3>
-<div class="sect3">
-<h4 id="_알림_상태_조회_api_get_http_request"><a class="link" href="#_알림_상태_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /notice/token/alarm HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY3MjU4NTkxMCwiZXhwIjoxNjcyNTg5NTEwfQ.5mrTinK6B9YMhATv8aAu0n8K-drY3mme28U-vRgexno
-Accept: application/json
-Content-Length: 37
-Host: localhost:8080
-
-{
-  "deviceToken" : "deviceToken"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_조회_api_get_request_headers"><a class="link" href="#_알림_상태_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_조회_api_get_request_fields"><a class="link" href="#_알림_상태_조회_api_get_request_fields">Request fields</a></h4>
-<div class="sect4">
-<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deviceToken</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">디바이스 토큰</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_조회_api_get_http_response"><a class="link" href="#_알림_상태_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 45
-
-{
-  "data" : {
-    "alarmOn" : true
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_조회_api_get_response_fields"><a class="link" href="#_알림_상태_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.alarmOn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">알람 상태</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_알림_상태_변경_api_patch"><a class="link" href="#_알림_상태_변경_api_patch">알림 상태 변경 API [PATCH]</a></h3>
-<div class="sect3">
-<h4 id="_알림_상태_변경_api_patch_http_request"><a class="link" href="#_알림_상태_변경_api_patch_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /notice/token/alarm HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY3MjU4NTkxMSwiZXhwIjoxNjcyNTg5NTExfQ.ZVEPN35dikozc9Vwg23fwfHlNort8qqLR9n3RJYVORA
-Accept: application/json
-Content-Length: 37
-Host: localhost:8080
-
-{
-  "deviceToken" : "deviceToken"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_변경_api_patch_request_headers"><a class="link" href="#_알림_상태_변경_api_patch_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_변경_api_patch_request_fields"><a class="link" href="#_알림_상태_변경_api_patch_request_fields">Request fields</a></h4>
-<div class="sect4">
-<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deviceToken</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">디바이스 토큰</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_알림_상태_변경_api_patch_http_response"><a class="link" href="#_알림_상태_변경_api_patch_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_오늘_알림_조회_api_get"><a class="link" href="#_오늘_알림_조회_api_get">오늘 알림 조회 API [GET]</a></h3>
 <div class="paragraph">
 <p>오늘 알림 조회</p>
@@ -809,7 +578,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /notice/today?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY3MjU4NTkxMCwiZXhwIjoxNjcyNTg5NTEwfQ.5mrTinK6B9YMhATv8aAu0n8K-drY3mme28U-vRgexno
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY3Mjg0Mzg2MCwiZXhwIjoxNjcyODQ3NDYwfQ.cX-nPnhbcTNlQxSsuptDd-AGYSIhwU6JSNOmeeWFKhk
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -863,26 +632,26 @@ Content-Length: 810
     "totalElements" : 2,
     "totalPages" : 1,
     "contents" : [ {
-      "noticeId" : 6,
+      "noticeId" : 4,
       "image" : null,
-      "fromUserId" : 43,
+      "fromUserId" : 41,
       "fromUserNickName" : "nickname2",
       "title" : "title2",
       "contentId" : null,
       "content" : null,
       "isFollow" : true,
-      "createdAt" : "2023-01-02T00:11:50.956941",
+      "createdAt" : "2023-01-04T23:51:00.107167",
       "noticeType" : "FOLLOW"
     }, {
-      "noticeId" : 5,
+      "noticeId" : 3,
       "image" : "S3_DEFAULT_COMMENT",
-      "fromUserId" : 43,
+      "fromUserId" : 41,
       "fromUserNickName" : "nickname2",
       "title" : "title1",
       "contentId" : 1,
       "content" : "content1",
       "isFollow" : true,
-      "createdAt" : "2023-01-02T00:11:50.955911",
+      "createdAt" : "2023-01-04T23:51:00.102173",
       "noticeType" : "REVIEW_COMMENT"
     } ]
   }
@@ -1022,7 +791,7 @@ Content-Length: 810
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-12-24 17:30:56 +0900
+Last updated 2023-01-04 23:08:01 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

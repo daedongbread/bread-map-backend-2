@@ -11,22 +11,12 @@
 
 == APIs
 - 알림 토큰 추가 API
-- 알림 토큰 수정 API
-- 알림 토큰 삭제 API
-- 알림 상태 조회 API
-- 알림 상태 변경 API
 - 오늘 알림 조회 API
 - 이번주 알림 조회 API
 - 이번주 이전 알림 조회 API
 
 === 알림 토큰 추가 API [POST]
 operation::notice/token/add[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 알림 상태 조회 API [GET]
-operation::notice/token/alarm[snippets='http-request,request-headers,request-fields,http-response,response-fields']
-
-=== 알림 상태 변경 API [PATCH]
-operation::notice/token/alarm/update[snippets='http-request,request-headers,request-fields,http-response']
 
 === 오늘 알림 조회 API [GET]
 오늘 알림 조회

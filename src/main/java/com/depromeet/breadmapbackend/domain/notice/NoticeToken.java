@@ -25,19 +25,13 @@ public class NoticeToken extends BaseEntity {
     @Column(nullable = false)
     private String deviceToken;
 
-    @Column(nullable = false)
-    private boolean isAlarmOn;
-
     @Builder
-    public NoticeToken(User user, String deviceToken, boolean isAlarmOn) {
+    public NoticeToken(User user, String deviceToken) {
         this.user = user;
         this.deviceToken = deviceToken;
-        this.isAlarmOn = true;
     }
 
     public void updateDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
-
-    public void updateAlarm() { this.isAlarmOn = !this.isAlarmOn; }
 }

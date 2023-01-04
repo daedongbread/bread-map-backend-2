@@ -21,6 +21,7 @@ import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
+import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -320,5 +321,17 @@ public class UserServiceImpl implements UserService {
         BlockUser blockUser = blockUserRepository.findByUserAndBlockUser(user, userToUnblock).orElseThrow(() -> new DaedongException(DaedongStatus.BLOCK_NOT_FOUND));
 
         blockUserRepository.delete(blockUser);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public AlarmDto getAlarmStatus(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        return new AlarmDto(user.getIsAlarmOn());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAlarmStatus(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        user.changeAlarm();
     }
 }

@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.service.user.UserService;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,5 +114,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unblock(@CurrentUser String username, @RequestBody BlockRequest request) {
         userService.unblock(username, request);
+    }
+
+    @GetMapping("/alarm")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AlarmDto> getAlarmStatus(@CurrentUser String username) {
+        return new ApiResponse<>(userService.getAlarmStatus(username));
+    }
+
+    @PatchMapping("/alarm")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateAlarmStatus(@CurrentUser String username) {
+        userService.updateAlarmStatus(username);
     }
 }
