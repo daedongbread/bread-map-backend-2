@@ -65,14 +65,14 @@ spring:
 
         provider:
           kakao:
-            authorization-uri: ${KAKAO_AUTH_URI}
-            token-uri: ${KAKAO_TOKEN_URI}
-            user-info-uri: ${KAKAO_USER_INFO_URI}
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
           apple:
-            authorization-uri: ${APPLE_AUTH_URI}
-            token-uri: ${APPLE_TOKEN_URI}
-            user-info-uri: ${APPLE_USER_INFO_URI}
+            authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post
+            token-uri: https://appleid.apple.com/auth/token
+            jwk-set-uri: https://appleid.apple.com/auth/keys
             user-name-attribute: sub
 
 server:
