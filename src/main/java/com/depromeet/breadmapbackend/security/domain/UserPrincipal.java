@@ -72,7 +72,7 @@ public class UserPrincipal implements OAuth2User, OidcUser {
         );
     }
 
-    public static UserPrincipal create(User user, Map<String, Object> attributes) {
+    public static UserPrincipal create(User user, Map<String, Object> attributes) { // TODO
         return new UserPrincipal(
                 user.getUsername(),
                 user.getProviderType(),
@@ -82,7 +82,7 @@ public class UserPrincipal implements OAuth2User, OidcUser {
         );
     }
 
-    public static UserPrincipal create(String username, Collection<? extends GrantedAuthority> authorities) {
+    public static UserPrincipal create(String username, Collection<? extends GrantedAuthority> authorities) { // TODO
         return new UserPrincipal(
                 username,
                 null,

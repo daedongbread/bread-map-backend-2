@@ -3,8 +3,6 @@ package com.depromeet.breadmapbackend.web.advice;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.depromeet.breadmapbackend.domain.exception.*;
 import com.depromeet.breadmapbackend.infra.feign.exception.SgisFeignException;
-import com.depromeet.breadmapbackend.security.CAccessDeniedException;
-import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
 import com.depromeet.breadmapbackend.web.controller.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

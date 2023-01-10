@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.security.token;
 
-import com.depromeet.breadmapbackend.security.CAccessDeniedException;
-import com.depromeet.breadmapbackend.security.CAuthenticationEntryPointException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongException;
+import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -13,11 +13,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -100,7 +98,7 @@ public class JwtTokenProvider {
 
         // 권한 정보가 없음
         if (claims.get(ROLES) == null) {
-            throw new CAccessDeniedException();
+            throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
         }
 
         Collection<? extends GrantedAuthority> authorities =
@@ -108,7 +106,7 @@ public class JwtTokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        UserPrincipal userPrincipal = UserPrincipal.create(claims.getSubject(), authorities);
+        UserPrincipal userPrincipal = UserPrincipal.create(claims.getSubject(), authorities); // TODO
 
         return new UsernamePasswordAuthenticationToken(userPrincipal, token, authorities);
     }
