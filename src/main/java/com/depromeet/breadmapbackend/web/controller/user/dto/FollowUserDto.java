@@ -13,7 +13,7 @@ public class FollowUserDto {
     private String nickName;
     private Integer reviewNum;
     private Integer followerNum;
-    private Boolean isFollow;
+    private Boolean isFollow; // 내가 팔로우 했는지
     private Boolean isMe;
 
     @Builder
