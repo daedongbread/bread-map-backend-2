@@ -64,7 +64,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
             user = createUser(oAuth2UserInfo, providerType);
         }
 
-        return UserPrincipal.create(user, oAuth2User.getAttributes());
+        return UserPrincipal.create(user, oAuth2User.getAttributes()); // TODO
     }
 
     private String createNickName() {

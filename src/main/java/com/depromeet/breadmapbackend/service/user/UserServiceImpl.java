@@ -243,7 +243,7 @@ public class UserServiceImpl implements UserService {
                         follow.getFromUser(),
                         reviewRepository.countByUser(follow.getFromUser()),
                         followRepository.countByToUser(follow.getFromUser()),
-                        followRepository.findByFromUserAndToUser(follow.getFromUser(), toUser).isPresent(),
+                        followRepository.findByFromUserAndToUser(toUser, follow.getFromUser()).isPresent(), // 내가 팔로우 했는지
                         false
                 ))
                 .collect(Collectors.toList());
@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
                         follow.getToUser(),
                         reviewRepository.countByUser(follow.getToUser()),
                         followRepository.countByToUser(follow.getToUser()),
-                        followRepository.findByFromUserAndToUser(fromUser, follow.getToUser()).isPresent(),
+                        followRepository.findByFromUserAndToUser(fromUser, follow.getToUser()).isPresent(), // 내가 팔로우 했는지
                         false
                 ))
                 .collect(Collectors.toList());
