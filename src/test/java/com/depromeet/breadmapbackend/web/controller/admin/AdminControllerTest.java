@@ -327,7 +327,7 @@ class AdminControllerTest extends ControllerTest {
 
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/admin/bakery")
-                .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
+                .file(new MockMultipartFile("bakeryImage", "testImage", "image/png", (InputStream) null))
                 .file(new MockMultipartFile("productImageList", "newImage", "image/png", (InputStream) null))
                 .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -365,6 +365,7 @@ class AdminControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isCreated());
+        System.out.println("Image : " + bakery.getImage());
     }
 
     @Test

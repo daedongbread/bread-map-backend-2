@@ -80,8 +80,8 @@ class UserControllerTest extends ControllerTest {
         blockUserRepository.save(blockUser);
         
         Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1")
-                .image("testImage").status(BakeryStatus.POSTING).build();
+                .facilityInfoList(Collections.singletonList(FacilityInfo.PARKING)).name("bakery1").status(BakeryStatus.POSTING).build();
+        bakery.updateImage("testImage");
         bakeryRepository.save(bakery);
 
         Flag flag = Flag.builder().user(user1).name("testFlagName").color(FlagColor.ORANGE).build();
