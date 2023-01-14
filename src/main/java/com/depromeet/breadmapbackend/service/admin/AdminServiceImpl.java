@@ -477,7 +477,7 @@ public class AdminServiceImpl implements AdminService{
         if(bakeryImage != null && !bakeryImage.isEmpty()) {
             String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageType.BAKERY_IMAGE, bakery.getId());
             String image = s3Uploader.upload(bakeryImage, imagePath);
-            bakeryRepository.findById(bakery.getId()).get().updateImage(imagePath); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
+            bakeryRepository.findById(bakery.getId()).get().updateImage(image); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
         }
 
         if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
