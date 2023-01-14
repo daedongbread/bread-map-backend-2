@@ -20,14 +20,14 @@ public interface AdminService {
     AdminBakeryDto getBakery(Long bakeryId);
     PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable);
     BakeryLocationDto getBakeryLatitudeLongitude(String address);
-    void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
-    void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
+    void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
+    void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void deleteProduct(Long bakeryId, Long productId);
     SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable);
     void deleteBakery(Long bakeryId);
     PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable);
     BakeryAddReportDto getBakeryReport(Long reportId);
-    void updateBakeryAddReportStatus(Long reportId, UpdateBakeryReportStatusRequest request);
+    void updateBakeryAddReportStatus(Long reportId, BakeryReportStatusUpdateRequest request);
     PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable);
     void updateReviewStatus(Long reportId);
     PageResponseDto<AdminUserDto> getUserList(Pageable pageable);

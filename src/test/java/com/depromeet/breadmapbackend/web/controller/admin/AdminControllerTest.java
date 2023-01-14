@@ -10,10 +10,10 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
-import com.depromeet.breadmapbackend.web.controller.admin.dto.AddBakeryRequest;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminLoginRequest;
-import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryReportStatusRequest;
-import com.depromeet.breadmapbackend.web.controller.admin.dto.UpdateBakeryRequest;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.BakeryReportStatusUpdateRequest;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -316,11 +316,11 @@ class AdminControllerTest extends ControllerTest {
     @Test
     void addBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        String object = objectMapper.writeValueAsString(AddBakeryRequest.builder()
+        String object = objectMapper.writeValueAsString(BakeryAddRequest.builder()
                 .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
-                        AddBakeryRequest.AddProductRequest.builder()
+                        BakeryAddRequest.AddProductRequest.builder()
                                 .productType(ProductType.BREAD).productName("testBread").price("12000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
@@ -371,14 +371,14 @@ class AdminControllerTest extends ControllerTest {
     @Test
     void updateBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        String object = objectMapper.writeValueAsString(UpdateBakeryRequest.builder()
+        String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
                 .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
-                        UpdateBakeryRequest.UpdateProductRequest.builder()
+                        BakeryUpdateRequest.UpdateProductRequest.builder()
                                 .productId(product.getId()).productType(ProductType.BREAD)
                                 .productName("testBread").price("12000").existedImage("image").build(),//,
-                        UpdateBakeryRequest.UpdateProductRequest.builder()
+                        BakeryUpdateRequest.UpdateProductRequest.builder()
                                 .productType(ProductType.BREAD).productName("newBread").price("10000").build()
                 )).build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
@@ -548,7 +548,7 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void updateBakeryAddReportStatus() throws Exception {
-        String object = objectMapper.writeValueAsString(UpdateBakeryReportStatusRequest.builder()
+        String object = objectMapper.writeValueAsString(BakeryReportStatusUpdateRequest.builder()
                 .status(BakeryAddReportStatus.REFLECT).build());
 
         mockMvc.perform(patch("/admin/bakery/report/{reportId}", bakeryAddReport.getId())

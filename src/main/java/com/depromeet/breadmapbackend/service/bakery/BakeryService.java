@@ -11,7 +11,7 @@ import java.util.List;
 public interface BakeryService {
     List<BakeryCardDto> findBakeryList(Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
     List<BakeryCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
-    BakeryDto findBakery(Long bakeryId);
+    BakeryDto findBakery(String username, Long bakeryId);
     List<ProductDto> findProductList(Long bakeryId);
     void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request);
     void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException;
