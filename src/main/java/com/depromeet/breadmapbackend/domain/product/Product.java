@@ -45,12 +45,11 @@ public class Product extends BaseEntity {
     private boolean isTrue;
 
     @Builder
-    private Product(ProductType productType, String name, String price, Bakery bakery, String image, Boolean isTrue) {
+    private Product(ProductType productType, String name, String price, Bakery bakery, Boolean isTrue) {
         this.productType = productType;
         this.name = name;
         this.price = price;
         this.bakery = bakery;
-        this.image = image;
         if(isTrue == null) this.isTrue = true;
         else this.isTrue = isTrue;
 //        this.bakery.getBreadList().add(this);

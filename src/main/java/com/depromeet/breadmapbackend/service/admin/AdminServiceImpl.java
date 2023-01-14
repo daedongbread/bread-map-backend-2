@@ -461,7 +461,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addBakery(AddBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
+    public void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
         Long bakeryId = createBakeryId(request.getAddress());
         Bakery bakery = Bakery.builder()
                 .id(bakeryId).name(request.getName())
@@ -477,14 +477,14 @@ public class AdminServiceImpl implements AdminService{
         if(bakeryImage != null && !bakeryImage.isEmpty()) {
             String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageType.BAKERY_IMAGE, bakery.getId());
             String image = s3Uploader.upload(bakeryImage, imagePath);
-            bakery.updateImage(image);
+            bakeryRepository.findById(bakery.getId()).get().updateImage(imagePath); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
         }
 
         if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
             if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
             if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for(int i = 0; i < request.getProductList().size(); i++) {
-                AddBakeryRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
+                BakeryAddRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
                 Product product = Product.builder().bakery(bakery).productType(addProductRequest.getProductType())
                         .name(addProductRequest.getProductName()).price(addProductRequest.getPrice()).build();
                 productRepository.save(product);
@@ -493,14 +493,14 @@ public class AdminServiceImpl implements AdminService{
                     MultipartFile productImage = productImageList.get(i);
                     String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
                     String image = s3Uploader.upload(productImage, imagePath);
-                    product.updateImage(image);
+                    product.updateImage(imagePath);
                 }
             }
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateBakery(Long bakeryId, UpdateBakeryRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
+    public void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         bakery.update(bakeryId, request.getName(),
@@ -519,7 +519,7 @@ public class AdminServiceImpl implements AdminService{
             if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
             if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for (int i = 0; i < request.getProductList().size(); i++) {
-                UpdateBakeryRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
+                BakeryUpdateRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
                 Product product;
                 if (updateProductRequest.getProductId() == null) { // 새로운 product 일 때
                     product = Product.builder()
@@ -594,7 +594,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateBakeryAddReportStatus(Long reportId, UpdateBakeryReportStatusRequest request) {
+    public void updateBakeryAddReportStatus(Long reportId, BakeryReportStatusUpdateRequest request) {
         BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_REPORT_NOT_FOUND));
         bakeryAddReport.updateStatus(request.getStatus());
     }

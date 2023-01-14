@@ -32,8 +32,8 @@ public class FileConverter {
         String fileName = UUID.randomUUID() + originalFileExtension;
         // 파일 위치
         String filePath = imageType.getCode() + "/" + id + "/" + fileName; // ex) bakeryImage/1/random_name.jpg
-        log.info("profileImage : origName : \"{}\", fileName : \"{}\", filePath : \"{}\"",
-                multipartFile.getOriginalFilename(), fileName, filePath);
+        log.info("origName : \"{}\", fileName : \"{}\", filePath : \"{}\"",
+                multipartFile.getOriginalFilename() + originalFileExtension, fileName, filePath);
         return filePath;
     }
 }

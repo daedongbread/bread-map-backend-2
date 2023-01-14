@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBakeryReportStatusRequest {
+public class BakeryReportStatusUpdateRequest {
     private BakeryAddReportStatus status;
 }

@@ -124,12 +124,14 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public BakeryDto findBakery(Long bakeryId) {
+    public BakeryDto findBakery(String username, Long bakeryId) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         bakery.addViews();
 
-        BakeryInfo info = BakeryInfo.builder()
+        BakeryDto.BakeryInfo info = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)
+                .isFlaged(flagBakeryRepository.findByBakeryAndUser(bakery, user).isPresent())
                 .rating(Math.floor(bakery.getReviewList()
                         .stream().map(br -> Math.floor(br.getRatings()
                                 .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
