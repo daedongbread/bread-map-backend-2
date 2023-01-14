@@ -9,7 +9,6 @@ import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.PageableSortConverter;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -85,7 +84,7 @@ public class AdminController {
     @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBakery(
-            @RequestPart AddBakeryRequest request,
+            @RequestPart BakeryAddRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
             @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
         adminService.addBakery(request, bakeryImage, productImageList);
@@ -94,7 +93,7 @@ public class AdminController {
     @PostMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBakery(
-            @PathVariable Long bakeryId, @RequestPart UpdateBakeryRequest request,
+            @PathVariable Long bakeryId, @RequestPart BakeryUpdateRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
             @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, productImageList);
@@ -136,7 +135,7 @@ public class AdminController {
 
     @PatchMapping("/bakery/report/{reportId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBakeryAddReportStatus(@PathVariable Long reportId, @RequestBody UpdateBakeryReportStatusRequest request) {
+    public void updateBakeryAddReportStatus(@PathVariable Long reportId, @RequestBody BakeryReportStatusUpdateRequest request) {
         adminService.updateBakeryAddReportStatus(reportId, request);
     }
 

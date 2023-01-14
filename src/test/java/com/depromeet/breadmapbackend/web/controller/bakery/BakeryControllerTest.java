@@ -205,6 +205,7 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.info.flagNum").description("빵집 가봤어요 수"),
                                 fieldWithPath("data.info.rating").description("빵집 평점"),
                                 fieldWithPath("data.info.reviewNum").description("빵집 리뷰 수"),
+                                fieldWithPath("data.info.isFlaged").description("유저 빵집 깃발 저장 유무"),
                                 fieldWithPath("data.info.address").description("빵집 도로명 주소"),
                                 fieldWithPath("data.info.hours").description("빵집 영업 시간"),
                                 fieldWithPath("data.info.websiteURL").description("빵집 홈페이지"),

@@ -42,8 +42,8 @@ public class BakeryController {
 
     @GetMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<BakeryDto> findBakery(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryService.findBakery(bakeryId));
+    public ApiResponse<BakeryDto> findBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryService.findBakery(username, bakeryId));
     }
 
     @GetMapping("/{bakeryId}/product")
