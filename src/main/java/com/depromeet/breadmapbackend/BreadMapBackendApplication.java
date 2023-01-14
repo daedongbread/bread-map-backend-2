@@ -15,6 +15,10 @@ import java.util.TimeZone;
 @EnableFeignClients
 @SpringBootApplication
 public class BreadMapBackendApplication {
+	@PostConstruct
+	public void started(){
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(BreadMapBackendApplication.class, args);
@@ -24,9 +28,4 @@ public class BreadMapBackendApplication {
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
-
-//	@PostConstruct
-//	public void started(){
-//		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-//	}
 }
