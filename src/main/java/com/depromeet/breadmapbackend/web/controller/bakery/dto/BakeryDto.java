@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.controller.bakery.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BakeryDto {
-    private BakeryInfo info;
+    private BakeryInfo bakeryInfo;
+    private FlagInfo flagInfo;
     private List<ProductDto> menu;
     private List<FacilityInfo> facilityInfoList;
 
@@ -26,9 +28,6 @@ public class BakeryDto {
         private Integer flagNum;
         private Double rating;
         private Integer reviewNum;
-
-        private Boolean isFlaged;
-
         private String address;
         private String hours;
         private String websiteURL;
@@ -38,13 +37,12 @@ public class BakeryDto {
         private String phoneNumber;
 
         @Builder
-        public BakeryInfo(Bakery bakery, Boolean isFlaged, Double rating, Integer reviewNum) {
+        public BakeryInfo(Bakery bakery, Double rating, Integer reviewNum) {
             this.image = bakery.getImage();
             this.name = bakery.getName();
             this.flagNum = bakery.getFlagNum();
             this.rating = rating;
             this.reviewNum = reviewNum;
-            this.isFlaged = isFlaged;
             this.address = bakery.getAddress();
             this.hours = bakery.getHours();
             this.websiteURL = bakery.getWebsiteURL();
@@ -52,6 +50,19 @@ public class BakeryDto {
             this.facebookURL = bakery.getFacebookURL();
             this.blogURL = bakery.getBlogURL();
             this.phoneNumber = bakery.getPhoneNumber();
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class FlagInfo {
+        private Long flagId;
+        private Boolean isFlaged;
+
+        @Builder
+        public FlagInfo(FlagBakery flagBakery) {
+            this.flagId = flagBakery != null ? flagBakery.getFlag().getId() : null;
+            this.isFlaged = flagBakery != null;
         }
     }
 }

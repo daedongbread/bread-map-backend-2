@@ -129,9 +129,8 @@ public class BakeryServiceImpl implements BakeryService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         bakery.addViews();
 
-        BakeryDto.BakeryInfo info = BakeryDto.BakeryInfo.builder()
+        BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)
-                .isFlaged(flagBakeryRepository.findByBakeryAndUser(bakery, user).isPresent())
                 .rating(Math.floor(bakery.getReviewList()
                         .stream().map(br -> Math.floor(br.getRatings()
                                 .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
@@ -139,6 +138,8 @@ public class BakeryServiceImpl implements BakeryService {
                         .stream().mapToDouble(Double::doubleValue)
                         .average().orElse(0)*10)/10.0)
                 .reviewNum(bakery.getReviewList().size()).build();
+        BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
+                .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, user).orElse(null)).build();
         List<ProductDto> menu = productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
@@ -156,7 +157,7 @@ public class BakeryServiceImpl implements BakeryService {
 //                .collect(Collectors.toList());
 
         return BakeryDto.builder()
-                .info(info).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
+                .bakeryInfo(bakeryInfo).flagInfo(flagInfo).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
