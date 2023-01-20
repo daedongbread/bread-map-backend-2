@@ -63,9 +63,9 @@ public class FlagController {
         flagService.addBakeryToFlag(username, flagId, bakeryId);
     }
 
-    @DeleteMapping("/{flagId}/{flagBakeryId}")
+    @DeleteMapping("/{flagId}/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @PathVariable Long flagBakeryId) {
-        flagService.removeBakeryToFlag(username, flagId, flagBakeryId);
+    public void removeBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @PathVariable Long bakeryId) {
+        flagService.removeBakeryToFlag(username, flagId, bakeryId);
     }
 }

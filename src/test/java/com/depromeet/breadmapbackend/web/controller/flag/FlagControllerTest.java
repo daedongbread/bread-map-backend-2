@@ -281,7 +281,7 @@ class FlagControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
-        mockMvc.perform(delete("/flag/{flagId}/{flagBakeryId}", flag.getId(), flagBakery.getId())
+        mockMvc.perform(delete("/flag/{flagId}/bakery/{bakeryId}", flag.getId(), bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("flag/bakeryDelete",
@@ -290,7 +290,7 @@ class FlagControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
                                 parameterWithName("flagId").description("깃발 고유번호"),
-                                parameterWithName("flagBakeryId").description("깃발에 추가된 빵집 고유번호")
+                                parameterWithName("bakeryId").description("깃발에 추가된 빵집 고유번호")
                         )
                 ))
                 .andExpect(status().isNoContent());
