@@ -134,13 +134,14 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void removeBakeryToFlag(String username, Long flagId, Long flagBakeryId) {
+    public void removeBakeryToFlag(String username, Long flagId, Long bakeryId) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
-        FlagBakery flagBakery = flagBakeryRepository.findById(flagBakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Bakery bakery = bakeryRepository.findById(flagBakery.getBakery().getId()).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        FlagBakery flagBakery = flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         if(flag.getName().equals("가봤어요")) bakery.minusFlagNum();
         flag.removeFlagBakery(flagBakery);
+        flagBakeryRepository.delete(flagBakery);
     }
 }
