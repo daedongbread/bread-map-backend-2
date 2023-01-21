@@ -16,13 +16,13 @@ import com.depromeet.breadmapbackend.domain.user.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeDto;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -46,18 +46,7 @@ public class NoticeServiceImpl implements NoticeService{
     private final FollowRepository followRepository;
 
     private final FcmService fcmService;
-
-    @Value("${cloud.aws.s3.default-path.comment}")
-    private String defaultCommentImage;
-
-    @Value("${cloud.aws.s3.default-path.like}")
-    private String defaultLikeImage;
-
-    @Value("${cloud.aws.s3.default-path.report}")
-    private String defaultReportImage;
-
-    @Value("${cloud.aws.s3.default-path.flag}")
-    private String defaultFlagImage;
+    private final CustomAWSS3Properties customAwss3Properties;
 
     @Transactional(rollbackFor = Exception.class)
     public void addNoticeToken(String username, NoticeTokenRequest request) {
@@ -238,13 +227,13 @@ public class NoticeServiceImpl implements NoticeService{
     private String noticeImage(Notice notice) {
         if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getImage();
         else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
-            return defaultCommentImage;
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getComment();
         else if(notice.getType().equals(NoticeType.REVIEW_LIKE) || notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))
-            return defaultLikeImage;
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getLike();
         else if(notice.getType().equals(NoticeType.ADD_BAKERY) || notice.getType().equals(NoticeType.ADD_PRODUCT))
-            return defaultReportImage;
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getReport();
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
-            return defaultFlagImage;
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getFlag();
         else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
     }
 }

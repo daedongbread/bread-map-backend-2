@@ -266,9 +266,6 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
                                 fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
                                 fieldWithPath("content").description("리뷰 내용")
-                        ),
-                        responseFields(
-                                fieldWithPath("data.reviewId").description("리뷰 고유 번호")
                         )
                 ))
                 .andExpect(status().isCreated());

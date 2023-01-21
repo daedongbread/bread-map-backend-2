@@ -27,6 +27,9 @@ import com.depromeet.breadmapbackend.infra.feign.client.SgisClient;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTranscoordDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTokenDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisGeocodeDto;
+import com.depromeet.breadmapbackend.infra.properties.CustomJWTKeyProperties;
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
+import com.depromeet.breadmapbackend.infra.properties.CustomSGISKeyProperties;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
@@ -79,23 +82,14 @@ public class AdminServiceImpl implements AdminService{
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final StringRedisTemplate redisTemplate;
-
-    @Value("${sgis.key}")
-    public String SGIS_CONSUMER_KEY;
-
-    @Value("${sgis.secret}")
-    private String SGIS_CONSUMER_SECRET;
-
-    @Value("${spring.jwt.admin}")
-    private String JWT_ADMIN_KEY;
-
-    @Value("${spring.redis.key.adminRefresh}")
-    private String REDIS_KEY_ADMIN_REFRESH;
+    private final CustomRedisProperties customRedisProperties;
+    private final CustomJWTKeyProperties customJWTKeyProperties;
+    private final CustomSGISKeyProperties customSGISKeyProperties;
 
     @Transactional(rollbackFor = Exception.class)
     public void adminJoin(AdminJoinRequest request) {
         if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new DaedongException(DaedongStatus.ADMIN_EMAIL_DUPLICATE_EXCEPTION);
-        if(!request.getSecret().equals(JWT_ADMIN_KEY)) throw new DaedongException(DaedongStatus.ADMIN_KEY_EXCEPTION);
+        if(!request.getSecret().equals(customJWTKeyProperties.getAdmin())) throw new DaedongException(DaedongStatus.ADMIN_KEY_EXCEPTION);
         Admin admin = Admin.builder().email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword())).build();
         adminRepository.save(admin);
@@ -108,7 +102,7 @@ public class AdminServiceImpl implements AdminService{
 
         JwtToken adminToken = jwtTokenProvider.createJwtToken(admin.getEmail(), "ROLE_ADMIN");
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId(),
+                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
                         adminToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
         return adminToken;
     }
@@ -122,12 +116,12 @@ public class AdminServiceImpl implements AdminService{
         String email = authentication.getName();
         Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
 
-        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId());
+        String refreshToken = redisTemplate.opsForValue().get(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId());
         if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_ADMIN_REFRESH + ":" + admin.getId(),
+                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         return reissueToken;
@@ -165,7 +159,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
-        SgisTokenDto token = sgisClient.getToken(SGIS_CONSUMER_KEY, SGIS_CONSUMER_SECRET);
+        SgisTokenDto token = sgisClient.getToken(customSGISKeyProperties.getKey(), customSGISKeyProperties.getSecret());
         SgisGeocodeDto geocode = sgisClient.getGeocode(token.getResult().getAccessToken(), address);
         SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
                 5179, 4326, geocode.getResult().getResultdata().get(0).getX(), geocode.getResult().getResultdata().get(0).getY());

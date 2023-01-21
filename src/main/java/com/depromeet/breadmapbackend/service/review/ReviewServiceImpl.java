@@ -110,7 +110,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ReviewAddDto addReview(String username, Long bakeryId, ReviewRequest request) {
+    public void addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
@@ -132,7 +132,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if(request.getNoExistProductRatingRequestList() != null) {
             request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
-                if(productRepository.findByName(noExistProductRatingRequest.getProductName()).isPresent())
+                if(productRepository.findByBakeryAndName(bakery, noExistProductRatingRequest.getProductName()).isPresent())
                     throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
@@ -144,8 +144,6 @@ public class ReviewServiceImpl implements ReviewService {
                 review.addRating(reviewProductRating);
             });
         }
-
-        return ReviewAddDto.builder().reviewId(review.getId()).build();
     }
 
     @Transactional(rollbackFor = Exception.class)

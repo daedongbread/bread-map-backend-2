@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ImageType {
+public enum ImageType { // TODO : with ConfigurationProperties
     BAKERY_IMAGE("bakeryImage"),
     PRODUCT_IMAGE("productImage"),
     REVIEW_IMAGE("reviewImage"),
