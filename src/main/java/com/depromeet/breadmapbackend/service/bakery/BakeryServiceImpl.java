@@ -20,6 +20,7 @@ import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
@@ -55,6 +56,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final ProductAddReportRepository productAddReportRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
+    private final CustomAWSS3Properties customAwss3Properties;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> findBakeryList

@@ -8,6 +8,8 @@ import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
@@ -37,9 +39,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
     private final FlagRepository flagRepository;
     private final StringRedisTemplate redisTemplate;
     private final NoticeTokenRepository noticeTokenRepository;
-
-    @Value("${spring.redis.key.delete}")
-    private String REDIS_KEY_DELETE;
+    private final CustomAWSS3Properties customAwss3Properties;
+    private final CustomRedisProperties customRedisProperties;
 
     @Override
     // oAuth2UserRequest 에는 access token 과 같은 정보들
@@ -53,13 +54,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
 
         String username = providerType.name() + "_" + oAuth2UserInfo.getUsername();
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_DELETE + ":" + username)))
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getDelete() + ":" + username)))
             throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
 
         User user = null;
         if (userRepository.findByUsername(username).isPresent()) {
             user = userRepository.findByUsername(username).get();
-//            updateUser(user, oAuth2UserInfo);
         } else {
             user = createUser(oAuth2UserInfo, providerType);
         }
@@ -93,7 +93,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
                 .email(oAuth2UserInfo.getEmail())
                 .providerType(providerType)
                 .roleType(RoleType.USER)
-                .image(oAuth2UserInfo.getImageUrl())
+//                .image(oAuth2UserInfo.getImageUrl())
+                .image(customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getUser())
                 .build();
         userRepository.save(user);
 

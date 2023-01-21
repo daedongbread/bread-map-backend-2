@@ -2,9 +2,9 @@ package com.depromeet.breadmapbackend.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,13 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class S3Uploader {
-    @Value("${cloud.aws.cloudFront.distributionDomain}")
-    public String CLOUD_FRONT_DOMAIN_NAME;
-
     private final AmazonS3Client amazonS3Client;
+    private final CustomAWSS3Properties customAwss3Properties;
 
-    @Value("${cloud.aws.s3.bucket}")
-    public String bucket;  // S3 버킷 이름
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {
         log.info("upload file : " + multipartFile.getOriginalFilename());
@@ -31,7 +27,7 @@ public class S3Uploader {
 //                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 //        upload(uploadFile, fileName);
         newUpload(multipartFile, fileName);
-        return CLOUD_FRONT_DOMAIN_NAME + "/" + fileName;
+        return customAwss3Properties.getCloudFront() + "/" + fileName;
     }
 
     // S3로 파일 업로드하기
@@ -48,9 +44,9 @@ public class S3Uploader {
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3Client.putObject(new PutObjectRequest(customAwss3Properties.getBucket(), fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         log.info("File putS3 success");
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
     }
 
     // S3로 업로드
@@ -59,38 +55,39 @@ public class S3Uploader {
         metadata.setContentType(multipartFile.getContentType());
         metadata.setContentLength(multipartFile.getSize());
         amazonS3Client.putObject(
-                new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), metadata)
+                new PutObjectRequest(customAwss3Properties.getBucket(), fileName, multipartFile.getInputStream(), metadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
         log.info("File putS3 success");
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
     }
 
     public String get(String fileName) {
-        return CLOUD_FRONT_DOMAIN_NAME + "/" + fileName;
+        return customAwss3Properties.getCloudFront() + "/" + fileName;
     }
 
     // get file
     private String getS3(String fileName) {
         log.info("get file : " + fileName);
-        return amazonS3Client.getUrl(CLOUD_FRONT_DOMAIN_NAME, fileName).toString();
+        return amazonS3Client.getUrl(customAwss3Properties.getCloudFront(), fileName).toString();
     }
 
     // delete file
     public void deleteFileS3(String fileName) {
         if(fileName != null) {
-            fileName = fileName.replace(CLOUD_FRONT_DOMAIN_NAME + "/", "");
+            fileName = fileName.replace(customAwss3Properties.getCloudFront() + "/", "");
             log.info("delete file : " + fileName);
-            if (amazonS3Client.doesObjectExist(bucket, fileName)) amazonS3Client.deleteObject(bucket, fileName);
+            if (amazonS3Client.doesObjectExist(customAwss3Properties.getBucket(), fileName))
+                amazonS3Client.deleteObject(customAwss3Properties.getBucket(), fileName);
         }
     }
 
     // delete file
     public void deleteFolderS3(String folderName) {
         log.info("delete folder : " + folderName);
-        if (amazonS3Client.listObjectsV2(bucket, folderName).getKeyCount() > 0) {
+        if (amazonS3Client.listObjectsV2(customAwss3Properties.getBucket(), folderName).getKeyCount() > 0) {
             //        ObjectListing objects = amazonS3Client.listObjects(bucket, folderName);
             ListObjectsRequest listObject = new ListObjectsRequest();
-            listObject.setBucketName(bucket);
+            listObject.setBucketName(customAwss3Properties.getBucket());
             listObject.setPrefix(folderName);
 
             ObjectListing objects;
@@ -99,7 +96,7 @@ public class S3Uploader {
                 //1000개 단위로 읽음
                 for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
                     log.info("key : " + objectSummary.getKey());
-                    amazonS3Client.deleteObject(bucket, objectSummary.getKey());
+                    amazonS3Client.deleteObject(customAwss3Properties.getBucket(), objectSummary.getKey());
                 }
                 //objects = s3.listNextBatchOfObjects(objects); <--이녀석은 1000개 단위로만 가져옴..
                 listObject.setMarker(objects.getNextMarker());

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.infra;
 
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,15 +14,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-    @Value("${spring.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.redis.port}")
-    private int redisPort;
+    private final CustomRedisProperties customRedisProperties;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);  // Lettuce 사용
+        return new LettuceConnectionFactory(customRedisProperties.getHost(), customRedisProperties.getPort());  // Lettuce 사용
     }
 
     @Bean

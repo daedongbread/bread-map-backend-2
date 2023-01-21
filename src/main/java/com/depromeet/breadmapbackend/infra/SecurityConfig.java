@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.infra;
 
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.security.CustomAccessDeniedHandler;
 import com.depromeet.breadmapbackend.security.CustomAuthenticationEntryPoint;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
@@ -9,7 +10,6 @@ import com.depromeet.breadmapbackend.security.handler.OAuth2AuthenticationSucces
 import com.depromeet.breadmapbackend.security.service.CustomOAuth2UserService;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,13 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-
     private final CustomOAuth2UserService oAuth2UserService;
     private final StringRedisTemplate redisTemplate;
-
-    @Value("${spring.redis.key.refresh}")
-    private String REDIS_KEY_REFRESH;
-
+    private final CustomRedisProperties customRedisProperties;
     private final UserRepository userRepository;
 
     // 토큰 프로바이더 설정
@@ -95,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .oauth2Login()
                 .successHandler(
-                        new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, redisTemplate, REDIS_KEY_REFRESH, userRepository))
+                        new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, redisTemplate, customRedisProperties.getKey().getRefresh(), userRepository))
                 .userInfoEndpoint().userService(oAuth2UserService);
     }
 

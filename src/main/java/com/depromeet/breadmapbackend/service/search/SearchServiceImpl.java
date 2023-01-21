@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.web.controller.search.dto.SearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,7 @@ public class SearchServiceImpl implements SearchService {
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
     private final StringRedisTemplate redisTemplate;
-
-    @Value("${spring.redis.key.recent}")
-    private String REDIS_KEY_RECENT;
+    private final CustomRedisProperties customRedisProperties;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> autoComplete(String word, Double latitude, Double longitude) {
@@ -56,8 +55,8 @@ public class SearchServiceImpl implements SearchService {
 
         ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
-        redisRecentSearch.add(REDIS_KEY_RECENT + ":" + username, word, Double.parseDouble(time));
-        redisRecentSearch.removeRange(REDIS_KEY_RECENT + ":" + username, -(10 + 1), -(10 + 1));
+        redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + username, word, Double.parseDouble(time));
+        redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + username, -(10 + 1), -(10 + 1));
 
         return bakeryRepository.findByNameStartsWith(word).stream()
                 .map(bakery -> SearchDto.builder()
@@ -76,18 +75,18 @@ public class SearchServiceImpl implements SearchService {
     public List<String> recentKeywords(String username) {
         if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
         return new ArrayList<>(Objects.requireNonNull(
-                redisTemplate.opsForZSet().reverseRange(REDIS_KEY_RECENT + ":" + username, 0, -1)));
+                redisTemplate.opsForZSet().reverseRange(customRedisProperties.getKey().getRecent() + ":" + username, 0, -1)));
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeyword(String username, String keyword) {
         if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-        redisTemplate.opsForZSet().remove(REDIS_KEY_RECENT + ":" + username, keyword);
+        redisTemplate.opsForZSet().remove(customRedisProperties.getKey().getRecent() + ":" + username, keyword);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecentKeywordAll(String username) {
         if(userRepository.findByUsername(username).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-        redisTemplate.delete(REDIS_KEY_RECENT + ":" + username);
+        redisTemplate.delete(customRedisProperties.getKey().getRecent() + ":" + username);
     }
 }

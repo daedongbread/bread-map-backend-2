@@ -43,8 +43,8 @@ public class ReviewController {
 
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<ReviewAddDto> addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
-        return new ApiResponse<>(reviewService.addReview(username, bakeryId, request));
+    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
+        reviewService.addReview(username, bakeryId, request);
     }
 
     @PostMapping("/{reviewId}/image")
@@ -59,12 +59,6 @@ public class ReviewController {
     public void removeReview(@CurrentUser String username, @PathVariable Long reviewId) {
         reviewService.removeReview(username, reviewId);
     }
-
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public ApiResponse<List<UserReviewDto>> getUserReviewList(@CurrentUser String username) {
-//        return new ApiResponse<>(reviewService.getUserReviewList(username));
-//    }
 
     @PostMapping("/{reviewId}/like")
     @ResponseStatus(HttpStatus.CREATED)

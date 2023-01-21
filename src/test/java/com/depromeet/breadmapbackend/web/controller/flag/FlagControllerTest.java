@@ -271,7 +271,7 @@ class FlagControllerTest extends ControllerTest {
                         pathParameters(parameterWithName("flagId").description("깃발 고유번호")),
                         requestParameters(parameterWithName("bakeryId").description("깃발에 추가할 빵집 고유번호"))
                 ))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
     }
 
