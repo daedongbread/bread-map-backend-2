@@ -64,7 +64,7 @@ class UserControllerTest extends ControllerTest {
 
         token1 = jwtTokenProvider.createJwtToken(user1.getUsername(), RoleType.USER.getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + ":" + user1.getUsername(),
+                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getUsername(),
                         token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
         token2 = jwtTokenProvider.createJwtToken(user2.getUsername(), RoleType.USER.getCode());
 

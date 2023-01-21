@@ -13,6 +13,7 @@ import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
@@ -54,11 +55,8 @@ public abstract class ControllerTest {
     @Autowired
     protected StringRedisTemplate redisTemplate;
 
-    @Value("${spring.redis.key.refresh}")
-    protected String REDIS_KEY_REFRESH;
-
-    @Value("${spring.redis.key.adminRefresh}")
-    protected String REDIS_KEY_ADMIN_REFRESH;
+    @Autowired
+    protected CustomRedisProperties customRedisProperties;
 
     @Autowired
     protected UserRepository userRepository;

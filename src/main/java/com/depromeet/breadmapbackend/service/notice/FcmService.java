@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.infra.properties.CustomFirebaseProperties;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
@@ -33,12 +34,7 @@ https://team-platform.tistory.com/23
  */
 public class FcmService {
     private final NoticeTokenRepository noticeTokenRepository;
-
-    @Value("${firebase.message.path.user}")
-    private String userPath;
-
-    @Value("${firebase.message.path.review}")
-    private String reviewPath;
+    private final CustomFirebaseProperties customFirebaseProperties;
 
     public void sendMessageTo(User user, String title, String content, Long contentId, NoticeType type) throws FirebaseMessagingException {
         if(!user.getIsAlarmOn()) return;
@@ -80,9 +76,9 @@ public class FcmService {
     }
 
     private String makePath(Long contentId, NoticeType type) {
-        if(type.equals(NoticeType.FOLLOW)) return userPath + contentId;
+        if(type.equals(NoticeType.FOLLOW)) return customFirebaseProperties.getMessage().getPath().getUser() + contentId;
         else if(type.equals(NoticeType.REVIEW_COMMENT) || type.equals(NoticeType.REVIEW_LIKE))
-            return reviewPath + contentId;
+            return customFirebaseProperties.getMessage().getPath().getReview() + contentId;
         else if(type.equals(NoticeType.RECOMMENT) || type.equals(NoticeType.REVIEW_COMMENT_LIKE))
             return ""; // TODO : 댓글 엔드포인트
 //        else if(type.equals(NoticeType.ADD_BAKERY) || type.equals(NoticeType.ADD_PRODUCT))

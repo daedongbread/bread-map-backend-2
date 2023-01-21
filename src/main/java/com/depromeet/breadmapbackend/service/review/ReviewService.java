@@ -11,7 +11,7 @@ public interface ReviewService {
     List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort);
     List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort);
     ReviewDetailDto getReview(Long reviewId);
-    ReviewAddDto addReview(String username, Long reviewId, ReviewRequest request);
+    void addReview(String username, Long reviewId, ReviewRequest request);
     void addReviewImage(String username, Long bakeryId, List<MultipartFile> files) throws IOException;
     void removeReview(String username, Long reviewId);
 //    List<UserReviewDto> getUserReviewList(String username);

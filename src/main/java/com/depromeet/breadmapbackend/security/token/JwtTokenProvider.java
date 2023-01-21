@@ -2,9 +2,11 @@ package com.depromeet.breadmapbackend.security.token;
 
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.infra.properties.CustomJWTKeyProperties;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,9 +24,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${spring.jwt.secret}")
-    private String key;
+    private final CustomJWTKeyProperties customJWTKeyProperties;
     private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hour/
     private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 day
 
@@ -37,7 +39,7 @@ public class JwtTokenProvider {
 //    }
 
     private Key getSigningKey() {
-        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = customJWTKeyProperties.getSecret().getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

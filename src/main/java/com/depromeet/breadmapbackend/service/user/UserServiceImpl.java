@@ -18,10 +18,10 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
-import com.depromeet.breadmapbackend.web.controller.notice.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -63,15 +63,7 @@ public class UserServiceImpl implements UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
-
-    @Value("${spring.redis.key.delete}")
-    private String REDIS_KEY_DELETE;
-
-    @Value("${spring.redis.key.refresh}")
-    private String REDIS_KEY_REFRESH;
-
-    @Value("${spring.redis.key.access}")
-    private String REDIS_KEY_ACCESS;
+    private final CustomRedisProperties customRedisProperties;
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
@@ -82,14 +74,14 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-        String refreshToken = redisTemplate.opsForValue().get(REDIS_KEY_REFRESH + ":" + user.getUsername());
+        String refreshToken = redisTemplate.opsForValue().get(customRedisProperties.getKey().getRefresh() + ":" + user.getUsername());
         if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 //        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
 //        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + ":" + user.getUsername(),
+                .set(customRedisProperties.getKey().getRefresh() + ":" + user.getUsername(),
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 //        refreshToken.updateToken(reissueToken.getRefreshToken());
 
@@ -172,8 +164,8 @@ public class UserServiceImpl implements UserService {
         eventPublisher.publishEvent(new NoticeTokenDeleteEvent(username, request.getDeviceToken()));
 
         // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_KEY_REFRESH + ":" + username))) {
-            redisTemplate.delete(REDIS_KEY_REFRESH + ":" + username);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getRefresh() + ":" + username))) {
+            redisTemplate.delete(customRedisProperties.getKey().getRefresh() + ":" + username);
         }
 
         // 해당 Access Token 남은 유효시간 가지고 와서 BlackList 로 저장하기
@@ -208,11 +200,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
 
-        redisTemplate.delete(Arrays.asList(REDIS_KEY_ACCESS + ":" + username, REDIS_KEY_REFRESH + ":" + username));
+        redisTemplate.delete(Arrays.asList(customRedisProperties.getKey().getAccess() + ":" + username, customRedisProperties.getKey().getRefresh() + ":" + username));
 
 //        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
-//        redisDeleteUser.set(REDIS_KEY_DELETE + ":" + username, username);
-//        redisTemplate.expire(REDIS_KEY_DELETE + ":" + username, 7, TimeUnit.DAYS);
+//        redisDeleteUser.set(customRedisProperties.getKey().getDelete() + ":" + username, username);
+//        redisTemplate.expire(customRedisProperties.getKey().getDelete() + ":" + username, 7, TimeUnit.DAYS);
     }
 
     @Transactional(rollbackFor = Exception.class)

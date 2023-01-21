@@ -58,7 +58,7 @@ public class FlagController {
     }
 
     @PostMapping("/{flagId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void addBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @RequestParam Long bakeryId) {
         flagService.addBakeryToFlag(username, flagId, bakeryId);
     }

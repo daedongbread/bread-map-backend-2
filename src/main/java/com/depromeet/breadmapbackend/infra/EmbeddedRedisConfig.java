@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.infra;
 
+import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +15,9 @@ import java.io.IOException;
 @Slf4j
 @Profile("!prod")
 @Configuration
+@RequiredArgsConstructor
 public class EmbeddedRedisConfig {
-    @Value("${spring.redis.port}")
-    private int redisPort;
+    private final CustomRedisProperties customRedisProperties;
 
     private RedisServer redisServer;
 
@@ -23,7 +25,7 @@ public class EmbeddedRedisConfig {
     public void redisServer() throws IOException {
         log.info("Connect to Embedded-Redis");
         redisServer = RedisServer.builder()
-                .port(redisPort)
+                .port(customRedisProperties.getPort())
                 .setting("maxmemory 128M")
                 .build();
         redisServer.start();
