@@ -103,10 +103,11 @@ cloud:
         product-add-report: ${S3_DEFAULT_BUCKET_PRODUCT_ADD_REPORT}
         user: ${S3_DEFAULT_BUCKET_USER}
       default-image:
-        comment: ${S3_DEFAULT_COMMENT}
-        like: ${S3_DEFAULT_LIKE}
-        report: ${S3_DEFAULT_REPORT}
-        flag: ${S3_DEFAULT_FLAG}
+        comment: ${S3_DEFAULT_IMAGE_COMMENT}
+        like: ${S3_DEFAULT_IMAGE_LIKE}
+        report: ${S3_DEFAULT_IMAGE_REPORT}
+        flag: ${S3_DEFAULT_IMAGE_FLAG}
+        user: ${S3_DEFAULT_IMAGE_USER}
 
 #logging:
 #  level:
