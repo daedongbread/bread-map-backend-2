@@ -12,7 +12,7 @@ public interface ReviewService {
     List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort);
     ReviewDetailDto getReview(Long reviewId);
     void addReview(String username, Long reviewId, ReviewRequest request);
-    void addReviewImage(String username, Long bakeryId, List<MultipartFile> files) throws IOException;
+    void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException;
     void removeReview(String username, Long reviewId);
 //    List<UserReviewDto> getUserReviewList(String username);
     void reviewLike(String username, Long reviewId);
