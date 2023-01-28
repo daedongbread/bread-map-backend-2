@@ -28,19 +28,19 @@ public class BakeryController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BakeryCardDto>> findBakeryList(
-            @RequestParam BakerySortType sort,
+            @RequestParam BakerySortType sortBy,
             @RequestParam Double latitude, @RequestParam Double longitude,
             @RequestParam Double latitudeDelta, @RequestParam Double longitudeDelta) {
-        return new ApiResponse<>(bakeryService.findBakeryList(latitude, longitude, latitudeDelta, longitudeDelta, sort));
+        return new ApiResponse<>(bakeryService.findBakeryList(latitude, longitude, latitudeDelta, longitudeDelta, sortBy));
     }
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<BakeryCardDto>> findBakeryListByFilter(
-            @CurrentUser String username, @RequestParam BakerySortType sort,
+            @CurrentUser String username, @RequestParam BakerySortType sortBy,
             @RequestParam Double latitude, @RequestParam Double longitude,
             @RequestParam Double latitudeDelta, @RequestParam Double longitudeDelta) {
-        return new ApiResponse<>(bakeryService.findBakeryListByFilter(username, latitude, longitude, latitudeDelta, longitudeDelta, sort));
+        return new ApiResponse<>(bakeryService.findBakeryListByFilter(username, latitude, longitude, latitudeDelta, longitudeDelta, sortBy));
     }
 
     @GetMapping("/{bakeryId}")
@@ -78,12 +78,6 @@ public class BakeryController {
     public void productAddReport(@PathVariable Long bakeryId, @RequestPart ProductReportRequest request,
                                  @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         bakeryService.productAddReport(bakeryId, request, files);
-    }
-
-    @GetMapping("/{bakeryId}/review/product")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleProductDto>> findSimpleProductList(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryService.findSimpleProductList(bakeryId));
     }
 
     @GetMapping("/{bakeryId}/review/product/search")

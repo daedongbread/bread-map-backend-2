@@ -4,9 +4,13 @@ import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,30 +25,25 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/{bakeryId}/simple")
+    @GetMapping("/bakery/{bakeryId}") // TODO
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<ReviewDto>> getSimpleBakeryReviewList(@PathVariable Long bakeryId,
-                                                                  @RequestParam(defaultValue = "latest") ReviewSortType sort){
-        return new ApiResponse<>(reviewService.getSimpleBakeryReviewList(bakeryId, sort));
-    }
-
-    @GetMapping("/{bakeryId}/all")
-    @ResponseStatus(HttpStatus.OK) //TODO : 페이징?
-    public ApiResponse<List<ReviewDto>> getBakeryReviewList(@PathVariable Long bakeryId,
-                                                            @RequestParam(defaultValue = "latest") ReviewSortType sort){
-        return new ApiResponse<>(reviewService.getBakeryReviewList(bakeryId, sort));
+    public ApiResponse<SliceResponseDto<ReviewDto>> getBakeryReviewList(
+            @CurrentUser String username, @PathVariable Long bakeryId,
+            @RequestParam(defaultValue = "latest") ReviewSortType sortBy,
+            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+        return new ApiResponse<>(reviewService.getBakeryReviewList(username, bakeryId, sortBy, pageable));
     }
 
     @GetMapping("/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ReviewDetailDto> getReview(@PathVariable Long reviewId) {
-        return new ApiResponse<>(reviewService.getReview(reviewId));
+    public ApiResponse<ReviewDetailDto> getReview(@CurrentUser String username, @PathVariable Long reviewId) {
+        return new ApiResponse<>(reviewService.getReview(username, reviewId));
     }
 
     @PostMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
-        reviewService.addReview(username, bakeryId, request);
+    public ApiResponse<ReviewAddDto> addReview(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody ReviewRequest request) {
+        return new ApiResponse<>(reviewService.addReview(username, bakeryId, request));
     }
 
     @PostMapping("/{reviewId}/image")
@@ -52,6 +51,13 @@ public class ReviewController {
     public void addReviewImage(@CurrentUser String username, @PathVariable Long reviewId,
                                @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         reviewService.addReviewImage(username, reviewId, files);
+    }
+
+    @PostMapping("/{bakeryId}/test")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addReviewTest(@CurrentUser String username, @PathVariable Long bakeryId, @RequestPart ReviewRequest request,
+                              @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+        reviewService.addReviewTest(username, bakeryId, request, files);
     }
 
     @DeleteMapping("/{reviewId}")

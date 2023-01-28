@@ -14,11 +14,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SliceResponseDto <D> {
     private int pageNumber; // 현재 페이지
-    private int numberOfElements; // 현제 페이지 데이터 수
+    private int numberOfElements; // 현재 페이지 데이터 수
     private int size; // 페이지 크기
     private boolean hasNext; // 다음 slice 존재 여부
     private List<D> contents;
 
+    public static <E, D> SliceResponseDto<D> of(Slice<E> entity, List<D> contents) {
+        return new SliceResponseDto<> (entity.getNumber(),
+                entity.getNumberOfElements(),
+                entity.getSize(),
+                entity.hasNext(), contents);
+    }
 
     public static <E, D> SliceResponseDto<D> of(Slice<E> entity, Function<E, D> makeDto) {
         List<D> dto = convertToDto(entity, makeDto);

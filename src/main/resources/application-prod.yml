@@ -84,6 +84,20 @@ spring:
             jwk-set-uri: https://appleid.apple.com/auth/keys
             user-name-attribute: sub
 
+management:
+  endpoint:
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      exposure:
+        include: health
+      base-path: /actuator # default
+
 cloud:
   aws:
     credentials:

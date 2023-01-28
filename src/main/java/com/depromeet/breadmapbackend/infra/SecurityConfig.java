@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/auth/reissue", "/admin/join", "/admin/login", "/admin/reissue").permitAll()
-                .antMatchers("/h2-console/**", "/favicon.ico").permitAll()
+                .antMatchers("/h2-console/**", "/favicon.ico", "/actuator/health").permitAll()
                 .antMatchers("/bakery/**", "/flag/**", "/review/**", "/user/**", "/notice/**", "/search/**").hasAuthority(RoleType.USER.getCode())
                 .antMatchers("/admin/**").hasAuthority(RoleType.ADMIN.getCode())
 //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())

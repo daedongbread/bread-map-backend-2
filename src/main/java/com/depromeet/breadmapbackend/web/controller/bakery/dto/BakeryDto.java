@@ -17,7 +17,6 @@ import java.util.List;
 public class BakeryDto {
     private BakeryInfo bakeryInfo;
     private FlagInfo flagInfo;
-    private List<ProductDto> menu;
     private List<FacilityInfo> facilityInfoList;
 
     @Getter

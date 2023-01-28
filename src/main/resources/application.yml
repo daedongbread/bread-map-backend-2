@@ -81,6 +81,20 @@ server:
       charset: UTF-8
       force: true
 
+management:
+  endpoint:
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      exposure:
+        include: health
+      base-path: /actuator # default
+
 cloud:
   aws:
     region:

@@ -27,6 +27,7 @@ import com.depromeet.breadmapbackend.infra.feign.client.SgisClient;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTranscoordDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTokenDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisGeocodeDto;
+import com.depromeet.breadmapbackend.infra.feign.exception.SgisFeignException;
 import com.depromeet.breadmapbackend.infra.properties.CustomJWTKeyProperties;
 import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.infra.properties.CustomSGISKeyProperties;
@@ -161,6 +162,7 @@ public class AdminServiceImpl implements AdminService{
     public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
         SgisTokenDto token = sgisClient.getToken(customSGISKeyProperties.getKey(), customSGISKeyProperties.getSecret());
         SgisGeocodeDto geocode = sgisClient.getGeocode(token.getResult().getAccessToken(), address);
+        if(geocode.getResult() == null) throw new SgisFeignException();
         SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
                 5179, 4326, geocode.getResult().getResultdata().get(0).getX(), geocode.getResult().getResultdata().get(0).getY());
 
