@@ -266,6 +266,9 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
                                 fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
                                 fieldWithPath("content").description("리뷰 내용")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.reviewId").description("리뷰 고유 번호")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -286,6 +289,51 @@ class ReviewControllerTest extends ControllerTest {
                         pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
                         requestParts(
                                 partWithName("files").description("리뷰 이미지들")
+                        )
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+//    @Transactional
+    void addReviewTest() throws Exception {
+        String object = objectMapper.writeValueAsString(ReviewRequest.builder()
+                .productRatingList(Arrays.asList(
+                        ReviewRequest.ProductRatingRequest.builder().productId(product1.getId()).rating(5L).build(),
+                        ReviewRequest.ProductRatingRequest.builder().productId(product2.getId()).rating(4L).build()
+                ))
+                .noExistProductRatingRequestList(Arrays.asList(
+                        ReviewRequest.NoExistProductRatingRequest.builder()
+                                .productType(ProductType.BREAD).productName("fakeBread1").rating(5L).build(),
+                        ReviewRequest.NoExistProductRatingRequest.builder()
+                                .productType(ProductType.BREAD).productName("fakeBread2").rating(4L).build()
+                )).content("review add test").build());
+        MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
+
+        mockMvc.perform(RestDocumentationRequestBuilders
+                .fileUpload("/review/{bakeryId}/test", bakery.getId())
+                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("review/addTest",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParts(
+                                partWithName("request").description("리뷰 정보"),
+                                partWithName("files").description("리뷰 이미지들")
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("productRatingList").description("리뷰 상품 점수 리스트"),
+                                fieldWithPath("productRatingList.[].productId").description("리뷰 상품 고유 번호"),
+                                fieldWithPath("productRatingList.[].rating").description("리뷰 상품 점수"),
+                                fieldWithPath("noExistProductRatingRequestList").description("빵집에 없는 상품 점수 리스트"),
+                                fieldWithPath("noExistProductRatingRequestList.[].productType").description("상품 타입"),
+                                fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
+                                fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
+                                fieldWithPath("content").description("리뷰 내용")
                         )
                 ))
                 .andExpect(status().isCreated());

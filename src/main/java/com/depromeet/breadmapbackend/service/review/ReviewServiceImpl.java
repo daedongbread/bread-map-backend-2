@@ -110,7 +110,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addReview(String username, Long bakeryId, ReviewRequest request) {
+    public ReviewAddDto addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
@@ -144,6 +144,8 @@ public class ReviewServiceImpl implements ReviewService {
                 review.addRating(reviewProductRating);
             });
         }
+
+        return ReviewAddDto.builder().reviewId(review.getId()).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -152,6 +154,53 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         Bakery bakery = review.getBakery();
+
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+        for (MultipartFile file : files) {
+            if (file == null || file.isEmpty()) continue;
+            String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
+            String image = s3Uploader.upload(file, imagePath);
+            ReviewImage reviewImage = ReviewImage.builder()
+                    .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
+            review.addImage(reviewImage);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void addReviewTest(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+
+        Review review = Review.builder()
+                .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
+        reviewRepository.save(review);
+
+        if(request.getProductRatingList() != null) {
+            request.getProductRatingList().forEach(productRatingRequest -> {
+                Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+                if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
+                    ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
+                            .product(product).review(review).rating(productRatingRequest.getRating()).build();
+                    reviewProductRatingRepository.save(reviewProductRating);
+                    review.addRating(reviewProductRating);
+                }
+            });
+        }
+
+        if(request.getNoExistProductRatingRequestList() != null) {
+            request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
+                if(productRepository.findByBakeryAndName(bakery, noExistProductRatingRequest.getProductName()).isPresent())
+                    throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
+                Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
+                        .name(noExistProductRatingRequest.getProductName())
+                        .price("0").bakery(bakery).isTrue(false).build();
+                productRepository.save(product);
+                ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
+                        .product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
+                reviewProductRatingRepository.save(reviewProductRating);
+                review.addRating(reviewProductRating);
+            });
+        }
 
         if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {
