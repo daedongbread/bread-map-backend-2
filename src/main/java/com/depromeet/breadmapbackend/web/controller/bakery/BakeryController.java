@@ -80,12 +80,6 @@ public class BakeryController {
         bakeryService.productAddReport(bakeryId, request, files);
     }
 
-    @GetMapping("/{bakeryId}/review/product")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SimpleProductDto>> findSimpleProductList(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryService.findSimpleProductList(bakeryId));
-    }
-
     @GetMapping("/{bakeryId}/review/product/search")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<SimpleProductDto>> searchSimpleProductList(

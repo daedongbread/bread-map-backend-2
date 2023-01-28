@@ -142,12 +142,6 @@ public class BakeryServiceImpl implements BakeryService {
                 .reviewNum(bakery.getReviewList().size()).build();
         BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
                 .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, user).orElse(null)).build();
-        List<ProductDto> menu = productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
-                .map(product -> new ProductDto(product,
-                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
-                        reviewProductRatingRepository.countByProductId(product.getId()))).limit(3).collect(Collectors.toList());
-
 //        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
 //                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
 //                .map(br -> new ReviewDto(br,
@@ -159,7 +153,7 @@ public class BakeryServiceImpl implements BakeryService {
 //                .collect(Collectors.toList());
 
         return BakeryDto.builder()
-                .bakeryInfo(bakeryInfo).flagInfo(flagInfo).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
+                .bakeryInfo(bakeryInfo).flagInfo(flagInfo)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -169,8 +163,9 @@ public class BakeryServiceImpl implements BakeryService {
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
                         Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
-                        reviewProductRatingRepository.countByProductId(product.getId()))).limit(3).collect(Collectors.toList());
-
+                        reviewProductRatingRepository.countByProductId(product.getId())))
+                .sorted(Comparator.comparing(ProductDto::getRating).reversed().thenComparing(ProductDto::getName))
+                .collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -215,14 +210,6 @@ public class BakeryServiceImpl implements BakeryService {
             productAddReport.addImage(image);
         }
         productAddReportRepository.save(productAddReport);
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SimpleProductDto> findSimpleProductList(Long bakeryId) { // 순서?
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        return productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
-                .map(SimpleProductDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

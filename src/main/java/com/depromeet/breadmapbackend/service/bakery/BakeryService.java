@@ -17,6 +17,5 @@ public interface BakeryService {
     void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException;
     void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request);
     void productAddReport(Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException;
-    List<SimpleProductDto> findSimpleProductList(Long bakeryId);
     List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name);
 }
