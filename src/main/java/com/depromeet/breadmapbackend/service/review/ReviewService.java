@@ -1,14 +1,16 @@
 package com.depromeet.breadmapbackend.service.review;
 
 import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface ReviewService {
-    List<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sort);
+    SliceResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Pageable pageable);
     ReviewDetailDto getReview(String username, Long reviewId);
     ReviewAddDto addReview(String username, Long reviewId, ReviewRequest request);
     void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException;

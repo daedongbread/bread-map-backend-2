@@ -4,9 +4,13 @@ import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,11 +25,13 @@ import java.util.List;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/{bakeryId}/all")
-    @ResponseStatus(HttpStatus.OK) //TODO : 페이징?
-    public ApiResponse<List<ReviewDto>> getBakeryReviewList(@CurrentUser String username, @PathVariable Long bakeryId,
-                                                            @RequestParam(defaultValue = "latest") ReviewSortType sort){
-        return new ApiResponse<>(reviewService.getBakeryReviewList(username, bakeryId, sort));
+    @GetMapping("/bakery/{bakeryId}") // TODO
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<SliceResponseDto<ReviewDto>> getBakeryReviewList(
+            @CurrentUser String username, @PathVariable Long bakeryId,
+            @RequestParam(defaultValue = "latest") ReviewSortType sortBy,
+            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+        return new ApiResponse<>(reviewService.getBakeryReviewList(username, bakeryId, sortBy, pageable));
     }
 
     @GetMapping("/{reviewId}")

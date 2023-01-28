@@ -14,10 +14,15 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminBakeryReviewImageDto;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +31,6 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.depromeet.breadmapbackend.domain.user.QFollow.follow;
 
 @Slf4j
 @Service
@@ -48,26 +51,23 @@ public class ReviewServiceImpl implements ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sort){ //TODO : 페이징
+    public SliceResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Pageable pageable) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Comparator<ReviewDto> comparing;
-        if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
-        else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
-        else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
+        Slice<Review> reviewSlice;
+        if(sortBy == null || sortBy.equals(ReviewSortType.LATEST)) reviewSlice = reviewRepository.findSliceByBakeryOrder(bakery, pageable);
+        else if(sortBy.equals(ReviewSortType.HIGH)) reviewSlice = reviewRepository.findSliceByBakeryOrderByRatingDesc(bakery, pageable);
+        else if(sortBy.equals(ReviewSortType.LOW)) reviewSlice = reviewRepository.findSliceByBakeryOrderByRatingAsc(bakery, pageable);
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
-        return reviewRepository.findByBakery(bakery)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(br -> new ReviewDto(br,
-//                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId()))
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByToUser(br.getUser()),
-                        followRepository.findByFromUserAndToUser(user, br.getUser()).isPresent(),
-                        user.equals(br.getUser())
-                ))
-                .sorted(comparing)
+        List<ReviewDto> contents = reviewSlice.getContent().stream()
+                .map(e -> new ReviewDto(e,
+                        reviewRepository.countByUser(e.getUser()),
+                        followRepository.countByToUser(e.getUser()),
+                        followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
+                        user.equals(e.getUser())))
                 .collect(Collectors.toList());
+        return SliceResponseDto.of(reviewSlice, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -86,9 +86,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
 
         return ReviewDetailDto.builder()
-                .review(review)
-//                .reviewNum(Math.toIntExact(reviewRepository.countByUserId(review.getUser().getId())))
-                .reviewNum(reviewRepository.countByUser(review.getUser()))
+                .review(review).reviewNum(reviewRepository.countByUser(review.getUser()))
                 .followerNum(followRepository.countByToUser(review.getUser()))
                 .isFollow(followRepository.findByFromUserAndToUser(user, review.getUser()).isPresent())
                 .isMe(user.equals(review.getUser()))

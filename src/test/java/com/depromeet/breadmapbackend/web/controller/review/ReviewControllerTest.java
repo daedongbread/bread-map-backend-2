@@ -44,7 +44,8 @@ class ReviewControllerTest extends ControllerTest {
     private Bakery bakery;
     private Product product1;
     private Product product2;
-    private Review review;
+    private Review review1;
+    private Review review2;
     private ReviewComment comment1;
     private ReviewComment comment2;
 
@@ -62,19 +63,27 @@ class ReviewControllerTest extends ControllerTest {
         product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price("4000").build();
         productRepository.save(product1);
         productRepository.save(product2);
-        review = Review.builder().user(user).bakery(bakery).content("content1").build();
-        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
-        review.addImage(image);
-        reviewRepository.save(review);
-        ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product1).review(review).rating(4L).build();
-        reviewProductRatingRepository.save(rating);
 
-        ReviewLike reviewLike = ReviewLike.builder().review(review).user(user).build();
+        review1 = Review.builder().user(user).bakery(bakery).content("content1").build();
+        ReviewImage image1 = ReviewImage.builder().review(review1).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
+        review1.addImage(image1);
+        reviewRepository.save(review1);
+        review2 = Review.builder().user(user).bakery(bakery).content("content2").build();
+        ReviewImage image2 = ReviewImage.builder().review(review2).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image2").build();
+        review2.addImage(image2);
+        reviewRepository.save(review2);
+
+        ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review1).rating(4L).build();
+        reviewProductRatingRepository.save(rating1);
+        ReviewProductRating rating2 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review2).rating(3L).build();
+        reviewProductRatingRepository.save(rating2);
+
+        ReviewLike reviewLike = ReviewLike.builder().review(review1).user(user).build();
         reviewLikeRepository.save(reviewLike);
 
-        comment1 = ReviewComment.builder().review(review).user(user).content("comment1").build();
+        comment1 = ReviewComment.builder().review(review1).user(user).content("comment1").build();
         reviewCommentRepository.save(comment1);
-        comment2 = ReviewComment.builder().review(review).user(user).content("comment1").parent(comment1).build();
+        comment2 = ReviewComment.builder().review(review1).user(user).content("comment1").parent(comment1).build();
         reviewCommentRepository.save(comment2);
 
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(comment1).user(user).build();
@@ -102,7 +111,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getBakeryReviewList() throws Exception{
-        mockMvc.perform(get("/review/{bakeryId}/all?sort=latest", bakery.getId())
+        mockMvc.perform(get("/review/bakery/{bakeryId}?sortBy=latest", bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/get/all",
@@ -112,25 +121,32 @@ class ReviewControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법 (latest, high, low) (default = latest)")),
+                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
                         responseFields(
-                                fieldWithPath("data.[].id").description("리뷰 고유 번호"),
-                                fieldWithPath("data.[].userId").description("유저 고유 번호"),
-                                fieldWithPath("data.[].userImage").description("유저 이미지"),
-                                fieldWithPath("data.[].nickName").description("유저 닉네임"),
-                                fieldWithPath("data.[].reviewNum").description("유저 리뷰 수"),
-                                fieldWithPath("data.[].followerNum").description("유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("유저 팔로우 여부"),
-                                fieldWithPath("data.[].isMe").description("유저 본인 여부"),
-                                fieldWithPath("data.[].productRatingList").description("리뷰 상품 점수 리스트"),
-                                fieldWithPath("data.[].productRatingList.[].productName").description("리뷰 상품 이름"),
-                                fieldWithPath("data.[].productRatingList.[].rating").description("리뷰 상품 점수"),
-                                fieldWithPath("data.[].imageList").description("리뷰 이미지"),
-                                fieldWithPath("data.[].content").description("리뷰 내용"),
-                                fieldWithPath("data.[].likeNum").description("리뷰 좋아요 수"),
-                                fieldWithPath("data.[].commentNum").description("리뷰 댓글 수"),
-                                fieldWithPath("data.[].createdAt").description("리뷰 생성일"),
-                                fieldWithPath("data.[].averageRating").description("리뷰 평균 점수")
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.contents").description("리뷰 리스트"),
+                                fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
+                                fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
+                                fieldWithPath("data.contents.[].userInfo.userImage").description("유저 이미지"),
+                                fieldWithPath("data.contents.[].userInfo.nickName").description("유저 닉네임"),
+                                fieldWithPath("data.contents.[].userInfo.reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.contents.[].userInfo.followerNum").description("유저 팔로워 수"),
+                                fieldWithPath("data.contents.[].userInfo.isFollow").description("유저 팔로우 여부"),
+                                fieldWithPath("data.contents.[].userInfo.isMe").description("유저 본인 여부"),
+                                fieldWithPath("data.contents.[].reviewInfo").description("리뷰 정보"),
+                                fieldWithPath("data.contents.[].reviewInfo.id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList").description("리뷰 상품 점수 리스트"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].productName").description("리뷰 상품 이름"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
+                                fieldWithPath("data.contents.[].reviewInfo.imageList").description("리뷰 이미지"),
+                                fieldWithPath("data.contents.[].reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.contents.[].reviewInfo.likeNum").description("리뷰 좋아요 수"),
+                                fieldWithPath("data.contents.[].reviewInfo.commentNum").description("리뷰 댓글 수"),
+                                fieldWithPath("data.contents.[].reviewInfo.createdAt").description("리뷰 생성일"),
+                                fieldWithPath("data.contents.[].reviewInfo.averageRating").description("리뷰 평균 점수")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -139,7 +155,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getReview() throws Exception{
-        mockMvc.perform(get("/review/{reviewId}", review.getId())
+        mockMvc.perform(get("/review/{reviewId}", review1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/get",
@@ -150,25 +166,31 @@ class ReviewControllerTest extends ControllerTest {
                                 parameterWithName("reviewId").description("리뷰 고유 번호")
                         ),
                         responseFields(
-                                fieldWithPath("data.id").description("리뷰 고유 번호"),
-                                fieldWithPath("data.bakeryImage").description("빵집 이미지"),
-                                fieldWithPath("data.bakeryName").description("빵집 이름"),
-                                fieldWithPath("data.bakeryAddress").description("빵집 주소"),
-                                fieldWithPath("data.userId").description("유저 고유 번호"),
-                                fieldWithPath("data.userImage").description("유저 이미지"),
-                                fieldWithPath("data.nickName").description("유저 닉네임"),
-                                fieldWithPath("data.reviewNum").description("유저 리뷰 수"),
-                                fieldWithPath("data.followerNum").description("유저 팔로워 수"),
-                                fieldWithPath("data.isFollow").description("유저 팔로우 여부"),
-                                fieldWithPath("data.isMe").description("유저 본인 여부"),
-                                fieldWithPath("data.productRatingList").description("리뷰 상품 점수 리스트"),
-                                fieldWithPath("data.productRatingList.[].productName").description("리뷰 상품 이름"),
-                                fieldWithPath("data.productRatingList.[].rating").description("리뷰 상품 점수"),
-                                fieldWithPath("data.imageList").description("리뷰 이미지"),
-                                fieldWithPath("data.content").description("리뷰 내용"),
-                                fieldWithPath("data.likeNum").description("리뷰 좋아요 수"),
-                                fieldWithPath("data.commentNum").description("리뷰 댓글 수"),
-                                fieldWithPath("data.createdAt").description("리뷰 생성일"),
+                                fieldWithPath("data.bakeryInfo").description("리뷰 빵집 정보"),
+                                fieldWithPath("data.bakeryInfo.bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.bakeryInfo.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.bakeryInfo.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.bakeryInfo.bakeryAddress").description("빵집 주소"),
+                                fieldWithPath("data.reviewDto").description("리뷰 상세 정보"),
+                                fieldWithPath("data.reviewDto.userInfo").description("리뷰 유저 정보"),
+                                fieldWithPath("data.reviewDto.userInfo.userId").description("유저 고유 번호"),
+                                fieldWithPath("data.reviewDto.userInfo.userImage").description("유저 이미지"),
+                                fieldWithPath("data.reviewDto.userInfo.nickName").description("유저 닉네임"),
+                                fieldWithPath("data.reviewDto.userInfo.reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.reviewDto.userInfo.followerNum").description("유저 팔로워 수"),
+                                fieldWithPath("data.reviewDto.userInfo.isFollow").description("유저 팔로우 여부"),
+                                fieldWithPath("data.reviewDto.userInfo.isMe").description("유저 본인 여부"),
+                                fieldWithPath("data.reviewDto.reviewInfo").description("리뷰 정보"),
+                                fieldWithPath("data.reviewDto.reviewInfo.id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.reviewDto.reviewInfo.productRatingList").description("리뷰 상품 점수 리스트"),
+                                fieldWithPath("data.reviewDto.reviewInfo.productRatingList.[].productName").description("리뷰 상품 이름"),
+                                fieldWithPath("data.reviewDto.reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
+                                fieldWithPath("data.reviewDto.reviewInfo.imageList").description("리뷰 이미지"),
+                                fieldWithPath("data.reviewDto.reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.reviewDto.reviewInfo.likeNum").description("리뷰 좋아요 수"),
+                                fieldWithPath("data.reviewDto.reviewInfo.commentNum").description("리뷰 댓글 수"),
+                                fieldWithPath("data.reviewDto.reviewInfo.createdAt").description("리뷰 생성일"),
+                                fieldWithPath("data.reviewDto.reviewInfo.averageRating").description("리뷰 평균 점수"),
                                 fieldWithPath("data.comments").description("리뷰 댓글 리스트"),
                                 fieldWithPath("data.comments.[].id").description("댓글 고유 번호"),
                                 fieldWithPath("data.comments.[].userId").description("유저 고유 번호"),
@@ -247,7 +269,7 @@ class ReviewControllerTest extends ControllerTest {
 //    @Transactional
     void addReviewImage() throws Exception {
         mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/review/{reviewId}/image", review.getId())
+                .fileUpload("/review/{reviewId}/image", review1.getId())
                 .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -311,7 +333,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void removeReview() throws Exception {
-        mockMvc.perform(delete("/review/{reviewId}", review.getId())
+        mockMvc.perform(delete("/review/{reviewId}", review1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/remove",
@@ -371,7 +393,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void reviewUnlike() throws Exception {
-        mockMvc.perform(delete("/review/{reviewId}/unlike", review.getId())
+        mockMvc.perform(delete("/review/{reviewId}/unlike", review1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/unlike",
@@ -386,7 +408,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getReviewCommentList() throws Exception {
-        mockMvc.perform(get("/review/{reviewId}/comment", review.getId())
+        mockMvc.perform(get("/review/{reviewId}/comment", review1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/comment/all",
@@ -424,7 +446,7 @@ class ReviewControllerTest extends ControllerTest {
         String object = objectMapper.writeValueAsString(ReviewCommentRequest.builder()
                 .content("add review comment test").parentCommentId(0L).build());
 
-        mockMvc.perform(post("/review/{reviewId}/comment", review.getId())
+        mockMvc.perform(post("/review/{reviewId}/comment", review1.getId())
                 .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -444,7 +466,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void removeReviewComment() throws Exception {
-        mockMvc.perform(delete("/review/{reviewId}/comment/{commentId}", review.getId(), comment1.getId())
+        mockMvc.perform(delete("/review/{reviewId}/comment/{commentId}", review1.getId(), comment1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/comment/remove",
@@ -462,7 +484,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void reviewCommentLike() throws Exception {
-        mockMvc.perform(post("/review/{reviewId}/comment/{commentId}/like", review.getId(), comment2.getId())
+        mockMvc.perform(post("/review/{reviewId}/comment/{commentId}/like", review1.getId(), comment2.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/comment/like",
@@ -480,7 +502,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void reviewCommentUnlike() throws Exception {
-        mockMvc.perform(delete("/review/{reviewId}/comment/{commentId}/unlike", review.getId(), comment1.getId())
+        mockMvc.perform(delete("/review/{reviewId}/comment/{commentId}/unlike", review1.getId(), comment1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/comment/unlike",
@@ -500,7 +522,7 @@ class ReviewControllerTest extends ControllerTest {
         String object = objectMapper.writeValueAsString(
                 ReviewReportRequest.builder().reason(ReviewReportReason.COPYRIGHT_THEFT).content("Copyright").build());
 
-        mockMvc.perform(post("/review/{reviewId}/report", review.getId())
+        mockMvc.perform(post("/review/{reviewId}/report", review1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken())
                 .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

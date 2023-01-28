@@ -107,7 +107,7 @@ class BakeryControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findBakeryList() throws Exception {
-        mockMvc.perform(get("/bakery?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
+        mockMvc.perform(get("/bakery?sortBy=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/find/default",
@@ -115,7 +115,7 @@ class BakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법 (distance, popular)"),
+                                parameterWithName("sortBy").description("정렬 방법 (distance, popular)"),
                                 parameterWithName("latitude").description("중앙 위도"),
                                 parameterWithName("longitude").description("중앙 경도"),
                                 parameterWithName("latitudeDelta").description("위도 범위"),
@@ -150,7 +150,7 @@ class BakeryControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery1).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
-        mockMvc.perform(get("/bakery/filter?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
+        mockMvc.perform(get("/bakery/filter?sortBy=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/find/filter",
@@ -158,7 +158,7 @@ class BakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법 (distance, popular)"),
+                                parameterWithName("sortBy").description("정렬 방법 (distance, popular)"),
                                 parameterWithName("latitude").description("중앙 위도"),
                                 parameterWithName("longitude").description("중앙 경도"),
                                 parameterWithName("latitudeDelta").description("위도 범위"),

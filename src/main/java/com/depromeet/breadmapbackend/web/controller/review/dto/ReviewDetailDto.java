@@ -1,64 +1,46 @@
 package com.depromeet.breadmapbackend.web.controller.review.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 public class ReviewDetailDto {
-    private Long id;
-    private String bakeryImage;
-    private String bakeryName;
-    private String bakeryAddress;
-
-    private Long userId;
-    private String userImage;
-    private String nickName;
-    private Integer reviewNum;
-    private Integer followerNum;
-    private Boolean isFollow;
-    private Boolean isMe;
-
-    private List<ProductRatingDto> productRatingList;
-    private List<String> imageList;
-    private String content;
-
-    private Integer likeNum;
-    private Integer commentNum;
-    private String createdAt;
-
+    private BakeryInfo bakeryInfo;
+    private ReviewDto reviewDto;
     private List<ReviewCommentDto> comments;
-
     private List<SimpleReviewDto> userOtherReviews;
     private List<SimpleReviewDto> bakeryOtherReviews;
+
+    @Getter
+    @NoArgsConstructor
+    public static class BakeryInfo {
+        private Long bakeryId;
+        private String bakeryImage;
+        private String bakeryName;
+        private String bakeryAddress;
+
+        @Builder
+        public BakeryInfo(Bakery bakery) {
+            this.bakeryId = bakery.getId();
+            this.bakeryImage = bakery.getImage();
+            this.bakeryName = bakery.getName();
+            this.bakeryAddress = bakery.getAddress();
+        }
+    }
 
     @Builder
     public ReviewDetailDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe,
                            List<SimpleReviewDto> userOtherReviews, List<SimpleReviewDto> bakeryOtherReviews) {
-        this.bakeryImage = review.getBakery().getImage();
-        this.bakeryName = review.getBakery().getName();
-        this.bakeryAddress = review.getBakery().getAddress();
-        this.id = review.getId();
-        this.userId = review.getUser().getId();
-        this.userImage = review.getUser().getImage();
-        this.nickName = review.getUser().getNickName();
-        this.reviewNum = reviewNum;
-        this.followerNum = followerNum;
-        this.isFollow = isFollow;
-        this.isMe = isMe;
-        this.productRatingList = review.getRatings().stream().map(ProductRatingDto::new).collect(Collectors.toList());
-        this.imageList = review.getImageList().stream().map(ReviewImage::getImage).collect(Collectors.toList());
-        this.content = review.getContent();
-        this.likeNum = review.getLikes().size();
-        this.commentNum = (int) review.getComments().stream().filter(reviewComment -> reviewComment.getUser() != null).count();
-        this.createdAt = review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.bakeryInfo = BakeryInfo.builder().bakery(review.getBakery()).build();
+        this.reviewDto = ReviewDto.builder()
+                .review(review).reviewNum(reviewNum).followerNum(followerNum).isFollow(isFollow).isMe(isMe).build();
         this.comments = review.getComments().stream()
                 .filter(reviewComment -> reviewComment.getParent() == null).map(ReviewCommentDto::new).collect(Collectors.toList());
         this.userOtherReviews = userOtherReviews;

@@ -456,7 +456,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_빵집_삭제_요청_api_post">빵집 삭제 요청 API [POST]</a></li>
 <li><a href="#_빵집_추가_요청_api_post">빵집 추가 요청 API [POST]</a></li>
 <li><a href="#_상품_추가_요청_api_post">상품 추가 요청 API [POST]</a></li>
-<li><a href="#_리뷰용_상품_간단_리스트_조회_api_get">리뷰용 상품 간단 리스트 조회 API [GET]</a></li>
 <li><a href="#_리뷰용_상품_검색_api_get">리뷰용 상품 검색 API [GET]</a></li>
 </ul>
 </li>
@@ -494,9 +493,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>상품 추가 요청 API</p>
 </li>
 <li>
-<p>리뷰용 상품 간단 리스트 조회 API</p>
-</li>
-<li>
 <p>리뷰용 상품 검색 API</p>
 </li>
 </ul>
@@ -507,8 +503,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_빵집_지도_api_get_http_request"><a class="link" href="#_빵집_지도_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery?sort=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery?sortBy=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -528,7 +524,7 @@ Host: localhost:8080</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sortBy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">정렬 방법 (distance, popular)</p></td>
 </tr>
 <tr>
@@ -704,8 +700,8 @@ Content-Length: 752
 <h4 id="_빵집_지도_필터_api_get_http_request"><a class="link" href="#_빵집_지도_필터_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/filter?sort=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAzLCJleHAiOjE2NzQ5MDk1MDN9.HwWTMkScQUKe_rL0FQ8clv0eux21C5B94KfAIhT0IEQ
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/filter?sortBy=distance&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc4LCJleHAiOjE2NzQ5MjYzNzh9.PMaZBTcjtY_OAK95GYt0WJ-1PBjKTXAVFC16ivy7Lwo
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -725,7 +721,7 @@ Host: localhost:8080</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sortBy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">정렬 방법 (distance, popular)</p></td>
 </tr>
 <tr>
@@ -775,7 +771,7 @@ Content-Length: 750
     "rating" : 4.0,
     "reviewNum" : 1,
     "simpleReviewList" : [ {
-      "id" : 38,
+      "id" : 36,
       "content" : "content1"
     } ],
     "distance" : 153.0,
@@ -791,7 +787,7 @@ Content-Length: 750
     "rating" : 4.0,
     "reviewNum" : 1,
     "simpleReviewList" : [ {
-      "id" : 39,
+      "id" : 37,
       "content" : "content1"
     } ],
     "distance" : 165.0,
@@ -902,7 +898,7 @@ Content-Length: 750
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -952,7 +948,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 650
+Content-Length: 484
 
 {
   "data" : {
@@ -974,14 +970,6 @@ Content-Length: 650
       "flagId" : null,
       "isFlaged" : false
     },
-    "menu" : [ {
-      "id" : 29,
-      "name" : "bread1",
-      "rating" : 4.0,
-      "reviewNum" : 1,
-      "price" : "3000",
-      "image" : null
-    } ],
     "facilityInfoList" : [ "PARKING" ]
   }
 }</code></pre>
@@ -1082,41 +1070,6 @@ Content-Length: 650
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 빵집 깃발 저장 유무 (깃발 미선택 시 false)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 메뉴</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 고유번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu.[].name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 평점</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu.[].reviewNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 리뷰 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu.[].price</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 가격</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menu.[].image</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이미지</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.facilityInfoList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">빵집 시설 정보 (PARKING("주차 가능"),
@@ -1138,7 +1091,7 @@ BOOKING("예약"))</p></td>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/product HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1192,7 +1145,7 @@ Content-Length: 153
 
 {
   "data" : [ {
-    "id" : 33,
+    "id" : 31,
     "name" : "bread1",
     "rating" : 4.0,
     "reviewNum" : 1,
@@ -1264,7 +1217,7 @@ Content-Length: 153
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1/update HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -1399,11 +1352,11 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1/delete HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=file; filename=c9d5603c-4923-4809-b36f-f26a10591bf9.png
+Content-Disposition: form-data; name=file; filename=9a339c16-fc39-43c4-a93f-b1664bf9c2de.png
 Content-Type: image/png
 
 test
@@ -1512,7 +1465,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/add HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -1618,11 +1571,11 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /bakery/report/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=08cff919-7a46-4cd3-b3f1-716954d31e85.png
+Content-Disposition: form-data; name=files; filename=93159cca-418c-48a7-a346-4947e6b20eeb.png
 Content-Type: image/png
 
 test
@@ -1762,150 +1715,13 @@ X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_리뷰용_상품_간단_리스트_조회_api_get"><a class="link" href="#_리뷰용_상품_간단_리스트_조회_api_get">리뷰용 상품 간단 리스트 조회 API [GET]</a></h3>
-<div class="sect3">
-<h4 id="_리뷰용_상품_간단_리스트_조회_api_get_http_request"><a class="link" href="#_리뷰용_상품_간단_리스트_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/product HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAyLCJleHAiOjE2NzQ5MDk1MDJ9.hGVwu7KhwBWW6wIgwaxBLFgdsSpJgXZwCePTMHuJf08
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_리뷰용_상품_간단_리스트_조회_api_get_request_headers"><a class="link" href="#_리뷰용_상품_간단_리스트_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_리뷰용_상품_간단_리스트_조회_api_get_path_parameters"><a class="link" href="#_리뷰용_상품_간단_리스트_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
-<div class="paragraph">
-<p>/bakery/{bakeryId}/review/product</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_리뷰용_상품_간단_리스트_조회_api_get_http_response"><a class="link" href="#_리뷰용_상품_간단_리스트_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 110
-
-{
-  "data" : [ {
-    "id" : 23,
-    "name" : "bread1",
-    "price" : "3000",
-    "image" : null
-  } ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_리뷰용_상품_간단_리스트_조회_api_get_response_fields"><a class="link" href="#_리뷰용_상품_간단_리스트_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].price</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 가격</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].image</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이미지</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_리뷰용_상품_검색_api_get"><a class="link" href="#_리뷰용_상품_검색_api_get">리뷰용 상품 검색 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰용_상품_검색_api_get_http_request"><a class="link" href="#_리뷰용_상품_검색_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /bakery/1/review/product/search?name=bread HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTA1OTAzLCJleHAiOjE2NzQ5MDk1MDN9.HwWTMkScQUKe_rL0FQ8clv0eux21C5B94KfAIhT0IEQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc0OTIyNzc3LCJleHAiOjE2NzQ5MjYzNzd9.BxdtB7tvBqUQv7Z-sWJvQQBCM1tkpmfw4BgBGY1JtkA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2004,7 +1820,7 @@ Content-Length: 110
 
 {
   "data" : [ {
-    "id" : 37,
+    "id" : 35,
     "name" : "bread1",
     "price" : "3000",
     "image" : null
@@ -2062,7 +1878,7 @@ Content-Length: 110
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-10-07 02:14:28 +0900
+Last updated 2023-01-28 20:58:51 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
