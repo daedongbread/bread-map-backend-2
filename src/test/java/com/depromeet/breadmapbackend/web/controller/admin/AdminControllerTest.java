@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -327,8 +328,8 @@ class AdminControllerTest extends ControllerTest {
 
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/admin/bakery")
-                .file(new MockMultipartFile("bakeryImage", "testImage", "image/png", (InputStream) null))
-                .file(new MockMultipartFile("productImageList", "newImage", "image/png", (InputStream) null))
+                .file(new MockMultipartFile("bakeryImage", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(new MockMultipartFile("productImageList", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
                 .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -365,7 +366,6 @@ class AdminControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isCreated());
-        System.out.println("Image : " + bakery.getImage());
     }
 
     @Test

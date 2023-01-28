@@ -14,10 +14,15 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
+import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminBakeryReviewImageDto;
+import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,47 +51,28 @@ public class ReviewServiceImpl implements ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
+    public SliceResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Pageable pageable) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Comparator<ReviewDto> comparing;
-        if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
-        else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
-        else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
+        Slice<Review> reviewSlice;
+        if(sortBy == null || sortBy.equals(ReviewSortType.LATEST)) reviewSlice = reviewRepository.findSliceByBakeryOrder(bakery, pageable);
+        else if(sortBy.equals(ReviewSortType.HIGH)) reviewSlice = reviewRepository.findSliceByBakeryOrderByRatingDesc(bakery, pageable);
+        else if(sortBy.equals(ReviewSortType.LOW)) reviewSlice = reviewRepository.findSliceByBakeryOrderByRatingAsc(bakery, pageable);
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
-        return reviewRepository.findByBakery(bakery)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(br -> new ReviewDto(br,
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(comparing)
-                .limit(3)
+        List<ReviewDto> contents = reviewSlice.getContent().stream()
+                .map(e -> new ReviewDto(e,
+                        reviewRepository.countByUser(e.getUser()),
+                        followRepository.countByToUser(e.getUser()),
+                        followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
+                        user.equals(e.getUser())))
                 .collect(Collectors.toList());
+        return SliceResponseDto.of(reviewSlice, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Comparator<ReviewDto> comparing;
-        if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
-        else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
-        else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
-
-        return reviewRepository.findByBakery(bakery)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(br -> new ReviewDto(br,
-//                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId()))
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(comparing)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ReviewDetailDto getReview(Long reviewId) {
+    public ReviewDetailDto getReview(String username, Long reviewId) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         review.addViews();
@@ -100,17 +86,17 @@ public class ReviewServiceImpl implements ReviewService {
                 .limit(5).map(SimpleReviewDto::new).collect(Collectors.toList());
 
         return ReviewDetailDto.builder()
-                .review(review)
-//                .reviewNum(Math.toIntExact(reviewRepository.countByUserId(review.getUser().getId())))
-                .reviewNum(reviewRepository.countByUser(review.getUser()))
+                .review(review).reviewNum(reviewRepository.countByUser(review.getUser()))
                 .followerNum(followRepository.countByToUser(review.getUser()))
+                .isFollow(followRepository.findByFromUserAndToUser(user, review.getUser()).isPresent())
+                .isMe(user.equals(review.getUser()))
                 .userOtherReviews(userOtherReviews)
                 .bakeryOtherReviews(bakeryOtherReviews)
                 .build();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addReview(String username, Long bakeryId, ReviewRequest request) {
+    public ReviewAddDto addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
@@ -144,6 +130,8 @@ public class ReviewServiceImpl implements ReviewService {
                 review.addRating(reviewProductRating);
             });
         }
+
+        return ReviewAddDto.builder().reviewId(review.getId()).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -152,6 +140,53 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         Bakery bakery = review.getBakery();
+
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+        for (MultipartFile file : files) {
+            if (file == null || file.isEmpty()) continue;
+            String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
+            String image = s3Uploader.upload(file, imagePath);
+            ReviewImage reviewImage = ReviewImage.builder()
+                    .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
+            review.addImage(reviewImage);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void addReviewTest(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+
+        Review review = Review.builder()
+                .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
+        reviewRepository.save(review);
+
+        if(request.getProductRatingList() != null) {
+            request.getProductRatingList().forEach(productRatingRequest -> {
+                Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+                if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
+                    ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
+                            .product(product).review(review).rating(productRatingRequest.getRating()).build();
+                    reviewProductRatingRepository.save(reviewProductRating);
+                    review.addRating(reviewProductRating);
+                }
+            });
+        }
+
+        if(request.getNoExistProductRatingRequestList() != null) {
+            request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
+                if(productRepository.findByBakeryAndName(bakery, noExistProductRatingRequest.getProductName()).isPresent())
+                    throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
+                Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
+                        .name(noExistProductRatingRequest.getProductName())
+                        .price("0").bakery(bakery).isTrue(false).build();
+                productRepository.save(product);
+                ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
+                        .product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
+                reviewProductRatingRepository.save(reviewProductRating);
+                review.addRating(reviewProductRating);
+            });
+        }
 
         if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {

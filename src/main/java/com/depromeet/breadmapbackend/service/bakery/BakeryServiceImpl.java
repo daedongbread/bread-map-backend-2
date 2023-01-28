@@ -8,7 +8,6 @@ import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepositorySupport;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.product.ProductAddReport;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
@@ -16,9 +15,7 @@ import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewProductRatingRepository;
-import com.depromeet.breadmapbackend.domain.review.repository.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.service.S3Uploader;
@@ -45,10 +42,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final BakeryRepository bakeryRepository;
     private final ProductRepository productRepository;
     private final ReviewProductRatingRepository reviewProductRatingRepository;
-    private final ReviewRepository reviewRepository;
-    private final FollowRepository followRepository;
     private final UserRepository userRepository;
-    private final FlagRepositorySupport flagRepositorySupport;
     private final FlagBakeryRepository flagBakeryRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
@@ -60,11 +54,11 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> findBakeryList
-            (Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
+            (Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sortBy) {
 
         Comparator<BakeryCardDto> comparing;
-        if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
-        else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
+        if(sortBy.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
+        else if(sortBy.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
@@ -92,11 +86,11 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> findBakeryListByFilter
-            (String username, Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sort) {
+            (String username, Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta, BakerySortType sortBy) {
 
         Comparator<BakeryCardDto> comparing;
-        if(sort.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
-        else if(sort.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
+        if(sortBy.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
+        else if(sortBy.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
@@ -142,24 +136,9 @@ public class BakeryServiceImpl implements BakeryService {
                 .reviewNum(bakery.getReviewList().size()).build();
         BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
                 .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, user).orElse(null)).build();
-        List<ProductDto> menu = productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
-                .map(product -> new ProductDto(product,
-                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
-                        reviewProductRatingRepository.countByProductId(product.getId()))).limit(3).collect(Collectors.toList());
-
-//        List<ReviewDto> review = reviewRepository.findByBakery(bakery)
-//                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-//                .map(br -> new ReviewDto(br,
-//                        reviewRepository.countByUser(br.getUser()),
-//                        followRepository.countByFromUser(br.getUser())
-//                ))
-//                .sorted(Comparator.comparing(ReviewDto::getId).reversed())
-//                .limit(3)
-//                .collect(Collectors.toList());
 
         return BakeryDto.builder()
-                .bakeryInfo(bakeryInfo).flagInfo(flagInfo).menu(menu)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
+                .bakeryInfo(bakeryInfo).flagInfo(flagInfo)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -169,8 +148,9 @@ public class BakeryServiceImpl implements BakeryService {
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
                         Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
-                        reviewProductRatingRepository.countByProductId(product.getId()))).limit(3).collect(Collectors.toList());
-
+                        reviewProductRatingRepository.countByProductId(product.getId())))
+                .sorted(Comparator.comparing(ProductDto::getRating).reversed().thenComparing(ProductDto::getName))
+                .collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -215,14 +195,6 @@ public class BakeryServiceImpl implements BakeryService {
             productAddReport.addImage(image);
         }
         productAddReportRepository.save(productAddReport);
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SimpleProductDto> findSimpleProductList(Long bakeryId) { // 순서?
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        return productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
-                .map(SimpleProductDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

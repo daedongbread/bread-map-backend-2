@@ -9,14 +9,13 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BakeryService {
-    List<BakeryCardDto> findBakeryList(Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
-    List<BakeryCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sort);
+    List<BakeryCardDto> findBakeryList(Double latitude, Double longitude, Double height, Double width, BakerySortType sortBy);
+    List<BakeryCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sortBy);
     BakeryDto findBakery(String username, Long bakeryId);
     List<ProductDto> findProductList(Long bakeryId);
     void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request);
     void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException;
     void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request);
     void productAddReport(Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException;
-    List<SimpleProductDto> findSimpleProductList(Long bakeryId);
     List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name);
 }

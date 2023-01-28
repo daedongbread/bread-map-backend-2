@@ -35,7 +35,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -108,7 +107,7 @@ class BakeryControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void findBakeryList() throws Exception {
-        mockMvc.perform(get("/bakery?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
+        mockMvc.perform(get("/bakery?sortBy=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/find/default",
@@ -116,7 +115,7 @@ class BakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법 (distance, popular)"),
+                                parameterWithName("sortBy").description("정렬 방법 (distance, popular)"),
                                 parameterWithName("latitude").description("중앙 위도"),
                                 parameterWithName("longitude").description("중앙 경도"),
                                 parameterWithName("latitudeDelta").description("위도 범위"),
@@ -151,7 +150,7 @@ class BakeryControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery1).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
-        mockMvc.perform(get("/bakery/filter?sort=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
+        mockMvc.perform(get("/bakery/filter?sortBy=distance&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/find/filter",
@@ -159,7 +158,7 @@ class BakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestParameters(
-                                parameterWithName("sort").description("정렬 방법 (distance, popular)"),
+                                parameterWithName("sortBy").description("정렬 방법 (distance, popular)"),
                                 parameterWithName("latitude").description("중앙 위도"),
                                 parameterWithName("longitude").description("중앙 경도"),
                                 parameterWithName("latitudeDelta").description("위도 범위"),
@@ -214,29 +213,6 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryInfo.phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("data.flagInfo.flagId").description("유저 빵집 깃발 고유 번호 (깃발 미선택 시 null)"),
                                 fieldWithPath("data.flagInfo.isFlaged").description("유저 빵집 깃발 저장 유무 (깃발 미선택 시 false)"),
-                                fieldWithPath("data.menu").description("빵집 메뉴"),
-                                fieldWithPath("data.menu.[].id").description("상품 고유번호"),
-                                fieldWithPath("data.menu.[].name").description("상품 이름"),
-                                fieldWithPath("data.menu.[].rating").description("상품 평점"),
-                                fieldWithPath("data.menu.[].reviewNum").description("상품 리뷰 수"),
-                                fieldWithPath("data.menu.[].price").description("상품 가격"),
-                                fieldWithPath("data.menu.[].image").description("상품 이미지"),
-//                                fieldWithPath("data.review").description("빵집 리뷰"),
-//                                fieldWithPath("data.review.[].id").description("리뷰 고유 번호"),
-//                                fieldWithPath("data.review.[].userId").description("유저 고유 번호"),
-//                                fieldWithPath("data.review.[].userImage").description("유저 이미지"),
-//                                fieldWithPath("data.review.[].nickName").description("유저 닉네임"),
-//                                fieldWithPath("data.review.[].reviewNum").description("유저 리뷰 수"),
-//                                fieldWithPath("data.review.[].followerNum").description("유저 팔로워 수"),
-//                                fieldWithPath("data.review.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
-//                                fieldWithPath("data.review.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
-//                                fieldWithPath("data.review.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
-//                                fieldWithPath("data.review.[].imageList").description("리뷰 이미지"),
-//                                fieldWithPath("data.review.[].content").description("리뷰 내용"),
-//                                fieldWithPath("data.review.[].likeNum").description("리뷰 좋아요 수"),
-//                                fieldWithPath("data.review.[].commentNum").description("리뷰 댓글 수"),
-//                                fieldWithPath("data.review.[].createdAt").description("리뷰 생성일"),
-//                                fieldWithPath("data.review.[].averageRating").description("리뷰 평균 점수"),
                                 fieldWithPath("data.facilityInfoList")
                                         .description("빵집 시설 정보 (PARKING(\"주차 가능\"),\n" +
                                                 "WIFI(\"와이파이\"),\n" +
@@ -300,7 +276,7 @@ class BakeryControllerTest extends ControllerTest {
     void bakeryDeleteReport() throws Exception {
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/bakery/report/{bakeryId}/delete", bakery1.getId())
-                .file(new MockMultipartFile("file", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(new MockMultipartFile("file", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/report/delete",
@@ -343,7 +319,7 @@ class BakeryControllerTest extends ControllerTest {
 
         mockMvc.perform(RestDocumentationRequestBuilders
                 .fileUpload("/bakery/report/{bakeryId}", bakery1.getId())
-                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
+                .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -363,26 +339,6 @@ class BakeryControllerTest extends ControllerTest {
                         )
                 ))
                 .andExpect(status().isCreated());
-    }
-
-    @Test
-    void findSimpleProductList() throws Exception {
-        mockMvc.perform(get("/bakery/{bakeryId}/review/product", bakery1.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("bakery/review/product",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        responseFields(
-                                fieldWithPath("data.[].id").description("상품 고유 번호"),
-                                fieldWithPath("data.[].name").description("상품 이름"),
-                                fieldWithPath("data.[].price").description("상품 가격"),
-                                fieldWithPath("data.[].image").description("상품 이미지")
-                        )
-                ))
-                .andExpect(status().isOk());
     }
 
     @Test
