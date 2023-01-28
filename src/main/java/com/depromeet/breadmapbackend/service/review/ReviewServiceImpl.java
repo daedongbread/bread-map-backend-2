@@ -27,6 +27,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.depromeet.breadmapbackend.domain.user.QFollow.follow;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -46,27 +48,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Comparator<ReviewDto> comparing;
-        if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
-        else if(sort.equals(ReviewSortType.HIGH)) comparing = Comparator.comparing(ReviewDto::getAverageRating).reversed();
-        else if(sort.equals(ReviewSortType.LOW)) comparing = Comparator.comparing(ReviewDto::getAverageRating);
-        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
-
-        return reviewRepository.findByBakery(bakery)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(br -> new ReviewDto(br,
-                        reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
-                ))
-                .sorted(comparing)
-                .limit(3)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort){ //TODO : 페이징
+    public List<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sort){ //TODO : 페이징
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Comparator<ReviewDto> comparing;
         if(sort == null || sort.equals(ReviewSortType.LATEST)) comparing = Comparator.comparing(ReviewDto::getId).reversed();
@@ -79,14 +62,17 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(br -> new ReviewDto(br,
 //                            Math.toIntExact(reviewRepository.countByUserId(br.getUser().getId()))
                         reviewRepository.countByUser(br.getUser()),
-                        followRepository.countByFromUser(br.getUser())
+                        followRepository.countByToUser(br.getUser()),
+                        followRepository.findByFromUserAndToUser(user, br.getUser()).isPresent(),
+                        user.equals(br.getUser())
                 ))
                 .sorted(comparing)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ReviewDetailDto getReview(Long reviewId) {
+    public ReviewDetailDto getReview(String username, Long reviewId) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         review.addViews();
@@ -104,6 +90,8 @@ public class ReviewServiceImpl implements ReviewService {
 //                .reviewNum(Math.toIntExact(reviewRepository.countByUserId(review.getUser().getId())))
                 .reviewNum(reviewRepository.countByUser(review.getUser()))
                 .followerNum(followRepository.countByToUser(review.getUser()))
+                .isFollow(followRepository.findByFromUserAndToUser(user, review.getUser()).isPresent())
+                .isMe(user.equals(review.getUser()))
                 .userOtherReviews(userOtherReviews)
                 .bakeryOtherReviews(bakeryOtherReviews)
                 .build();

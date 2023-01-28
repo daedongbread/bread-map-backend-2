@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ReviewDto {
     private Long id;
-
     private Long userId;
     private String userImage;
     private String nickName;
     private Integer reviewNum;
     private Integer followerNum;
+    private Boolean isFollow;
+    private Boolean isMe;
 
     private List<ProductRatingDto> productRatingList;
     private List<String> imageList;
@@ -31,13 +32,15 @@ public class ReviewDto {
     private Double averageRating;
 
     @Builder
-    public ReviewDto(Review review, Integer reviewNum, Integer followerNum) {
+    public ReviewDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe) {
         this.id = review.getId();
         this.userId = review.getUser().getId();
         this.userImage = review.getUser().getImage();
         this.nickName = review.getUser().getNickName();
         this.reviewNum = reviewNum; //TODO : User에 List<Review>?
         this.followerNum = followerNum;
+        this.isFollow = isFollow;
+        this.isMe = isMe;
         this.productRatingList = review.getRatings().stream().map(ProductRatingDto::new).collect(Collectors.toList());
         this.imageList = review.getImageList().stream().map(ReviewImage::getImage).collect(Collectors.toList());
         this.content = review.getContent();

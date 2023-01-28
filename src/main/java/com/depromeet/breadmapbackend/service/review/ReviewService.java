@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ReviewService {
-    List<ReviewDto> getSimpleBakeryReviewList(Long bakeryId, ReviewSortType sort);
-    List<ReviewDto> getBakeryReviewList(Long bakeryId, ReviewSortType sort);
-    ReviewDetailDto getReview(Long reviewId);
+    List<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sort);
+    ReviewDetailDto getReview(String username, Long reviewId);
     ReviewAddDto addReview(String username, Long reviewId, ReviewRequest request);
     void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException;
     void addReviewTest(String username, Long reviewId, ReviewRequest request, List<MultipartFile> files) throws IOException;
