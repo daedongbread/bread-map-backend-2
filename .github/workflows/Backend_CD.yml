@@ -63,7 +63,7 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.TMP_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TMP_AWS_SECRET_ACCESS_KEY }}
-      run: aws ecs update-service --cluster tmp-cluster --service tmp-service --force-new-deployment
+      run: aws ecs update-service --cluster tmp-cluster --service tmp-api-server-service --force-new-deployment
     
     - name: CD notification to Slack
       uses: 8398a7/action-slack@v3
