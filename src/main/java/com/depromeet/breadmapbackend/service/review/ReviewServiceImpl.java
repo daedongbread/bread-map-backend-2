@@ -71,6 +71,28 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public SliceResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, Pageable pageable) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Product product = productRepository.findByBakeryAndId(bakery, productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+
+        Slice<Review> reviewSlice;
+        if(sortBy == null || sortBy.equals(ReviewSortType.LATEST)) reviewSlice = reviewRepository.findSliceByBakeryAndProductOrder(bakery, product, pageable);
+        else if(sortBy.equals(ReviewSortType.HIGH)) reviewSlice = reviewRepository.findSliceByBakeryAndProductOrderByRatingDesc(bakery, product, pageable);
+        else if(sortBy.equals(ReviewSortType.LOW)) reviewSlice = reviewRepository.findSliceByBakeryAndProductOrderByRatingAsc(bakery, product, pageable);
+        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
+
+        List<ReviewDto> contents = reviewSlice.getContent().stream()
+                .map(e -> new ReviewDto(e,
+                        reviewRepository.countByUser(e.getUser()),
+                        followRepository.countByToUser(e.getUser()),
+                        followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
+                        user.equals(e.getUser())))
+                .collect(Collectors.toList());
+        return SliceResponseDto.of(reviewSlice, contents);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReviewDetailDto getReview(String username, Long reviewId) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
