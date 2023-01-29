@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByBakery(Bakery bakery);
+    Optional<Product> findByBakeryAndId(Bakery bakery, Long productId);
     List<Product> findByBakeryAndNameStartsWith(Bakery bakery, String name);
     Optional<Product> findByBakeryAndName(Bakery bakery, String name);
 }

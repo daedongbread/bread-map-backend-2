@@ -73,17 +73,21 @@ class ReviewControllerTest extends ControllerTest {
         review2.addImage(image2);
         reviewRepository.save(review2);
 
-        ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review1).rating(4L).build();
+        ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review1).rating(5L).build();
         reviewProductRatingRepository.save(rating1);
-        ReviewProductRating rating2 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review2).rating(3L).build();
+        ReviewProductRating rating2 = ReviewProductRating.builder().bakery(bakery).product(product2).review(review1).rating(4L).build();
         reviewProductRatingRepository.save(rating2);
+        ReviewProductRating rating3 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review2).rating(4L).build();
+        reviewProductRatingRepository.save(rating3);
+        ReviewProductRating rating4 = ReviewProductRating.builder().bakery(bakery).product(product2).review(review2).rating(3L).build();
+        reviewProductRatingRepository.save(rating4);
 
         ReviewLike reviewLike = ReviewLike.builder().review(review1).user(user).build();
         reviewLikeRepository.save(reviewLike);
 
         comment1 = ReviewComment.builder().review(review1).user(user).content("comment1").build();
         reviewCommentRepository.save(comment1);
-        comment2 = ReviewComment.builder().review(review1).user(user).content("comment1").parent(comment1).build();
+        comment2 = ReviewComment.builder().review(review1).user(user).content("comment2").parent(comment1).build();
         reviewCommentRepository.save(comment2);
 
         ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(comment1).user(user).build();
@@ -114,12 +118,57 @@ class ReviewControllerTest extends ControllerTest {
         mockMvc.perform(get("/review/bakery/{bakeryId}?sortBy=latest", bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("review/get/all",
+                .andDo(document("review/get/bakery",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
+                        responseFields(
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.contents").description("리뷰 리스트"),
+                                fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
+                                fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
+                                fieldWithPath("data.contents.[].userInfo.userImage").description("유저 이미지"),
+                                fieldWithPath("data.contents.[].userInfo.nickName").description("유저 닉네임"),
+                                fieldWithPath("data.contents.[].userInfo.reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.contents.[].userInfo.followerNum").description("유저 팔로워 수"),
+                                fieldWithPath("data.contents.[].userInfo.isFollow").description("유저 팔로우 여부"),
+                                fieldWithPath("data.contents.[].userInfo.isMe").description("유저 본인 여부"),
+                                fieldWithPath("data.contents.[].reviewInfo").description("리뷰 정보"),
+                                fieldWithPath("data.contents.[].reviewInfo.id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList").description("리뷰 상품 점수 리스트"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].productName").description("리뷰 상품 이름"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
+                                fieldWithPath("data.contents.[].reviewInfo.imageList").description("리뷰 이미지"),
+                                fieldWithPath("data.contents.[].reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.contents.[].reviewInfo.likeNum").description("리뷰 좋아요 수"),
+                                fieldWithPath("data.contents.[].reviewInfo.commentNum").description("리뷰 댓글 수"),
+                                fieldWithPath("data.contents.[].reviewInfo.createdAt").description("리뷰 생성일"),
+                                fieldWithPath("data.contents.[].reviewInfo.averageRating").description("리뷰 평균 점수")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+//    @Transactional
+    void getProductReviewList() throws Exception{
+        mockMvc.perform(get("/review/bakery/{bakeryId}/product/{productId}?sortBy=low", bakery.getId(), product1.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("review/get/product",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("productId").description("상품 고유 번호")),
                         requestParameters(
                                 parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
                         responseFields(

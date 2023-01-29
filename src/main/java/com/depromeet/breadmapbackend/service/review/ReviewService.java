@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface ReviewService {
     SliceResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Pageable pageable);
+    SliceResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, Pageable pageable);
     ReviewDetailDto getReview(String username, Long reviewId);
     ReviewAddDto addReview(String username, Long reviewId, ReviewRequest request);
     void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException;
