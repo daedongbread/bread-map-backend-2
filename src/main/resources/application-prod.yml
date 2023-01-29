@@ -45,6 +45,7 @@ spring:
           google:
             client-id: ${GOOGLE_ID}
             client-secret: ${GOOGLE_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
             scope:
               - email
               - profile
