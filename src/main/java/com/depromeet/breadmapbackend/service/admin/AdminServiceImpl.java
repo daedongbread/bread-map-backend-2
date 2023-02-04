@@ -511,7 +511,7 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
+        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) { // TODO
             if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
             if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for (int i = 0; i < request.getProductList().size(); i++) {
@@ -527,7 +527,6 @@ public class AdminServiceImpl implements AdminService{
                 }
 
                 if(request.getProductList().get(i).getExistedImage() != null) { // 기존 product가 이미지를 가지고 있을 때
-                    log.info("D : " + request.getProductList().get(i).getExistedImage());
                     if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 업데이트 할 때. 기존 이미지 삭제 후 새 이미지 등록
                         log.info("I : " + productImageList.get(i));
                         MultipartFile productImage = productImageList.get(i);

@@ -15,12 +15,14 @@ import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.AdminBakeryReviewImageDto;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
+    private final ReviewQueryRepository reviewQueryRepository;
     private final UserRepository userRepository;
     private final BakeryRepository bakeryRepository;
     private final ProductRepository productRepository;
@@ -51,45 +54,36 @@ public class ReviewServiceImpl implements ReviewService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public SliceResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Pageable pageable) {
+    public PageResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Long lastId, Double lastRating, int page) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Slice<Review> reviewSlice;
-        if(sortBy == null || sortBy.equals(ReviewSortType.LATEST)) reviewSlice = reviewRepository.findSliceByBakeryOrder(bakery, pageable);
-        else if(sortBy.equals(ReviewSortType.HIGH)) reviewSlice = reviewRepository.findSliceByBakeryOrderByRatingDesc(bakery, pageable);
-        else if(sortBy.equals(ReviewSortType.LOW)) reviewSlice = reviewRepository.findSliceByBakeryOrderByRatingAsc(bakery, pageable);
-        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 
-        List<ReviewDto> contents = reviewSlice.getContent().stream()
+        Page<Review> bakeryReviews = reviewQueryRepository.findBakeryReview(bakery, sortBy, lastId, lastRating, page);
+        List<ReviewDto> contents = bakeryReviews.getContent().stream()
                 .map(e -> new ReviewDto(e,
                         reviewRepository.countByUser(e.getUser()),
                         followRepository.countByToUser(e.getUser()),
                         followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
                         user.equals(e.getUser())))
                 .collect(Collectors.toList());
-        return SliceResponseDto.of(reviewSlice, contents);
+        return PageResponseDto.of(bakeryReviews, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public SliceResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, Pageable pageable) {
+    public PageResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, Long lastId, Double lastRating, int page) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Product product = productRepository.findByBakeryAndId(bakery, productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
 
-        Slice<Review> reviewSlice;
-        if(sortBy == null || sortBy.equals(ReviewSortType.LATEST)) reviewSlice = reviewRepository.findSliceByBakeryAndProductOrder(bakery, product, pageable);
-        else if(sortBy.equals(ReviewSortType.HIGH)) reviewSlice = reviewRepository.findSliceByBakeryAndProductOrderByRatingDesc(bakery, product, pageable);
-        else if(sortBy.equals(ReviewSortType.LOW)) reviewSlice = reviewRepository.findSliceByBakeryAndProductOrderByRatingAsc(bakery, product, pageable);
-        else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
-
-        List<ReviewDto> contents = reviewSlice.getContent().stream()
+        Page<Review> productReviews = reviewQueryRepository.findProductReview(bakery, product, sortBy, lastId, lastRating, page);
+        List<ReviewDto> contents = productReviews.getContent().stream()
                 .map(e -> new ReviewDto(e,
                         reviewRepository.countByUser(e.getUser()),
                         followRepository.countByToUser(e.getUser()),
                         followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
                         user.equals(e.getUser())))
                 .collect(Collectors.toList());
-        return SliceResponseDto.of(reviewSlice, contents);
+        return PageResponseDto.of(productReviews, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

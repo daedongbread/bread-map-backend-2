@@ -12,7 +12,9 @@ public enum DaedongStatus {
     // 400 BAD REQUEST
     BAKERY_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40020, "invalid bakery sort type"), // 빵집 정렬 조건이 틀렸을 때
     FLAG_COLOR_EXCEPTION(BAD_REQUEST, 40040, "invalid flag color"), // 올바르지 않은 깃발 색깔일 때
-    FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 40041, "unedit flag"), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
+    FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 40041,"unedit flag"), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
+    REVIEW_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40050, "invalid review sort type"), // 리뷰 정렬 조건이 틀렸을 때
+    REVIEW_PAGE_EXCEPTION(BAD_REQUEST, 40050, "invalid review page request"), // 리뷰 페이지 조건이 틀렸을 때
     NOTICE_TYPE_EXCEPTION(BAD_REQUEST, 40060, "invalid notice type"), // 알림 타입이 틀렸을 때
     IMAGE_INVALID_EXCEPTION(BAD_REQUEST, 40080, "image is invalid"), // 이미지가 유효하지 않을 때
     IMAGE_NUM_UNMATCH_EXCEPTION(BAD_REQUEST, 40081, "image number unmatch with product number"), // 이미지 개수가 상품 개수와 일치하지 않을 때

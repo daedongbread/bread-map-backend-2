@@ -115,7 +115,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getBakeryReviewList() throws Exception{
-        mockMvc.perform(get("/review/bakery/{bakeryId}?sortBy=latest", bakery.getId())
+        mockMvc.perform(get("/review/bakery/{bakeryId}?sortBy=high&page=0", bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/get/bakery",
@@ -125,12 +125,16 @@ class ReviewControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
+                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)"),
+                                parameterWithName("lastId").optional().description("지난 리뷰 마지막 고유 번호 (최신순(latest) 조회 시 두번째 페이지부터 필요)"),
+                                parameterWithName("lastRating").optional().description("지난 리뷰 마지막 평균점수 (별점(high, low) 조회 시 두번째 페이지부터 필요"),
+                                parameterWithName("page").description("현재 페이지 번호 (0부터)")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
                                 fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
                                 fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
                                 fieldWithPath("data.contents").description("리뷰 리스트"),
                                 fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
                                 fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
@@ -159,7 +163,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getProductReviewList() throws Exception{
-        mockMvc.perform(get("/review/bakery/{bakeryId}/product/{productId}?sortBy=low", bakery.getId(), product1.getId())
+        mockMvc.perform(get("/review/bakery/{bakeryId}/product/{productId}?sortBy=low&page=0", bakery.getId(), product1.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/get/product",
@@ -170,12 +174,16 @@ class ReviewControllerTest extends ControllerTest {
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
                                 parameterWithName("productId").description("상품 고유 번호")),
                         requestParameters(
-                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
+                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)"),
+                                parameterWithName("lastId").optional().description("지난 리뷰 마지막 고유 번호 (최신순(latest) 조회 시 두번째 페이지부터 필요)"),
+                                parameterWithName("lastRating").optional().description("지난 리뷰 마지막 평균점수 (별점(high, low) 조회 시 두번째 페이지부터 필요"),
+                                parameterWithName("page").description("현재 페이지 번호 (0부터)")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
                                 fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
                                 fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
                                 fieldWithPath("data.contents").description("리뷰 리스트"),
                                 fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
                                 fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
