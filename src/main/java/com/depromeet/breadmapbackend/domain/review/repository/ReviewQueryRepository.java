@@ -41,7 +41,7 @@ public class ReviewQueryRepository {
                 .having(infinityCondition(sortBy, lastId, lastRating, page))
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset(page)
-                .limit(BAKERY_REVIEW_SIZE + 1) // TODO
+                .limit(BAKERY_REVIEW_SIZE) // TODO
                 .fetch();
 
         Long count = queryFactory.select(review.count()).from(review)
@@ -67,7 +67,7 @@ public class ReviewQueryRepository {
                 .having(infinityCondition(sortBy, lastId, lastRating, page))
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset(page)
-                .limit(PRODUCT_REVIEW_SIZE + 1) // TODO
+                .limit(PRODUCT_REVIEW_SIZE) // TODO
                 .fetch();
 
         Long count = queryFactory.select(review.count()).from(review)
@@ -92,7 +92,7 @@ public class ReviewQueryRepository {
                 .groupBy(reviewProductRating.review.id)
                 .orderBy(review.createdAt.desc())
                 .offset(page)
-                .limit(USER_REVIEW_SIZE + 1) // TODO
+                .limit(USER_REVIEW_SIZE) // TODO
                 .fetch();
 
         Long count = queryFactory.select(review.count()).from(review)

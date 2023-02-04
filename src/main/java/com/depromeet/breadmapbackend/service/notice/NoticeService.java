@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.service.notice;
 
+import com.depromeet.breadmapbackend.domain.notice.NoticeDayType;
 import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
 import com.depromeet.breadmapbackend.domain.review.RecommentEvent;
 import com.depromeet.breadmapbackend.domain.review.ReviewCommentEvent;
@@ -20,7 +21,5 @@ public interface NoticeService {
     void addReviewLikeNotice(ReviewLikeEvent event) throws FirebaseMessagingException;
     void addRecommentNotice(RecommentEvent event) throws FirebaseMessagingException;
     void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) throws FirebaseMessagingException;
-    PageResponseDto<NoticeDto> getTodayNoticeList(String username, Pageable pageable);
-    PageResponseDto<NoticeDto> getWeekNoticeList(String username, Pageable pageable);
-    PageResponseDto<NoticeDto> getBeforeNoticeList(String username, Pageable pageable);
+    PageResponseDto<NoticeDto> getNoticeList(String username, NoticeDayType type, Long lastId, int page);
 }

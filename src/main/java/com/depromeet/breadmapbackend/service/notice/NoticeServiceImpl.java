@@ -2,10 +2,8 @@ package com.depromeet.breadmapbackend.service.notice;
 
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.domain.notice.Notice;
-import com.depromeet.breadmapbackend.domain.notice.NoticeToken;
-import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
+import com.depromeet.breadmapbackend.domain.notice.*;
+import com.depromeet.breadmapbackend.domain.notice.repository.NoticeQueryRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.RecommentEvent;
@@ -41,6 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService{
     private final NoticeRepository noticeRepository;
+    private final NoticeQueryRepository noticeQueryRepository;
     private final UserRepository userRepository;
     private final NoticeTokenRepository noticeTokenRepository;
     private final FollowRepository followRepository;
@@ -179,45 +178,12 @@ public class NoticeServiceImpl implements NoticeService{
 //    }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<NoticeDto> getTodayNoticeList(String username, Pageable pageable) {
+    public PageResponseDto<NoticeDto> getNoticeList(String username, NoticeDayType type, Long lastId, int page) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-        Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtAfter(
-                user, LocalDateTime.now().with(LocalTime.MIN), pageable);
-
-        return PageResponseDto.of(all,
-                all.getContent().stream().map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice))
-                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
-                        .notice(notice).build())
-                        .collect(Collectors.toList()));
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<NoticeDto> getWeekNoticeList(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
-        Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtBetween(
-                user, LocalDateTime.now().with(LocalTime.MIN).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
-                LocalDateTime.now().minusDays(1).with(LocalTime.MAX), pageable);
-
-        return PageResponseDto.of(all,
-                all.getContent().stream().map(notice -> NoticeDto.builder()
-                        .image(noticeImage(notice))
-                        .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
-                        .notice(notice).build())
-                        .collect(Collectors.toList()));
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<NoticeDto> getBeforeNoticeList(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
-        Page<Notice> all  = noticeRepository.findTop20ByUserAndCreatedAtBefore(
-                user, LocalDateTime.now().with(LocalTime.MAX).with(TemporalAdjusters.previous(DayOfWeek.SUNDAY)), pageable);
-
-        return PageResponseDto.of(all,
-                all.getContent().stream().map(notice -> NoticeDto.builder()
+        Page<Notice> content = noticeQueryRepository.findNotice(user, type, lastId, page);
+        return PageResponseDto.of(content,
+                content.getContent().stream().map(notice -> NoticeDto.builder()
                         .image(noticeImage(notice))
                         .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
                         .notice(notice).build())
