@@ -15,8 +15,7 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagRequest;
-import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryCardDto;
-import com.depromeet.breadmapbackend.web.controller.flag.dto.SimpleFlagDto;
+import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.MapSimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,23 +37,15 @@ public class FlagServiceImpl implements FlagService {
     private final BakeryRepository bakeryRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SimpleFlagDto> findSimpleFlags(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        return flagRepository.findByUser(user).stream()
-                .map(flag -> SimpleFlagDto.builder()
-                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor()).build())
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<FlagDto> findFlags(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         return flagRepository.findByUser(user).stream()
                 .map(flag -> FlagDto.builder()
                         .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
-                        .bakeryImageList(flagBakeryRepository.findBakeryByFlag(flag).stream()
-                                .sorted(Comparator.comparing(Bakery::getId).reversed()).map(Bakery::getImage)
-                                .limit(3).collect(Collectors.toList())).build())
+                        .bakeryImageList(flag.getFlagBakeryList().stream()
+                                .sorted(Comparator.comparing(FlagBakery::getCreatedAt)).limit(3)
+                                .map(flagBakery -> flagBakery.getBakery().getImage())
+                                .collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
     }
 
@@ -70,16 +61,6 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void removeFlag(String username, Long flagId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
-        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
-
-        user.removeFlag(flag);
-        flagRepository.delete(flag);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
     public void updateFlag(String username, Long flagId, FlagRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
@@ -90,12 +71,22 @@ public class FlagServiceImpl implements FlagService {
         flag.updateFlag(request.getName(), request.getColor());
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void removeFlag(String username, Long flagId) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
+        if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
+
+        user.removeFlag(flag);
+        flagRepository.delete(flag);
+    }
+
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FlagBakeryCardDto> findBakeryByFlag(String username, Long flagId) {
+    public List<FlagBakeryDto> findBakeryByFlag(String username, Long flagId) { // TODO page?
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
         return flagBakeryRepository.findByFlag(flag).stream()
-                .sorted(Comparator.comparing(FlagBakery::getId).reversed())
-                .map(flagBakery -> FlagBakeryCardDto.builder()
+                .sorted(Comparator.comparing(FlagBakery::getCreatedAt).reversed())
+                .map(flagBakery -> FlagBakeryDto.builder()
                         .bakery(flagBakery.getBakery())
 //                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList().stream().map(BreadReview::getRating)
 //                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
@@ -105,7 +96,7 @@ public class FlagServiceImpl implements FlagService {
                                 }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
                         .reviewNum(flagBakery.getBakery().getReviewList().size())
                         .simpleReviewList(flagBakery.getBakery().getReviewList().stream()
-                                .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
+                                .sorted(Comparator.comparing(Review::getCreatedAt).reversed()).map(MapSimpleReviewDto::new)
                                 .limit(3).collect(Collectors.toList())).build())
                 .collect(Collectors.toList());
     }
