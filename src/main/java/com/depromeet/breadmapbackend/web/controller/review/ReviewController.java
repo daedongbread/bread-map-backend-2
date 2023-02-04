@@ -44,6 +44,14 @@ public class ReviewController {
         return new ApiResponse<>(reviewService.getProductReviewList(username, bakeryId, productId, sortBy, lastId, lastRating, page));
     }
 
+    @GetMapping("/user/{userId}") // TODO
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<ReviewDto>> getUserReviewList(
+            @CurrentUser String username, @PathVariable Long userId,
+            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+        return new ApiResponse<>(reviewService.getUserReviewList(username, userId, page));
+    }
+
     @GetMapping("/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<ReviewDetailDto> getReview(@CurrentUser String username, @PathVariable Long reviewId) {

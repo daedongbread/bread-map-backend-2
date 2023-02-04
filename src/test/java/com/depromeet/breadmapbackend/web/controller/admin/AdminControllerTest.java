@@ -129,6 +129,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("password").description("관리자 비밀번호")
                         ),
                         responseFields(
+                                fieldWithPath("data.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.accessToken").description("엑세스 토큰"),
                                 fieldWithPath("data.refreshToken").description("리프레시 토큰"),
                                 fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
@@ -161,6 +162,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("refreshToken").description("리프레시 토큰")
                         ),
                         responseFields(
+                                fieldWithPath("data.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.accessToken").description("엑세스 토큰"),
                                 fieldWithPath("data.refreshToken").description("리프레시 토큰"),
                                 fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")

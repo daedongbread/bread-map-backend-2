@@ -13,6 +13,7 @@ import java.util.List;
 public interface ReviewService {
     PageResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Long lastId, Double lastRating, int page);
     PageResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, Long lastId, Double lastRating, int page);
+    PageResponseDto<ReviewDto> getUserReviewList(String username, Long userId, int page);
     ReviewDetailDto getReview(String username, Long reviewId);
     ReviewAddDto addReview(String username, Long reviewId, ReviewRequest request);
     void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException;

@@ -55,7 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, Long lastId, Double lastRating, int page) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         Page<Review> bakeryReviews = reviewQueryRepository.findBakeryReview(bakery, sortBy, lastId, lastRating, page);
@@ -63,15 +63,15 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(e -> new ReviewDto(e,
                         reviewRepository.countByUser(e.getUser()),
                         followRepository.countByToUser(e.getUser()),
-                        followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
-                        user.equals(e.getUser())))
+                        followRepository.findByFromUserAndToUser(me, e.getUser()).isPresent(),
+                        me.equals(e.getUser())))
                 .collect(Collectors.toList());
         return PageResponseDto.of(bakeryReviews, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, Long lastId, Double lastRating, int page) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Product product = productRepository.findByBakeryAndId(bakery, productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
 
@@ -80,10 +80,26 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(e -> new ReviewDto(e,
                         reviewRepository.countByUser(e.getUser()),
                         followRepository.countByToUser(e.getUser()),
-                        followRepository.findByFromUserAndToUser(user, e.getUser()).isPresent(),
-                        user.equals(e.getUser())))
+                        followRepository.findByFromUserAndToUser(me, e.getUser()).isPresent(),
+                        me.equals(e.getUser())))
                 .collect(Collectors.toList());
         return PageResponseDto.of(productReviews, contents);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public PageResponseDto<ReviewDto> getUserReviewList(String username, Long userId, int page) {
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+
+        Page<Review> userReviews = reviewQueryRepository.findUserReview(user, page);
+        List<ReviewDto> contents = userReviews.getContent().stream()
+                .map(e -> new ReviewDto(e,
+                        reviewRepository.countByUser(e.getUser()),
+                        followRepository.countByToUser(e.getUser()),
+                        followRepository.findByFromUserAndToUser(me, e.getUser()).isPresent(),
+                        me.equals(e.getUser())))
+                .collect(Collectors.toList());
+        return PageResponseDto.of(userReviews, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

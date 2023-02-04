@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
+import com.depromeet.breadmapbackend.domain.user.User;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -27,6 +28,7 @@ public class ReviewQueryRepository {
     private final JPAQueryFactory queryFactory;
     private final Integer BAKERY_REVIEW_SIZE = 5;
     private final Integer PRODUCT_REVIEW_SIZE = 5;
+    private final Integer USER_REVIEW_SIZE = 5;
 
     public Page<Review> findBakeryReview(Bakery bakery, ReviewSortType sortBy, Long lastId, Double lastRating, int page) {
         Pageable pageable = PageRequest.of(page, BAKERY_REVIEW_SIZE);
@@ -75,6 +77,29 @@ public class ReviewQueryRepository {
                 .join(review.ratings, reviewProductRating) // TODO
                 .groupBy(reviewProductRating.review.id)
                 .having(infinityCondition(sortBy, lastId, lastRating, page))
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, count);
+    }
+
+    public Page<Review> findUserReview(User user, int page) {
+        Pageable pageable = PageRequest.of(page, USER_REVIEW_SIZE);
+
+        List<Review> content = queryFactory.selectFrom(review)
+                .where(review.user.eq(user),
+                        review.status.eq(ReviewStatus.UNBLOCK))
+                .join(review.ratings, reviewProductRating) // TODO
+                .groupBy(reviewProductRating.review.id)
+                .orderBy(review.createdAt.desc())
+                .offset(page)
+                .limit(USER_REVIEW_SIZE + 1) // TODO
+                .fetch();
+
+        Long count = queryFactory.select(review.count()).from(review)
+                .where(review.user.eq(user),
+                        review.status.eq(ReviewStatus.UNBLOCK))
+                .join(review.ratings, reviewProductRating) // TODO
+                .groupBy(reviewProductRating.review.id)
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);

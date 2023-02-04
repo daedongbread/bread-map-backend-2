@@ -30,16 +30,10 @@ public class UserController {
         return new ApiResponse<>(userService.reissue(request));
     }
 
-    @GetMapping("/me")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ProfileDto> myProfile(@CurrentUser String username) {
-        return new ApiResponse<>(userService.myProfile(username));
-    }
-
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ProfileDto> otherProfile(@CurrentUser String username, @PathVariable Long userId) {
-        return new ApiResponse<>(userService.otherProfile(username, userId));
+    public ApiResponse<ProfileDto> profile(@CurrentUser String username, @PathVariable Long userId) {
+        return new ApiResponse<>(userService.profile(username, userId));
     }
 
     @PostMapping("/nickname")
