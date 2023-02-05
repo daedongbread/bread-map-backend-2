@@ -313,6 +313,22 @@ class BakeryControllerTest extends ControllerTest {
     }
 
     @Test
+    void bakeryReportImage() throws Exception {
+        mockMvc.perform(RestDocumentationRequestBuilders
+                        .fileUpload("/bakery/report/{bakeryId}/image", bakery1.getId())
+                        .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/report/image",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호"))
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void productAddReport() throws Exception {
         String object = objectMapper.writeValueAsString(ProductReportRequest.builder().name("newBread").price("4000").build());
         MockMultipartFile request =
