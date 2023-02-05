@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class FlagBakeryCardDto {
+public class FlagBakeryDto {
     private Long id;
     private String image;
     private String name;
@@ -20,7 +20,7 @@ public class FlagBakeryCardDto {
     private List<MapSimpleReviewDto> simpleReviewList;
 
     @Builder
-    public FlagBakeryCardDto(Bakery bakery, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList) {
+    public FlagBakeryDto(Bakery bakery, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList) {
         this.id = bakery.getId();
         this.image = bakery.getImage();
         this.name = bakery.getName();

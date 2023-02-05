@@ -12,12 +12,12 @@
 == APIs
 - 빵집 리뷰 전체 조회 API
 - 상품 리뷰 전체 조회 API
+- 유저 리뷰 전체 조회 API
 - 리뷰 상세 조회 API
 - 리뷰 추가 API
 - 리뷰 사진 추가 API
 - 리뷰 추가 (데이터 + 이미지) API
 - 리뷰 삭제 API
-//- 유저 리뷰 전체 조회 API
 - 리뷰 좋아요 API
 - 리뷰 좋아요 취소 API
 - 리뷰 댓글 전체 조회 API
@@ -32,6 +32,9 @@ operation::review/get/bakery[snippets='http-request,request-headers,path-paramet
 
 === 상품 리뷰 전체 조회 API [GET]
 operation::review/get/product[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+
+=== 유저 리뷰 전체 조회 API [GET]
+operation::review/get/user[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 === 리뷰 상세 조회 API [GET]
 operation::review/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']

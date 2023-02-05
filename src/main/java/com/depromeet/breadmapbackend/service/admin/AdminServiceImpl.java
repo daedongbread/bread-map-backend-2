@@ -2,10 +2,7 @@ package com.depromeet.breadmapbackend.service.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReport;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryAddReportStatus;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.product.Product;
@@ -41,10 +38,7 @@ import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,6 +64,7 @@ public class AdminServiceImpl implements AdminService{
     private final BakeryAddReportRepository bakeryAddReportRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
+    private final BakeryReportImageRepository bakeryReportImageRepository;
     private final ProductAddReportRepository productAddReportRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
@@ -511,7 +506,7 @@ public class AdminServiceImpl implements AdminService{
             bakery.updateImage(image);
         }
 
-        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
+        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) { // TODO
             if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
             if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for (int i = 0; i < request.getProductList().size(); i++) {
@@ -527,7 +522,6 @@ public class AdminServiceImpl implements AdminService{
                 }
 
                 if(request.getProductList().get(i).getExistedImage() != null) { // 기존 product가 이미지를 가지고 있을 때
-                    log.info("D : " + request.getProductList().get(i).getExistedImage());
                     if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 업데이트 할 때. 기존 이미지 삭제 후 새 이미지 등록
                         log.info("I : " + productImageList.get(i));
                         MultipartFile productImage = productImageList.get(i);
@@ -558,10 +552,31 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable) {
+    public SliceResponseDto<AdminImageDto> getBakeryReportImages(Long bakeryId, Long lastId, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Slice<ReviewImage> reviewImageSlice = reviewImageRepository.findSliceByBakery(bakery, pageable);
-        return SliceResponseDto.of(reviewImageSlice, AdminBakeryReviewImageDto::new);
+        PageRequest pageable = PageRequest.of(page, 30, Sort.by("createdAt").descending());
+
+        Slice<BakeryReportImage> bakeryReportImageSlice;
+        if (lastId == null && page == 0) bakeryReportImageSlice = bakeryReportImageRepository.findSliceByBakery(bakery, pageable);
+        else if (lastId != null && page != 0) {
+            bakeryReportImageSlice = bakeryReportImageRepository.findSliceByBakeryAndIdLessThan(bakery, lastId, pageable);
+        }
+        else throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
+        return SliceResponseDto.of(bakeryReportImageSlice, AdminImageDto::new);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public SliceResponseDto<AdminImageDto> getBakeryReviewImages(Long bakeryId, Long lastId, int page) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        PageRequest pageable = PageRequest.of(page, 30, Sort.by("createdAt").descending());
+
+        Slice<ReviewImage> reviewImageSlice;
+        if (lastId == null && page == 0) reviewImageSlice = reviewImageRepository.findSliceByBakery(bakery, pageable);
+        else if (lastId != null && page != 0) {
+            reviewImageSlice = reviewImageRepository.findSliceByBakeryAndIdLessThan(bakery, lastId, pageable);
+        }
+        else throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
+        return SliceResponseDto.of(reviewImageSlice, AdminImageDto::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -570,6 +585,7 @@ public class AdminServiceImpl implements AdminService{
         flagBakeryRepository.deleteByBakery(bakery);
         bakeryDeleteReportRepository.deleteByBakery(bakery);
         bakeryUpdateReportRepository.deleteByBakery(bakery);
+        bakeryReportImageRepository.deleteByBakery(bakery);
         productAddReportRepository.deleteByBakery(bakery);
         reviewImageRepository.deleteByBakery(bakery);
         reviewProductRatingRepository.deleteByBakeryId(bakeryId);

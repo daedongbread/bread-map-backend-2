@@ -10,8 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 
 
 public interface ReviewImageRepository extends JpaRepository<ReviewImage, Long> {
-    @Query(value = "select * from review_image", nativeQuery = true)
+//    @Query(value = "select * from review_image", nativeQuery = true)
     Slice<ReviewImage> findSliceByBakery(Bakery bakery, Pageable pageable);
+    Slice<ReviewImage> findSliceByBakeryAndIdLessThan(Bakery bakery, Long lastId, Pageable pageable);
     void deleteByBakery(Bakery bakery);
     void deleteByReview(Review review);
 }

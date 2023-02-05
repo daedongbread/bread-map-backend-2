@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.infra;
 
 import com.depromeet.breadmapbackend.domain.common.converter.BakerySortTypeConverter;
+import com.depromeet.breadmapbackend.domain.common.converter.NoticeDayTypeConverter;
 import com.depromeet.breadmapbackend.domain.common.converter.ReviewSortTypeConverter;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUserArgumentResolver;
 import org.springframework.context.annotation.Configuration;
@@ -29,5 +30,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new BakerySortTypeConverter());
         registry.addConverter(new ReviewSortTypeConverter());
+        registry.addConverter(new NoticeDayTypeConverter());
     }
 }

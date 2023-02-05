@@ -57,14 +57,14 @@ public class BakeryController {
 
     @PostMapping("/report/{bakeryId}/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryUpdateReport(@PathVariable Long bakeryId, @RequestBody BakeryUpdateRequest request) {
-        bakeryService.bakeryUpdateReport(bakeryId, request);
+    public void bakeryUpdateReport(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody BakeryUpdateRequest request) {
+        bakeryService.bakeryUpdateReport(username, bakeryId, request);
     }
 
     @PostMapping("/report/{bakeryId}/delete")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryDeleteReport(@PathVariable Long bakeryId, @RequestPart MultipartFile file) throws IOException {
-        bakeryService.bakeryDeleteReport(bakeryId, file);
+    public void bakeryDeleteReport(@CurrentUser String username, @PathVariable Long bakeryId, @RequestPart MultipartFile file) throws IOException {
+        bakeryService.bakeryDeleteReport(username, bakeryId, file);
     }
 
     @PostMapping("/report/add")
@@ -73,11 +73,18 @@ public class BakeryController {
         bakeryService.bakeryAddReport(username, request);
     }
 
-    @PostMapping("/report/{bakeryId}")
+    @PostMapping("/report/{bakeryId}/image")
     @ResponseStatus(HttpStatus.CREATED)
-    public void productAddReport(@PathVariable Long bakeryId, @RequestPart ProductReportRequest request,
-                                 @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        bakeryService.productAddReport(bakeryId, request, files);
+    public void bakeryReportImage(@CurrentUser String username, @PathVariable Long bakeryId, @RequestPart List<MultipartFile> files) throws IOException {
+        bakeryService.bakeryReportImage(username, bakeryId, files);
+    }
+
+    @PostMapping("/report/{bakeryId}/product")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void productAddReport(
+            @CurrentUser String username, @PathVariable Long bakeryId, @RequestPart ProductReportRequest request,
+            @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+        bakeryService.productAddReport(username, bakeryId, request, files);
     }
 
     @GetMapping("/{bakeryId}/review/product/search")

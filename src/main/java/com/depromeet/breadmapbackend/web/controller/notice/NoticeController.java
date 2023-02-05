@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.notice;
 
+import com.depromeet.breadmapbackend.domain.notice.NoticeDayType;
 import com.depromeet.breadmapbackend.service.notice.NoticeService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
@@ -26,27 +27,10 @@ public class NoticeController {
         noticeService.addNoticeToken(username, request);
     }
 
-    @GetMapping("/today")
+    @GetMapping("/{type}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<NoticeDto>> getTodayNoticeList(
-            @CurrentUser String username,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(noticeService.getTodayNoticeList(username, pageable));
-    }
-
-    @GetMapping("/week")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<NoticeDto>> getWeekNoticeList(
-            @CurrentUser String username,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(noticeService.getWeekNoticeList(username, pageable));
-    }
-
-    @GetMapping("/before")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<NoticeDto>> getBeforeNoticeList(
-            @CurrentUser String username,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(noticeService.getBeforeNoticeList(username, pageable));
+    public ApiResponse<PageResponseDto<NoticeDto>> getNoticeList(
+            @CurrentUser String username, @PathVariable NoticeDayType type, @RequestParam(required = false) Long lastId, @RequestParam int page) {
+        return new ApiResponse<>(noticeService.getNoticeList(username, type, lastId, page));
     }
 }

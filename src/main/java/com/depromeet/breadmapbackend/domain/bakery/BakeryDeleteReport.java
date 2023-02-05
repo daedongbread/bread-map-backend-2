@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,16 +17,21 @@ public class BakeryDeleteReport extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String image;
 
     @Builder
-    public BakeryDeleteReport(Bakery bakery, String image) {
+    public BakeryDeleteReport(Bakery bakery, User user, String image) {
         this.bakery = bakery;
+        this.user = user;
         this.image = image;
     }
 }

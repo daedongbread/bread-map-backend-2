@@ -15,12 +15,6 @@ import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByBakery(Bakery bakery);
-    @Query(value = "SELECT r FROM Review r WHERE r.bakery = :bakery AND r.status = 'UNBLOCK'")
-    Slice<Review> findSliceByBakeryOrder(@Param("bakery")Bakery bakery, Pageable pageable);
-    @Query(value = "SELECT r FROM Review r JOIN r.ratings pr WHERE r.bakery = :bakery AND r.status = 'UNBLOCK' GROUP BY r.id ORDER BY AVG(pr.rating) DESC, r.createdAt DESC")
-    Slice<Review> findSliceByBakeryOrderByRatingDesc(@Param("bakery")Bakery bakery, Pageable pageable);
-    @Query(value = "SELECT r FROM Review r JOIN r.ratings pr WHERE r.bakery = :bakery AND r.status = 'UNBLOCK' GROUP BY r.id ORDER BY AVG(pr.rating) ASC, r.createdAt DESC")
-    Slice<Review> findSliceByBakeryOrderByRatingAsc(@Param("bakery")Bakery bakery, Pageable pageable);
     @Query(value = "SELECT r FROM Review r JOIN r.ratings pr WHERE pr.product = :product AND r.bakery = :bakery AND r.status = 'UNBLOCK'")
     Slice<Review> findSliceByBakeryAndProductOrder(@Param("bakery")Bakery bakery, @Param("product")Product product, Pageable pageable);
     @Query(value = "SELECT r FROM Review r JOIN r.ratings pr WHERE pr.product = :product AND r.bakery = :bakery AND r.status = 'UNBLOCK' GROUP BY r.id ORDER BY AVG(pr.rating) DESC, r.createdAt DESC")

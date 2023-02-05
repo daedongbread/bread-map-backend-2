@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.review.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
@@ -12,8 +13,26 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class ReviewDto {
+    private BakeryInfo bakeryInfo;
     private UserInfo userInfo;
     private ReviewInfo reviewInfo;
+
+    @Getter
+    @NoArgsConstructor
+    public static class BakeryInfo {
+        private Long bakeryId;
+        private String bakeryImage;
+        private String bakeryName;
+        private String bakeryAddress;
+
+        @Builder
+        public BakeryInfo(Bakery bakery) {
+            this.bakeryId = bakery.getId();
+            this.bakeryImage = bakery.getImage();
+            this.bakeryName = bakery.getName();
+            this.bakeryAddress = bakery.getAddress();
+        }
+    }
 
     @Getter
     @NoArgsConstructor
@@ -69,6 +88,7 @@ public class ReviewDto {
 
     @Builder
     public ReviewDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe) {
+        this.bakeryInfo = BakeryInfo.builder().bakery(review.getBakery()).build();
         this.userInfo = UserInfo.builder().review(review).reviewNum(reviewNum).followerNum(followerNum).isFollow(isFollow).isMe(isMe).build();
         this.reviewInfo = ReviewInfo.builder().review(review).build();
     }

@@ -10,10 +10,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
-    List<Notice> findByUser(User user);
-    Page<Notice> findTop20ByUserAndCreatedAtAfter(User user, LocalDateTime startTime, Pageable pageable);
-    Page<Notice> findTop20ByUserAndCreatedAtBetween(User user, LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
-    Page<Notice> findTop20ByUserAndCreatedAtBefore(User user, LocalDateTime startTime, Pageable pageable);
-    Page<Notice> findTop20ByUserAndCreatedAtBetweenOrderByCreatedAt(User user, LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
     void deleteByUser(User user);
 }

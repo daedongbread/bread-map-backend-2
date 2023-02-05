@@ -23,7 +23,8 @@ public interface AdminService {
     void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void deleteProduct(Long bakeryId, Long productId);
-    SliceResponseDto<AdminBakeryReviewImageDto> getBakeryReviewImages(Long bakeryId, Pageable pageable);
+    SliceResponseDto<AdminImageDto> getBakeryReportImages(Long bakeryId, Long lastId, int page);
+    SliceResponseDto<AdminImageDto> getBakeryReviewImages(Long bakeryId, Long lastId, int page);
     void deleteBakery(Long bakeryId);
     PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable);
     BakeryAddReportDto getBakeryReport(Long reportId);
