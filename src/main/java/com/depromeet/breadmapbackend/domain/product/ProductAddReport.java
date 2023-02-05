@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.product;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.converter.StringListConverter;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,10 @@ public class ProductAddReport extends BaseEntity {
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(nullable = false)
     private String name;
 
@@ -34,8 +39,9 @@ public class ProductAddReport extends BaseEntity {
     private List<String> images = new ArrayList<>();
 
     @Builder
-    public ProductAddReport(Bakery bakery, String name, String price) {
+    public ProductAddReport(Bakery bakery, User user, String name, String price) {
         this.bakery = bakery;
+        this.user = user;
         this.name = name;
         this.price = price;
     }

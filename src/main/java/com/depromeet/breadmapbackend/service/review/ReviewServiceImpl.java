@@ -262,9 +262,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ReviewCommentDto> getReviewCommentList(Long reviewId) {
-        if(reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
+    public List<ReviewCommentDto> getReviewCommentList(Long reviewId) { // TODO : slice
+        if(reviewRepository.findById(reviewId).filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty())
+            throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
 
         return reviewCommentRepository.findByReviewIdAndParentIsNull(reviewId)
                 .stream().map(ReviewCommentDto::new).collect(Collectors.toList());

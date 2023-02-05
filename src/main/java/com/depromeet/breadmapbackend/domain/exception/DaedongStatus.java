@@ -22,6 +22,8 @@ public enum DaedongStatus {
     IMAGE_NUM_UNMATCH_EXCEPTION(BAD_REQUEST, 40081, "image number unmatch with product number"), // 이미지 개수가 상품 개수와 일치하지 않을 때
     IMAGE_NUM_EXCEED_EXCEPTION(BAD_REQUEST, 40082, "image number exceed"), // 이미지 개수가 초과될 때
     ADMIN_KEY_EXCEPTION(BAD_REQUEST, 40090, "invalid admin key"), // 관리자 회원가입에서 키가 틀렸을 때
+    ADMIN_PAGE_EXCEPTION(BAD_REQUEST, 40091, "invalid admin page request"), // 관리자 관련 페이지 조건이 틀렸을 때
+
 
     // 401 UNAUTHORIZED
     CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외

@@ -21,12 +21,14 @@ public class ReviewDto {
     @NoArgsConstructor
     public static class BakeryInfo {
         private Long bakeryId;
+        private String bakeryImage;
         private String bakeryName;
         private String bakeryAddress;
 
         @Builder
         public BakeryInfo(Bakery bakery) {
             this.bakeryId = bakery.getId();
+            this.bakeryImage = bakery.getImage();
             this.bakeryName = bakery.getName();
             this.bakeryAddress = bakery.getAddress();
         }

@@ -91,6 +91,7 @@ class BakeryControllerTest extends ControllerTest {
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
+        bakeryReportImageRepository.deleteAllInBatch();
         productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
@@ -318,7 +319,7 @@ class BakeryControllerTest extends ControllerTest {
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/bakery/report/{bakeryId}", bakery1.getId())
+                .fileUpload("/bakery/report/{bakeryId}/product", bakery1.getId())
                 .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
