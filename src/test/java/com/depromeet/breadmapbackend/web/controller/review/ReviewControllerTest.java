@@ -115,7 +115,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getBakeryReviewList() throws Exception{
-        mockMvc.perform(get("/review/bakery/{bakeryId}?sortBy=latest", bakery.getId())
+        mockMvc.perform(get("/review/bakery/{bakeryId}?sortBy=high&page=0", bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/get/bakery",
@@ -125,12 +125,22 @@ class ReviewControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
+                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)"),
+                                parameterWithName("lastId").optional().description("지난 리뷰 마지막 고유 번호 (최신순(latest) 조회 시 두번째 페이지부터 필요)"),
+                                parameterWithName("lastRating").optional().description("지난 리뷰 마지막 평균점수 (별점(high, low) 조회 시 두번째 페이지부터 필요"),
+                                parameterWithName("page").description("현재 페이지 번호 (0부터)")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
                                 fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
                                 fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("리뷰 리스트"),
+                                fieldWithPath("data.contents.[].bakeryInfo").description("리뷰 빵집 정보"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryAddress").description("빵집 주소"),
                                 fieldWithPath("data.contents").description("리뷰 리스트"),
                                 fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
                                 fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
@@ -159,7 +169,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void getProductReviewList() throws Exception{
-        mockMvc.perform(get("/review/bakery/{bakeryId}/product/{productId}?sortBy=low", bakery.getId(), product1.getId())
+        mockMvc.perform(get("/review/bakery/{bakeryId}/product/{productId}?sortBy=low&page=0", bakery.getId(), product1.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("review/get/product",
@@ -170,13 +180,72 @@ class ReviewControllerTest extends ControllerTest {
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
                                 parameterWithName("productId").description("상품 고유 번호")),
                         requestParameters(
-                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)")),
+                                parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)"),
+                                parameterWithName("lastId").optional().description("지난 리뷰 마지막 고유 번호 (최신순(latest) 조회 시 두번째 페이지부터 필요)"),
+                                parameterWithName("lastRating").optional().description("지난 리뷰 마지막 평균점수 (별점(high, low) 조회 시 두번째 페이지부터 필요"),
+                                parameterWithName("page").description("현재 페이지 번호 (0부터)")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
                                 fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
                                 fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
                                 fieldWithPath("data.contents").description("리뷰 리스트"),
+                                fieldWithPath("data.contents.[].bakeryInfo").description("리뷰 빵집 정보"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryAddress").description("빵집 주소"),
+                                fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
+                                fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
+                                fieldWithPath("data.contents.[].userInfo.userImage").description("유저 이미지"),
+                                fieldWithPath("data.contents.[].userInfo.nickName").description("유저 닉네임"),
+                                fieldWithPath("data.contents.[].userInfo.reviewNum").description("유저 리뷰 수"),
+                                fieldWithPath("data.contents.[].userInfo.followerNum").description("유저 팔로워 수"),
+                                fieldWithPath("data.contents.[].userInfo.isFollow").description("유저 팔로우 여부"),
+                                fieldWithPath("data.contents.[].userInfo.isMe").description("유저 본인 여부"),
+                                fieldWithPath("data.contents.[].reviewInfo").description("리뷰 정보"),
+                                fieldWithPath("data.contents.[].reviewInfo.id").description("리뷰 고유 번호"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList").description("리뷰 상품 점수 리스트"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].productName").description("리뷰 상품 이름"),
+                                fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
+                                fieldWithPath("data.contents.[].reviewInfo.imageList").description("리뷰 이미지"),
+                                fieldWithPath("data.contents.[].reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.contents.[].reviewInfo.likeNum").description("리뷰 좋아요 수"),
+                                fieldWithPath("data.contents.[].reviewInfo.commentNum").description("리뷰 댓글 수"),
+                                fieldWithPath("data.contents.[].reviewInfo.createdAt").description("리뷰 생성일"),
+                                fieldWithPath("data.contents.[].reviewInfo.averageRating").description("리뷰 평균 점수")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+//    @Transactional
+    void getUserReviewList() throws Exception{
+        mockMvc.perform(get("/review/user/{userId}?page=0", user.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("review/get/user",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(
+                                parameterWithName("userId").description("유저 고유 번호")),
+                        requestParameters(
+                                parameterWithName("page").description("현재 페이지 번호 (0부터)")),
+                        responseFields(
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("리뷰 리스트"),
+                                fieldWithPath("data.contents.[].bakeryInfo").description("리뷰 빵집 정보"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.contents.[].bakeryInfo.bakeryAddress").description("빵집 주소"),
                                 fieldWithPath("data.contents.[].userInfo").description("리뷰 유저 정보"),
                                 fieldWithPath("data.contents.[].userInfo.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.contents.[].userInfo.userImage").description("유저 이미지"),
@@ -215,12 +284,12 @@ class ReviewControllerTest extends ControllerTest {
                                 parameterWithName("reviewId").description("리뷰 고유 번호")
                         ),
                         responseFields(
-                                fieldWithPath("data.bakeryInfo").description("리뷰 빵집 정보"),
-                                fieldWithPath("data.bakeryInfo.bakeryId").description("빵집 고유 번호"),
-                                fieldWithPath("data.bakeryInfo.bakeryImage").description("빵집 이미지"),
-                                fieldWithPath("data.bakeryInfo.bakeryName").description("빵집 이름"),
-                                fieldWithPath("data.bakeryInfo.bakeryAddress").description("빵집 주소"),
                                 fieldWithPath("data.reviewDto").description("리뷰 상세 정보"),
+                                fieldWithPath("data.reviewDto.bakeryInfo").description("리뷰 빵집 정보"),
+                                fieldWithPath("data.reviewDto.bakeryInfo.bakeryId").description("빵집 고유 번호"),
+                                fieldWithPath("data.reviewDto.bakeryInfo.bakeryImage").description("빵집 이미지"),
+                                fieldWithPath("data.reviewDto.bakeryInfo.bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.reviewDto.bakeryInfo.bakeryAddress").description("빵집 주소"),
                                 fieldWithPath("data.reviewDto.userInfo").description("리뷰 유저 정보"),
                                 fieldWithPath("data.reviewDto.userInfo.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.reviewDto.userInfo.userImage").description("유저 이미지"),
@@ -240,26 +309,6 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.reviewDto.reviewInfo.commentNum").description("리뷰 댓글 수"),
                                 fieldWithPath("data.reviewDto.reviewInfo.createdAt").description("리뷰 생성일"),
                                 fieldWithPath("data.reviewDto.reviewInfo.averageRating").description("리뷰 평균 점수"),
-                                fieldWithPath("data.comments").description("리뷰 댓글 리스트"),
-                                fieldWithPath("data.comments.[].id").description("댓글 고유 번호"),
-                                fieldWithPath("data.comments.[].userId").description("유저 고유 번호"),
-                                fieldWithPath("data.comments.[].userImage").description("유저 이미지"),
-                                fieldWithPath("data.comments.[].nickName").description("유저 닉네임"),
-                                fieldWithPath("data.comments.[].commentNickName").description("부모 댓글 유저 닉네임"),
-                                fieldWithPath("data.comments.[].content").description("댓글 내용"),
-                                fieldWithPath("data.comments.[].createdAt").description("댓글 생성일"),
-                                fieldWithPath("data.comments.[].likeNum").description("댓글 좋아요 수"),
-                                fieldWithPath("data.comments.[].commentList").description("대댓글 리스트"),
-                                fieldWithPath("data.comments.[].commentList.[]").description("리뷰 대댓글 리스트"),
-                                fieldWithPath("data.comments.[].commentList.[].id").description("대댓글 고유 번호"),
-                                fieldWithPath("data.comments.[].commentList.[].userId").description("유저 고유 번호"),
-                                fieldWithPath("data.comments.[].commentList.[].userImage").description("유저 이미지"),
-                                fieldWithPath("data.comments.[].commentList.[].nickName").description("유저 닉네임"),
-                                fieldWithPath("data.comments.[].commentList.[].commentNickName").description("부모 댓글 유저 닉네임"),
-                                fieldWithPath("data.comments.[].commentList.[].content").description("대댓글 내용"),
-                                fieldWithPath("data.comments.[].commentList.[].createdAt").description("대댓글 생성일"),
-                                fieldWithPath("data.comments.[].commentList.[].likeNum").description("대댓글 좋아요 수"),
-                                fieldWithPath("data.comments.[].commentList.[].commentList").description("대댓글 리스트"),
                                 fieldWithPath("data.userOtherReviews").description("유저 다른 빵집 리뷰 리스트"),
                                 fieldWithPath("data.userOtherReviews.[].id").description("리뷰 고유 번호"),
                                 fieldWithPath("data.userOtherReviews.[].image").description("리뷰 이미지"),
@@ -393,33 +442,6 @@ class ReviewControllerTest extends ControllerTest {
                 ))
                 .andExpect(status().isNoContent());
     }
-
-//    @Test
-////    @Transactional
-//    void getUserReviewList() throws Exception {
-//        mockMvc.perform(get("/review")
-//                .header("Authorization", "Bearer " + token.getAccessToken()))
-//                .andDo(print())
-//                .andDo(document("review/get/user",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-//                        responseFields(
-//                                fieldWithPath("data.[].id").description("리뷰 고유 번호"),
-//                                fieldWithPath("data.[].bakeryName").description("빵집 이름"),
-//                                fieldWithPath("data.[].bakeryAddress").description("빵집 주소"),
-//                                fieldWithPath("data.[].breadRatingDtoList").description("리뷰 빵 점수 리스트"),
-//                                fieldWithPath("data.[].breadRatingDtoList.[].breadName").description("리뷰 빵 이름"),
-//                                fieldWithPath("data.[].breadRatingDtoList.[].rating").description("리뷰 빵 점수"),
-//                                fieldWithPath("data.[].imageList").description("리뷰 이미지"),
-//                                fieldWithPath("data.[].content").description("리뷰 내용"),
-//                                fieldWithPath("data.[].likeNum").description("리뷰 좋아요 수"),
-//                                fieldWithPath("data.[].commentNum").description("리뷰 댓글 수"),
-//                                fieldWithPath("data.[].createdAt").description("리뷰 생성일")
-//                        )
-//                ))
-//                .andExpect(status().isOk());
-//    }
 
     @Test
 //    @Transactional

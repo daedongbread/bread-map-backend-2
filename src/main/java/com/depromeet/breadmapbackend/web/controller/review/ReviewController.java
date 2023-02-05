@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
+import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.review.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +28,28 @@ public class ReviewController {
 
     @GetMapping("/bakery/{bakeryId}") // TODO
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SliceResponseDto<ReviewDto>> getBakeryReviewList(
+    public ApiResponse<PageResponseDto<ReviewDto>> getBakeryReviewList(
             @CurrentUser String username, @PathVariable Long bakeryId,
-            @RequestParam(defaultValue = "latest") ReviewSortType sortBy,
-            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
-        return new ApiResponse<>(reviewService.getBakeryReviewList(username, bakeryId, sortBy, pageable));
+            @RequestParam(required = false) Long lastId, @RequestParam(required = false) Double lastRating,
+            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+        return new ApiResponse<>(reviewService.getBakeryReviewList(username, bakeryId, sortBy, lastId, lastRating, page));
     }
 
     @GetMapping("/bakery/{bakeryId}/product/{productId}") // TODO
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SliceResponseDto<ReviewDto>> getProductReviewList(
+    public ApiResponse<PageResponseDto<ReviewDto>> getProductReviewList(
             @CurrentUser String username, @PathVariable Long bakeryId, @PathVariable Long productId,
-            @RequestParam(defaultValue = "latest") ReviewSortType sortBy,
-            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
-        return new ApiResponse<>(reviewService.getProductReviewList(username, bakeryId, productId, sortBy, pageable));
+            @RequestParam(required = false) Long lastId, @RequestParam(required = false) Double lastRating,
+            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+        return new ApiResponse<>(reviewService.getProductReviewList(username, bakeryId, productId, sortBy, lastId, lastRating, page));
+    }
+
+    @GetMapping("/user/{userId}") // TODO
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<ReviewDto>> getUserReviewList(
+            @CurrentUser String username, @PathVariable Long userId,
+            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+        return new ApiResponse<>(reviewService.getUserReviewList(username, userId, page));
     }
 
     @GetMapping("/{reviewId}")

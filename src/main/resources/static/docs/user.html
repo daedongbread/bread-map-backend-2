@@ -533,8 +533,8 @@ Content-Length: 339
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzYyMDYxMjZ9.IlefBFxZ6qRMqP3cnBFhUIoNpd6IrQtNdTBW_OilXwo"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzY3OTUzNTd9._PR0saY1g8JwaHoiU1FiPoAZTcxFaiJwJXrIVNsYnMM"
 }</code></pre>
 </div>
 </div>
@@ -590,12 +590,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 403
+Content-Length: 424
 
 {
   "data" : {
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzYyMDYxMjZ9.IlefBFxZ6qRMqP3cnBFhUIoNpd6IrQtNdTBW_OilXwo",
+    "userId" : 102,
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzY3OTUzNTd9._PR0saY1g8JwaHoiU1FiPoAZTcxFaiJwJXrIVNsYnMM",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -621,6 +622,11 @@ Content-Length: 403
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessToken</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰</p></td>
@@ -644,223 +650,26 @@ Content-Length: 403
 <h3 id="_본인_프로필_조회_api_get"><a class="link" href="#_본인_프로필_조회_api_get">본인 프로필 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_본인_프로필_조회_api_get_http_request"><a class="link" href="#_본인_프로필_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/me HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.jYIVpENWcJKYWP7eQgFws3sVnu3I970-CkUW-0g2hbE
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::user/me</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_본인_프로필_조회_api_get_request_headers"><a class="link" href="#_본인_프로필_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::user/me</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_본인_프로필_조회_api_get_http_response"><a class="link" href="#_본인_프로필_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 724
-
-{
-  "data" : {
-    "userId" : 64,
-    "userImage" : null,
-    "nickName" : "testNickName1",
-    "followingNum" : 1,
-    "followerNum" : 1,
-    "isFollow" : false,
-    "userFlagList" : [ {
-      "flagId" : 12,
-      "name" : "testFlagName",
-      "color" : "ORANGE",
-      "flagImageList" : [ "testImage" ]
-    } ],
-    "userReviewList" : [ {
-      "id" : 90,
-      "bakeryName" : "bakery1",
-      "bakeryAddress" : "address",
-      "productRatingList" : [ {
-        "productName" : "bread1",
-        "rating" : 4
-      } ],
-      "imageList" : [ "image1" ],
-      "content" : "content1",
-      "likeNum" : 0,
-      "commentNum" : 0,
-      "createdAt" : "2023-01-29T21:48:45.119583"
-    } ]
-  }
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::user/me</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_본인_프로필_조회_api_get_response_fields"><a class="link" href="#_본인_프로필_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.followerNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.followingNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로잉 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.isFollow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로우 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].flagId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 고유번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].color</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 색깔</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].flagImageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 이미지 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].bakeryName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 빵집 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].bakeryAddress</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 빵집 주소</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].productRatingList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].imageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].commentNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 댓글 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 생성일</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet response-fields not found for operation::user/me</p>
 </div>
 </div>
 </div>
@@ -870,8 +679,8 @@ Content-Length: 724
 <h4 id="_타인_프로필_조회_api_get_http_request"><a class="link" href="#_타인_프로필_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/94 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.6SdPwct4r5tao0vlS8BDIfOvg464lmk9e0FH2jVCVAQ
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/87 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.eCztwcH0Hhh8fS97ELEiSATPo_Ig6DcJ814jVqHUMXs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -915,36 +724,16 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 723
+Content-Length: 175
 
 {
   "data" : {
-    "userId" : 94,
+    "userId" : 87,
     "userImage" : null,
     "nickName" : "testNickName1",
     "followingNum" : 1,
     "followerNum" : 1,
-    "isFollow" : true,
-    "userFlagList" : [ {
-      "flagId" : 22,
-      "name" : "testFlagName",
-      "color" : "ORANGE",
-      "flagImageList" : [ "testImage" ]
-    } ],
-    "userReviewList" : [ {
-      "id" : 100,
-      "bakeryName" : "bakery1",
-      "bakeryAddress" : "address",
-      "productRatingList" : [ {
-        "productName" : "bread1",
-        "rating" : 4
-      } ],
-      "imageList" : [ "image1" ],
-      "content" : "content1",
-      "likeNum" : 0,
-      "commentNum" : 0,
-      "createdAt" : "2023-01-29T21:48:46.35579"
-    } ]
+    "isFollow" : true
   }
 }</code></pre>
 </div>
@@ -998,91 +787,6 @@ Content-Length: 723
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로우 여부</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].flagId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 고유번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].color</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 색깔</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userFlagList.[].flagImageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 깃발 이미지 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].bakeryName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 빵집 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].bakeryAddress</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 빵집 주소</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].productRatingList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].imageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].commentNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 댓글 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userReviewList.[].createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 생성일</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1097,11 +801,11 @@ Content-Length: 723
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/nickname HTTP/1.1
 Content-Type: application/json;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=file; filename=ebc86c79-78c2-4580-8e3d-a0e8c2320f5f.png
+Content-Disposition: form-data; name=file; filename=0621606f-e224-4101-ba1e-9dee17881fa5.png
 Content-Type: image/png
 
 test
@@ -1213,14 +917,14 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.jYIVpENWcJKYWP7eQgFws3sVnu3I970-CkUW-0g2hbE
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTYsImV4cCI6MTY3NTU4OTM1Nn0.EO36u9AQIymdZnIkZhWEwy6RoI6RTeLQywyKDhac9zI
 Accept: application/json
 Content-Length: 374
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.jYIVpENWcJKYWP7eQgFws3sVnu3I970-CkUW-0g2hbE",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzYyMDYxMjV9.ahjThN3GHSxex2btaFxwxC46botHg_k5XvSpMDbHPi0",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTYsImV4cCI6MTY3NTU4OTM1Nn0.EO36u9AQIymdZnIkZhWEwy6RoI6RTeLQywyKDhac9zI",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NzY3OTUzNTZ9.cPyabBTYifUKk_rpuSvC96F8q8-YfxIMjTmQqhJhuMs",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>
@@ -1317,7 +1021,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.6SdPwct4r5tao0vlS8BDIfOvg464lmk9e0FH2jVCVAQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.eCztwcH0Hhh8fS97ELEiSATPo_Ig6DcJ814jVqHUMXs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1373,12 +1077,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/follow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.ir8MJ5XGThh7EU1wJ6eJjpEnTJexIAatbf2Uc7Tx0yo
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTYsImV4cCI6MTY3NTU4OTM1Nn0.KteNYTPF3Xbxg66szx0zF1A1Egc9KihnQIwl4eU0M1Q
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 70
+  "userId" : 69
 }</code></pre>
 </div>
 </div>
@@ -1464,12 +1168,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user/follow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 86
+  "userId" : 85
 }</code></pre>
 </div>
 </div>
@@ -1553,7 +1257,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/follower HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjQsImV4cCI6MTY3NTAwMDEyNH0.jn4weUwOsOgX9pwvjCBlhJHwUhhBPiG31b0q4DhOopE
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTYsImV4cCI6MTY3NTU4OTM1Nn0.KteNYTPF3Xbxg66szx0zF1A1Egc9KihnQIwl4eU0M1Q
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1601,7 +1305,7 @@ Content-Length: 197
 
 {
   "data" : [ {
-    "userId" : 61,
+    "userId" : 63,
     "userImage" : null,
     "nickName" : "testNickName1",
     "reviewNum" : 1,
@@ -1621,7 +1325,7 @@ Content-Length: 197
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/following HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjcsImV4cCI6MTY3NTAwMDEyN30.MWmZnrbHHxPYwU0mnFa7JRYNLyo5tf7ymb6tNZqo4NY
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.eCztwcH0Hhh8fS97ELEiSATPo_Ig6DcJ814jVqHUMXs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1669,7 +1373,7 @@ Content-Length: 198
 
 {
   "data" : [ {
-    "userId" : 109,
+    "userId" : 108,
     "userImage" : null,
     "nickName" : "testNickName1",
     "reviewNum" : 1,
@@ -1688,8 +1392,8 @@ Content-Length: 198
 <h4 id="_타인_팔로워_리스트_조회_get_http_request"><a class="link" href="#_타인_팔로워_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/67/follower HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.ir8MJ5XGThh7EU1wJ6eJjpEnTJexIAatbf2Uc7Tx0yo
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/66/follower HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTYsImV4cCI6MTY3NTU4OTM1Nn0.KteNYTPF3Xbxg66szx0zF1A1Egc9KihnQIwl4eU0M1Q
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1737,7 +1441,7 @@ Content-Length: 197
 
 {
   "data" : [ {
-    "userId" : 68,
+    "userId" : 67,
     "userImage" : null,
     "nickName" : "testNickName2",
     "reviewNum" : 0,
@@ -1756,8 +1460,8 @@ Content-Length: 197
 <h4 id="_타인_팔로잉_리스트_조회_get_http_request"><a class="link" href="#_타인_팔로잉_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/82/following HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.ir8MJ5XGThh7EU1wJ6eJjpEnTJexIAatbf2Uc7Tx0yo
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/81/following HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.eCztwcH0Hhh8fS97ELEiSATPo_Ig6DcJ814jVqHUMXs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1805,7 +1509,7 @@ Content-Length: 197
 
 {
   "data" : [ {
-    "userId" : 83,
+    "userId" : 82,
     "userImage" : null,
     "nickName" : "testNickName2",
     "reviewNum" : 0,
@@ -1825,7 +1529,7 @@ Content-Length: 197
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/block HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1873,7 +1577,7 @@ Content-Length: 160
 
 {
   "data" : [ {
-    "userId" : 99,
+    "userId" : 98,
     "userImage" : null,
     "nickName" : "testBlockUserNickName",
     "reviewNum" : 0,
@@ -1893,12 +1597,12 @@ Content-Length: 160
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /user/block HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 92
+  "userId" : 94
 }</code></pre>
 </div>
 </div>
@@ -1984,12 +1688,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /user/block HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjYsImV4cCI6MTY3NTAwMDEyNn0.FYN2ODpqXKQGVZMjIeEajSt9u4gr382nlSYuaSvwU08
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 90
+  "userId" : 92
 }</code></pre>
 </div>
 </div>
@@ -2073,7 +1777,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /user/alarm HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.jYIVpENWcJKYWP7eQgFws3sVnu3I970-CkUW-0g2hbE
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTcsImV4cCI6MTY3NTU4OTM1N30.LCQF19ci4z3wCmhIa4qlbs-D9s57FtD-RjFMBtxuYOw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2162,7 +1866,7 @@ Content-Length: 45
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /user/alarm HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzQ5OTY1MjUsImV4cCI6MTY3NTAwMDEyNX0.jYIVpENWcJKYWP7eQgFws3sVnu3I970-CkUW-0g2hbE
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0VXNlck5hbWUxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NzU1ODU3NTYsImV4cCI6MTY3NTU4OTM1Nn0.EO36u9AQIymdZnIkZhWEwy6RoI6RTeLQywyKDhac9zI
 Host: localhost:8080</code></pre>
 </div>
 </div>

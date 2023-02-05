@@ -75,6 +75,9 @@ class AdminControllerTest extends ControllerTest {
                 .name("test Report").build();
         bakeryAddReportRepository.save(bakeryAddReport);
 
+        BakeryReportImage bakeryReportImage = BakeryReportImage.builder().bakery(bakery).image("testImage").user(user).build();
+        bakeryReportImageRepository.save(bakeryReportImage);
+
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
         ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
         review.addImage(image);
@@ -93,6 +96,7 @@ class AdminControllerTest extends ControllerTest {
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
+        bakeryReportImageRepository.deleteAllInBatch();
         productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
@@ -129,6 +133,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("password").description("관리자 비밀번호")
                         ),
                         responseFields(
+                                fieldWithPath("data.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.accessToken").description("엑세스 토큰"),
                                 fieldWithPath("data.refreshToken").description("리프레시 토큰"),
                                 fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
@@ -161,6 +166,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("refreshToken").description("리프레시 토큰")
                         ),
                         responseFields(
+                                fieldWithPath("data.userId").description("유저 고유 번호"),
                                 fieldWithPath("data.accessToken").description("엑세스 토큰"),
                                 fieldWithPath("data.refreshToken").description("리프레시 토큰"),
                                 fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
@@ -446,9 +452,9 @@ class AdminControllerTest extends ControllerTest {
     }
 
     @Test
-    void getBakeryReviewImages() throws Exception {
+    void getBakeryReportImages() throws Exception {
         mockMvc.perform(get("/admin/bakery/{bakeryId}/image?page=0", bakery.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken()))
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/image",
                         preprocessRequest(prettyPrint()),
@@ -456,6 +462,34 @@ class AdminControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("lastId").optional().description("지난 이미지 마지막 고유 번호 (두번째 페이지부터 필요)")),
+                        responseFields(
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
+                                fieldWithPath("data.contents").description("빵집 제보 이미지 리스트"),
+                                fieldWithPath("data.contents.[].imageId").description("빵집 제보 이미지 고유 번호"),
+                                fieldWithPath("data.contents.[].image").description("빵집 제보 이미지")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getBakeryReviewImages() throws Exception {
+        mockMvc.perform(get("/admin/bakery/{bakeryId}/review/image?page=0", bakery.getId())
+                .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/bakery/review/image",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("lastId").optional().description("지난 이미지 마지막 고유 번호 (두번째 페이지부터 필요)")),
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(

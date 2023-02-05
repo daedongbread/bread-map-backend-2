@@ -47,6 +47,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
+    private final BakeryReportImageRepository bakeryReportImageRepository;
     private final ProductAddReportRepository productAddReportRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
@@ -154,26 +155,28 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryUpdateReport(Long bakeryId, BakeryUpdateRequest request) {
+    public void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateRequest request) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
-                .bakery(bakery).name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
+                .bakery(bakery).user(user).name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryDeleteReport(Long bakeryId, MultipartFile file) throws IOException {
+    public void bakeryDeleteReport(String username, Long bakeryId, MultipartFile file) throws IOException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_DELETE_REPORT_IMAGE, bakeryId);
         String image = s3Uploader.upload(file, imagePath);
 
-        BakeryDeleteReport bakeryDeleteReport = BakeryDeleteReport.builder().bakery(bakery).image(image).build();
+        BakeryDeleteReport bakeryDeleteReport = BakeryDeleteReport.builder().bakery(bakery).user(user).image(image).build();
         bakeryDeleteReportRepository.save(bakeryDeleteReport);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryAddReport(@CurrentUser String username, BakeryReportRequest request) {
+    public void bakeryAddReport(String username, BakeryReportRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
                 .name(request.getName()).location(request.getLocation()).content(request.getContent())
@@ -182,11 +185,25 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void productAddReport(Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException {
+    public void bakeryReportImage(String username, Long bakeryId, List<MultipartFile> files) throws IOException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+
+        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+        for (MultipartFile file : files) {
+            String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_REPORT_IMAGE, bakeryId);
+            String image = s3Uploader.upload(file, imagePath);
+            bakeryReportImageRepository.save(BakeryReportImage.builder().bakery(bakery).image(image).user(user).build());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void productAddReport(String username, Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         ProductAddReport productAddReport = ProductAddReport.builder()
-                .bakery(bakery).name(request.getName()).price(request.getPrice()).build();
+                .bakery(bakery).user(user).name(request.getName()).price(request.getPrice()).build();
 
         if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
         for (MultipartFile file : files) {

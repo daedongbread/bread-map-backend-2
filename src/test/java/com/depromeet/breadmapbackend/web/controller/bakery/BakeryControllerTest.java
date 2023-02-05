@@ -91,6 +91,7 @@ class BakeryControllerTest extends ControllerTest {
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
+        bakeryReportImageRepository.deleteAllInBatch();
         productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
@@ -312,13 +313,29 @@ class BakeryControllerTest extends ControllerTest {
     }
 
     @Test
+    void bakeryReportImage() throws Exception {
+        mockMvc.perform(RestDocumentationRequestBuilders
+                        .fileUpload("/bakery/report/{bakeryId}/image", bakery1.getId())
+                        .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("bakery/report/image",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호"))
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void productAddReport() throws Exception {
         String object = objectMapper.writeValueAsString(ProductReportRequest.builder().name("newBread").price("4000").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/bakery/report/{bakeryId}", bakery1.getId())
+                .fileUpload("/bakery/report/{bakeryId}/product", bakery1.getId())
                 .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
                 .file(request).accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))

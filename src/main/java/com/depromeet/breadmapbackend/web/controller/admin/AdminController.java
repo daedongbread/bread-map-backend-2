@@ -108,10 +108,16 @@ public class AdminController {
 
     @GetMapping("/bakery/{bakeryId}/image")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SliceResponseDto<AdminBakeryReviewImageDto>> getBakeryReviewImages(
-            @PathVariable Long bakeryId,
-            @PageableDefault(size = 30, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId, PageableSortConverter.convertSort(pageable)));
+    public ApiResponse<SliceResponseDto<AdminImageDto>> getBakeryReportImages(
+            @PathVariable Long bakeryId, @RequestParam(required = false) Long lastId, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getBakeryReportImages(bakeryId, lastId, page));
+    }
+
+    @GetMapping("/bakery/{bakeryId}/review/image")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<SliceResponseDto<AdminImageDto>> getBakeryReviewImages(
+            @PathVariable Long bakeryId, @RequestParam(required = false) Long lastId, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId, lastId, page));
     }
 
     @DeleteMapping("/bakery/{bakeryId}")

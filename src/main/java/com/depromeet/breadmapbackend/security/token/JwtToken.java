@@ -1,18 +1,17 @@
 package com.depromeet.breadmapbackend.security.token;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtToken {
-    private final String accessToken;
-    private final String refreshToken;
-    private final Long accessTokenExpiredDate;
-
-    @Builder
-    public JwtToken(String accessToken, String refreshToken, Long accessTokenExpiredDate) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.accessTokenExpiredDate = accessTokenExpiredDate;
-    }
+    private Long userId;
+    private String accessToken;
+    private String refreshToken;
+    private Long accessTokenExpiredDate;
 }

@@ -1,8 +1,12 @@
 package com.depromeet.breadmapbackend.security.token;
 
+import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.properties.CustomJWTKeyProperties;
+import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.domain.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -26,6 +30,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final CustomJWTKeyProperties customJWTKeyProperties;
     private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hour/
     private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 day
@@ -44,6 +50,13 @@ public class JwtTokenProvider {
     }
 
     public JwtToken createJwtToken(String username, String role) {
+        Long id = null;
+        if (role.equals(RoleType.USER.getCode())) {
+            id = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND)).getId();
+        } else if (role.equals(RoleType.ADMIN.getCode())) {
+            id = adminRepository.findByEmail(username).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND)).getId();
+        }
+
         Claims claims = Jwts.claims().setSubject(username);
         claims.put(ROLES, role);
 
@@ -62,7 +75,7 @@ public class JwtTokenProvider {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
-        return JwtToken.builder()
+        return JwtToken.builder().userId(id)
                 .accessToken(accessToken).refreshToken(refreshToken)
                 .accessTokenExpiredDate(accessTokenExpiredDate).build();
     }

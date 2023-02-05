@@ -4,11 +4,13 @@ import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.NoticeTokenDeleteEvent;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeRepository;
 import com.depromeet.breadmapbackend.domain.notice.repository.NoticeTokenRepository;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewStatus;
 import com.depromeet.breadmapbackend.domain.review.repository.*;
 import com.depromeet.breadmapbackend.domain.user.BlockUser;
@@ -22,11 +24,9 @@ import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.service.S3Uploader;
-import com.depromeet.breadmapbackend.web.controller.user.dto.UserReviewDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -89,52 +89,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ProfileDto myProfile(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Integer followingNum = followRepository.countByFromUser(user);
-        Integer followerNum = followRepository.countByToUser(user);
-
-        List<UserFlagDto> userFlagList = flagRepository.findByUser(user).stream()
-                .map(flag -> UserFlagDto.builder()
-                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
-                        .flagImageList(flag.getFlagBakeryList().stream().limit(3)
-                                .map(flagBakery -> flagBakery.getBakery().getImage())
-                                .collect(Collectors.toList())).build())
-                .collect(Collectors.toList());
-        List<UserReviewDto> userReviewList = reviewRepository.findByUser(user)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(UserReviewDto::new)
-                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
-                .collect(Collectors.toList());
-
-        return ProfileDto.builder().user(user)
-                .followingNum(followingNum).followerNum(followerNum)
-                .userFlagList(userFlagList).userReviewList(userReviewList).isFollow(false).build();
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public ProfileDto otherProfile(String username, Long userId) {
+    public ProfileDto profile(String username, Long userId) {
         User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User other = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Integer followingNum = followRepository.countByFromUser(other);
         Integer followerNum = followRepository.countByToUser(other);
         Boolean isFollow = followRepository.findByFromUserAndToUser(me, other).isPresent();
-        List<UserFlagDto> userFlagList = flagRepository.findByUser(other).stream()
-                .map(flag -> UserFlagDto.builder()
-                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
-                        .flagImageList(flag.getFlagBakeryList().stream().limit(3)
-                                .map(flagBakery -> flagBakery.getBakery().getImage())
-                                .collect(Collectors.toList())).build())
-                .collect(Collectors.toList());
-        List<UserReviewDto> userReviewList = reviewRepository.findByUser(other)
-                .stream().filter(rv -> rv.getStatus().equals(ReviewStatus.UNBLOCK))
-                .map(UserReviewDto::new)
-                .sorted(Comparator.comparing(UserReviewDto::getId).reversed())
-                .collect(Collectors.toList());
 
-        return ProfileDto.builder().user(other)
-                .followingNum(followingNum).followerNum(followerNum)
-                .userFlagList(userFlagList).userReviewList(userReviewList).isFollow(isFollow).build();
+        return ProfileDto.builder().user(other).followingNum(followingNum).followerNum(followerNum).isFollow(isFollow).build();
     }
 
     @Transactional(rollbackFor = Exception.class)

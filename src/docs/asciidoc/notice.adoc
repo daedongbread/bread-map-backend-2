@@ -11,24 +11,10 @@
 
 == APIs
 - 알림 토큰 추가 API
-- 오늘 알림 조회 API
-- 이번주 알림 조회 API
-- 이번주 이전 알림 조회 API
+- 알림 조회 API
 
 === 알림 토큰 추가 API [POST]
 operation::notice/token/add[snippets='http-request,request-headers,request-fields,http-response']
 
-=== 오늘 알림 조회 API [GET]
-오늘 알림 조회
-
-operation::notice[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 이번주 알림 조회 API [GET]
-엔드포인트 : /notice/week, 이외에는 오늘 알림 조회와 같음
-
-이번주 월요일부터 어제까지의 알림 조회
-
-=== 이번주 이전 알림 조회 API [GET]
-엔드포인트 : /notice/before, 이외에는 오늘 알림 조회와 같음
-
-저번주 일요일 전의 알림 조회
+=== 알림 조회 API [GET]
+operation::notice[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
