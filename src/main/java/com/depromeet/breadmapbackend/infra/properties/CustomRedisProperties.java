@@ -35,5 +35,11 @@ public class CustomRedisProperties {
         private final String refresh;
         @NotBlank(message = "해당값은 필수 값입니다")
         private final String adminRefresh;
+        @NotBlank(message = "해당값은 필수 값입니다")
+        private final String bakeryReview;
+        @NotBlank(message = "해당값은 필수 값입니다")
+        private final String productReview;
+        @NotBlank(message = "해당값은 필수 값입니다")
+        private final String userReview;
     }
 }

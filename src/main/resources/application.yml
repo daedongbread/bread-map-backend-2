@@ -26,6 +26,9 @@ spring:
       access: access
       refresh: refresh
       admin-refresh: adminRefresh
+      bakery-review: bakeryReview
+      product-review: productReview
+      user-review: userReview
   jpa:
     open-in-view: false
   security:

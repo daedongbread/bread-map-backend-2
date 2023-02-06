@@ -21,7 +21,7 @@ public class BakeryUpdateReport extends BaseEntity {
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

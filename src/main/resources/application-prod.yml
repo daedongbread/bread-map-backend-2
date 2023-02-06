@@ -38,6 +38,9 @@ spring:
       access: ${REDIS_KEY_ACCESS}
       refresh: ${REDIS_KEY_REFRESH}
       admin-refresh: ${REDIS_KEY_ADMIN_REFRESH}
+      bakery-review: ${REDIS_KEY_BAKERY_REVIEW}
+      product-review: ${REDIS_KEY_PRODUCT_REVIEW}
+      user-review: ${REDIS_KEY_USER_REVIEW}
   security:
     oauth2:
       client:

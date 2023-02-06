@@ -126,8 +126,6 @@ class ReviewControllerTest extends ControllerTest {
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
                                 parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)"),
-                                parameterWithName("lastId").optional().description("지난 리뷰 마지막 고유 번호 (최신순(latest) 조회 시 두번째 페이지부터 필요)"),
-                                parameterWithName("lastRating").optional().description("지난 리뷰 마지막 평균점수 (별점(high, low) 조회 시 두번째 페이지부터 필요"),
                                 parameterWithName("page").description("현재 페이지 번호 (0부터)")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
@@ -181,8 +179,6 @@ class ReviewControllerTest extends ControllerTest {
                                 parameterWithName("productId").description("상품 고유 번호")),
                         requestParameters(
                                 parameterWithName("sortBy").description("정렬 방법 (latest, high, low) (default = latest)"),
-                                parameterWithName("lastId").optional().description("지난 리뷰 마지막 고유 번호 (최신순(latest) 조회 시 두번째 페이지부터 필요)"),
-                                parameterWithName("lastRating").optional().description("지난 리뷰 마지막 평균점수 (별점(high, low) 조회 시 두번째 페이지부터 필요"),
                                 parameterWithName("page").description("현재 페이지 번호 (0부터)")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
