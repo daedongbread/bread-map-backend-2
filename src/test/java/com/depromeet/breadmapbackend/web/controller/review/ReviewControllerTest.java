@@ -155,6 +155,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
                                 fieldWithPath("data.contents.[].reviewInfo.imageList").description("리뷰 이미지"),
                                 fieldWithPath("data.contents.[].reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.contents.[].reviewInfo.isLike").description("리뷰 좋아요 여부"),
                                 fieldWithPath("data.contents.[].reviewInfo.likeNum").description("리뷰 좋아요 수"),
                                 fieldWithPath("data.contents.[].reviewInfo.commentNum").description("리뷰 댓글 수"),
                                 fieldWithPath("data.contents.[].reviewInfo.createdAt").description("리뷰 생성일"),
@@ -207,6 +208,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
                                 fieldWithPath("data.contents.[].reviewInfo.imageList").description("리뷰 이미지"),
                                 fieldWithPath("data.contents.[].reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.contents.[].reviewInfo.isLike").description("리뷰 좋아요 여부"),
                                 fieldWithPath("data.contents.[].reviewInfo.likeNum").description("리뷰 좋아요 수"),
                                 fieldWithPath("data.contents.[].reviewInfo.commentNum").description("리뷰 댓글 수"),
                                 fieldWithPath("data.contents.[].reviewInfo.createdAt").description("리뷰 생성일"),
@@ -257,6 +259,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents.[].reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
                                 fieldWithPath("data.contents.[].reviewInfo.imageList").description("리뷰 이미지"),
                                 fieldWithPath("data.contents.[].reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.contents.[].reviewInfo.isLike").description("리뷰 좋아요 여부"),
                                 fieldWithPath("data.contents.[].reviewInfo.likeNum").description("리뷰 좋아요 수"),
                                 fieldWithPath("data.contents.[].reviewInfo.commentNum").description("리뷰 댓글 수"),
                                 fieldWithPath("data.contents.[].reviewInfo.createdAt").description("리뷰 생성일"),
@@ -301,6 +304,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.reviewDto.reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
                                 fieldWithPath("data.reviewDto.reviewInfo.imageList").description("리뷰 이미지"),
                                 fieldWithPath("data.reviewDto.reviewInfo.content").description("리뷰 내용"),
+                                fieldWithPath("data.reviewDto.reviewInfo.isLike").description("리뷰 좋아요 여부"),
                                 fieldWithPath("data.reviewDto.reviewInfo.likeNum").description("리뷰 좋아요 수"),
                                 fieldWithPath("data.reviewDto.reviewInfo.commentNum").description("리뷰 댓글 수"),
                                 fieldWithPath("data.reviewDto.reviewInfo.createdAt").description("리뷰 생성일"),
@@ -332,76 +336,15 @@ class ReviewControllerTest extends ControllerTest {
                         ReviewRequest.NoExistProductRatingRequest.builder()
                                 .productType(ProductType.BREAD).productName("fakeBread2").rating(4L).build()
                 )).content("review add test").build());
-
-        mockMvc.perform(post("/review/{bakeryId}", bakery.getId())
-                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("review/add",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestFields(
-                                fieldWithPath("productRatingList").description("리뷰 상품 점수 리스트"),
-                                fieldWithPath("productRatingList.[].productId").description("리뷰 상품 고유 번호"),
-                                fieldWithPath("productRatingList.[].rating").description("리뷰 상품 점수"),
-                                fieldWithPath("noExistProductRatingRequestList").description("빵집에 없는 상품 점수 리스트"),
-                                fieldWithPath("noExistProductRatingRequestList.[].productType").description("상품 타입"),
-                                fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
-                                fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
-                                fieldWithPath("content").description("리뷰 내용")
-                        ),
-                        responseFields(
-                                fieldWithPath("data.reviewId").description("리뷰 고유 번호")
-                        )
-                ))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-//    @Transactional
-    void addReviewImage() throws Exception {
-        mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/review/{reviewId}/image", review1.getId())
-                .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("review/add/image",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
-                        requestParts(
-                                partWithName("files").description("리뷰 이미지들")
-                        )
-                ))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-//    @Transactional
-    void addReviewTest() throws Exception {
-        String object = objectMapper.writeValueAsString(ReviewRequest.builder()
-                .productRatingList(Arrays.asList(
-                        ReviewRequest.ProductRatingRequest.builder().productId(product1.getId()).rating(5L).build(),
-                        ReviewRequest.ProductRatingRequest.builder().productId(product2.getId()).rating(4L).build()
-                ))
-                .noExistProductRatingRequestList(Arrays.asList(
-                        ReviewRequest.NoExistProductRatingRequest.builder()
-                                .productType(ProductType.BREAD).productName("fakeBread1").rating(5L).build(),
-                        ReviewRequest.NoExistProductRatingRequest.builder()
-                                .productType(ProductType.BREAD).productName("fakeBread2").rating(4L).build()
-                )).content("review add test").build());
         MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
         mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/review/{bakeryId}/test", bakery.getId())
+                .fileUpload("/review/{bakeryId}", bakery.getId())
                 .file(new MockMultipartFile("files", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
                 .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("review/addTest",
+                .andDo(document("review/add",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),

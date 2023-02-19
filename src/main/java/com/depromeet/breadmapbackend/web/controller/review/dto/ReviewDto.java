@@ -65,6 +65,7 @@ public class ReviewDto {
         private List<String> imageList;
         private String content;
 
+        private Boolean isLike;
         private Integer likeNum;
         private Integer commentNum;
         private String createdAt;
@@ -72,11 +73,12 @@ public class ReviewDto {
         private Double averageRating;
 
         @Builder
-        public ReviewInfo(Review review) {
+        public ReviewInfo(Review review, Boolean isLike) {
             this.id = review.getId();
             this.productRatingList = review.getRatings().stream().map(ProductRatingDto::new).collect(Collectors.toList());
             this.imageList = review.getImageList().stream().map(ReviewImage::getImage).collect(Collectors.toList());
             this.content = review.getContent();
+            this.isLike = isLike;
             this.likeNum = review.getLikes().size();
             this.commentNum = (int) review.getComments().stream().filter(reviewComment -> reviewComment.getUser() != null).count();
             this.createdAt = review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -87,9 +89,9 @@ public class ReviewDto {
     }
 
     @Builder
-    public ReviewDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe) {
+    public ReviewDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe, Boolean isLike) {
         this.bakeryInfo = BakeryInfo.builder().bakery(review.getBakery()).build();
         this.userInfo = UserInfo.builder().review(review).reviewNum(reviewNum).followerNum(followerNum).isFollow(isFollow).isMe(isMe).build();
-        this.reviewInfo = ReviewInfo.builder().review(review).build();
+        this.reviewInfo = ReviewInfo.builder().review(review).isLike(isLike).build();
     }
 }
