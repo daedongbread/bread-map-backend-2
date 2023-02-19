@@ -17,10 +17,10 @@ public class ReviewDetailDto {
     private List<SimpleReviewDto> bakeryOtherReviews;
 
     @Builder
-    public ReviewDetailDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe,
+    public ReviewDetailDto(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe, Boolean isLike,
                            List<SimpleReviewDto> userOtherReviews, List<SimpleReviewDto> bakeryOtherReviews) {
         this.reviewDto = ReviewDto.builder()
-                .review(review).reviewNum(reviewNum).followerNum(followerNum).isFollow(isFollow).isMe(isMe).build();
+                .review(review).reviewNum(reviewNum).followerNum(followerNum).isFollow(isFollow).isMe(isMe).isLike(isLike).build();
         this.userOtherReviews = userOtherReviews;
         this.bakeryOtherReviews = bakeryOtherReviews;
     }
