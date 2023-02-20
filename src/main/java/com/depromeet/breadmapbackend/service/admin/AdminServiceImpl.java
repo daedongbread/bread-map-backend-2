@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.service.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.admin.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.admin.repository.AdminRepository;
 import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
@@ -10,6 +11,9 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.product.ProductAddReport;
+import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
+import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportImageRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
@@ -66,6 +70,7 @@ public class AdminServiceImpl implements AdminService{
     private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
     private final BakeryReportImageRepository bakeryReportImageRepository;
     private final ProductAddReportRepository productAddReportRepository;
+    private final ProductAddReportImageRepository productAddReportImageRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
     private final FlagBakeryRepository flagBakeryRepository;
@@ -552,31 +557,17 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public SliceResponseDto<AdminImageDto> getBakeryReportImages(Long bakeryId, Long lastId, int page) {
+    public PageResponseDto<AdminImageDto> getAdminBakeryImages(Long bakeryId, int page, AdminBakeryImageType type) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         PageRequest pageable = PageRequest.of(page, 30, Sort.by("createdAt").descending());
 
-        Slice<BakeryReportImage> bakeryReportImageSlice;
-        if (lastId == null && page == 0) bakeryReportImageSlice = bakeryReportImageRepository.findSliceByBakery(bakery, pageable);
-        else if (lastId != null && page != 0) {
-            bakeryReportImageSlice = bakeryReportImageRepository.findSliceByBakeryAndIdLessThan(bakery, lastId, pageable);
-        }
-        else throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
-        return SliceResponseDto.of(bakeryReportImageSlice, AdminImageDto::new);
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public SliceResponseDto<AdminImageDto> getBakeryReviewImages(Long bakeryId, Long lastId, int page) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        PageRequest pageable = PageRequest.of(page, 30, Sort.by("createdAt").descending());
-
-        Slice<ReviewImage> reviewImageSlice;
-        if (lastId == null && page == 0) reviewImageSlice = reviewImageRepository.findSliceByBakery(bakery, pageable);
-        else if (lastId != null && page != 0) {
-            reviewImageSlice = reviewImageRepository.findSliceByBakeryAndIdLessThan(bakery, lastId, pageable);
-        }
-        else throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
-        return SliceResponseDto.of(reviewImageSlice, AdminImageDto::new);
+        if (type.equals(AdminBakeryImageType.BAKERY)) {
+            return PageResponseDto.of(bakeryReportImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
+        } else if (type.equals(AdminBakeryImageType.PRODUCT)) {
+            return PageResponseDto.of(productAddReportImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
+        } else if (type.equals(AdminBakeryImageType.REVIEW)) {
+            return PageResponseDto.of(reviewImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
+        } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
     }
 
     @Transactional(rollbackFor = Exception.class)

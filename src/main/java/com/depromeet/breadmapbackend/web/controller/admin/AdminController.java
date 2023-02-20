@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.web.controller.admin;
 
+import com.depromeet.breadmapbackend.domain.admin.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
@@ -108,16 +109,9 @@ public class AdminController {
 
     @GetMapping("/bakery/{bakeryId}/image")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SliceResponseDto<AdminImageDto>> getBakeryReportImages(
-            @PathVariable Long bakeryId, @RequestParam(required = false) Long lastId, @RequestParam int page) {
-        return new ApiResponse<>(adminService.getBakeryReportImages(bakeryId, lastId, page));
-    }
-
-    @GetMapping("/bakery/{bakeryId}/review/image")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SliceResponseDto<AdminImageDto>> getBakeryReviewImages(
-            @PathVariable Long bakeryId, @RequestParam(required = false) Long lastId, @RequestParam int page) {
-        return new ApiResponse<>(adminService.getBakeryReviewImages(bakeryId, lastId, page));
+    public ApiResponse<PageResponseDto<AdminImageDto>> getAdminBakeryImages(
+            @PathVariable Long bakeryId, @RequestParam AdminBakeryImageType type, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getAdminBakeryImages(bakeryId, page, type));
     }
 
     @DeleteMapping("/bakery/{bakeryId}")

@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.product.ProductAddReport;
+import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
@@ -51,7 +52,6 @@ public class BakeryServiceImpl implements BakeryService {
     private final ProductAddReportRepository productAddReportRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
-    private final CustomAWSS3Properties customAwss3Properties;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> findBakeryList
@@ -189,11 +189,14 @@ public class BakeryServiceImpl implements BakeryService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
-        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-        for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_REPORT_IMAGE, bakeryId);
-            String image = s3Uploader.upload(file, imagePath);
-            bakeryReportImageRepository.save(BakeryReportImage.builder().bakery(bakery).image(image).user(user).build());
+        if (files != null) {
+            if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
+                String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_REPORT_IMAGE, bakeryId);
+                String image = s3Uploader.upload(file, imagePath);
+                bakeryReportImageRepository.save(BakeryReportImage.builder().bakery(bakery).image(image).user(user).build());
+            }
         }
     }
 
@@ -204,14 +207,18 @@ public class BakeryServiceImpl implements BakeryService {
 
         ProductAddReport productAddReport = ProductAddReport.builder()
                 .bakery(bakery).user(user).name(request.getName()).price(request.getPrice()).build();
-
-        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-        for (MultipartFile file : files) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageType.PRODUCT_ADD_REPORT_IMAGE, bakeryId);
-            String image = s3Uploader.upload(file, imagePath);
-            productAddReport.addImage(image);
-        }
         productAddReportRepository.save(productAddReport);
+
+        if (files != null) {
+            if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
+                String imagePath = fileConverter.parseFileInfo(file, ImageType.PRODUCT_ADD_REPORT_IMAGE, bakeryId);
+                String image = s3Uploader.upload(file, imagePath);
+                ProductAddReportImage.builder().productAddReport(productAddReport).image(image).build();
+//                productAddReport.addImage(image);
+            }
+        }
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

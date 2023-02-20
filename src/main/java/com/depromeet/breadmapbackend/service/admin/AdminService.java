@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.service.admin;
 
+import com.depromeet.breadmapbackend.domain.admin.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
@@ -23,8 +24,7 @@ public interface AdminService {
     void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void deleteProduct(Long bakeryId, Long productId);
-    SliceResponseDto<AdminImageDto> getBakeryReportImages(Long bakeryId, Long lastId, int page);
-    SliceResponseDto<AdminImageDto> getBakeryReviewImages(Long bakeryId, Long lastId, int page);
+    PageResponseDto<AdminImageDto> getAdminBakeryImages(Long bakeryId, int page, AdminBakeryImageType type);
     void deleteBakery(Long bakeryId);
     PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable);
     BakeryAddReportDto getBakeryReport(Long reportId);

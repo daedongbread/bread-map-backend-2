@@ -97,6 +97,7 @@ class AdminControllerTest extends ControllerTest {
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
+        productAddReportImageRepository.deleteAllInBatch();
         productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();
@@ -452,8 +453,8 @@ class AdminControllerTest extends ControllerTest {
     }
 
     @Test
-    void getBakeryReportImages() throws Exception {
-        mockMvc.perform(get("/admin/bakery/{bakeryId}/image?page=0", bakery.getId())
+    void getBakeryImages() throws Exception {
+        mockMvc.perform(get("/admin/bakery/{bakeryId}/image?type=bakery&page=0", bakery.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/image",
@@ -463,43 +464,17 @@ class AdminControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("lastId").optional().description("지난 이미지 마지막 고유 번호 (두번째 페이지부터 필요)")),
-                        responseFields(
-                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
-                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
-                                fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
-                                fieldWithPath("data.contents").description("빵집 제보 이미지 리스트"),
-                                fieldWithPath("data.contents.[].imageId").description("빵집 제보 이미지 고유 번호"),
-                                fieldWithPath("data.contents.[].image").description("빵집 제보 이미지")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void getBakeryReviewImages() throws Exception {
-        mockMvc.perform(get("/admin/bakery/{bakeryId}/review/image?page=0", bakery.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("admin/bakery/review/image",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호"),
-                                parameterWithName("lastId").optional().description("지난 이미지 마지막 고유 번호 (두번째 페이지부터 필요)")),
-                        requestParameters(
+                                parameterWithName("type").optional().description("이미지 종류 (bakery, product, review)"),
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
                                 fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
                                 fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.hasNext").description("다음 slice 존재 여부"),
-                                fieldWithPath("data.contents").description("빵집 리뷰 이미지 리스트"),
-                                fieldWithPath("data.contents.[].imageId").description("빵집 리뷰 이미지 고유 번호"),
-                                fieldWithPath("data.contents.[].image").description("빵집 리뷰 이미지")
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("빵집 제보 이미지 리스트"),
+                                fieldWithPath("data.contents.[].imageId").description("빵집 제보 이미지 고유 번호"),
+                                fieldWithPath("data.contents.[].image").description("빵집 제보 이미지")
                         )
                 ))
                 .andExpect(status().isOk());
