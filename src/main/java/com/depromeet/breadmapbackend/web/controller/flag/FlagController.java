@@ -20,10 +20,10 @@ import java.util.List;
 public class FlagController {
     private final FlagService flagService;
 
-    @GetMapping
+    @GetMapping("/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<FlagDto>> findFlags(@CurrentUser String username) {
-        return new ApiResponse<>(flagService.findFlags(username));
+    public ApiResponse<List<FlagDto>> findFlags(@PathVariable Long userId) {
+        return new ApiResponse<>(flagService.findFlags(userId));
     }
 
     @PostMapping
@@ -45,8 +45,8 @@ public class FlagController {
     }
     @GetMapping("/{flagId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<FlagBakeryDto>> findBakeryByFlag(@CurrentUser String username, @PathVariable Long flagId) {
-        return new ApiResponse<>(flagService.findBakeryByFlag(username, flagId));
+    public ApiResponse<List<FlagBakeryDto>> findBakeryByFlag(@PathVariable Long flagId) {
+        return new ApiResponse<>(flagService.findBakeryByFlag(flagId));
     }
 
     @PostMapping("/{flagId}")

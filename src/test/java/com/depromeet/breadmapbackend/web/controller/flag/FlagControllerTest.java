@@ -88,13 +88,14 @@ class FlagControllerTest extends ControllerTest {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
-        mockMvc.perform(get("/flag")
+        mockMvc.perform(get("/flag/user/{userId}", user.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("flag/find",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("userId").description("유저 고유번호")),
                         responseFields(
                                 fieldWithPath("data.[].flagId").description("깃발 고유번호"),
                                 fieldWithPath("data.[].name").description("깃발 이름"),

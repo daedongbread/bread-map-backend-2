@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum DaedongStatus {
     // 400 BAD REQUEST
+    BLOCK_MYSELF(BAD_REQUEST, 40012, "cannot block myself"), // 나를 차단/차단 해제할 때
     BAKERY_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40020, "invalid bakery sort type"), // 빵집 정렬 조건이 틀렸을 때
     FLAG_COLOR_EXCEPTION(BAD_REQUEST, 40040, "invalid flag color"), // 올바르지 않은 깃발 색깔일 때
     FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 40041,"unedit flag"), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
@@ -36,20 +37,20 @@ public enum DaedongStatus {
     REJOIN_RESTRICT(FORBIDDEN, 40311, "rejoin is not possible within 7 days of withdrawal"), // 탈퇴한지 7일이 지나지 않았는데 재가입 시
 
     // 404 NOT FOUND
-    USER_NOT_FOUND(NOT_FOUND, 40010, "user not found"), // 유저가 존재하지 않을 때
-    FOLLOW_NOT_FOUND(NOT_FOUND, 40011, "follow not found"), // 팔로우가 되어 있지 않을 때
-    BLOCK_NOT_FOUND(NOT_FOUND, 40012, "block not found"), // 차단하지 않은 유저일 때
-    BAKERY_NOT_FOUND(NOT_FOUND, 40020, "bakery not found"), // 빵집이 존재하지 않을 때
-    PRODUCT_NOT_FOUND(NOT_FOUND, 40030, "product not found"), // 상품이 존재하지 않을 때
-    FLAG_NOT_FOUND(NOT_FOUND, 40040, "flag not found"), // 존재하지 않은 리스트일 때
+    USER_NOT_FOUND(NOT_FOUND, 40410, "user not found"), // 유저가 존재하지 않을 때
+    FOLLOW_NOT_FOUND(NOT_FOUND, 40411, "follow not found"), // 팔로우가 되어 있지 않을 때
+    BLOCK_NOT_FOUND(NOT_FOUND, 40412, "block not found"), // 차단하지 않은 유저일 때
+    BAKERY_NOT_FOUND(NOT_FOUND, 40420, "bakery not found"), // 빵집이 존재하지 않을 때
+    PRODUCT_NOT_FOUND(NOT_FOUND, 40430, "product not found"), // 상품이 존재하지 않을 때
+    FLAG_NOT_FOUND(NOT_FOUND, 40440, "flag not found"), // 존재하지 않은 리스트일 때
     FLAG_BAKERY_NOT_FOUND(NOT_FOUND, 40041, "bakery not found in flag"), // 해당 리스트에 없는 빵집일 때
-    REVIEW_NOT_FOUND(NOT_FOUND, 40050, "review not found"), // 존재하지 않은 리뷰일 때
-    REVIEW_COMMENT_NOT_FOUND(NOT_FOUND, 40051, "review comment not found"), // 존재하지 않은 리뷰일 때
-    NOTICE_TOKEN_NOT_FOUND(NOT_FOUND, 40060, "notice token not found"), // 알림 토큰이 존재하지 않을 때
-    ADMIN_NOT_FOUND(NOT_FOUND, 40090, "admin not found"), // 관리자가 존재하지 않을 때
-    BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40091, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
-    REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40092, "review report not found"), // 존재하지 않는 리뷰 신고일 때
-    ADMIN_IMAGE_NOT_FOUND(NOT_FOUND, 40094, "admin image not found"), // 존재하지 않는 관리자 이미지일 때
+    REVIEW_NOT_FOUND(NOT_FOUND, 40450, "review not found"), // 존재하지 않은 리뷰일 때
+    REVIEW_COMMENT_NOT_FOUND(NOT_FOUND, 40451, "review comment not found"), // 존재하지 않은 리뷰일 때
+    NOTICE_TOKEN_NOT_FOUND(NOT_FOUND, 40460, "notice token not found"), // 알림 토큰이 존재하지 않을 때
+    ADMIN_NOT_FOUND(NOT_FOUND, 40490, "admin not found"), // 관리자가 존재하지 않을 때
+    BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40491, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
+    REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40492, "review report not found"), // 존재하지 않는 리뷰 신고일 때
+    ADMIN_IMAGE_NOT_FOUND(NOT_FOUND, 40494, "admin image not found"), // 존재하지 않는 관리자 이미지일 때
 
 
 
