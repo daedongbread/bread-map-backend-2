@@ -293,53 +293,7 @@ class UserControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void myFollowerList() throws Exception {
-        mockMvc.perform(get("/user/follower")
-                .header("Authorization", "Bearer " + token2.getAccessToken()))
-                .andDo(print())
-                .andDo(document("user/me/follower",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        responseFields(
-                                fieldWithPath("data.[].userId").description("팔로워 유저 고유번호"),
-                                fieldWithPath("data.[].userImage").description("팔로워 유저 이미지"),
-                                fieldWithPath("data.[].nickName").description("팔로워 유저 닉네임"),
-                                fieldWithPath("data.[].reviewNum").description("팔로워 유저 리뷰 수"),
-                                fieldWithPath("data.[].followerNum").description("팔로워 유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("팔로워 유저 팔로우 여부"),
-                                fieldWithPath("data.[].isMe").description("팔로워 유저 본인 여부 : 항상 false")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-//    @Transactional
-    void myFollowingList() throws Exception {
-        mockMvc.perform(get("/user/following")
-                .header("Authorization", "Bearer " + token2.getAccessToken()))
-                .andDo(print())
-                .andDo(document("user/me/following",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        responseFields(
-                                fieldWithPath("data.[].userId").description("팔로잉 유저 고유번호"),
-                                fieldWithPath("data.[].userImage").description("팔로잉 유저 이미지"),
-                                fieldWithPath("data.[].nickName").description("팔로잉 유저 닉네임"),
-                                fieldWithPath("data.[].reviewNum").description("팔로잉 유저 리뷰 수"),
-                                fieldWithPath("data.[].followerNum").description("팔로잉 유저 팔로워 수"),
-                                fieldWithPath("data.[].isFollow").description("팔로잉 유저 팔로우 여부"),
-                                fieldWithPath("data.[].isMe").description("팔로잉 유저 본인 여부 : 항상 false")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-//    @Transactional
-    void otherFollowerList() throws Exception {
+    void followerList() throws Exception {
         mockMvc.perform(get("/user/{userId}/follower", user1.getId())
                 .header("Authorization", "Bearer " + token2.getAccessToken()))
                 .andDo(print())
@@ -362,7 +316,7 @@ class UserControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void otherFollowingList() throws Exception {
+    void followingList() throws Exception {
         mockMvc.perform(get("/user/{userId}/following", user1.getId())
                 .header("Authorization", "Bearer " + token2.getAccessToken()))
                 .andDo(print())

@@ -190,35 +190,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FollowUserDto> myFollowerList(String username) { // 나를 팔로우한 사람
-        User toUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        return followRepository.findByToUser(toUser).stream()
-                .map(follow -> new FollowUserDto(
-                        follow.getFromUser(),
-                        reviewRepository.countByUser(follow.getFromUser()),
-                        followRepository.countByToUser(follow.getFromUser()),
-                        followRepository.findByFromUserAndToUser(toUser, follow.getFromUser()).isPresent(), // 내가 팔로우 했는지
-                        false
-                ))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FollowUserDto> myFollowingList(String username) { // 내가 팔로우한 사람
-        User fromUser = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        return followRepository.findByFromUser(fromUser).stream()
-                .map(follow -> new FollowUserDto(
-                        follow.getToUser(),
-                        reviewRepository.countByUser(follow.getToUser()),
-                        followRepository.countByToUser(follow.getToUser()),
-                        followRepository.findByFromUserAndToUser(fromUser, follow.getToUser()).isPresent(), // 내가 팔로우 했는지
-                        false
-                ))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FollowUserDto> otherFollowerList(String username, Long userId) { // 타인을 팔로우한 사람
+    public List<FollowUserDto> followerList(String username, Long userId) { // 나를 팔로우한 사람
         User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User toUser = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         return followRepository.findByToUser(toUser).stream()
@@ -233,7 +205,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FollowUserDto> otherFollowingList(String username, Long userId) { // 타인이 팔로우한 사람
+    public List<FollowUserDto> followingList(String username, Long userId) { // 내가 팔로우한 사람
         User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         return followRepository.findByFromUser(fromUser).stream()
