@@ -92,6 +92,7 @@ class BakeryControllerTest extends ControllerTest {
         bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
+        productAddReportImageRepository.deleteAllInBatch();
         productAddReportRepository.deleteAllInBatch();
         flagBakeryRepository.deleteAllInBatch();
         flagRepository.deleteAllInBatch();

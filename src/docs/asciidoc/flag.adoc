@@ -19,7 +19,7 @@
 - 깃발에 등록된 빵집 삭제 API
 
 === 깃발 리스트 조회 API [GET]
-operation::flag/find[snippets='http-request,request-headers,http-response,response-fields']
+operation::flag/find[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 깃발 추가 API [POST]
 operation::flag/add[snippets='http-request,request-headers,request-fields,http-response']

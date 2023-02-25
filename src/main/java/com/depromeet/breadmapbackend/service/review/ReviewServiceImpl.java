@@ -55,11 +55,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> bakeryReviews = reviewQueryRepository.findBakeryReview(me, bakery, sortBy, page);
         List<ReviewDto> contents = bakeryReviews.getContent().stream()
-                .map(e -> new ReviewDto(e,
-                        reviewRepository.countByUser(e.getUser()),
-                        followRepository.countByToUser(e.getUser()),
-                        followRepository.findByFromUserAndToUser(me, e.getUser()).isPresent(),
-                        me.equals(e.getUser())))
+                .map(review -> new ReviewDto(review,
+                        reviewRepository.countByUser(review.getUser()),
+                        followRepository.countByToUser(review.getUser()),
+                        followRepository.findByFromUserAndToUser(me, review.getUser()).isPresent(),
+                        me.equals(review.getUser()),
+                        reviewLikeRepository.findByUserAndReview(me, review).isPresent()))
                 .collect(Collectors.toList());
         return PageResponseDto.of(bakeryReviews, contents);
     }
@@ -72,11 +73,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> productReviews = reviewQueryRepository.findProductReview(me, bakery, product, sortBy, page);
         List<ReviewDto> contents = productReviews.getContent().stream()
-                .map(e -> new ReviewDto(e,
-                        reviewRepository.countByUser(e.getUser()),
-                        followRepository.countByToUser(e.getUser()),
-                        followRepository.findByFromUserAndToUser(me, e.getUser()).isPresent(),
-                        me.equals(e.getUser())))
+                .map(review -> new ReviewDto(review,
+                        reviewRepository.countByUser(review.getUser()),
+                        followRepository.countByToUser(review.getUser()),
+                        followRepository.findByFromUserAndToUser(me, review.getUser()).isPresent(),
+                        me.equals(review.getUser()),
+                        reviewLikeRepository.findByUserAndReview(me, review).isPresent()))
                 .collect(Collectors.toList());
         return PageResponseDto.of(productReviews, contents);
     }
@@ -88,11 +90,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> userReviews = reviewQueryRepository.findUserReview(me, user, page);
         List<ReviewDto> contents = userReviews.getContent().stream()
-                .map(e -> new ReviewDto(e,
-                        reviewRepository.countByUser(e.getUser()),
-                        followRepository.countByToUser(e.getUser()),
-                        followRepository.findByFromUserAndToUser(me, e.getUser()).isPresent(),
-                        me.equals(e.getUser())))
+                .map(review -> new ReviewDto(review,
+                        reviewRepository.countByUser(review.getUser()),
+                        followRepository.countByToUser(review.getUser()),
+                        followRepository.findByFromUserAndToUser(me, review.getUser()).isPresent(),
+                        me.equals(review.getUser()),
+                        reviewLikeRepository.findByUserAndReview(me, review).isPresent()))
                 .collect(Collectors.toList());
         return PageResponseDto.of(userReviews, contents);
     }
@@ -117,13 +120,14 @@ public class ReviewServiceImpl implements ReviewService {
                 .followerNum(followRepository.countByToUser(review.getUser()))
                 .isFollow(followRepository.findByFromUserAndToUser(user, review.getUser()).isPresent())
                 .isMe(user.equals(review.getUser()))
+                .isLike(reviewLikeRepository.findByUserAndReview(user, review).isPresent())
                 .userOtherReviews(userOtherReviews)
                 .bakeryOtherReviews(bakeryOtherReviews)
                 .build();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ReviewAddDto addReview(String username, Long bakeryId, ReviewRequest request) {
+    public void addReview(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
@@ -158,71 +162,16 @@ public class ReviewServiceImpl implements ReviewService {
             });
         }
 
-        return ReviewAddDto.builder().reviewId(review.getId()).build();
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void addReviewImage(String username, Long reviewId, List<MultipartFile> files) throws IOException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Review review = reviewRepository.findByIdAndUser(reviewId, user)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
-        Bakery bakery = review.getBakery();
-
-        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-        for (MultipartFile file : files) {
-            if (file == null || file.isEmpty()) continue;
-            String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
-            String image = s3Uploader.upload(file, imagePath);
-            ReviewImage reviewImage = ReviewImage.builder()
-                    .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
-            review.addImage(reviewImage);
-        }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void addReviewTest(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-
-        Review review = Review.builder()
-                .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
-        reviewRepository.save(review);
-
-        if(request.getProductRatingList() != null) {
-            request.getProductRatingList().forEach(productRatingRequest -> {
-                Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
-                if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
-                    ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
-                            .product(product).review(review).rating(productRatingRequest.getRating()).build();
-                    reviewProductRatingRepository.save(reviewProductRating);
-                    review.addRating(reviewProductRating);
-                }
-            });
-        }
-
-        if(request.getNoExistProductRatingRequestList() != null) {
-            request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
-                if(productRepository.findByBakeryAndName(bakery, noExistProductRatingRequest.getProductName()).isPresent())
-                    throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
-                Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
-                        .name(noExistProductRatingRequest.getProductName())
-                        .price("0").bakery(bakery).isTrue(false).build();
-                productRepository.save(product);
-                ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
-                        .product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
-                reviewProductRatingRepository.save(reviewProductRating);
-                review.addRating(reviewProductRating);
-            });
-        }
-
-        if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-        for (MultipartFile file : files) {
-            if (file == null || file.isEmpty()) continue;
-            String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
-            String image = s3Uploader.upload(file, imagePath);
-            ReviewImage reviewImage = ReviewImage.builder()
-                    .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
-            review.addImage(reviewImage);
+        if (files != null) {
+            if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
+                String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
+                String image = s3Uploader.upload(file, imagePath);
+                ReviewImage reviewImage = ReviewImage.builder()
+                        .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
+                review.addImage(reviewImage);
+            }
         }
     }
 

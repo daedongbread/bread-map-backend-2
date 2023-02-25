@@ -1,11 +1,12 @@
 package com.depromeet.breadmapbackend.service.admin;
 
+import com.depromeet.breadmapbackend.domain.admin.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
-import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,11 +24,14 @@ public interface AdminService {
     void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void deleteProduct(Long bakeryId, Long productId);
-    SliceResponseDto<AdminImageDto> getBakeryReportImages(Long bakeryId, Long lastId, int page);
-    SliceResponseDto<AdminImageDto> getBakeryReviewImages(Long bakeryId, Long lastId, int page);
+    PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType type, int page);
+    void updateBakeryImage(Long bakeryId, AdminImageUpdateRequest request);
+    void updateProductImage(Long productId, AdminImageUpdateRequest request);
+    ResponseEntity<byte[]> downloadAdminImage(String image) throws IOException;
+    void deleteAdminImage(Long bakeryId, Long imageId, AdminBakeryImageType type);
     void deleteBakery(Long bakeryId);
-    PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable);
-    BakeryAddReportDto getBakeryReport(Long reportId);
+    PageResponseDto<SimpleBakeryAddReportDto> getBakeryAddReportList(Pageable pageable);
+    BakeryAddReportDto getBakeryAddReport(Long reportId);
     void updateBakeryAddReportStatus(Long reportId, BakeryReportStatusUpdateRequest request);
     PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable);
     void updateReviewStatus(Long reportId);

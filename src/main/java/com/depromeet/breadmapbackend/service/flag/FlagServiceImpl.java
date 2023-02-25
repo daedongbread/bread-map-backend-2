@@ -37,8 +37,8 @@ public class FlagServiceImpl implements FlagService {
     private final BakeryRepository bakeryRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FlagDto> findFlags(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public List<FlagDto> findFlags(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         return flagRepository.findByUser(user).stream()
                 .map(flag -> FlagDto.builder()
                         .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
@@ -82,7 +82,7 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FlagBakeryDto> findBakeryByFlag(String username, Long flagId) { // TODO page?
+    public List<FlagBakeryDto> findBakeryByFlag(Long flagId) { // TODO page?
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
         return flagBakeryRepository.findByFlag(flag).stream()
                 .sorted(Comparator.comparing(FlagBakery::getCreatedAt).reversed())

@@ -35,8 +35,8 @@ public class ProductAddReport extends BaseEntity {
     @Column(nullable = false)
     private String price;
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> images = new ArrayList<>();
+    @OneToMany(mappedBy = "productAddReport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductAddReportImage> images = new ArrayList<>();
 
     @Builder
     public ProductAddReport(Bakery bakery, User user, String name, String price) {
@@ -46,7 +46,7 @@ public class ProductAddReport extends BaseEntity {
         this.price = price;
     }
 
-    public void addImage(String image) {
+    public void addImage(ProductAddReportImage image) {
         this.images.add(image);
     }
 }
