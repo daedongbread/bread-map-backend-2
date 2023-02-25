@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.common.converter;
 
+import com.depromeet.breadmapbackend.domain.admin.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.exception.DaedongException;
 import com.depromeet.breadmapbackend.domain.exception.DaedongStatus;

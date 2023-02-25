@@ -23,6 +23,7 @@ public enum DaedongStatus {
     IMAGE_NUM_EXCEED_EXCEPTION(BAD_REQUEST, 40082, "image number exceed"), // 이미지 개수가 초과될 때
     ADMIN_KEY_EXCEPTION(BAD_REQUEST, 40090, "invalid admin key"), // 관리자 회원가입에서 키가 틀렸을 때
     ADMIN_PAGE_EXCEPTION(BAD_REQUEST, 40091, "invalid admin page request"), // 관리자 관련 페이지 조건이 틀렸을 때
+    ADMIN_IMAGE_TYPE_EXCEPTION(BAD_REQUEST, 40092, "invalid admin image type"), // 관리자 관련 이미지 조건이 틀렸을 때  TODO
 
 
     // 401 UNAUTHORIZED
@@ -48,6 +49,7 @@ public enum DaedongStatus {
     ADMIN_NOT_FOUND(NOT_FOUND, 40090, "admin not found"), // 관리자가 존재하지 않을 때
     BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40091, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
     REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40092, "review report not found"), // 존재하지 않는 리뷰 신고일 때
+    ADMIN_IMAGE_NOT_FOUND(NOT_FOUND, 40094, "admin image not found"), // 존재하지 않는 관리자 이미지일 때
 
 
 

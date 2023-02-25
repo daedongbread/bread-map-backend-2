@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.infra;
 
+import com.depromeet.breadmapbackend.domain.common.converter.AdminBakeryImageTypeConverter;
 import com.depromeet.breadmapbackend.domain.common.converter.BakerySortTypeConverter;
 import com.depromeet.breadmapbackend.domain.common.converter.NoticeDayTypeConverter;
 import com.depromeet.breadmapbackend.domain.common.converter.ReviewSortTypeConverter;
@@ -31,5 +32,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new BakerySortTypeConverter());
         registry.addConverter(new ReviewSortTypeConverter());
         registry.addConverter(new NoticeDayTypeConverter());
+        registry.addConverter(new AdminBakeryImageTypeConverter());
     }
 }

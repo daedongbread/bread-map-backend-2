@@ -28,10 +28,7 @@
 === 토큰 재발급 API [POST]
 operation::user/reissue[snippets='http-request,request-fields,http-response,response-fields']
 
-=== 본인 프로필 조회 API [GET]
-operation::user/me[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 타인 프로필 조회 API [GET]
+=== 프로필 조회 API [GET]
 operation::user/profile[snippets='http-request,request-headers,http-response,response-fields']
 
 === 닉네임 업데이트 API [PATCH]

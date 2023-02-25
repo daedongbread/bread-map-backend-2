@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,10 @@ public class S3Uploader {
         return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
     }
 
+    public void copy(String oldSource, String newSource) {
+        amazonS3Client.copyObject(customAwss3Properties.getBucket(), oldSource, customAwss3Properties.getBucket(), newSource);
+    }
+
     public String get(String fileName) {
         return customAwss3Properties.getCloudFront() + "/" + fileName;
     }
@@ -69,6 +74,17 @@ public class S3Uploader {
     private String getS3(String fileName) {
         log.info("get file : " + fileName);
         return amazonS3Client.getUrl(customAwss3Properties.getCloudFront(), fileName).toString();
+    }
+
+    /*
+     * 파일 다운로드
+     */
+    public byte[] getObject(String fileName) throws IOException{
+        fileName = fileName.replace(customAwss3Properties.getCloudFront() + "/", "");
+        log.info("Download file : " + fileName);
+        S3Object o = amazonS3Client.getObject(new GetObjectRequest(customAwss3Properties.getBucket(), fileName));
+        S3ObjectInputStream objectInputStream = o.getObjectContent();
+        return IOUtils.toByteArray(objectInputStream);
     }
 
     // delete file
