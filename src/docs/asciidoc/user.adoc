@@ -46,16 +46,10 @@ operation::user/follow[snippets='http-request,request-headers,request-fields,htt
 === 언팔로우 API [DELETE]
 operation::user/unfollow[snippets='http-request,request-headers,request-fields,http-response']
 
-=== 본인 팔로워 리스트 조회 [GET]
-operation::user/me/follower[snippets='http-request,request-headers,http-response']
-
-=== 본인 팔로잉 리스트 조회 [GET]
-operation::user/me/following[snippets='http-request,request-headers,http-response']
-
-=== 타인 팔로워 리스트 조회 [GET]
+=== 팔로워 리스트 조회 [GET]
 operation::user/follower[snippets='http-request,request-headers,http-response']
 
-=== 타인 팔로잉 리스트 조회 [GET]
+=== 팔로잉 리스트 조회 [GET]
 operation::user/following[snippets='http-request,request-headers,http-response']
 
 === 차단 리스트 조회 [GET]
