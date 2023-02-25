@@ -11,12 +11,9 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.domain.product.ProductAddReport;
-import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportImageRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
-import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewProductRatingRepository;
@@ -29,6 +26,7 @@ import com.depromeet.breadmapbackend.infra.feign.dto.SgisTranscoordDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisTokenDto;
 import com.depromeet.breadmapbackend.infra.feign.dto.SgisGeocodeDto;
 import com.depromeet.breadmapbackend.infra.feign.exception.SgisFeignException;
+import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.infra.properties.CustomJWTKeyProperties;
 import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.infra.properties.CustomSGISKeyProperties;
@@ -38,12 +36,15 @@ import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.SimpleBakeryAddReportDto;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
-import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -86,6 +88,7 @@ public class AdminServiceImpl implements AdminService{
     private final CustomRedisProperties customRedisProperties;
     private final CustomJWTKeyProperties customJWTKeyProperties;
     private final CustomSGISKeyProperties customSGISKeyProperties;
+    private final CustomAWSS3Properties customAWSS3Properties;
 
     @Transactional(rollbackFor = Exception.class)
     public void adminJoin(AdminJoinRequest request) {
@@ -557,9 +560,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<AdminImageDto> getAdminBakeryImages(Long bakeryId, int page, AdminBakeryImageType type) {
+    public PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType type, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        PageRequest pageable = PageRequest.of(page, 30, Sort.by("createdAt").descending());
+        PageRequest pageable = PageRequest.of(page, 16, Sort.by("createdAt").descending());
 
         if (type.equals(AdminBakeryImageType.BAKERY)) {
             return PageResponseDto.of(bakeryReportImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
@@ -568,6 +571,55 @@ public class AdminServiceImpl implements AdminService{
         } else if (type.equals(AdminBakeryImageType.REVIEW)) {
             return PageResponseDto.of(reviewImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
         } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
+    }
+
+    @Transactional
+    public void updateBakeryImage(Long bakeryId, AdminImageUpdateRequest request) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+        String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+        s3Uploader.copy(oldImage, newImage);
+        s3Uploader.deleteFileS3(oldImage);
+        bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+        // TODO 기존 이미지가 이미 삭제되어서 S3에 없는거면?
+    }
+
+    @Transactional
+    public void updateProductImage(Long productId, AdminImageUpdateRequest request) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + productId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+        s3Uploader.copy(oldImage, newImage);
+        s3Uploader.deleteFileS3(oldImage);
+        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+        // TODO 기존 이미지가 이미 삭제되어서 S3에 없는거면?
+    }
+
+    @Transactional
+    public ResponseEntity<byte[]> downloadAdminImage(String image) throws IOException {
+        byte[] bytes = s3Uploader.getObject(image);
+        String fileName = URLEncoder.encode(image.replace(customAWSS3Properties.getCloudFront() + "/", ""), "UTF-8").replaceAll("\\+", "%20");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+    }
+
+    @Transactional
+    public void deleteAdminImage(Long bakeryId, Long imageId, AdminBakeryImageType type) { // TODO : bakeryId
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+
+        if (type.equals(AdminBakeryImageType.BAKERY)) {
+//            if () 등록된거면 삭제?
+            bakeryReportImageRepository.delete(bakeryReportImageRepository.findById(imageId).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_IMAGE_NOT_FOUND)));
+        } else if (type.equals(AdminBakeryImageType.PRODUCT)) {
+            productAddReportImageRepository.delete(productAddReportImageRepository.findById(imageId).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_IMAGE_NOT_FOUND)));
+        } else if (type.equals(AdminBakeryImageType.REVIEW)) {
+            // TODO
+        } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
+
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -585,13 +637,13 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<SimpleBakeryAddReportDto> getBakeryReportList(Pageable pageable) {
+    public PageResponseDto<SimpleBakeryAddReportDto> getBakeryAddReportList(Pageable pageable) {
         Page<BakeryAddReport> all = bakeryAddReportRepository.findPageAll(pageable);
         return PageResponseDto.of(all, SimpleBakeryAddReportDto::new);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public BakeryAddReportDto getBakeryReport(Long reportId) {
+    public BakeryAddReportDto getBakeryAddReport(Long reportId) {
         BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findById(reportId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_REPORT_NOT_FOUND));
         return BakeryAddReportDto.builder().bakeryAddReport(bakeryAddReport).build();
     }

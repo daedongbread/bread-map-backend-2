@@ -49,6 +49,7 @@ public enum DaedongStatus {
     ADMIN_NOT_FOUND(NOT_FOUND, 40090, "admin not found"), // 관리자가 존재하지 않을 때
     BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40091, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
     REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40092, "review report not found"), // 존재하지 않는 리뷰 신고일 때
+    ADMIN_IMAGE_NOT_FOUND(NOT_FOUND, 40094, "admin image not found"), // 존재하지 않는 관리자 이미지일 때
 
 
 

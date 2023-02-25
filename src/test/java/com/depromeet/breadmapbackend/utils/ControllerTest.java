@@ -14,8 +14,10 @@ import com.depromeet.breadmapbackend.domain.user.repository.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.repository.UserRepository;
 import com.depromeet.breadmapbackend.infra.EmbeddedRedisConfig;
+import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.service.S3Uploader;
 import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.service.flag.FlagService;
@@ -142,4 +144,10 @@ public abstract class ControllerTest {
 
     @Autowired
     protected AdminService adminService;
+
+    @Autowired
+    protected S3Uploader s3Uploader;
+
+    @Autowired
+    protected CustomAWSS3Properties customAWSS3Properties;
 }

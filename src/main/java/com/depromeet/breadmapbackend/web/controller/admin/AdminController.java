@@ -8,7 +8,6 @@ import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.PageableSortConverter;
-import com.depromeet.breadmapbackend.web.controller.common.SliceResponseDto;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,9 +109,32 @@ public class AdminController {
 
     @GetMapping("/bakery/{bakeryId}/image")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminImageDto>> getAdminBakeryImages(
+    public ApiResponse<PageResponseDto<AdminImageDto>> getAdminImages(
             @PathVariable Long bakeryId, @RequestParam AdminBakeryImageType type, @RequestParam int page) {
-        return new ApiResponse<>(adminService.getAdminBakeryImages(bakeryId, page, type));
+        return new ApiResponse<>(adminService.getAdminImages(bakeryId, type, page));
+    }
+
+    @PatchMapping("/bakery/{bakeryId}/image")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateBakeryImage(@PathVariable Long bakeryId, @RequestBody @Validated(ValidationSequence.class) AdminImageUpdateRequest request) {
+        adminService.updateBakeryImage(bakeryId, request);
+    }
+
+    @PatchMapping("/product/{productId}/image")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateProductImage(@PathVariable Long productId, @RequestBody @Validated(ValidationSequence.class) AdminImageUpdateRequest request) {
+        adminService.updateProductImage(productId, request);
+    }
+
+    @GetMapping("/image")
+    public ResponseEntity<byte[]> downloadAdminImage(@RequestParam String image) throws IOException {
+        return adminService.downloadAdminImage(image);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}/image/{imageId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAdminImage(@PathVariable Long bakeryId, @PathVariable Long imageId, @RequestParam AdminBakeryImageType type) {
+        adminService.deleteAdminImage(bakeryId, imageId, type);
     }
 
     @DeleteMapping("/bakery/{bakeryId}")
@@ -122,15 +145,15 @@ public class AdminController {
 
     @GetMapping("/bakery/report")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryReportList(
+    public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryAddReportList(
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getBakeryReportList(PageableSortConverter.convertSort(pageable)));
+        return new ApiResponse<>(adminService.getBakeryAddReportList(PageableSortConverter.convertSort(pageable)));
     }
 
     @GetMapping("/bakery/report/{reportId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<BakeryAddReportDto> getBakeryReport(@PathVariable Long reportId) {
-        return new ApiResponse<>(adminService.getBakeryReport(reportId));
+    public ApiResponse<BakeryAddReportDto> getBakeryAddReport(@PathVariable Long reportId) {
+        return new ApiResponse<>(adminService.getBakeryAddReport(reportId));
     }
 
     @PatchMapping("/bakery/report/{reportId}")
