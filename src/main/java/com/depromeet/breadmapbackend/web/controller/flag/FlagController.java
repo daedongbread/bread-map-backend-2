@@ -45,7 +45,7 @@ public class FlagController {
     }
     @GetMapping("/{flagId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<FlagBakeryDto>> findBakeryByFlag(@PathVariable Long flagId) {
+    public ApiResponse<FlagBakeryDto> findBakeryByFlag(@PathVariable Long flagId) {
         return new ApiResponse<>(flagService.findBakeryByFlag(flagId));
     }
 

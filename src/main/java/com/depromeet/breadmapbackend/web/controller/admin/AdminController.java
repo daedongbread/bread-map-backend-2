@@ -57,9 +57,8 @@ public class AdminController {
 
     @GetMapping("/bakery")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.getBakeryList(PageableSortConverter.convertSort(pageable)));
+    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(@RequestParam int page) {
+        return new ApiResponse<>(adminService.getBakeryList(page));
     }
 
     @GetMapping("/bakery/{bakeryId}")
@@ -71,9 +70,8 @@ public class AdminController {
     @GetMapping("/bakery/search")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
-            @RequestParam String name,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminService.searchBakeryList(name, PageableSortConverter.convertSort(pageable)));
+            @RequestParam String name, @RequestParam int page) {
+        return new ApiResponse<>(adminService.searchBakeryList(name, page));
     }
 
     @GetMapping("/bakery/location")
