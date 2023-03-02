@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,16 +37,14 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> autoComplete(String word, Double latitude, Double longitude) {
-        return bakeryRepository.findByNameStartsWith(word).stream()
+        return bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakeryId(bakery.getId()).bakeryName(bakery.getName())
                         .reviewNum(bakery.getReviewList().size())
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
-                                * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
-                .sorted(Comparator.comparing(SearchDto::getDistance))
-                .limit(10)
+                                * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
+                                + sin(toRadians(latitude)) * sin(toRadians(bakery.getLatitude()))) * 6371000)).build())
                 .collect(Collectors.toList());
     }
 
@@ -58,7 +57,7 @@ public class SearchServiceImpl implements SearchService {
         redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + username, word, Double.parseDouble(time));
         redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + username, -(10 + 1), -(10 + 1));
 
-        return bakeryRepository.findByNameStartsWith(word).stream()
+        return  bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakeryId(bakery.getId()).bakeryName(bakery.getName())
                         .reviewNum(bakery.getReviewList().size())
@@ -66,8 +65,6 @@ public class SearchServiceImpl implements SearchService {
                                 * cos(toRadians(bakery.getLatitude()))
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
                                 + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
-                .sorted(Comparator.comparing(SearchDto::getDistance))
-                .limit(10)
                 .collect(Collectors.toList());
     }
 

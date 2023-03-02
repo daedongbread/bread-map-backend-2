@@ -17,9 +17,9 @@ public interface AdminService {
     JwtToken adminLogin(AdminLoginRequest request);
     JwtToken reissue(ReissueRequest reissueRequest);
     AdminBarDto getAdminBar();
-    PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable);
+    PageResponseDto<AdminSimpleBakeryDto> getBakeryList(int page);
     AdminBakeryDto getBakery(Long bakeryId);
-    PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable);
+    PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page);
     BakeryLocationDto getBakeryLatitudeLongitude(String address);
     void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
     void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;

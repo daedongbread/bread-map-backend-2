@@ -97,9 +97,10 @@ class FlagControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("userId").description("유저 고유번호")),
                         responseFields(
-                                fieldWithPath("data.[].flagId").description("깃발 고유번호"),
-                                fieldWithPath("data.[].name").description("깃발 이름"),
-                                fieldWithPath("data.[].color")
+                                fieldWithPath("data.[].flagInfo").description("깃발 정보"),
+                                fieldWithPath("data.[].flagInfo.id").description("깃발 고유번호"),
+                                fieldWithPath("data.[].flagInfo.name").description("깃발 이름"),
+                                fieldWithPath("data.[].flagInfo.color")
                                         .description("깃발 색깔 (ORANGE(\"주황색\"),\n" +
                                                 "GREEN(\"초록색\"),\n" +
                                                 "YELLOW(\"노란색\"),\n" +
@@ -215,15 +216,30 @@ class FlagControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("flagId").description("깃발 고유번호")),
                         responseFields(
-                                fieldWithPath("data.[].image").description("빵집 이미지"),
-                                fieldWithPath("data.[].id").description("빵집 고유 번호"),
-                                fieldWithPath("data.[].name").description("빵집 이름"),
-                                fieldWithPath("data.[].flagNum").description("빵집 가봤어요 수"),
-                                fieldWithPath("data.[].rating").description("빵집 평점"),
-                                fieldWithPath("data.[].reviewNum").description("빵집 리뷰 수"),
-                                fieldWithPath("data.[].simpleReviewList").description("빵집 리뷰 리스트"),
-                                fieldWithPath("data.[].simpleReviewList.[].id").description("빵집 리뷰 아이디"),
-                                fieldWithPath("data.[].simpleReviewList.[].content").description("빵집 리뷰 내용")
+                                fieldWithPath("data.flagInfo").description("깃발 정보"),
+                                fieldWithPath("data.flagInfo.id").description("깃발 고유번호"),
+                                fieldWithPath("data.flagInfo.name").description("깃발 이름"),
+                                fieldWithPath("data.flagInfo.color")
+                                        .description("깃발 색깔 (ORANGE(\"주황색\"),\n" +
+                                                "GREEN(\"초록색\"),\n" +
+                                                "YELLOW(\"노란색\"),\n" +
+                                                "CYAN(\"청록색\"),\n" +
+                                                "BLUE(\"초록색\"),\n" +
+                                                "SKY(\"하늘색\"),\n" +
+                                                "NAVY(\"네이비색\"),\n" +
+                                                "PURPLE(\"보라색\"),\n" +
+                                                "RED(\"빨간색\"),\n" +
+                                                "PINK(\"핑크색\"))"),
+                                fieldWithPath("data.flagBakeryInfoList").description("깃발에 속한 빵집 리스트"),
+                                fieldWithPath("data.flagBakeryInfoList.[].image").description("빵집 이미지"),
+                                fieldWithPath("data.flagBakeryInfoList.[].id").description("빵집 고유 번호"),
+                                fieldWithPath("data.flagBakeryInfoList.[].name").description("빵집 이름"),
+                                fieldWithPath("data.flagBakeryInfoList.[].flagNum").description("빵집 가봤어요 수"),
+                                fieldWithPath("data.flagBakeryInfoList.[].rating").description("빵집 평점"),
+                                fieldWithPath("data.flagBakeryInfoList.[].reviewNum").description("빵집 리뷰 수"),
+                                fieldWithPath("data.flagBakeryInfoList.[].simpleReviewList").description("빵집 리뷰 리스트 (3개)"),
+                                fieldWithPath("data.flagBakeryInfoList.[].simpleReviewList.[].id").description("빵집 리뷰 아이디"),
+                                fieldWithPath("data.flagBakeryInfoList.[].simpleReviewList.[].content").description("빵집 리뷰 내용")
                         )
                 ))
                 .andExpect(status().isOk());

@@ -38,10 +38,10 @@ public class AdminBakeryDto {
         this.latitude = bakery.getLatitude();
         this.longitude = bakery.getLongitude();
         this.hours = bakery.getHours();
-        this.websiteURL = bakery.getWebsiteURL();
-        this.instagramURL = bakery.getInstagramURL();
-        this.facebookURL = bakery.getFacebookURL();
-        this.blogURL = bakery.getBlogURL();
+        this.websiteURL = bakery.getBakeryURL().getWebsiteURL();
+        this.instagramURL = bakery.getBakeryURL().getInstagramURL();
+        this.facebookURL = bakery.getBakeryURL().getFacebookURL();
+        this.blogURL = bakery.getBakeryURL().getBlogURL();
         this.phoneNumber = bakery.getPhoneNumber();
         this.facilityInfoList = bakery.getFacilityInfoList();
         this.status = bakery.getStatus();

@@ -41,7 +41,7 @@ public class FlagServiceImpl implements FlagService {
         User user = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         return flagRepository.findByUser(user).stream()
                 .map(flag -> FlagDto.builder()
-                        .flagId(flag.getId()).name(flag.getName()).color(flag.getColor())
+                        .flag(flag)
                         .bakeryImageList(flag.getFlagBakeryList().stream()
                                 .sorted(Comparator.comparing(FlagBakery::getCreatedAt)).limit(3)
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
@@ -82,23 +82,23 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<FlagBakeryDto> findBakeryByFlag(Long flagId) { // TODO page?
+    public FlagBakeryDto findBakeryByFlag(Long flagId) { // TODO page?
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
-        return flagBakeryRepository.findByFlag(flag).stream()
-                .sorted(Comparator.comparing(FlagBakery::getCreatedAt).reversed())
-                .map(flagBakery -> FlagBakeryDto.builder()
-                        .bakery(flagBakery.getBakery())
-//                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getBreadReviewList().stream().map(BreadReview::getRating)
-//                                .mapToInt(Integer::intValue).toArray()).average().orElse(0)*10)/10.0)
-                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
-                                .stream().map(br -> {
-                                    return Arrays.stream(br.getRatings().stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
-                                }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
-                        .reviewNum(flagBakery.getBakery().getReviewList().size())
-                        .simpleReviewList(flagBakery.getBakery().getReviewList().stream()
-                                .sorted(Comparator.comparing(Review::getCreatedAt).reversed()).map(MapSimpleReviewDto::new)
-                                .limit(3).collect(Collectors.toList())).build())
-                .collect(Collectors.toList());
+        return FlagBakeryDto.builder().flag(flag)
+                .flagBakeryInfoList(
+                        flagBakeryRepository.findByFlag(flag).stream()
+                                .sorted(Comparator.comparing(FlagBakery::getCreatedAt).reversed())
+                                .map(flagBakery -> FlagBakeryDto.FlagBakeryInfo.builder()
+                                        .bakery(flagBakery.getBakery())
+                                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
+                                                .stream().map(br -> {
+                                                    return Arrays.stream(br.getRatings().stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
+                                                }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
+                                        .reviewNum(flagBakery.getBakery().getReviewList().size())
+                                        .simpleReviewList(flagBakery.getBakery().getReviewList().stream()
+                                                .sorted(Comparator.comparing(Review::getCreatedAt).reversed()).map(MapSimpleReviewDto::new)
+                                                .limit(3).collect(Collectors.toList())).build())
+                        .collect(Collectors.toList())).build();
     }
 
     @Transactional(rollbackFor = Exception.class)
