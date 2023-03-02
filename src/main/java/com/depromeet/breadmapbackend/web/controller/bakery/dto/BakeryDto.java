@@ -44,10 +44,10 @@ public class BakeryDto {
             this.reviewNum = reviewNum;
             this.address = bakery.getAddress();
             this.hours = bakery.getHours();
-            this.websiteURL = bakery.getWebsiteURL();
-            this.instagramURL = bakery.getInstagramURL();
-            this.facebookURL = bakery.getFacebookURL();
-            this.blogURL = bakery.getBlogURL();
+            this.websiteURL = bakery.getBakeryURL().getWebsiteURL();
+            this.instagramURL = bakery.getBakeryURL().getInstagramURL();
+            this.facebookURL = bakery.getBakeryURL().getFacebookURL();
+            this.blogURL = bakery.getBakeryURL().getBlogURL();
             this.phoneNumber = bakery.getPhoneNumber();
         }
     }

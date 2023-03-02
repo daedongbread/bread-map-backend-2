@@ -49,6 +49,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -141,8 +142,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(Pageable pageable) {
-        Page<Bakery> all = bakeryRepository.findPageAll(pageable);
+    public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(@RequestParam int page) {
+        PageRequest pageRequest = PageRequest.of(page, 20);
+        Page<Bakery> all = bakeryRepository.findPageAll(pageRequest);
         return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 
@@ -156,8 +158,9 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, Pageable pageable) {
-        Page<Bakery> all = bakeryRepository.findByNameContains(name, pageable);
+    public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 20);
+        Page<Bakery> all = bakeryRepository.findByNameContainsOrderByUpdatedAt(name, pageRequest);
         return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
     }
 

@@ -6,17 +6,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
-public class FlagDto {
-    private FlagInfo flagInfo;
-    private List<String> bakeryImageList;
+public class FlagInfo {
+    private Long id;
+    private String name;
+    private FlagColor color;
 
     @Builder
-    public FlagDto(Flag flag, List<String> bakeryImageList) {
-        this.flagInfo = FlagInfo.builder().flag(flag).build();
-        this.bakeryImageList = bakeryImageList;
+    public FlagInfo(Flag flag) {
+        this.id = flag.getId();
+        this.name = flag.getName();
+        this.color = flag.getColor();
     }
 }

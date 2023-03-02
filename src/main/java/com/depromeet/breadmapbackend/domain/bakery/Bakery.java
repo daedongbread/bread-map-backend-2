@@ -34,13 +34,8 @@ public class Bakery extends BaseEntity {
 
     private String phoneNumber;
 
-    private String websiteURL;
-
-    private String instagramURL;
-
-    private String facebookURL;
-
-    private String blogURL;
+    @Embedded
+    private BakeryURL bakeryURL;
 
     private String image;
 
@@ -78,16 +73,18 @@ public class Bakery extends BaseEntity {
         this.address = address;
         this.hours = hours;
         this.phoneNumber = phoneNumber;
-        this.websiteURL = websiteURL;
-        this.instagramURL = instagramURL;
-        this.facebookURL = facebookURL;
-        this.blogURL = blogURL;
+        this.bakeryURL = BakeryURL.builder()
+                .websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
         this.flagNum = 0;
         this.user = user;
         this.facilityInfoList = facilityInfoList;
         this.status = status;
         this.views = 0;
     }
+
+//    public BakeryURL getBakeryURL() {
+//        return this.bakeryURL == null ? new BakeryURL() : this.bakeryURL;
+//    }
 
     public void addFlagNum() {
         this.flagNum += 1;
@@ -113,10 +110,7 @@ public class Bakery extends BaseEntity {
         this.longitude = longitude;
         this.hours = hours;
         this.phoneNumber = phoneNumber;
-        this.websiteURL = websiteURL;
-        this.instagramURL = instagramURL;
-        this.facebookURL = facebookURL;
-        this.blogURL = blogURL;
+        this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
         this.facilityInfoList = facilityInfoList;
         this.status = status;
     }
