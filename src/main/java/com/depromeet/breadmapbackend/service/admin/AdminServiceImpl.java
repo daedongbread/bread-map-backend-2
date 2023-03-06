@@ -635,17 +635,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page, Long lastId) {
+    public PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
-        Page<ProductAddReport> contents;
-        if (page == 0) {
-            contents = productAddReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
-        } else {
-            if (lastId == null) throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
-            else contents = productAddReportRepository.findPageByBakeryAndIdLessThan(bakery, lastId, pageable); // TODO N+1
-        }
+        Page<ProductAddReport> contents = productAddReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
         return PageResponseDto.of(contents, ProductAddReportDto::new);
     }
 
@@ -669,17 +663,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page, Long lastId) {
+    public PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
-        Page<BakeryUpdateReport> contents;
-        if (page == 0) {
-            contents = bakeryUpdateReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
-        } else {
-            if (lastId == null) throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
-            else contents = bakeryUpdateReportRepository.findPageByBakeryAndIdLessThan(bakery, lastId, pageable); // TODO N+1
-        }
+        Page<BakeryUpdateReport> contents = bakeryUpdateReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
         return PageResponseDto.of(contents, BakeryUpdateReportDto::new);
     }
 

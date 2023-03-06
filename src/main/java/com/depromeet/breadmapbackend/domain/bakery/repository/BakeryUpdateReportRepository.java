@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface BakeryUpdateReportRepository extends JpaRepository<BakeryUpdateReport, Long> {
     Page<BakeryUpdateReport> findPageByBakery(Bakery bakery, Pageable pageable);
-    Page<BakeryUpdateReport> findPageByBakeryAndIdLessThan(Bakery bakery, Long lastId, Pageable pageable);
     Optional<BakeryUpdateReport> findByIdAndBakery(Long id, Bakery bakery);
     void deleteByIdAndBakery(Long id, Bakery bakery);
     void deleteByBakery(Bakery bakery);

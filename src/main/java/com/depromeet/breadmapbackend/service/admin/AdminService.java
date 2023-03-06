@@ -29,10 +29,10 @@ public interface AdminService {
     void updateProductImage(Long productId, AdminImageUpdateRequest request);
     ResponseEntity<byte[]> downloadAdminImage(String image) throws IOException;
     void deleteAdminImage(Long bakeryId, Long imageId, AdminBakeryImageType type);
-    PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page, Long lastId);
+    PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page);
     void updateProductAddImage(Long bakeryId, Long reportId, ProductAddImageUpdateRequest request);
     void deleteProductAddReport(Long bakeryId, Long reportId);
-    PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page, Long lastId);
+    PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page);
     void changeBakeryUpdateReport(Long bakeryId, Long reportId);
     void deleteBakeryUpdateReport(Long bakeryId, Long reportId);
     void deleteBakery(Long bakeryId);

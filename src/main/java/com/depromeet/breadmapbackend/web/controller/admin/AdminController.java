@@ -138,8 +138,8 @@ public class AdminController {
     @GetMapping("/bakery/{bakeryId}/productAddReport")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ProductAddReportDto>> getProductAddReports(
-            @PathVariable Long bakeryId, @RequestParam int page, @RequestParam(required = false) Long lastId) {
-        return new ApiResponse<>(adminService.getProductAddReports(bakeryId, page, lastId));
+            @PathVariable Long bakeryId, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getProductAddReports(bakeryId, page));
     }
 
     @PatchMapping("/bakery/{bakeryId}/productAddReport/{reportId}")
@@ -159,8 +159,8 @@ public class AdminController {
     @GetMapping("/bakery/{bakeryId}/updateReport")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<BakeryUpdateReportDto>> getBakeryUpdateReports(
-            @PathVariable Long bakeryId, @RequestParam int page, @RequestParam(required = false) Long lastId) {
-        return new ApiResponse<>(adminService.getBakeryUpdateReports(bakeryId, page, lastId));
+            @PathVariable Long bakeryId, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getBakeryUpdateReports(bakeryId, page));
     }
 
     @PatchMapping("/bakery/{bakeryId}/updateReport/{reportId}")

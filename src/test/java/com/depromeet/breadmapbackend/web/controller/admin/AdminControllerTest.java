@@ -617,9 +617,7 @@ class AdminControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("lastId").optional()
-                                        .description("마지막으로 조회한 상품 추가 제보 고유 번호 (page가 0일때는 없어도 됨)")
+                                parameterWithName("page").description("페이지 번호")
                         ),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
@@ -693,9 +691,7 @@ class AdminControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("lastId").optional()
-                                        .description("마지막으로 조회한 상품 추가 제보 고유 번호 (page가 0일때는 없어도 됨)")
+                                parameterWithName("page").description("페이지 번호")
                         ),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),

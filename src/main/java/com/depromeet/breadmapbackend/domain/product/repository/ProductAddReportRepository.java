@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface ProductAddReportRepository extends JpaRepository<ProductAddReport, Long> {
     Page<ProductAddReport> findPageByBakery(Bakery bakery, Pageable pageable);
-    Page<ProductAddReport> findPageByBakeryAndIdLessThan(Bakery bakery, Long lastId, Pageable pageable);
     Optional<ProductAddReport> findByIdAndBakery(Long id, Bakery bakery);
     void deleteByIdAndBakery(Long id, Bakery bakery);
     void deleteByBakery(Bakery bakery);
