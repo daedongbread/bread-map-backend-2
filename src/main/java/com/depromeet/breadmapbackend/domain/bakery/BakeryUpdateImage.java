@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +11,9 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BakeryDeleteReport extends BaseEntity {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BakeryUpdateImage extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,16 +21,17 @@ public class BakeryDeleteReport extends BaseEntity {
     private Bakery bakery;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "bakeryUpdateReport_id")
+    private BakeryUpdateReport bakeryUpdateReport;
 
     @Column(nullable = false)
     private String image;
 
     @Builder
-    public BakeryDeleteReport(Bakery bakery, User user, String image) {
+    public BakeryUpdateImage(Bakery bakery, BakeryUpdateReport report, String image) {
         this.bakery = bakery;
-        this.user = user;
+        this.bakeryUpdateReport = report;
         this.image = image;
+        this.bakeryUpdateReport.getImages().add(this);
     }
 }

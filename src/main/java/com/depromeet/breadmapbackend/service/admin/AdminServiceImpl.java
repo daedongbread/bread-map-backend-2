@@ -72,7 +72,6 @@ public class AdminServiceImpl implements AdminService{
     private final AdminRepository adminRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
-    private final BakeryDeleteReportRepository bakeryDeleteReportRepository;
     private final BakeryReportImageRepository bakeryReportImageRepository;
     private final ProductAddReportRepository productAddReportRepository;
     private final ProductAddReportImageRepository productAddReportImageRepository;
@@ -639,7 +638,6 @@ public class AdminServiceImpl implements AdminService{
     public void deleteBakery(Long bakeryId) { // TODO : casacade
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         flagBakeryRepository.deleteByBakery(bakery);
-        bakeryDeleteReportRepository.deleteByBakery(bakery);
         bakeryUpdateReportRepository.deleteByBakery(bakery);
         bakeryReportImageRepository.deleteByBakery(bakery);
         productAddReportRepository.deleteByBakery(bakery);

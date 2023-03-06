@@ -101,7 +101,7 @@ public abstract class ControllerTest {
     protected BakeryUpdateReportRepository bakeryUpdateReportRepository;
 
     @Autowired
-    protected BakeryDeleteReportRepository bakeryDeleteReportRepository;
+    protected BakeryUpdateImageRepository bakeryUpdateImageRepository;
 
     @Autowired
     protected BakeryAddReportRepository bakeryAddReportRepository;

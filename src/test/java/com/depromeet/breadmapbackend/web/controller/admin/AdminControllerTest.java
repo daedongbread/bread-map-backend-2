@@ -122,7 +122,6 @@ class AdminControllerTest extends ControllerTest {
         s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/productImage.jpg");
         s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/bakeryImage.jpg");
         bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
         productAddReportImageRepository.deleteAllInBatch();

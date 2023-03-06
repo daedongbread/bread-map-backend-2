@@ -13,8 +13,7 @@ public interface BakeryService {
     List<BakeryCardDto> findBakeryListByFilter(String username, Double latitude, Double longitude, Double height, Double width, BakerySortType sortBy);
     BakeryDto findBakery(String username, Long bakeryId);
     List<ProductDto> findProductList(Long bakeryId);
-    void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateRequest request);
-    void bakeryDeleteReport(String username, Long bakeryId, MultipartFile file) throws IOException;
+    void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateRequest request, List<MultipartFile> files) throws IOException;
     void bakeryAddReport(String username, BakeryReportRequest request);
     void bakeryReportImage(String username, Long bakeryId, List<MultipartFile> files) throws IOException;
     void productAddReport(String username, Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException;
