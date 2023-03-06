@@ -66,12 +66,13 @@ class ReviewControllerTest extends ControllerTest {
 
         review1 = Review.builder().user(user).bakery(bakery).content("content1").build();
         ReviewImage image1 = ReviewImage.builder().review(review1).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
-        review1.addImage(image1);
         reviewRepository.save(review1);
+        reviewImageRepository.save(image1);
+
         review2 = Review.builder().user(user).bakery(bakery).content("content2").build();
         ReviewImage image2 = ReviewImage.builder().review(review2).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image2").build();
-        review2.addImage(image2);
         reviewRepository.save(review2);
+        reviewImageRepository.save(image2);
 
         ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review1).rating(5L).build();
         reviewProductRatingRepository.save(rating1);

@@ -32,5 +32,6 @@ public class ReviewCommentLike extends BaseEntity {
     public ReviewCommentLike(ReviewComment reviewComment, User user) {
         this.reviewComment = reviewComment;
         this.user = user;
+        this.reviewComment.getLikes().add(this);
     }
 }

@@ -47,6 +47,7 @@ public class ReviewImage extends BaseEntity {
         this.imageType = imageType;
         this.image = image;
         this.isNew = true;
+        this.review.getImageList().add(this);
     }
 
     public void unNew() {

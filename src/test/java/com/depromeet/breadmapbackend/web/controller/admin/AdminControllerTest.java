@@ -80,9 +80,6 @@ class AdminControllerTest extends ControllerTest {
         product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
         product.updateImage(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg");
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage.jpg", "image/jpg", "test".getBytes()),
-                "productImage.jpg");
 
         bakeryAddReport = BakeryAddReport.builder().user(user).content("test content").location("test location")
                 .name("test Report").build();
@@ -96,30 +93,20 @@ class AdminControllerTest extends ControllerTest {
 
         bakeryReportImage = BakeryReportImage.builder().bakery(bakery).image("bakeryReportImage.jpg").user(user).build();
         bakeryReportImageRepository.save(bakeryReportImage);
-        s3Uploader.upload(
-                new MockMultipartFile("image", "bakeryReportImage.jpg", "image/jpg", "test".getBytes()),
-                "bakeryReportImage.jpg");
 
         productAddReport = ProductAddReport.builder().bakery(bakery).user(user).name("newBread").price("1000").build();
         productAddReportRepository.save(productAddReport);
         productAddReportImage1 = ProductAddReportImage.builder()
                 .productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage1.jpg").build();
         productAddReportImageRepository.save(productAddReportImage1);
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage1.jpg", "image/jpg", "test1".getBytes()),
-                "productImage1.jpg");
         productAddReportImage2 = ProductAddReportImage.builder()
                 .productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage2.jpg").build();
         productAddReportImageRepository.save(productAddReportImage2);
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage2.jpg", "image/jpg", "test2".getBytes()),
-                "productImage2.jpg");
 
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
-        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
-        review.addImage(image);
         reviewRepository.save(review);
-
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
+        reviewImageRepository.save(image);
         ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
 
@@ -130,10 +117,6 @@ class AdminControllerTest extends ControllerTest {
 
     @AfterEach
     public void setDown() {
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/productImage2.jpg");
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/productImage1.jpg");
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/bakeryReportImage.jpg");
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/productImage.jpg");
         s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/bakeryImage.jpg");
         bakeryUpdateReportImageRepository.deleteAllInBatch();
         bakeryUpdateReportRepository.deleteAllInBatch();

@@ -52,18 +52,7 @@ public class Product extends BaseEntity {
         this.bakery = bakery;
         if(isTrue == null) this.isTrue = true;
         else this.isTrue = isTrue;
-//        this.bakery.getBreadList().add(this);
-//        bakery.getBreadList().add(this);
-    }
-
-    public void updateType(ProductType productType) { this.productType = productType; }
-
-    public void updateName(String name) {
-        if(!this.name.equals(name)) this.name = name;
-    }
-
-    public void updatePrice(String price) {
-        if(!this.price.equals(price)) this.price = price;
+        this.bakery.getProductList().add(this);
     }
 
     public void updateImage(String image) {

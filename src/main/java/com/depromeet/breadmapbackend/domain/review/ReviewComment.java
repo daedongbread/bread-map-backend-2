@@ -56,15 +56,13 @@ public class ReviewComment extends BaseEntity {
         this.content = content;
         this.parent = parent;
         this.isDelete = false;
+        this.review.getComments().add(this);
+        if (parent != null) this.parent.getChildList().add(this);
     }
-
-    public void plusLike(ReviewCommentLike reviewCommentLike){ this.likes.add(reviewCommentLike); }
 
     public void minusLike(ReviewCommentLike reviewCommentLike){
         this.likes.remove(reviewCommentLike);
     }
-
-    public void addChildComment(ReviewComment reviewComment) { this.childList.add(reviewComment); }
 
     public void removeChildComment(ReviewComment reviewComment) { this.childList.remove(reviewComment); }
 
