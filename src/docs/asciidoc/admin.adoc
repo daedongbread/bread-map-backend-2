@@ -21,6 +21,16 @@
 - 빵집 수정 API
 - 빵집 상품 삭제 API
 - 빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 조회 API
+- 빵집 이미지 업데이트 API
+- 상품 이미지 업데이트 API
+- 이미지 다운로드 API
+- 이미지 삭제 API
+- 메뉴 제보 조회 API
+- 메뉴 제보 대표 이미지 변경 API
+- 메뉴 제보 삭제 API
+- 빵집 정보 수정 제보 조회 API
+- 빵집 정보 수정 제보 변경 완료 API
+- 빵집 정보 수정 제보 삭제 API
 - 빵집 삭제 API
 - 빵집 제보 전체 조회 API
 - 빵집 제보 상세 조회 API
@@ -74,6 +84,24 @@ operation::admin/image/download[snippets='http-request,request-headers,request-p
 
 === 이미지 삭제 API [GET]
 operation::admin/image/delete[snippets='http-request,request-headers,path-parameters,request-parameters,http-response']
+
+=== 메뉴 제보 조회 API [GET]
+operation::admin/productAddReport[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+
+=== 메뉴 제보 대표 이미지 변경 API [PATCH]
+operation::admin/productAddReport/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== 메뉴 제보 삭제 API [DELETE]
+operation::admin/productAddReport/delete[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 빵집 정보 수정 제보 조회 API [GET]
+operation::admin/updateReport[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+
+=== 빵집 정보 수정 제보 변경 완료 API [PATCH]
+operation::admin/updateReport/change[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 빵집 정보 수정 제보 삭제 API [DELETE]
+operation::admin/updateReport/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 빵집 삭제 API [DELETE]
 operation::admin/bakery/delete[snippets='http-request,request-headers,path-parameters,http-response']

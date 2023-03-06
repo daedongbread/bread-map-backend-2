@@ -88,7 +88,7 @@ class BakeryControllerTest extends ControllerTest {
 
     @AfterEach
     public void setDown() {
-        bakeryUpdateImageRepository.deleteAllInBatch();
+        bakeryUpdateReportImageRepository.deleteAllInBatch();
         bakeryUpdateReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();

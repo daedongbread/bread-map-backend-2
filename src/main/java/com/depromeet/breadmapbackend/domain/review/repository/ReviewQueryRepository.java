@@ -22,7 +22,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.depromeet.breadmapbackend.domain.review.QReview.review;
 import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.reviewProductRating;

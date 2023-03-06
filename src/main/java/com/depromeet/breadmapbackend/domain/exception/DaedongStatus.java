@@ -12,6 +12,7 @@ public enum DaedongStatus {
     // 400 BAD REQUEST
     BLOCK_MYSELF(BAD_REQUEST, 40012, "cannot block myself"), // 나를 차단/차단 해제할 때
     BAKERY_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40020, "invalid bakery sort type"), // 빵집 정렬 조건이 틀렸을 때
+    PRODUCT_ADD_REPORT_IMAGE_NOT_MAIN_EXCEPTION(BAD_REQUEST, 40030, "product add report image is not main"), // 상품 추가 제보 이미지가 메인이 아닐 때
     FLAG_COLOR_EXCEPTION(BAD_REQUEST, 40040, "invalid flag color"), // 올바르지 않은 깃발 색깔일 때
     FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 40041,"unedit flag"), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
     REVIEW_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40050, "invalid review sort type"), // 리뷰 정렬 조건이 틀렸을 때
@@ -50,7 +51,9 @@ public enum DaedongStatus {
     ADMIN_NOT_FOUND(NOT_FOUND, 40490, "admin not found"), // 관리자가 존재하지 않을 때
     BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40491, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
     REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40492, "review report not found"), // 존재하지 않는 리뷰 신고일 때
-    ADMIN_IMAGE_NOT_FOUND(NOT_FOUND, 40494, "admin image not found"), // 존재하지 않는 관리자 이미지일 때
+    PRODUCT_ADD_REPORT_NOT_FOUND(NOT_FOUND, 40493, "product add report not found"), // 상품 추가 제보가 존재하지 않을 때
+    PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40494, "product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
+    ADMIN_IMAGE_NOT_FOUND(NOT_FOUND, 40498, "admin image not found"), // 존재하지 않는 관리자 이미지일 때
 
 
 

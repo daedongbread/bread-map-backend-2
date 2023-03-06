@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.product.Product;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BakeryUpdateReport extends BaseEntity {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -38,7 +37,11 @@ public class BakeryUpdateReport extends BaseEntity {
     private String content;
 
     @OneToMany(mappedBy = "bakeryUpdateReport", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BakeryUpdateImage> images = new ArrayList<>();
+    private List<BakeryUpdateReportImage> images = new ArrayList<>();
+
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isChange;
 
     @Builder
     public BakeryUpdateReport(Bakery bakery, User user, String name, String location, String content) {
@@ -47,5 +50,10 @@ public class BakeryUpdateReport extends BaseEntity {
         this.name = name;
         this.location = location;
         this.content = content;
+        this.isChange = false;
+    }
+
+    public void change() {
+        this.isChange = true;
     }
 }

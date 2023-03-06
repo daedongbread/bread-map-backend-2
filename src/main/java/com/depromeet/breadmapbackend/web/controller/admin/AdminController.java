@@ -135,6 +135,46 @@ public class AdminController {
         adminService.deleteAdminImage(bakeryId, imageId, type);
     }
 
+    @GetMapping("/bakery/{bakeryId}/productAddReport")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<ProductAddReportDto>> getProductAddReports(
+            @PathVariable Long bakeryId, @RequestParam int page, @RequestParam(required = false) Long lastId) {
+        return new ApiResponse<>(adminService.getProductAddReports(bakeryId, page, lastId));
+    }
+
+    @PatchMapping("/bakery/{bakeryId}/productAddReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateProductAddImage(
+            @PathVariable Long bakeryId, @PathVariable Long reportId,
+            @RequestBody @Validated(ValidationSequence.class) ProductAddImageUpdateRequest request) {
+        adminService.updateProductAddImage(bakeryId, reportId, request);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}/productAddReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProductAddReport(@PathVariable Long bakeryId, @PathVariable Long reportId) {
+        adminService.deleteProductAddReport(bakeryId, reportId);
+    }
+
+    @GetMapping("/bakery/{bakeryId}/updateReport")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<BakeryUpdateReportDto>> getBakeryUpdateReports(
+            @PathVariable Long bakeryId, @RequestParam int page, @RequestParam(required = false) Long lastId) {
+        return new ApiResponse<>(adminService.getBakeryUpdateReports(bakeryId, page, lastId));
+    }
+
+    @PatchMapping("/bakery/{bakeryId}/updateReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeBakeryUpdateReport(@PathVariable Long bakeryId, @PathVariable Long reportId) {
+        adminService.changeBakeryUpdateReport(bakeryId, reportId);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}/updateReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBakeryUpdateReport(@PathVariable Long bakeryId, @PathVariable Long reportId) {
+        adminService.deleteBakeryUpdateReport(bakeryId, reportId);
+    }
+
     @DeleteMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBakery(@PathVariable Long bakeryId) {

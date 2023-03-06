@@ -11,6 +11,7 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.product.ProductAddReport;
 import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportImageRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
@@ -496,7 +497,7 @@ public class AdminServiceImpl implements AdminService{
                     MultipartFile productImage = productImageList.get(i);
                     String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
                     String image = s3Uploader.upload(productImage, imagePath);
-                    product.updateImage(imagePath);
+                    product.updateImage(image);
                 }
             }
         }
@@ -535,7 +536,6 @@ public class AdminServiceImpl implements AdminService{
 
                 if(request.getProductList().get(i).getExistedImage() != null) { // 기존 product가 이미지를 가지고 있을 때
                     if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 업데이트 할 때. 기존 이미지 삭제 후 새 이미지 등록
-                        log.info("I : " + productImageList.get(i));
                         MultipartFile productImage = productImageList.get(i);
                         s3Uploader.deleteFileS3(product.getImage());
                         String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
@@ -632,6 +632,68 @@ public class AdminServiceImpl implements AdminService{
             // TODO
         } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
 
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page, Long lastId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+
+        Page<ProductAddReport> contents;
+        if (page == 0) {
+            contents = productAddReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
+        } else {
+            if (lastId == null) throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
+            else contents = productAddReportRepository.findPageByBakeryAndIdLessThan(bakery, lastId, pageable); // TODO N+1
+        }
+        return PageResponseDto.of(contents, ProductAddReportDto::new);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateProductAddImage(Long bakeryId, Long reportId, ProductAddImageUpdateRequest request) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        ProductAddReport productAddReport = productAddReportRepository.findByIdAndBakery(reportId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_NOT_FOUND));
+        ProductAddReportImage beforeImage = productAddReportImageRepository.findByImageAndProductAddReport(request.getBeforeImage(), productAddReport).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND));
+        if (!beforeImage.getIsMain()) throw new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_IMAGE_NOT_MAIN_EXCEPTION);
+        else {
+            ProductAddReportImage afterImage = productAddReportImageRepository.findByIdAndProductAddReport(request.getAfterId(), productAddReport).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND));
+            beforeImage.unMain();
+            afterImage.isMain();
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteProductAddReport(Long bakeryId, Long reportId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        productAddReportRepository.deleteByIdAndBakery(reportId, bakery);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page, Long lastId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+
+        Page<BakeryUpdateReport> contents;
+        if (page == 0) {
+            contents = bakeryUpdateReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
+        } else {
+            if (lastId == null) throw new DaedongException(DaedongStatus.ADMIN_PAGE_EXCEPTION);
+            else contents = bakeryUpdateReportRepository.findPageByBakeryAndIdLessThan(bakery, lastId, pageable); // TODO N+1
+        }
+        return PageResponseDto.of(contents, BakeryUpdateReportDto::new);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void changeBakeryUpdateReport(Long bakeryId, Long reportId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        BakeryUpdateReport bakeryUpdateReport = bakeryUpdateReportRepository.findByIdAndBakery(reportId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        bakeryUpdateReport.change();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteBakeryUpdateReport(Long bakeryId, Long reportId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        bakeryUpdateReportRepository.deleteByIdAndBakery(reportId, bakery);
     }
 
     @Transactional(rollbackFor = Exception.class)
