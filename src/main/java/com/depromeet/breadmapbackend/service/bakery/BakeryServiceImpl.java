@@ -211,7 +211,6 @@ public class BakeryServiceImpl implements BakeryService {
                 String imagePath = fileConverter.parseFileInfo(file, ImageType.PRODUCT_ADD_REPORT_IMAGE, bakeryId);
                 String image = s3Uploader.upload(file, imagePath);
                 ProductAddReportImage.builder().productAddReport(productAddReport).image(image).build();
-//                productAddReport.addImage(image);
             }
         }
     }

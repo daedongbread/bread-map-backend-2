@@ -465,7 +465,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
+    public void addBakery(BakeryAddRequest request) {
         Long bakeryId = createBakeryId(request.getAddress());
         Bakery bakery = Bakery.builder()
                 .id(bakeryId).name(request.getName())
@@ -478,33 +478,35 @@ public class AdminServiceImpl implements AdminService{
                 .build();
         bakeryRepository.save(bakery);
 
-        if(bakeryImage != null && !bakeryImage.isEmpty()) {
-            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageType.BAKERY_IMAGE, bakery.getId());
-            String image = s3Uploader.upload(bakeryImage, imagePath);
-            bakeryRepository.findById(bakery.getId()).get().updateImage(image); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
+        if (request.getImage() != null) {
+            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+            String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+            s3Uploader.copy(oldImage, newImage);
+            if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.BAKERY_IMAGE.getCode()))
+                s3Uploader.deleteFileS3(oldImage);
+            bakeryRepository.findById(bakery.getId()).get().updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
         }
 
-        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) {
-            if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
-            if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-            for(int i = 0; i < request.getProductList().size(); i++) {
-                BakeryAddRequest.AddProductRequest addProductRequest = request.getProductList().get(i);
-                Product product = Product.builder().bakery(bakery).productType(addProductRequest.getProductType())
-                        .name(addProductRequest.getProductName()).price(addProductRequest.getPrice()).build();
+        if(request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
+            for (BakeryAddRequest.ProductAddRequest productAddRequest : request.getProductList()) {
+                Product product = Product.builder().bakery(bakery).productType(productAddRequest.getProductType())
+                        .name(productAddRequest.getProductName()).price(productAddRequest.getPrice()).build();
                 productRepository.save(product);
 
-                if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) {
-                    MultipartFile productImage = productImageList.get(i);
-                    String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
-                    String image = s3Uploader.upload(productImage, imagePath);
-                    product.updateImage(image);
+                if (productAddRequest.getImage() != null) {
+                    String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+                    String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+                    s3Uploader.copy(oldImage, newImage);
+                    if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
+                        s3Uploader.deleteFileS3(oldImage);
+                    product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
                 }
             }
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException {
+    public void updateBakery(Long bakeryId, BakeryUpdateRequest request) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         bakery.update(bakeryId, request.getName(),
@@ -512,45 +514,46 @@ public class AdminServiceImpl implements AdminService{
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(), request.getFacilityInfoList(), request.getStatus());
 
-        if(bakeryImage != null && !bakeryImage.isEmpty()) {
-            if(bakery.getImage() != null) s3Uploader.deleteFileS3(bakery.getImage());
-            String imagePath = fileConverter.parseFileInfo(bakeryImage, ImageType.BAKERY_IMAGE, bakery.getId());
-            String image = s3Uploader.upload(bakeryImage, imagePath);
-            bakery.updateImage(image);
+        if (request.getImage() != null && !request.getImage().equals(bakery.getImage())) {
+            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+            String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+            s3Uploader.copy(oldImage, newImage);
+            if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.BAKERY_IMAGE.getCode()))
+                s3Uploader.deleteFileS3(oldImage);
+            bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
         }
 
-        if(request.getProductList() != null && productImageList != null && !request.getProductList().isEmpty()) { // TODO
-            if (request.getProductList().size() != productImageList.size()) throw new DaedongException(DaedongStatus.IMAGE_NUM_UNMATCH_EXCEPTION);
-            if (productImageList.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-            for (int i = 0; i < request.getProductList().size(); i++) {
-                BakeryUpdateRequest.UpdateProductRequest updateProductRequest = request.getProductList().get(i);
+        if(request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
+            for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
                 Product product;
-                if (updateProductRequest.getProductId() == null) { // 새로운 product 일 때
+                if (productUpdateRequest.getProductId() == null) { // 새로운 product 일 때
                     product = Product.builder()
-                            .productType(updateProductRequest.getProductType()).bakery(bakery)
-                            .name(updateProductRequest.getProductName()).price(updateProductRequest.getPrice()).build();
+                            .productType(productUpdateRequest.getProductType()).bakery(bakery)
+                            .name(productUpdateRequest.getProductName()).price(productUpdateRequest.getPrice()).build();
+                    productRepository.save(product);
+
+                    if (productUpdateRequest.getImage() != null) {
+                        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+                        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+                        s3Uploader.copy(oldImage, newImage);
+                        if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
+                            s3Uploader.deleteFileS3(oldImage);
+                        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+                    }
                 } else { // 기존 product 일 때
-                    product = productRepository.findById(updateProductRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
-                    product.update(updateProductRequest.getProductName(), updateProductRequest.getPrice());
+                    product = productRepository.findById(productUpdateRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+                    product.update(productUpdateRequest.getProductType(), productUpdateRequest.getProductName(), productUpdateRequest.getPrice());
+
+                    if (productUpdateRequest.getImage() != null && !productUpdateRequest.getImage().equals(product.getImage())) {
+                        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+                        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+                        s3Uploader.copy(oldImage, newImage);
+                        if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
+                            s3Uploader.deleteFileS3(oldImage);
+                        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+                    }
                 }
 
-                if(request.getProductList().get(i).getExistedImage() != null) { // 기존 product가 이미지를 가지고 있을 때
-                    if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 업데이트 할 때. 기존 이미지 삭제 후 새 이미지 등록
-                        MultipartFile productImage = productImageList.get(i);
-                        s3Uploader.deleteFileS3(product.getImage());
-                        String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
-                        String image = s3Uploader.upload(productImage, imagePath);
-                        product.updateImage(image);
-                    }
-                }
-                else {  // 기존 product가 이미지를 가지고 있지 않을 때
-                    if(productImageList.get(i) != null && !productImageList.get(i).isEmpty()) { // 새로운 사진을 등록할 때
-                        MultipartFile productImage = productImageList.get(i);
-                        String imagePath = fileConverter.parseFileInfo(productImage, ImageType.PRODUCT_IMAGE, product.getId());
-                        String image = s3Uploader.upload(productImage, imagePath);
-                        product.updateImage(image);
-                    }
-                }
             }
         }
     }
@@ -738,5 +741,12 @@ public class AdminServiceImpl implements AdminService{
     public void changeUserBlock(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         user.changeBlock();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public TempImageDto uploadTempImage(MultipartFile file) throws IOException {
+        String imagePath = fileConverter.parseFileInfo(file, ImageType.ADMIN_TEMP_IMAGE, 0L);
+        String image = s3Uploader.upload(file, imagePath);
+        return TempImageDto.builder().image(image).build(); // cloudFrontDomain/adminTempImage/0/image.jpg
     }
 }

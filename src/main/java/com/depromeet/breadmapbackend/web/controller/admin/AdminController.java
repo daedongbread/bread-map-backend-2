@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
+import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.PageableSortConverter;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
@@ -82,20 +83,15 @@ public class AdminController {
 
     @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBakery(
-            @RequestPart BakeryAddRequest request,
-            @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
-        adminService.addBakery(request, bakeryImage, productImageList);
+    public void addBakery(@RequestBody @Validated(ValidationSequence.class) BakeryAddRequest request) {
+        adminService.addBakery(request);
     }
 
     @PostMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBakery(
-            @PathVariable Long bakeryId, @RequestPart @Validated(ValidationSequence.class) BakeryUpdateRequest request,
-            @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
-        adminService.updateBakery(bakeryId, request, bakeryImage, productImageList);
+            @PathVariable Long bakeryId, @RequestBody @Validated(ValidationSequence.class) BakeryUpdateRequest request) {
+        adminService.updateBakery(bakeryId, request);
     }
 
     @DeleteMapping("/bakery/{bakeryId}/product/{productId}")
@@ -225,5 +221,11 @@ public class AdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeUserBlock(@PathVariable Long userId) {
         adminService.changeUserBlock(userId);
+    }
+
+    @PostMapping("/image")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<TempImageDto> uploadTempImage(@RequestPart MultipartFile file) throws IOException {
+        return new ApiResponse<>(adminService.uploadTempImage(file));
     }
 }

@@ -21,8 +21,8 @@ public interface AdminService {
     AdminBakeryDto getBakery(Long bakeryId);
     PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page);
     BakeryLocationDto getBakeryLatitudeLongitude(String address);
-    void addBakery(BakeryAddRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
-    void updateBakery(Long bakeryId, BakeryUpdateRequest request, MultipartFile bakeryImage, List<MultipartFile> productImageList) throws IOException;
+    void addBakery(BakeryAddRequest request);
+    void updateBakery(Long bakeryId, BakeryUpdateRequest request);
     void deleteProduct(Long bakeryId, Long productId);
     PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType type, int page);
     void updateBakeryImage(Long bakeryId, AdminImageUpdateRequest request);
@@ -43,4 +43,5 @@ public interface AdminService {
     void updateReviewStatus(Long reportId);
     PageResponseDto<AdminUserDto> getUserList(Pageable pageable);
     void changeUserBlock(Long userId);
+    TempImageDto uploadTempImage(MultipartFile file) throws IOException;
 }

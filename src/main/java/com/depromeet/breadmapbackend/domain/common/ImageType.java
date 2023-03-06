@@ -12,7 +12,8 @@ public enum ImageType { // TODO : with ConfigurationProperties
     BAKERY_REPORT_IMAGE("bakeryReportImage"),
     BAKERY_UPDATE_REPORT_IMAGE("bakeryUpdateReportImage"),
     PRODUCT_ADD_REPORT_IMAGE("productAddReportImage"),
-    USER_IMAGE("userImage");
+    USER_IMAGE("userImage"),
+    ADMIN_TEMP_IMAGE("adminTempImage");
 
     private final String code;
 }
