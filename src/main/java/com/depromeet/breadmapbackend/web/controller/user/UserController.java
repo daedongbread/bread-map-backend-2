@@ -58,13 +58,15 @@ public class UserController {
 
     @PostMapping("/follow")
     @ResponseStatus(HttpStatus.CREATED)
-    public void follow(@CurrentUser String username, @RequestBody FollowRequest request) {
+    public void follow(
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) FollowRequest request) {
         userService.follow(username, request);
     }
 
     @DeleteMapping("/follow")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFollowing(@CurrentUser String username, @RequestBody FollowRequest request) {
+    public void deleteFollowing(
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) FollowRequest request) {
         userService.unfollow(username, request);
     }
 
@@ -88,13 +90,13 @@ public class UserController {
 
     @PostMapping("/block")
     @ResponseStatus(HttpStatus.CREATED)
-    public void block(@CurrentUser String username, @RequestBody BlockRequest request) {
+    public void block(@CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BlockRequest request) {
         userService.block(username, request);
     }
 
     @DeleteMapping("/block")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unblock(@CurrentUser String username, @RequestBody BlockRequest request) {
+    public void unblock(@CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BlockRequest request) {
         userService.unblock(username, request);
     }
 

@@ -530,7 +530,7 @@ class ReviewControllerTest extends ControllerTest {
     @Test
     void reviewReport() throws Exception {
         String object = objectMapper.writeValueAsString(
-                ReviewReportRequest.builder().reason(ReviewReportReason.COPYRIGHT_THEFT).content("Copyright").build());
+                ReviewReportRequest.builder().reason(ReviewReportReason.COPYRIGHT_THEFT).build());
 
         mockMvc.perform(post("/review/{reviewId}/report", review1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken())
@@ -543,7 +543,7 @@ class ReviewControllerTest extends ControllerTest {
                         pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
                         requestFields(
                                 fieldWithPath("reason").description("리뷰 신고 이유"),
-                                fieldWithPath("content").description("리뷰 신고 내용")
+                                fieldWithPath("content").optional().description("리뷰 신고 내용")
                         )
                 ))
                 .andExpect(status().isCreated());

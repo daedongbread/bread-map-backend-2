@@ -277,7 +277,7 @@ class BakeryControllerTest extends ControllerTest {
                         requestPartFields("request",
                                 fieldWithPath("name").description("수정 빵집 이름"),
                                 fieldWithPath("location").description("수정 빵집 위치"),
-                                fieldWithPath("content").description("수정 사항")
+                                fieldWithPath("content").optional().description("수정 사항")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -299,7 +299,7 @@ class BakeryControllerTest extends ControllerTest {
                         requestFields(
                                 fieldWithPath("name").description("제보 빵집 이름"),
                                 fieldWithPath("location").description("제보 빵집 위치"),
-                                fieldWithPath("content").description("추천 이유")
+                                fieldWithPath("content").optional().description("추천 이유")
                         )
                 ))
                 .andExpect(status().isCreated());

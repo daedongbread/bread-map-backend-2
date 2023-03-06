@@ -68,7 +68,8 @@ public class BakeryController {
 
     @PostMapping("/report/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryAddReport(@CurrentUser String username, @RequestBody BakeryReportRequest request) {
+    public void bakeryAddReport(
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BakeryReportRequest request) {
         bakeryService.bakeryAddReport(username, request);
     }
 

@@ -92,7 +92,7 @@ public class AdminController {
     @PostMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBakery(
-            @PathVariable Long bakeryId, @RequestPart BakeryUpdateRequest request,
+            @PathVariable Long bakeryId, @RequestPart @Validated(ValidationSequence.class) BakeryUpdateRequest request,
             @RequestPart(required = false) MultipartFile bakeryImage,
             @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
         adminService.updateBakery(bakeryId, request, bakeryImage, productImageList);
@@ -196,7 +196,8 @@ public class AdminController {
 
     @PatchMapping("/bakery/report/{reportId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBakeryAddReportStatus(@PathVariable Long reportId, @RequestBody BakeryReportStatusUpdateRequest request) {
+    public void updateBakeryAddReportStatus(
+            @PathVariable Long reportId, @RequestBody @Validated(ValidationSequence.class) BakeryReportStatusUpdateRequest request) {
         adminService.updateBakeryAddReportStatus(reportId, request);
     }
 
