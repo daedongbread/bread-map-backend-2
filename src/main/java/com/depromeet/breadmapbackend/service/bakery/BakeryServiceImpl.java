@@ -156,11 +156,11 @@ public class BakeryServiceImpl implements BakeryService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
-                .bakery(bakery).user(user).name(request.getName()).location(request.getLocation()).content(request.getContent()).build();
+                .bakery(bakery).user(user).reason(request.getReason()).content(request.getContent()).build();
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
 
         if (files != null) {
-            if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION); // TODO
+            if (files.size() > 5) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for (MultipartFile file : files) {
                 if (file.isEmpty()) continue;
                 String imagePath = fileConverter.parseFileInfo(file, ImageType.BAKERY_UPDATE_REPORT_IMAGE, bakeryId);

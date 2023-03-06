@@ -28,10 +28,7 @@ public class BakeryUpdateReport extends BaseEntity {
     private User user;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String location;
+    private BakeryUpdateReason reason;
 
     @Column(nullable = false)
     private String content;
@@ -44,11 +41,10 @@ public class BakeryUpdateReport extends BaseEntity {
     private Boolean isChange;
 
     @Builder
-    public BakeryUpdateReport(Bakery bakery, User user, String name, String location, String content) {
+    public BakeryUpdateReport(Bakery bakery, User user, BakeryUpdateReason reason, String content) {
         this.bakery = bakery;
         this.user = user;
-        this.name = name;
-        this.location = location;
+        this.reason = reason;
         this.content = content;
         this.isChange = false;
     }

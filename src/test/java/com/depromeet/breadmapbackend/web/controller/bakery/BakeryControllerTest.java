@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.controller.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryUpdateReason;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
@@ -254,7 +255,7 @@ class BakeryControllerTest extends ControllerTest {
     @Test
     void bakeryUpdateReport() throws Exception {
         String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
-                .name("newBakery").location("newLocation").content("newContent").build());
+                .reason(BakeryUpdateReason.BAKERY_SHUTDOWN).content("newContent").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
 
@@ -270,13 +271,12 @@ class BakeryControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParts(
-                                partWithName("request").description("빵집 수정 정보"),
+                                partWithName("request").description("빵집 수정 제보"),
                                 partWithName("files").description("빵집 수정 이미지들")
                         ),
                         requestPartBody("request"),
                         requestPartFields("request",
-                                fieldWithPath("name").description("수정 빵집 이름"),
-                                fieldWithPath("location").description("수정 빵집 위치"),
+                                fieldWithPath("reason").description("빵집 수정 제보 이유"),
                                 fieldWithPath("content").optional().description("수정 사항")
                         )
                 ))

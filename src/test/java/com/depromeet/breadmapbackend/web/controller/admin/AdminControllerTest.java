@@ -86,7 +86,7 @@ class AdminControllerTest extends ControllerTest {
         bakeryAddReportRepository.save(bakeryAddReport);
 
         bakeryUpdateReport = BakeryUpdateReport.builder()
-                .bakery(bakery).user(user).name("bakeryUpdateReport").content("name").location("test location").build();
+                .bakery(bakery).user(user).reason(BakeryUpdateReason.BAKERY_SHUTDOWN).content("content").build();
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
         BakeryUpdateReportImage bakeryUpdateReportImage = BakeryUpdateReportImage.builder().bakery(bakery).report(bakeryUpdateReport).image("image").build();
         bakeryUpdateReportImageRepository.save(bakeryUpdateReportImage);
@@ -707,6 +707,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents.[].reportId").description("빵집 수정 제보 고유 번호"),
                                 fieldWithPath("data.contents.[].createdAt").description("빵집 수정 제보 날짜"),
                                 fieldWithPath("data.contents.[].nickName").description("제보한 유저 닉네임"),
+                                fieldWithPath("data.contents.[].reason").description("빵집 수정 제보 이유"),
                                 fieldWithPath("data.contents.[].content").description("빵집 수정 제보 내용"),
                                 fieldWithPath("data.contents.[].imageList").description("빵집 수정 제보 이미지 리스트"),
                                 fieldWithPath("data.contents.[].isChange").description("빵집 수정 제보 변경 여부")
