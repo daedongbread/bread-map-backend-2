@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.product;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,8 +40,8 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewProductRating> reviewProductRatingList = new ArrayList<>();
 
-    @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
-    @ColumnDefault("true")
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
     private boolean isTrue;
 
     @Builder

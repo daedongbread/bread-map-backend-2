@@ -503,7 +503,8 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents").description("빵집 제보 이미지 리스트"),
                                 fieldWithPath("data.contents.[].type").description("빵집 관련 이미지 종류 (BAKERY, PRODUCT, REVIEW)"),
                                 fieldWithPath("data.contents.[].imageId").description("빵집 관련 이미지 고유 번호"),
-                                fieldWithPath("data.contents.[].image").description("빵집 관련 이미지")
+                                fieldWithPath("data.contents.[].image").description("빵집 관련 이미지"),
+                                fieldWithPath("data.contents.[].isNew").description("빵집 관련 이미지 신규 여부")
                         )
                 ))
                 .andExpect(status().isOk());

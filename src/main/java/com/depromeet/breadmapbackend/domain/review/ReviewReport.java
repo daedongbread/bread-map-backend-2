@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,7 +34,9 @@ public class ReviewReport extends BaseEntity {
 
     private String content;
 
-    private Boolean isBlock;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isBlock; // TODO
 
     @Builder
     public ReviewReport(User reporter, Review review, ReviewReportReason reason, String content) {

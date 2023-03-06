@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,7 +45,8 @@ public class ReviewComment extends BaseEntity {
     @OneToMany(mappedBy = "reviewComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewCommentLike> likes = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "boolean default 0")
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
     private boolean isDelete;
 
     @Builder

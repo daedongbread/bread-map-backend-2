@@ -11,9 +11,11 @@ import com.depromeet.breadmapbackend.domain.bakery.repository.*;
 import com.depromeet.breadmapbackend.domain.common.converter.FileConverter;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.flag.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportImageRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.product.repository.ProductRepository;
+import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.repository.ReviewProductRatingRepository;
@@ -554,7 +556,7 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteProduct(Long bakeryId, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
         s3Uploader.deleteFileS3(product.getImage());
@@ -562,21 +564,29 @@ public class AdminServiceImpl implements AdminService{
         productRepository.delete(product);
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType type, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         PageRequest pageable = PageRequest.of(page, 16, Sort.by("createdAt").descending());
 
+        PageResponseDto<AdminImageDto> adminImages;
         if (type.equals(AdminBakeryImageType.BAKERY)) {
-            return PageResponseDto.of(bakeryReportImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
+            Page<BakeryReportImage> bakeryReportImages = bakeryReportImageRepository.findPageByBakery(bakery, pageable);
+            adminImages = PageResponseDto.of(bakeryReportImages, AdminImageDto::new);
+            bakeryReportImages.forEach(BakeryReportImage::unNew);
         } else if (type.equals(AdminBakeryImageType.PRODUCT)) {
-            return PageResponseDto.of(productAddReportImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
+            Page<ProductAddReportImage> productAddReportImages = productAddReportImageRepository.findPageByBakery(bakery, pageable);
+            adminImages = PageResponseDto.of(productAddReportImages, AdminImageDto::new);
+            productAddReportImages.forEach(ProductAddReportImage::unNew);
         } else if (type.equals(AdminBakeryImageType.REVIEW)) {
-            return PageResponseDto.of(reviewImageRepository.findPageByBakery(bakery, pageable), AdminImageDto::new);
+            Page<ReviewImage> reviewImages = reviewImageRepository.findPageByBakery(bakery, pageable);
+            adminImages = PageResponseDto.of(reviewImages, AdminImageDto::new);
+            reviewImages.forEach(ReviewImage::unNew);
         } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
+        return adminImages;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateBakeryImage(Long bakeryId, AdminImageUpdateRequest request) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
@@ -587,7 +597,7 @@ public class AdminServiceImpl implements AdminService{
         // TODO 기존 이미지가 이미 삭제되어서 S3에 없는거면?
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateProductImage(Long productId, AdminImageUpdateRequest request) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
         String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
@@ -598,7 +608,7 @@ public class AdminServiceImpl implements AdminService{
         // TODO 기존 이미지가 이미 삭제되어서 S3에 없는거면?
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<byte[]> downloadAdminImage(String image) throws IOException {
         byte[] bytes = s3Uploader.getObject(image);
         String fileName = URLEncoder.encode(image.replace(customAWSS3Properties.getCloudFront() + "/", ""), "UTF-8").replaceAll("\\+", "%20");
@@ -610,7 +620,7 @@ public class AdminServiceImpl implements AdminService{
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteAdminImage(Long bakeryId, Long imageId, AdminBakeryImageType type) { // TODO : bakeryId
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
