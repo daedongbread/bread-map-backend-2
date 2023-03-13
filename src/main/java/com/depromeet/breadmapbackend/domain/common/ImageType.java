@@ -10,9 +10,10 @@ public enum ImageType { // TODO : with ConfigurationProperties
     PRODUCT_IMAGE("productImage"),
     REVIEW_IMAGE("reviewImage"),
     BAKERY_REPORT_IMAGE("bakeryReportImage"),
-    BAKERY_DELETE_REPORT_IMAGE("bakeryDeleteReportImage"),
+    BAKERY_UPDATE_REPORT_IMAGE("bakeryUpdateReportImage"),
     PRODUCT_ADD_REPORT_IMAGE("productAddReportImage"),
-    USER_IMAGE("userImage");
+    USER_IMAGE("userImage"),
+    ADMIN_TEMP_IMAGE("adminTempImage");
 
     private final String code;
 }

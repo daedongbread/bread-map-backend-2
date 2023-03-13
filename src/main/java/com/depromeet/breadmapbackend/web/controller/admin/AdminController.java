@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -82,20 +81,15 @@ public class AdminController {
 
     @PostMapping("/bakery")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBakery(
-            @RequestPart BakeryAddRequest request,
-            @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
-        adminService.addBakery(request, bakeryImage, productImageList);
+    public void addBakery(@RequestBody @Validated(ValidationSequence.class) BakeryAddRequest request) {
+        adminService.addBakery(request);
     }
 
     @PostMapping("/bakery/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBakery(
-            @PathVariable Long bakeryId, @RequestPart BakeryUpdateRequest request,
-            @RequestPart(required = false) MultipartFile bakeryImage,
-            @RequestPart(required = false) List<MultipartFile> productImageList) throws IOException {
-        adminService.updateBakery(bakeryId, request, bakeryImage, productImageList);
+            @PathVariable Long bakeryId, @RequestBody @Validated(ValidationSequence.class) BakeryUpdateRequest request) {
+        adminService.updateBakery(bakeryId, request);
     }
 
     @DeleteMapping("/bakery/{bakeryId}/product/{productId}")
@@ -105,34 +99,62 @@ public class AdminController {
         adminService.deleteProduct(bakeryId, productId);
     }
 
-    @GetMapping("/bakery/{bakeryId}/image")
+    @GetMapping("/bakery/{bakeryId}/{imageType}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminImageDto>> getAdminImages(
-            @PathVariable Long bakeryId, @RequestParam AdminBakeryImageType type, @RequestParam int page) {
-        return new ApiResponse<>(adminService.getAdminImages(bakeryId, type, page));
-    }
-
-    @PatchMapping("/bakery/{bakeryId}/image")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBakeryImage(@PathVariable Long bakeryId, @RequestBody @Validated(ValidationSequence.class) AdminImageUpdateRequest request) {
-        adminService.updateBakeryImage(bakeryId, request);
-    }
-
-    @PatchMapping("/product/{productId}/image")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProductImage(@PathVariable Long productId, @RequestBody @Validated(ValidationSequence.class) AdminImageUpdateRequest request) {
-        adminService.updateProductImage(productId, request);
+            @PathVariable Long bakeryId, @PathVariable AdminBakeryImageType imageType, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getAdminImages(bakeryId, imageType, page));
     }
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> downloadAdminImage(@RequestParam String image) throws IOException {
         return adminService.downloadAdminImage(image);
     }
-
-    @DeleteMapping("/bakery/{bakeryId}/image/{imageId}")
+    
+    @DeleteMapping("/bakery/{bakeryId}/{imageType}/{imageId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAdminImage(@PathVariable Long bakeryId, @PathVariable Long imageId, @RequestParam AdminBakeryImageType type) {
-        adminService.deleteAdminImage(bakeryId, imageId, type);
+    public void deleteAdminImage(@PathVariable Long bakeryId, @PathVariable AdminBakeryImageType imageType, @PathVariable Long imageId) {
+        adminService.deleteAdminImage(bakeryId, imageType, imageId);
+    }
+
+    @GetMapping("/bakery/{bakeryId}/productAddReport")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<ProductAddReportDto>> getProductAddReports(
+            @PathVariable Long bakeryId, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getProductAddReports(bakeryId, page));
+    }
+
+    @PatchMapping("/bakery/{bakeryId}/productAddReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void registerProductAddImage(
+            @PathVariable Long bakeryId, @PathVariable Long reportId,
+            @RequestBody @Validated(ValidationSequence.class) ProductAddImageRegisterRequest request) {
+        adminService.registerProductAddImage(bakeryId, reportId, request);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}/productAddReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProductAddReport(@PathVariable Long bakeryId, @PathVariable Long reportId) {
+        adminService.deleteProductAddReport(bakeryId, reportId);
+    }
+
+    @GetMapping("/bakery/{bakeryId}/updateReport")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<BakeryUpdateReportDto>> getBakeryUpdateReports(
+            @PathVariable Long bakeryId, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getBakeryUpdateReports(bakeryId, page));
+    }
+
+    @PatchMapping("/bakery/{bakeryId}/updateReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeBakeryUpdateReport(@PathVariable Long bakeryId, @PathVariable Long reportId) {
+        adminService.changeBakeryUpdateReport(bakeryId, reportId);
+    }
+
+    @DeleteMapping("/bakery/{bakeryId}/updateReport/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBakeryUpdateReport(@PathVariable Long bakeryId, @PathVariable Long reportId) {
+        adminService.deleteBakeryUpdateReport(bakeryId, reportId);
     }
 
     @DeleteMapping("/bakery/{bakeryId}")
@@ -156,7 +178,8 @@ public class AdminController {
 
     @PatchMapping("/bakery/report/{reportId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBakeryAddReportStatus(@PathVariable Long reportId, @RequestBody BakeryReportStatusUpdateRequest request) {
+    public void updateBakeryAddReportStatus(
+            @PathVariable Long reportId, @RequestBody @Validated(ValidationSequence.class) BakeryReportStatusUpdateRequest request) {
         adminService.updateBakeryAddReportStatus(reportId, request);
     }
 
@@ -184,5 +207,11 @@ public class AdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeUserBlock(@PathVariable Long userId) {
         adminService.changeUserBlock(userId);
+    }
+
+    @PostMapping("/image")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<TempImageDto> uploadTempImage(@RequestPart MultipartFile file) throws IOException {
+        return new ApiResponse<>(adminService.uploadTempImage(file));
     }
 }

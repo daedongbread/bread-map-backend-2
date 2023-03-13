@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -91,6 +92,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(ParseException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ErrorResponse parseException(HttpServletRequest request, ParseException e) {
+        log.error("message : \"{}\"", e.getMessage());
         return new ErrorResponse(500, "parse exception");
     }
 
@@ -137,6 +139,13 @@ public class ExceptionAdvice {
         return new ErrorResponse(400, "query parameter is missing");
     }
 
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public ErrorResponse handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException e) {
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse(406, "not acceptable");
+    }
+
     /*
      * JWT Signature Exception
      */
@@ -153,7 +162,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorResponse wrongURLException(HttpServletRequest request, NoHandlerFoundException e) {
-        log.error(e.getMessage());
+        log.error("message : \"{}\"", e.getMessage());
         return new ErrorResponse(404, "wrong URL");
     }
 
@@ -163,6 +172,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     protected ErrorResponse wrongMethodException(HttpServletRequest request, HttpRequestMethodNotSupportedException e) {
+        log.error("message : \"{}\"", e.getMessage());
         return new ErrorResponse(405, "wrong method");
     }
 
@@ -172,7 +182,8 @@ public class ExceptionAdvice {
     @ExceptionHandler(SgisFeignException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse sgisFeignException(SgisFeignException e) {
-        return new ErrorResponse(400, e.getMessage());
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse(400, "SGIS Exception");
     }
 
     /**
@@ -181,7 +192,8 @@ public class ExceptionAdvice {
     @ExceptionHandler(AmazonS3Exception.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse amazonS3Exception(AmazonS3Exception e) {
-        return new ErrorResponse(409, e.getMessage());
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse(409, "S3 Exception");
     }
 
     /**

@@ -69,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
     public PageResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, int page) {
         User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Product product = productRepository.findByBakeryAndId(bakery, productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+        Product product = productRepository.findByIdAndBakery(productId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
 
         Page<Review> productReviews = reviewQueryRepository.findProductReview(me, bakery, product, sortBy, page);
         List<ReviewDto> contents = productReviews.getContent().stream()
@@ -139,10 +139,8 @@ public class ReviewServiceImpl implements ReviewService {
             request.getProductRatingList().forEach(productRatingRequest -> {
                 Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
                 if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
-                    ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
-                            .product(product).review(review).rating(productRatingRequest.getRating()).build();
-                    reviewProductRatingRepository.save(reviewProductRating);
-                    review.addRating(reviewProductRating);
+                    ReviewProductRating.builder()
+                            .bakery(bakery).product(product).review(review).rating(productRatingRequest.getRating()).build();
                 }
             });
         }
@@ -155,10 +153,8 @@ public class ReviewServiceImpl implements ReviewService {
                         .name(noExistProductRatingRequest.getProductName())
                         .price("0").bakery(bakery).isTrue(false).build();
                 productRepository.save(product);
-                ReviewProductRating reviewProductRating = ReviewProductRating.builder().bakery(bakery)
-                        .product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
-                reviewProductRatingRepository.save(reviewProductRating);
-                review.addRating(reviewProductRating);
+                ReviewProductRating.builder()
+                        .bakery(bakery).product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
             });
         }
 
@@ -168,9 +164,8 @@ public class ReviewServiceImpl implements ReviewService {
                 if (file.isEmpty()) continue;
                 String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
                 String image = s3Uploader.upload(file, imagePath);
-                ReviewImage reviewImage = ReviewImage.builder()
+                ReviewImage.builder()
                         .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
-                review.addImage(reviewImage);
             }
         }
     }
@@ -226,21 +221,14 @@ public class ReviewServiceImpl implements ReviewService {
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         if(request.getParentCommentId().equals(0L)) { // 댓글
-            ReviewComment reviewComment = ReviewComment.builder()
-                    .review(review).user(user).content(request.getContent()).build();
-            reviewCommentRepository.save(reviewComment);
-            review.addComment(reviewComment); //TODO
+            ReviewComment.builder().review(review).user(user).content(request.getContent()).build();
             eventPublisher.publishEvent(ReviewCommentEvent.builder()
                     .userId(review.getUser().getId()).fromUserId(user.getId())
                     .reviewId(reviewId).reviewContent(review.getContent()).build());
 
         } else { // 대댓글
             ReviewComment parentComment = reviewCommentRepository.findById(request.getParentCommentId()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
-            ReviewComment reviewComment = ReviewComment.builder()
-                    .review(review).user(user).content(request.getContent()).parent(parentComment).build();
-            reviewCommentRepository.save(reviewComment);
-            parentComment.addChildComment(reviewComment);
-            review.addComment(reviewComment); //TODO
+            ReviewComment.builder().review(review).user(user).content(request.getContent()).parent(parentComment).build();
             eventPublisher.publishEvent(RecommentEvent.builder()
                     .userId(parentComment.getUser().getId()).fromUserId(user.getId())
                     .commentId(parentComment.getId()).commentContent(parentComment.getContent()).build());
@@ -298,8 +286,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent())
             throw new DaedongException(DaedongStatus.REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION);
-        ReviewCommentLike reviewCommentLike = ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
-        reviewComment.plusLike(reviewCommentLike);
+        ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
+
         eventPublisher.publishEvent(ReviewCommentLikeEvent.builder()
                 .userId(reviewComment.getUser().getId()).fromUserId(user.getId())
                 .commentId(reviewComment.getId()).commentContent(reviewComment.getContent()).build());

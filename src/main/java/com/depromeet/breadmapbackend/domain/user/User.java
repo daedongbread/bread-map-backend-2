@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.user;
 
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
@@ -45,6 +46,7 @@ public class User extends BaseEntity {
     private UserStatus status;
 
     @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
     private Boolean isAlarmOn;
 
     @Builder

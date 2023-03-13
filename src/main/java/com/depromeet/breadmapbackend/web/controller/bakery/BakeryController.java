@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.web.controller.bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakerySortType;
 import com.depromeet.breadmapbackend.service.bakery.BakeryService;
 import com.depromeet.breadmapbackend.web.advice.ValidationGroups;
+import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
@@ -10,6 +11,7 @@ import com.depromeet.breadmapbackend.web.controller.bakery.dto.SimpleProductDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,19 +59,17 @@ public class BakeryController {
 
     @PostMapping("/report/{bakeryId}/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryUpdateReport(@CurrentUser String username, @PathVariable Long bakeryId, @RequestBody BakeryUpdateRequest request) {
-        bakeryService.bakeryUpdateReport(username, bakeryId, request);
-    }
-
-    @PostMapping("/report/{bakeryId}/delete")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryDeleteReport(@CurrentUser String username, @PathVariable Long bakeryId, @RequestPart MultipartFile file) throws IOException {
-        bakeryService.bakeryDeleteReport(username, bakeryId, file);
+    public void bakeryUpdateReport(
+            @CurrentUser String username, @PathVariable Long bakeryId,
+            @RequestPart @Validated(ValidationSequence.class) BakeryUpdateReportRequest request,
+            @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+        bakeryService.bakeryUpdateReport(username, bakeryId, request, files);
     }
 
     @PostMapping("/report/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryAddReport(@CurrentUser String username, @RequestBody BakeryReportRequest request) {
+    public void bakeryAddReport(
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BakeryReportRequest request) {
         bakeryService.bakeryAddReport(username, request);
     }
 

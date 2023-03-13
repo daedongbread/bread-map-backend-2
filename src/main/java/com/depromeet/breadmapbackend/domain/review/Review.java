@@ -64,6 +64,7 @@ public class Review extends BaseEntity {
         this.content = content;
         this.status = ReviewStatus.UNBLOCK;
         this.views = 0;
+        this.bakery.getReviewList().add(this);
     }
 
     public void useChange() {
@@ -71,25 +72,9 @@ public class Review extends BaseEntity {
         else this.status = ReviewStatus.BLOCK;
     }
 
-//    public void addImage(String image) {
-//        this.imageList.add(image);
-//    }
-
-    public void addImage(ReviewImage reviewImage) {
-        this.imageList.add(reviewImage);
-    }
-
-    public void addRating(ReviewProductRating reviewProductRating){
-        this.ratings.add(reviewProductRating);
-    }
-
     public void plusLike(ReviewLike reviewLike){ this.likes.add(reviewLike); }
 
     public void minusLike(ReviewLike reviewLike){ this.likes.remove(reviewLike); }
-
-    public void addComment(ReviewComment reviewComment){
-        this.comments.add(reviewComment);
-    }
 
     public void removeComment(ReviewComment reviewComment){ this.comments.remove(reviewComment); }
 

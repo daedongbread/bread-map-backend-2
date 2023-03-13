@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum AdminBakeryImageType {
-    BAKERY,
-    PRODUCT,
-    REVIEW;
+    bakeryReportImage,
+    productAddReportImage,
+    reviewImage;
 }

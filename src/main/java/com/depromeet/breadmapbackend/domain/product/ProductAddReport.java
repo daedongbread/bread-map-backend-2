@@ -45,8 +45,4 @@ public class ProductAddReport extends BaseEntity {
         this.name = name;
         this.price = price;
     }
-
-    public void addImage(ProductAddReportImage image) {
-        this.images.add(image);
-    }
 }

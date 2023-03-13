@@ -41,10 +41,6 @@ public class Flag extends BaseEntity {
         this.color = color;
     }
 
-    public void addFlagBakery(FlagBakery flagBakery) {
-        this.flagBakeryList.add(flagBakery);
-    }
-
     public void removeFlagBakery(FlagBakery flagBakery) {
         this.flagBakeryList.remove(flagBakery);
     }

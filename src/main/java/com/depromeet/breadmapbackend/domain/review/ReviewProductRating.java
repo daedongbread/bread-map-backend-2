@@ -46,6 +46,6 @@ public class ReviewProductRating extends BaseEntity{
         this.product = product;
         this.review = review;
         this.rating = rating;
-//        this.bread.getBreadRatingList().add(this);
+        this.product.getReviewProductRatingList().add(this);
     }
 }

@@ -14,7 +14,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportRequest;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateReportRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.ProductReportRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,8 +88,8 @@ class BakeryControllerTest extends ControllerTest {
 
     @AfterEach
     public void setDown() {
+        bakeryUpdateReportImageRepository.deleteAllInBatch();
         bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
         productAddReportImageRepository.deleteAllInBatch();
@@ -253,40 +253,30 @@ class BakeryControllerTest extends ControllerTest {
 
     @Test
     void bakeryUpdateReport() throws Exception {
-        String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
-                .name("newBakery").location("newLocation").content("newContent").build());
+        String object = objectMapper.writeValueAsString(BakeryUpdateReportRequest.builder().content("newContent").build());
+        MockMultipartFile request =
+                new MockMultipartFile("request", "", "application/json", object.getBytes());
 
-        mockMvc.perform(post("/bakery/report/{bakeryId}/update", bakery1.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(RestDocumentationRequestBuilders
+                        .fileUpload("/bakery/report/{bakeryId}/update", bakery1.getId())
+                        .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
+                        .file(request).accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("bakery/report/update",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestFields(
-                                fieldWithPath("name").description("수정 빵집 이름"),
-                                fieldWithPath("location").description("수정 빵집 위치"),
-                                fieldWithPath("content").description("수정 사항")
+                        requestParts(
+                                partWithName("request").description("빵집 수정 제보"),
+                                partWithName("files").description("빵집 수정 이미지들")
+                        ),
+                        requestPartBody("request"),
+                        requestPartFields("request",
+//                                fieldWithPath("reason").description("빵집 수정 제보 이유"),
+                                fieldWithPath("content").optional().description("수정 사항")
                         )
-                ))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-    void bakeryDeleteReport() throws Exception {
-        mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/bakery/report/{bakeryId}/delete", bakery1.getId())
-                .file(new MockMultipartFile("file", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
-                .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("bakery/report/delete",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestParts(partWithName("file").description("삭제 요청한 빵집 이미지"))
                 ))
                 .andExpect(status().isCreated());
     }
@@ -307,7 +297,7 @@ class BakeryControllerTest extends ControllerTest {
                         requestFields(
                                 fieldWithPath("name").description("제보 빵집 이름"),
                                 fieldWithPath("location").description("제보 빵집 위치"),
-                                fieldWithPath("content").description("추천 이유")
+                                fieldWithPath("content").optional().description("추천 이유")
                         )
                 ))
                 .andExpect(status().isCreated());
