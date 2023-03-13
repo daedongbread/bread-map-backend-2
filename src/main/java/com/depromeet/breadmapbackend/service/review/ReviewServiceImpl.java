@@ -69,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
     public PageResponseDto<ReviewDto> getProductReviewList(String username, Long bakeryId, Long productId, ReviewSortType sortBy, int page) {
         User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        Product product = productRepository.findByBakeryAndId(bakery, productId).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+        Product product = productRepository.findByIdAndBakery(productId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
 
         Page<Review> productReviews = reviewQueryRepository.findProductReview(me, bakery, product, sortBy, page);
         List<ReviewDto> contents = productReviews.getContent().stream()

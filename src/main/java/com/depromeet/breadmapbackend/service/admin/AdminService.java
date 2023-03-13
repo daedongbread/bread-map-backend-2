@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface AdminService {
     void adminJoin(AdminJoinRequest request);
@@ -24,13 +23,11 @@ public interface AdminService {
     void addBakery(BakeryAddRequest request);
     void updateBakery(Long bakeryId, BakeryUpdateRequest request);
     void deleteProduct(Long bakeryId, Long productId);
-    PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType type, int page);
-    void updateBakeryImage(Long bakeryId, AdminImageUpdateRequest request);
-    void updateProductImage(Long productId, AdminImageUpdateRequest request);
+    PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType imageType, int page);
     ResponseEntity<byte[]> downloadAdminImage(String image) throws IOException;
-    void deleteAdminImage(Long bakeryId, Long imageId, AdminBakeryImageType type);
+    void deleteAdminImage(Long bakeryId, AdminBakeryImageType type, Long imageId);
     PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page);
-    void updateProductAddImage(Long bakeryId, Long reportId, ProductAddImageUpdateRequest request);
+    void registerProductAddImage(Long bakeryId, Long reportId, ProductAddImageRegisterRequest request);
     void deleteProductAddReport(Long bakeryId, Long reportId);
     PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page);
     void changeBakeryUpdateReport(Long bakeryId, Long reportId);

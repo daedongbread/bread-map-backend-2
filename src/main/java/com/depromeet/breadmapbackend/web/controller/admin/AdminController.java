@@ -6,7 +6,6 @@ import com.depromeet.breadmapbackend.service.admin.AdminService;
 import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.admin.dto.*;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
-import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
 import com.depromeet.breadmapbackend.web.controller.common.PageableSortConverter;
 import com.depromeet.breadmapbackend.web.controller.user.dto.ReissueRequest;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -101,34 +99,22 @@ public class AdminController {
         adminService.deleteProduct(bakeryId, productId);
     }
 
-    @GetMapping("/bakery/{bakeryId}/image")
+    @GetMapping("/bakery/{bakeryId}/{imageType}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminImageDto>> getAdminImages(
-            @PathVariable Long bakeryId, @RequestParam AdminBakeryImageType type, @RequestParam int page) {
-        return new ApiResponse<>(adminService.getAdminImages(bakeryId, type, page));
-    }
-
-    @PatchMapping("/bakery/{bakeryId}/image")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBakeryImage(@PathVariable Long bakeryId, @RequestBody @Validated(ValidationSequence.class) AdminImageUpdateRequest request) {
-        adminService.updateBakeryImage(bakeryId, request);
-    }
-
-    @PatchMapping("/product/{productId}/image")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProductImage(@PathVariable Long productId, @RequestBody @Validated(ValidationSequence.class) AdminImageUpdateRequest request) {
-        adminService.updateProductImage(productId, request);
+            @PathVariable Long bakeryId, @PathVariable AdminBakeryImageType imageType, @RequestParam int page) {
+        return new ApiResponse<>(adminService.getAdminImages(bakeryId, imageType, page));
     }
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> downloadAdminImage(@RequestParam String image) throws IOException {
         return adminService.downloadAdminImage(image);
     }
-
-    @DeleteMapping("/bakery/{bakeryId}/image/{imageId}")
+    
+    @DeleteMapping("/bakery/{bakeryId}/{imageType}/{imageId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAdminImage(@PathVariable Long bakeryId, @PathVariable Long imageId, @RequestParam AdminBakeryImageType type) {
-        adminService.deleteAdminImage(bakeryId, imageId, type);
+    public void deleteAdminImage(@PathVariable Long bakeryId, @PathVariable AdminBakeryImageType imageType, @PathVariable Long imageId) {
+        adminService.deleteAdminImage(bakeryId, imageType, imageId);
     }
 
     @GetMapping("/bakery/{bakeryId}/productAddReport")
@@ -140,10 +126,10 @@ public class AdminController {
 
     @PatchMapping("/bakery/{bakeryId}/productAddReport/{reportId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProductAddImage(
+    public void registerProductAddImage(
             @PathVariable Long bakeryId, @PathVariable Long reportId,
-            @RequestBody @Validated(ValidationSequence.class) ProductAddImageUpdateRequest request) {
-        adminService.updateProductAddImage(bakeryId, reportId, request);
+            @RequestBody @Validated(ValidationSequence.class) ProductAddImageRegisterRequest request) {
+        adminService.registerProductAddImage(bakeryId, reportId, request);
     }
 
     @DeleteMapping("/bakery/{bakeryId}/productAddReport/{reportId}")

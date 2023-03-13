@@ -12,14 +12,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AdminImageDto {
-    private AdminBakeryImageType type;
     private Long imageId;
     private String image;
     private Boolean isNew;
 
     @Builder
     public AdminImageDto(ReviewImage reviewImage) {
-        this.type = AdminBakeryImageType.REVIEW;
         this.imageId = reviewImage.getId();
         this.image = reviewImage.getImage();
         this.isNew = reviewImage.getIsNew();
@@ -27,7 +25,6 @@ public class AdminImageDto {
 
     @Builder
     public AdminImageDto(ProductAddReportImage productAddReportImage) {
-        this.type = AdminBakeryImageType.PRODUCT;
         this.imageId = productAddReportImage.getId();
         this.image = productAddReportImage.getImage();
         this.isNew = productAddReportImage.getIsNew();
@@ -35,7 +32,6 @@ public class AdminImageDto {
 
     @Builder
     public AdminImageDto(BakeryReportImage bakeryReportImage) {
-        this.type = AdminBakeryImageType.BAKERY;
         this.imageId = bakeryReportImage.getId();
         this.image = bakeryReportImage.getImage();
         this.isNew = bakeryReportImage.getIsNew();

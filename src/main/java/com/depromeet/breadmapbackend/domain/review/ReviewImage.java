@@ -40,6 +40,10 @@ public class ReviewImage extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isNew;
 
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isHide;
+
     @Builder
     public ReviewImage(Review review, Bakery bakery, ImageType imageType, String image) {
         this.review = review;
@@ -47,10 +51,15 @@ public class ReviewImage extends BaseEntity {
         this.imageType = imageType;
         this.image = image;
         this.isNew = true;
+        this.isHide = false;
         this.review.getImageList().add(this);
     }
 
     public void unNew() {
         this.isNew = false;
+    }
+
+    public void hide() {
+        this.isHide = true;
     }
 }

@@ -14,12 +14,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ProductAddReportDto {
     private Long reportId;
-    private String mainImage;
-    private List<ProductAddReportImageDto> imageList;
     private LocalDateTime createdAt;
     private String name;
     private String price;
     private String nickName;
+    private List<ProductAddReportImageDto> imageList;
 
 
     @Getter
@@ -27,23 +26,23 @@ public class ProductAddReportDto {
     public static class ProductAddReportImageDto {
         private Long imageId;
         private String image;
+        private Boolean isRegistered;
 
         @Builder
         public ProductAddReportImageDto(ProductAddReportImage productAddReportImage) {
             this.imageId = productAddReportImage.getId();
             this.image = productAddReportImage.getImage();
+            this.isRegistered = productAddReportImage.getIsRegistered();
         }
     }
 
     @Builder
     public ProductAddReportDto(ProductAddReport report) {
         this.reportId = report.getId();
-        this.mainImage = report.getImages().stream()
-                .filter(ProductAddReportImage::getIsMain).collect(Collectors.toList()).get(0).getImage();
-        this.imageList = report.getImages().stream().map(ProductAddReportImageDto::new).collect(Collectors.toList());
         this.createdAt = report.getCreatedAt();
         this.name = report.getName();
         this.price = report.getPrice();
         this.nickName = report.getUser().getNickName();
+        this.imageList = report.getImages().stream().map(ProductAddReportImageDto::new).collect(Collectors.toList());
     }
 }

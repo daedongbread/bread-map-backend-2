@@ -29,19 +29,19 @@ public class ProductAddReportImage extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isMain;
+    private Boolean isNew;
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isNew;
+    private Boolean isRegistered;
 
     @Builder
     public ProductAddReportImage(ProductAddReport productAddReport, String image) {
         this.productAddReport = productAddReport;
         this.bakery = productAddReport.getBakery();
         this.image = image;
-        this.isMain = this.productAddReport.getImages().isEmpty();
         this.isNew = true;
+        this.isRegistered = false;
         this.productAddReport.getImages().add(this);
     }
 
@@ -49,12 +49,6 @@ public class ProductAddReportImage extends BaseEntity {
         this.isNew = false;
     }
 
-    public void unMain() {
-        this.isMain = false;
-    }
-
-    public void isMain() {
-        this.isMain = true;
-    }
+    public void register() { this.isRegistered = true; }
 }
 

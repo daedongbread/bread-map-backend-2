@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ProductAddReportImageRepository extends JpaRepository<ProductAddReportImage, Long> {
-    Page<ProductAddReportImage> findPageByBakery(Bakery bakery, Pageable pageable);
+    Page<ProductAddReportImage> findPageByBakeryAndIsRegisteredIsTrue(Bakery bakery, Pageable pageable);
     Optional<ProductAddReportImage> findByImageAndProductAddReport(String image, ProductAddReport report);
     Optional<ProductAddReportImage> findByIdAndProductAddReport(Long id, ProductAddReport report);
 }
