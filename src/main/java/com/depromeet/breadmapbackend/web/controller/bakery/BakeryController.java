@@ -61,7 +61,7 @@ public class BakeryController {
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryUpdateReport(
             @CurrentUser String username, @PathVariable Long bakeryId,
-            @RequestPart @Validated(ValidationSequence.class) BakeryUpdateRequest request,
+            @RequestPart @Validated(ValidationSequence.class) BakeryUpdateReportRequest request,
             @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         bakeryService.bakeryUpdateReport(username, bakeryId, request, files);
     }

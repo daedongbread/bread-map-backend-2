@@ -152,11 +152,11 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateRequest request, List<MultipartFile> files) throws IOException {
+    public void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateReportRequest request, List<MultipartFile> files) throws IOException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
-                .bakery(bakery).user(user).reason(request.getReason()).content(request.getContent()).build();
+                .bakery(bakery).user(user).reason(BakeryUpdateReason.ETC).content(request.getContent()).build();
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
 
         if (files != null) {

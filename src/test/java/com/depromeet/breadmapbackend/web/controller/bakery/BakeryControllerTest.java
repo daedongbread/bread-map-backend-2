@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.web.controller.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryUpdateReason;
 import com.depromeet.breadmapbackend.domain.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
@@ -15,7 +14,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryReportRequest;
-import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateRequest;
+import com.depromeet.breadmapbackend.web.controller.bakery.dto.BakeryUpdateReportRequest;
 import com.depromeet.breadmapbackend.web.controller.bakery.dto.ProductReportRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -254,8 +253,7 @@ class BakeryControllerTest extends ControllerTest {
 
     @Test
     void bakeryUpdateReport() throws Exception {
-        String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
-                .reason(BakeryUpdateReason.BAKERY_SHUTDOWN).content("newContent").build());
+        String object = objectMapper.writeValueAsString(BakeryUpdateReportRequest.builder().content("newContent").build());
         MockMultipartFile request =
                 new MockMultipartFile("request", "", "application/json", object.getBytes());
 
@@ -276,7 +274,7 @@ class BakeryControllerTest extends ControllerTest {
                         ),
                         requestPartBody("request"),
                         requestPartFields("request",
-                                fieldWithPath("reason").description("빵집 수정 제보 이유"),
+//                                fieldWithPath("reason").description("빵집 수정 제보 이유"),
                                 fieldWithPath("content").optional().description("수정 사항")
                         )
                 ))
