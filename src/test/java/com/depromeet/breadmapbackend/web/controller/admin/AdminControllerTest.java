@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.admin.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
 import com.depromeet.breadmapbackend.domain.product.Product;
@@ -9,7 +10,6 @@ import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.security.domain.RoleType;
 import com.depromeet.breadmapbackend.security.token.JwtToken;
@@ -20,13 +20,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +37,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,7 +48,10 @@ class AdminControllerTest extends ControllerTest {
     private Product product;
     private Review review;
     private BakeryAddReport bakeryAddReport;
+    private BakeryUpdateReport bakeryUpdateReport;
     private ProductAddReport productAddReport;
+    private ProductAddReportImage productAddReportImage1;
+    private ProductAddReportImage productAddReportImage2;
     private BakeryReportImage bakeryReportImage;
     private JwtToken token;
     private ReviewReport reviewReport;
@@ -80,49 +80,51 @@ class AdminControllerTest extends ControllerTest {
         product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
         product.updateImage(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg");
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage.jpg", "image/jpg", "test".getBytes()),
-                "productImage.jpg");
 
         bakeryAddReport = BakeryAddReport.builder().user(user).content("test content").location("test location")
                 .name("test Report").build();
         bakeryAddReportRepository.save(bakeryAddReport);
 
+        bakeryUpdateReport = BakeryUpdateReport.builder()
+                .bakery(bakery).user(user).reason(BakeryUpdateReason.BAKERY_SHUTDOWN).content("content").build();
+        bakeryUpdateReportRepository.save(bakeryUpdateReport);
+        BakeryUpdateReportImage bakeryUpdateReportImage = BakeryUpdateReportImage.builder().bakery(bakery).report(bakeryUpdateReport).image("image").build();
+        bakeryUpdateReportImageRepository.save(bakeryUpdateReportImage);
+
         bakeryReportImage = BakeryReportImage.builder().bakery(bakery).image("bakeryReportImage.jpg").user(user).build();
         bakeryReportImageRepository.save(bakeryReportImage);
-        s3Uploader.upload(
-                new MockMultipartFile("image", "bakeryReportImage.jpg", "image/jpg", "test".getBytes()),
-                "bakeryReportImage.jpg");
 
         productAddReport = ProductAddReport.builder().bakery(bakery).user(user).name("newBread").price("1000").build();
         productAddReportRepository.save(productAddReport);
-        ProductAddReportImage.builder().productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage.jpg").build();
-//        productAddReportImageRepository.save(productAddReportImage); TODO
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage.jpg", "image/jpg", "test".getBytes()),
-                "productImage.jpg");
+        productAddReportImage1 = ProductAddReportImage.builder()
+                .productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage1.jpg").build();
+        productAddReportImageRepository.save(productAddReportImage1);
+        productAddReportImage2 = ProductAddReportImage.builder()
+                .productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage2.jpg").build();
+        productAddReportImageRepository.save(productAddReportImage2);
 
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
-        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
-        review.addImage(image);
         reviewRepository.save(review);
-
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
+        reviewImageRepository.save(image);
         ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
 
         reviewReport = ReviewReport.builder()
                 .reporter(user).review(review).reason(ReviewReportReason.COPYRIGHT_THEFT).content("content").build();
         reviewReportRepository.save(reviewReport);
+
+        s3Uploader.upload(
+                new MockMultipartFile("image", "tempImage.jpg", "image/jpg", "test".getBytes()),
+                "tempImage.jpg");
     }
 
     @AfterEach
     public void setDown() {
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/productImage.jpg");
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/bakeryReportImage.jpg");
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/productImage.jpg");
+        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/tempImage.jpg");
         s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/bakeryImage.jpg");
+        bakeryUpdateReportImageRepository.deleteAllInBatch();
         bakeryUpdateReportRepository.deleteAllInBatch();
-        bakeryDeleteReportRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
         productAddReportImageRepository.deleteAllInBatch();
@@ -353,33 +355,26 @@ class AdminControllerTest extends ControllerTest {
     void addBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         String object = objectMapper.writeValueAsString(BakeryAddRequest.builder()
-                .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .name("newBakery").image("tempImage.jpg")
+                .address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
-                        BakeryAddRequest.AddProductRequest.builder()
-                                .productType(ProductType.BREAD).productName("testBread").price("12000").build()
+                        BakeryAddRequest.ProductAddRequest.builder()
+                                .productType(ProductType.BREAD).productName("testBread").price("12000")
+                                .image("tempImage.jpg").build()
                 )).build());
-        MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
-        mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/admin/bakery")
-                .file(new MockMultipartFile("bakeryImage", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
-                .file(new MockMultipartFile("productImageList", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
-                .file(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/admin/bakery")
+                .content(object).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/add",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestParts(
-                                partWithName("request").description("빵집 정보"),
-                                partWithName("bakeryImage").description("빵집 이미지"),
-                                partWithName("productImageList").description("상품 이미지 " +
-                                        "(request의 상품 갯수와 반드시 같아야 하며 없는 이미지는 \"\"로 넘겨야 함)")
-                        ),
-                        requestPartFields("request",
+                        requestFields(
                                 fieldWithPath("name").description("빵집 이름"),
+                                fieldWithPath("image").description("빵집 이미지"),
                                 fieldWithPath("address").description("빵집 도로명 주소"),
                                 fieldWithPath("latitude").description("빵집 위도"),
                                 fieldWithPath("longitude").description("빵집 경도"),
@@ -394,6 +389,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
+                                fieldWithPath("productList.[].image").optional().description("상품 이미지"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
                                                 "POSTING(\"게시중\"),\n" +
@@ -407,23 +403,18 @@ class AdminControllerTest extends ControllerTest {
     void updateBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
-                .name("newBakery").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .name("newBakery").image("tempImage.jpg").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
-                        BakeryUpdateRequest.UpdateProductRequest.builder()
+                        BakeryUpdateRequest.ProductUpdateRequest.builder()
                                 .productId(product.getId()).productType(ProductType.BREAD)
-                                .productName("testBread").price("12000").existedImage("image").build(),//,
-                        BakeryUpdateRequest.UpdateProductRequest.builder()
+                                .productName("testBread").price("12000").image("tempImage.jpg").build(),//,
+                        BakeryUpdateRequest.ProductUpdateRequest.builder()
                                 .productType(ProductType.BREAD).productName("newBread").price("10000").build()
                 )).build());
-        MockMultipartFile request = new MockMultipartFile("request", "", "application/json", object.getBytes());
 
-        mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload("/admin/bakery/{bakeryId}", bakery.getId())
-                .file(new MockMultipartFile("bakeryImage", null, "image/png", (InputStream) null))
-                .file(new MockMultipartFile("productImageList", null, "image/png", (InputStream) null))
-                .file(new MockMultipartFile("productImageList", "newImage", "image/png", (InputStream) null))
-                .file(request).accept(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/admin/bakery/{bakeryId}", bakery.getId())
+                .content(object).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/bakery/update",
@@ -432,14 +423,9 @@ class AdminControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestParts(
-                                partWithName("request").description("빵집 정보"),
-                                partWithName("bakeryImage").description("빵집 이미지"),
-                                partWithName("productImageList").description("상품 이미지 " +
-                                        "(request의 상품 갯수와 반드시 같아야 하며 없는 이미지는 null로 넘겨야 함)")
-                        ),
-                        requestPartFields("request",
+                        requestFields(
                                 fieldWithPath("name").description("빵집 이름"),
+                                fieldWithPath("image").description("빵집 이미지"),
                                 fieldWithPath("address").description("빵집 도로명 주소"),
                                 fieldWithPath("latitude").description("빵집 위도"),
                                 fieldWithPath("longitude").description("빵집 경도"),
@@ -454,7 +440,7 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
-                                fieldWithPath("productList.[].existedImage").optional().description("상품 기존 이미지 (없으면 null)"),
+                                fieldWithPath("productList.[].image").optional().description("상품 이미지"),
                                 fieldWithPath("status")
                                         .description("빵집 게시상태 (" +
                                                 "POSTING(\"게시중\"),\n" +
@@ -482,7 +468,8 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void getAdminImages() throws Exception {
-        mockMvc.perform(get("/admin/bakery/{bakeryId}/image?type=bakery&page=0", bakery.getId())
+        mockMvc.perform(get("/admin/bakery/{bakeryId}/{imageType}?page=0",
+                        bakery.getId(), AdminBakeryImageType.bakeryReportImage)
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/image/all",
@@ -490,9 +477,9 @@ class AdminControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("imageType").description("이미지 종류 (bakeryReportImage, productAddReportImage, reviewImage)")),
                         requestParameters(
-                                parameterWithName("type").optional().description("이미지 종류 (bakery, product, review)"),
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
@@ -501,79 +488,46 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.totalElements").description("전체 데이터 수"),
                                 fieldWithPath("data.totalPages").description("전체 페이지 수"),
                                 fieldWithPath("data.contents").description("빵집 제보 이미지 리스트"),
-                                fieldWithPath("data.contents.[].type").description("빵집 관련 이미지 종류 (BAKERY, PRODUCT, REVIEW)"),
                                 fieldWithPath("data.contents.[].imageId").description("빵집 관련 이미지 고유 번호"),
-                                fieldWithPath("data.contents.[].image").description("빵집 관련 이미지")
+                                fieldWithPath("data.contents.[].image").description("빵집 관련 이미지"),
+                                fieldWithPath("data.contents.[].isNew").description("빵집 관련 이미지 신규 여부")
                         )
                 ))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void updateBakeryImage() throws Exception {
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage.jpg", "image/jpg", "test".getBytes()),
-                "newBakeryImage.jpg");
-        // given
-        String object = objectMapper.writeValueAsString(AdminImageUpdateRequest.builder()
-                .image(customAWSS3Properties.getCloudFront() + "/newBakeryImage.jpg").build());
-
-        // when
-        ResultActions result = mockMvc.perform(patch("/admin/bakery/{bakeryId}/image", bakery.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("admin/bakery/image/update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-                        pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestFields(
-                                fieldWithPath("image").description("업데이트할 이미지 경로")
-                        )
-                ))
-                .andExpect(status().isNoContent());
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/newBakeryImage.jpg");
-    }
-
-    @Test
-    void updateProductImage() throws Exception {
-        s3Uploader.upload(
-                new MockMultipartFile("image", "productImage.jpg", "image/jpg", "test".getBytes()),
-                "newProductImage.jpg");
-        // given
-        String object = objectMapper.writeValueAsString(AdminImageUpdateRequest.builder()
-                .image(customAWSS3Properties.getCloudFront() + "/newProductImage.jpg").build());
-
-        // when
-        ResultActions result = mockMvc.perform(patch("/admin/product/{productId}/image", product.getId())
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("admin/product/image/update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-                        pathParameters(
-                                parameterWithName("productId").description("상품 고유 번호")),
-                        requestFields(
-                                fieldWithPath("image").description("업데이트할 이미지 경로")
-                        )
-                ))
-                .andExpect(status().isNoContent());
-        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/newProductImage.jpg");
-    }
+//    @Test
+//    void updateBakeryImage() throws Exception {
+//        s3Uploader.upload(
+//                new MockMultipartFile("image", "productImage.jpg", "image/jpg", "test".getBytes()),
+//                "newBakeryImage.jpg");
+//        // given
+//        String object = objectMapper.writeValueAsString(AdminImageUpdateRequest.builder()
+//                .image(customAWSS3Properties.getCloudFront() + "/newBakeryImage.jpg").build());
+//
+//        // when
+//        ResultActions result = mockMvc.perform(patch("/admin/bakery/{bakeryId}/image", bakery.getId())
+//                .header("Authorization", "Bearer " + token.getAccessToken())
+//                .content(object)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON));
+//
+//        // then
+//        result
+//                .andDo(print())
+//                .andDo(document("admin/bakery/image/update",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+//                        requestFields(
+//                                fieldWithPath("image").description("업데이트할 이미지 경로")
+//                        )
+//                ))
+//                .andExpect(status().isNoContent());
+//        s3Uploader.deleteFileS3(customAWSS3Properties.getBucket() + "/newBakeryImage.jpg");
+//    }
 
     @Test
     void downloadAdminImage() throws Exception {
@@ -592,7 +546,8 @@ class AdminControllerTest extends ControllerTest {
 
     @Test
     void deleteAdminImage() throws Exception {
-        mockMvc.perform(delete("/admin/bakery/{bakeryId}/image/{imageId}?type=bakery", bakery.getId(), bakeryReportImage.getId())
+        mockMvc.perform(delete("/admin/bakery/{bakeryId}/{imageType}/{imageId}",
+                        bakery.getId(), AdminBakeryImageType.bakeryReportImage, bakeryReportImage.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("admin/image/delete",
@@ -601,9 +556,145 @@ class AdminControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
-                                parameterWithName("imageId").description("이미지 고유 번호")),
+                                parameterWithName("imageType").description("이미지 종류 (bakeryReportImage, productAddReportImage, reviewImage)"),
+                                parameterWithName("imageId").description("이미지 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getProductAddReports() throws Exception {
+        mockMvc.perform(get("/admin/bakery/{bakeryId}/productAddReport?page=0", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/productAddReport",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestParameters(
-                                parameterWithName("type").optional().description("이미지 종류 (bakery, product, review)"))
+                                parameterWithName("page").description("페이지 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("상품 추가 제보 리스트"),
+                                fieldWithPath("data.contents.[].reportId").description("상품 추가 제보 고유 번호"),
+                                fieldWithPath("data.contents.[].createdAt").description("상품 추가 제보 날짜"),
+                                fieldWithPath("data.contents.[].name").description("상품 이름"),
+                                fieldWithPath("data.contents.[].price").description("상품 가격"),
+                                fieldWithPath("data.contents.[].nickName").description("제보한 유저 닉네임"),
+                                fieldWithPath("data.contents.[].imageList").description("상품 추가 제보 이미지 리스트"),
+                                fieldWithPath("data.contents.[].imageList.[].imageId").description("상품 추가 제보 이미지 고유 번호"),
+                                fieldWithPath("data.contents.[].imageList.[].image").description("상품 추가 제보 이미지"),
+                                fieldWithPath("data.contents.[].imageList.[].isRegistered").description("상품 추가 제보 이미지 저장 여부")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void registerProductAddImage() throws Exception {
+        String object = objectMapper.writeValueAsString(ProductAddImageRegisterRequest.builder()
+                        .imageIdList(Arrays.asList(productAddReportImage1.getId(), productAddReportImage2.getId())).build());
+
+        mockMvc.perform(patch("/admin/bakery/{bakeryId}/productAddReport/{reportId}", bakery.getId(), bakeryAddReport.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("admin/productAddReport/register",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reportId").description("빵집 제보 고유 번호")),
+                        requestFields(
+                                fieldWithPath("imageIdList").description("저장할 이미지 고유 번호 리스트")
+                        ))
+                )
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteProductAddReport() throws Exception {
+        mockMvc.perform(delete("/admin/bakery/{bakeryId}/productAddReport/{reportId}", bakery.getId(), productAddReport.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/productAddReport/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reportId").description("상품 추가 제보 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getBakeryUpdateReports() throws Exception {
+        mockMvc.perform(get("/admin/bakery/{bakeryId}/updateReport?page=0", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/updateReport",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("빵집 수정 제보 리스트"),
+                                fieldWithPath("data.contents.[].reportId").description("빵집 수정 제보 고유 번호"),
+                                fieldWithPath("data.contents.[].createdAt").description("빵집 수정 제보 날짜"),
+                                fieldWithPath("data.contents.[].nickName").description("제보한 유저 닉네임"),
+                                fieldWithPath("data.contents.[].reason").description("빵집 수정 제보 이유"),
+                                fieldWithPath("data.contents.[].content").description("빵집 수정 제보 내용"),
+                                fieldWithPath("data.contents.[].imageList").description("빵집 수정 제보 이미지 리스트"),
+                                fieldWithPath("data.contents.[].isChange").description("빵집 수정 제보 변경 여부")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void changeBakeryUpdateReport() throws Exception {
+        mockMvc.perform(patch("/admin/bakery/{bakeryId}/updateReport/{reportId}", bakery.getId(), bakeryUpdateReport.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/updateReport/change",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reportId").description("빵집 수정 제보 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteBakeryUpdateReport() throws Exception {
+        mockMvc.perform(delete("/admin/bakery/{bakeryId}/updateReport/{reportId}", bakery.getId(), bakeryUpdateReport.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/updateReport/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reportId").description("빵집 수정 제보 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
     }
@@ -804,5 +895,23 @@ class AdminControllerTest extends ControllerTest {
                                 parameterWithName("userId").description("차단 유저 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void uploadTempImage() throws Exception {
+        mockMvc.perform(multipart("/admin/image")
+                        .file(new MockMultipartFile("file", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("admin/tempImage",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        requestParts(
+                                partWithName("file").description("업로드 이미지")),
+                        responseFields(
+                                fieldWithPath("data.image").description("업로드된 이미지"))
+                ))
+                .andExpect(status().isCreated());
     }
 }

@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.web.controller.flag;
 
 import com.depromeet.breadmapbackend.service.flag.FlagService;
+import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagDto;
@@ -9,6 +10,7 @@ import com.depromeet.breadmapbackend.web.controller.flag.dto.FlagBakeryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +30,14 @@ public class FlagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addFlag(@CurrentUser String username, @RequestBody FlagRequest request) {
+    public void addFlag(@CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) FlagRequest request) {
         flagService.addFlag(username, request);
     }
 
     @PatchMapping("/{flagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateFlag(@CurrentUser String username, @PathVariable Long flagId, @RequestBody FlagRequest request) {
+    public void updateFlag(
+            @CurrentUser String username, @PathVariable Long flagId, @RequestBody @Validated(ValidationSequence.class) FlagRequest request) {
         flagService.updateFlag(username, flagId, request);
     }
 

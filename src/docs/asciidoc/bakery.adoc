@@ -15,7 +15,6 @@
 - 빵집 단건 조회 API
 - 빵집 상품 리스트 조회 API
 - 빵집 수정 요청 API
-- 빵집 삭제 요청 API
 - 빵집 추가 요청 API
 - 빵집 이미지 제보 API
 - 상품 추가 요청 API
@@ -34,10 +33,7 @@ operation::bakery/find[snippets='http-request,path-parameters,http-response,resp
 operation::bakery/product[snippets='http-request,path-parameters,http-response,response-fields']
 
 === 빵집 수정 요청 API [POST]
-operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
-
-=== 빵집 삭제 요청 API [POST]
-operation::bakery/report/delete[snippets='http-request,request-headers,path-parameters,request-parts,http-response']
+operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
 
 === 빵집 추가 요청 API [POST]
 operation::bakery/report/add[snippets='http-request,request-headers,request-fields,http-response']

@@ -89,7 +89,7 @@ public class S3Uploader {
 
     // delete file
     public void deleteFileS3(String fileName) {
-        if(fileName != null) {
+        if(fileName != null && !fileName.isBlank()) {
             fileName = fileName.replace(customAwss3Properties.getCloudFront() + "/", "");
             log.info("delete file : " + fileName);
             if (amazonS3Client.doesObjectExist(customAwss3Properties.getBucket(), fileName))

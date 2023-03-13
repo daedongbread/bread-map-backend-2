@@ -35,5 +35,6 @@ public class FlagBakery extends BaseEntity {
         this.flag = flag;
         this.bakery = bakery;
         this.user = user;
+        this.flag.getFlagBakeryList().add(this);
     }
 }

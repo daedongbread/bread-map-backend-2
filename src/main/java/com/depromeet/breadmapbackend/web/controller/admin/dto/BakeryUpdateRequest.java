@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -21,12 +22,15 @@ public class BakeryUpdateRequest {
     @NotBlank(message = "빵집 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     @Size(min=1, max=20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
     private String name;
+
+    private String image;
+
     @NotBlank(message = "주소는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     @Size(min=3, max=100, message = "3자 이상, 100자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
     private String address;
-    @NotBlank(message = "위도는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+    @NotNull(message = "위도는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private Double latitude;
-    @NotBlank(message = "경도는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+    @NotNull(message = "경도는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private Double longitude;
     private String hours;
     private String websiteURL;
@@ -35,19 +39,18 @@ public class BakeryUpdateRequest {
     private String blogURL;
     private String phoneNumber;
     private List<FacilityInfo> facilityInfoList;
-    private List<UpdateProductRequest> productList;
-//    @NotBlank(message = "게시상태는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+    private List<ProductUpdateRequest> productList;
     private BakeryStatus status;
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class UpdateProductRequest {
+    public static class ProductUpdateRequest {
         private Long productId;
         private ProductType productType;
         private String productName;
         private String price;
-        private String existedImage;
+        private String image;
     }
 }

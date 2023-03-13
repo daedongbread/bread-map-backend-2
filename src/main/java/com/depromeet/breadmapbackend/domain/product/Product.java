@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.product;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,8 +40,8 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewProductRating> reviewProductRatingList = new ArrayList<>();
 
-    @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
-    @ColumnDefault("true")
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
     private boolean isTrue;
 
     @Builder
@@ -51,25 +52,15 @@ public class Product extends BaseEntity {
         this.bakery = bakery;
         if(isTrue == null) this.isTrue = true;
         else this.isTrue = isTrue;
-//        this.bakery.getBreadList().add(this);
-//        bakery.getBreadList().add(this);
-    }
-
-    public void updateType(ProductType productType) { this.productType = productType; }
-
-    public void updateName(String name) {
-        if(!this.name.equals(name)) this.name = name;
-    }
-
-    public void updatePrice(String price) {
-        if(!this.price.equals(price)) this.price = price;
+        this.bakery.getProductList().add(this);
     }
 
     public void updateImage(String image) {
         this.image = image;
     }
 
-    public void update(String name, String price) {
+    public void update(ProductType productType, String name, String price) {
+        this.productType = productType;
         this.name = name;
         this.price = price;
     }

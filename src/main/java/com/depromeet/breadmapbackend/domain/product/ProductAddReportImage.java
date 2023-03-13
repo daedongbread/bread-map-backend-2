@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.product;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
 
@@ -26,12 +27,28 @@ public class ProductAddReportImage extends BaseEntity {
     @Column(nullable = false)
     private String image;
 
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isNew;
+
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isRegistered;
+
     @Builder
     public ProductAddReportImage(ProductAddReport productAddReport, String image) {
         this.productAddReport = productAddReport;
         this.bakery = productAddReport.getBakery();
         this.image = image;
-        this.productAddReport.addImage(this);
+        this.isNew = true;
+        this.isRegistered = false;
+        this.productAddReport.getImages().add(this);
     }
+
+    public void unNew() {
+        this.isNew = false;
+    }
+
+    public void register() { this.isRegistered = true; }
 }
 

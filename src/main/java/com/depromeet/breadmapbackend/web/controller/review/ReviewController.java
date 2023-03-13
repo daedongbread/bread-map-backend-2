@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.web.controller.review;
 
 import com.depromeet.breadmapbackend.domain.review.ReviewSortType;
 import com.depromeet.breadmapbackend.service.review.ReviewService;
+import com.depromeet.breadmapbackend.web.advice.ValidationSequence;
 import com.depromeet.breadmapbackend.web.controller.common.ApiResponse;
 import com.depromeet.breadmapbackend.web.controller.common.CurrentUser;
 import com.depromeet.breadmapbackend.web.controller.common.PageResponseDto;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,7 +91,9 @@ public class ReviewController {
 
     @PostMapping("/{reviewId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReviewComment(@CurrentUser String username, @PathVariable Long reviewId, @RequestBody ReviewCommentRequest request) {
+    public void addReviewComment(
+            @CurrentUser String username, @PathVariable Long reviewId,
+            @RequestBody @Validated(ValidationSequence.class) ReviewCommentRequest request) {
         reviewService.addReviewComment(username, reviewId, request);
     }
 
@@ -114,7 +118,8 @@ public class ReviewController {
     @PostMapping("/{reviewId}/report")
     @ResponseStatus(HttpStatus.CREATED)
     public void reviewReport(
-            @CurrentUser String username, @PathVariable Long reviewId, @RequestBody ReviewReportRequest request) {
+            @CurrentUser String username, @PathVariable Long reviewId,
+            @RequestBody @Validated(ValidationSequence.class) ReviewReportRequest request) {
         reviewService.reviewReport(username, reviewId, request);
     }
 }

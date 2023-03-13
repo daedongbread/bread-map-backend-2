@@ -1,19 +1,19 @@
 package com.depromeet.breadmapbackend.domain.review.repository;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.product.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 
 public interface ReviewImageRepository extends JpaRepository<ReviewImage, Long> {
 //    @Query(value = "select * from review_image", nativeQuery = true)
-    Page<ReviewImage> findPageByBakery(Bakery bakery, Pageable pageable);
+    Page<ReviewImage> findPageByBakeryAndIsHideIsFalse(Bakery bakery, Pageable pageable);
+    Optional<ReviewImage> findByIdAndBakery(Long id, Bakery bakery);
     void deleteByBakery(Bakery bakery);
     void deleteByReview(Review review);
 }

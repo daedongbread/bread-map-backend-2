@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.review;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.common.BaseEntity;
 import com.depromeet.breadmapbackend.domain.common.ImageType;
+import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,11 +36,30 @@ public class ReviewImage extends BaseEntity {
     @Column(nullable = false)
     private String image;
 
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isNew;
+
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isHide;
+
     @Builder
     public ReviewImage(Review review, Bakery bakery, ImageType imageType, String image) {
         this.review = review;
         this.bakery = bakery;
         this.imageType = imageType;
         this.image = image;
+        this.isNew = true;
+        this.isHide = false;
+        this.review.getImageList().add(this);
+    }
+
+    public void unNew() {
+        this.isNew = false;
+    }
+
+    public void hide() {
+        this.isHide = true;
     }
 }
