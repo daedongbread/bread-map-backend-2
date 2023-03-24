@@ -1,8 +1,8 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import com.depromeet.breadmapbackend.domain.common.converter.FacilityInfoListConverter;
-import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.product.Product;
+import com.depromeet.breadmapbackend.global.converter.FacilityInfoListConverter;
+import com.depromeet.breadmapbackend.global.BaseEntity;
+import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;

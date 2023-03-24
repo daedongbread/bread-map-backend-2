@@ -1,14 +1,13 @@
 package com.depromeet.breadmapbackend.domain.user;
 
-import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
+import com.depromeet.breadmapbackend.global.BaseEntity;
+import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.security.domain.ProviderType;
-import com.depromeet.breadmapbackend.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.domain.ProviderType;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

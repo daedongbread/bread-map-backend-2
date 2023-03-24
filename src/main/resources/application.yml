@@ -120,6 +120,7 @@ cloud:
         product-add-report: productAddReport
         user: user
       default-image:
+        bakery: S3_DEFAULT_BAKERY
         comment: S3_DEFAULT_COMMENT
         like: S3_DEFAULT_LIKE
         report: S3_DEFAULT_REPORT

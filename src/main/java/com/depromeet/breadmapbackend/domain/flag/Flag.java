@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.flag;
 
-import com.depromeet.breadmapbackend.domain.common.BaseEntity;
+import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,9 +1,10 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.ImageType;
-import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
+import com.depromeet.breadmapbackend.global.BaseEntity;
+import com.depromeet.breadmapbackend.global.ImageType;
+import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

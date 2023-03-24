@@ -9,40 +9,40 @@
 :operation-http-request-title: Example Request
 :operation-http-response-title: Example Response
 
-== APIs
+== Bakery APIs
 - 빵집 지도 API
-- 빵집 지도 필터 API
 - 빵집 단건 조회 API
-- 빵집 상품 리스트 조회 API
-- 빵집 수정 요청 API
-- 빵집 추가 요청 API
-- 빵집 이미지 제보 API
-- 상품 추가 요청 API
-- 리뷰용 상품 검색 API
 
 === 빵집 지도 API [GET]
 operation::bakery/find/default[snippets='http-request,request-parameters,http-response,response-fields']
 
-=== 빵집 지도 필터 API [GET]
-operation::bakery/find/filter[snippets='http-request,request-parameters,http-response,response-fields']
-
 === 빵집 단건 조회 API [GET]
 operation::bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
 
+== Bakery Product APIs
+- 빵집 상품 리스트 조회 API
+- 상품 추가 요청 API
+- 리뷰용 상품 검색 API
+
 === 빵집 상품 리스트 조회 API [GET]
 operation::bakery/product[snippets='http-request,path-parameters,http-response,response-fields']
-
-=== 빵집 수정 요청 API [POST]
-operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
-
-=== 빵집 추가 요청 API [POST]
-operation::bakery/report/add[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 빵집 이미지 제보 API [POST]
-operation::bakery/report/image[snippets='http-request,request-headers,request-fields,http-response']
 
 === 상품 추가 요청 API [POST]
 operation::bakery/report/product[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
 
 === 리뷰용 상품 검색 API [GET]
 operation::bakery/review/product/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+
+== Bakery Product APIs
+- 빵집 추가 요청 API
+- 빵집 수정 요청 API
+- 빵집 이미지 제보 API
+
+=== 빵집 추가 요청 API [POST]
+operation::bakery/report/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 빵집 수정 요청 API [POST]
+operation::bakery/report/update[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
+
+=== 빵집 이미지 제보 API [POST]
+operation::bakery/report/image[snippets='http-request,request-headers,request-fields,http-response']

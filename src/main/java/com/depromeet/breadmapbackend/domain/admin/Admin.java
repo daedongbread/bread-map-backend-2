@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin;
 
-import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.BaseEntity;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
