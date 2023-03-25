@@ -21,12 +21,12 @@ public class S3Uploader {
     private final AmazonS3Client amazonS3Client;
     private final CustomAWSS3Properties customAwss3Properties;
 
+    public String alreadyUpload(String fileName){
+        return customAwss3Properties.getCloudFront() + "/" + fileName;
+    }
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {
         log.info("upload file : " + multipartFile.getOriginalFilename());
-//        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
-//                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-//        upload(uploadFile, fileName);
         newUpload(multipartFile, fileName);
         return customAwss3Properties.getCloudFront() + "/" + fileName;
     }

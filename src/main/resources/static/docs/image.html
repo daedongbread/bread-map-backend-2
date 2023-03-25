@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>API 문서</title>
+<title>이미지 API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -439,28 +439,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>API 문서</h1>
+<h1>이미지 API</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_소개">소개</a>
+<li><a href="#_image_apis">Image APIs</a>
 <ul class="sectlevel2">
-<li><a href="#_domain">Domain</a></li>
-</ul>
-</li>
-<li><a href="#_apis">APIs</a>
-<ul class="sectlevel2">
-<li><a href="#_user_api">User API</a></li>
-<li><a href="#_bakery_api">Bakery API</a></li>
-<li><a href="#_flag_api">Flag API</a></li>
-<li><a href="#_review_api">Review API</a></li>
-<li><a href="#_search_api">Search API</a></li>
-<li><a href="#_notice_api">Notice API</a></li>
-<li><a href="#_admin_api">Admin API</a></li>
-<li><a href="#_image_api">Image API</a></li>
+<li><a href="#_임시_이미지_업로드_api_post">임시 이미지 업로드 API [POST]</a></li>
 </ul>
 </li>
 </ul>
@@ -468,13 +456,39 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_소개"><a class="link" href="#_소개">소개</a></h2>
+<h2 id="_image_apis"><a class="link" href="#_image_apis">Image APIs</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>대동빵지도 API</p>
+<div class="ulist">
+<ul>
+<li>
+<p>이미지 업로드 API</p>
+</li>
+</ul>
 </div>
 <div class="sect2">
-<h3 id="_domain"><a class="link" href="#_domain">Domain</a></h3>
+<h3 id="_임시_이미지_업로드_api_post"><a class="link" href="#_임시_이미지_업로드_api_post">임시 이미지 업로드 API [POST]</a></h3>
+<div class="sect3">
+<h4 id="_임시_이미지_업로드_api_post_http_request"><a class="link" href="#_임시_이미지_업로드_api_post_http_request">Example Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/images HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjc5NzYyNzc0LCJleHAiOjE2Nzk3NjYzNzR9.J-FJTDh12MTWtEayA-1X8yziTa3tkXCnfvx52FtabKA
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=image; filename=5ea547fc-da84-4d20-8f1e-c5088b4580e9.png
+Content-Type: image/png
+
+test
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_임시_이미지_업로드_api_post_request_headers"><a class="link" href="#_임시_이미지_업로드_api_post_request_headers">Request headers</a></h4>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -482,105 +496,91 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">환경</th>
-<th class="tableblock halign-left valign-top">Domain</th>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">개발 서버</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">운영 서버</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://api.daedongbread.com" class="bare">https://api.daedongbread.com</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저/관리자의 Access Token</code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_임시_이미지_업로드_api_post_request_parts"><a class="link" href="#_임시_이미지_업로드_api_post_request_parts">Request parts</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Part</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업로드 이미지</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sect1">
-<h2 id="_apis"><a class="link" href="#_apis">APIs</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_user_api"><a class="link" href="#_user_api">User API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="user.html">User APIs</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_bakery_api"><a class="link" href="#_bakery_api">Bakery API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="bakery.html">Bakery APIs</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_flag_api"><a class="link" href="#_flag_api">Flag API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="flag.html">Flag APIs</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_review_api"><a class="link" href="#_review_api">Review API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="review.html">Review APIs</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_search_api"><a class="link" href="#_search_api">Search API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="search.html">Search APIs</a></p>
-</li>
-</ul>
+<div class="sect3">
+<h4 id="_임시_이미지_업로드_api_post_http_response"><a class="link" href="#_임시_이미지_업로드_api_post_http_response">Example Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 99
+
+{
+  "data" : {
+    "imagePath" : "cloudfront/images/9de1bd74cc287dac824dbdf93182129a.png"
+  }
+}</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_notice_api"><a class="link" href="#_notice_api">Notice API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="notice.html">Notice APIs</a></p>
-</li>
-</ul>
 </div>
+<div class="sect3">
+<h4 id="_임시_이미지_업로드_api_post_response_fields"><a class="link" href="#_임시_이미지_업로드_api_post_response_fields">Response fields</a></h4>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.imagePath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업로드된 이미지 경로</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sect2">
-<h3 id="_admin_api"><a class="link" href="#_admin_api">Admin API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="admin.html">Admin APIs</a></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_image_api"><a class="link" href="#_image_api">Image API</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="image.html">Image APIs</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -589,7 +589,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-26 01:42:37 +0900
+Last updated 2023-03-26 01:40:40 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

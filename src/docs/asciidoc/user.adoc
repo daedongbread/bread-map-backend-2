@@ -19,25 +19,25 @@
 - 알림 상태 변경 API
 
 === 토큰 재발급 API [POST]
-operation::user/reissue[snippets='http-request,request-fields,http-response,response-fields']
+operation::v1/user/reissue[snippets='http-request,request-fields,http-response,response-fields']
 
 === 프로필 조회 API [GET]
-operation::user/profile[snippets='http-request,request-headers,http-response,response-fields']
+operation::v1/user/profile[snippets='http-request,request-headers,http-response,response-fields']
 
 === 닉네임 업데이트 API [PATCH]
-operation::user/nickname[snippets='http-request,request-headers,request-parts,request-part-request-fields,http-response']
+operation::v1/user/nickname[snippets='http-request,request-headers,request-parts,request-part-request-fields,http-response']
 
 === 로그아웃 API [POST]
-operation::user/logout[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/user/logout[snippets='http-request,request-headers,request-fields,http-response']
 
 // === 유저 탈퇴 API [DELETE]
-// operation::user/delete[snippets='http-request,request-headers,http-response']
+// operation::v1/user/delete[snippets='http-request,request-headers,http-response']
 
 === 알림 상태 조회 API [GET]
-operation::user/alarm[snippets='http-request,request-headers,http-response,response-fields']
+operation::v1/user/alarm[snippets='http-request,request-headers,http-response,response-fields']
 
 === 알림 상태 변경 API [PATCH]
-operation::user/alarm/update[snippets='http-request,request-headers,http-response']
+operation::v1/user/alarm/update[snippets='http-request,request-headers,http-response']
 
 == User Follow APIs
 - 팔로우 API
@@ -46,16 +46,16 @@ operation::user/alarm/update[snippets='http-request,request-headers,http-respons
 - 팔로잉 리스트 조회 API
 
 === 팔로우 API [POST]
-operation::user/follow[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/user/follow[snippets='http-request,request-headers,request-fields,http-response']
 
 === 언팔로우 API [DELETE]
-operation::user/unfollow[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/user/unfollow[snippets='http-request,request-headers,request-fields,http-response']
 
 === 팔로워 리스트 조회 [GET]
-operation::user/follower[snippets='http-request,request-headers,http-response']
+operation::v1/user/follower[snippets='http-request,request-headers,http-response']
 
 === 팔로잉 리스트 조회 [GET]
-operation::user/following[snippets='http-request,request-headers,http-response']
+operation::v1/user/following[snippets='http-request,request-headers,http-response']
 
 == User Block APIs
 - 차단 리스트 조회 API
@@ -63,10 +63,10 @@ operation::user/following[snippets='http-request,request-headers,http-response']
 - 차단 해제 API
 
 === 차단 리스트 조회 [GET]
-operation::user/blockList[snippets='http-request,request-headers,http-response']
+operation::v1/user/blockList[snippets='http-request,request-headers,http-response']
 
 === 차단 API [POST]
-operation::user/block[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/user/block[snippets='http-request,request-headers,request-fields,http-response']
 
 === 차단 해제 API [DELETE]
-operation::user/unblock[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/user/unblock[snippets='http-request,request-headers,request-fields,http-response']
