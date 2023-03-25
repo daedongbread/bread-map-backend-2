@@ -39,6 +39,8 @@ public class CustomAWSS3Properties {
         private final String productAddReport;
         @NotBlank(message = "해당값은 필수 값입니다")
         private final String user;
+        @NotBlank(message = "해당값은 필수 값입니다")
+        private final String image;
     }
 
     @Getter

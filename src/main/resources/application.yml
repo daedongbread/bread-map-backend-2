@@ -119,6 +119,7 @@ cloud:
         bakery-delete-report: bakeryDeleteReport
         product-add-report: productAddReport
         user: user
+        image: image
       default-image:
         bakery: S3_DEFAULT_BAKERY
         comment: S3_DEFAULT_COMMENT

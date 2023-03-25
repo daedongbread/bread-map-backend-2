@@ -124,6 +124,7 @@ cloud:
         bakery-delete-report: ${S3_DEFAULT_BUCKET_BAKERY_DELETE_REPORT}
         product-add-report: ${S3_DEFAULT_BUCKET_PRODUCT_ADD_REPORT}
         user: ${S3_DEFAULT_BUCKET_USER}
+        image: ${S3_DEFAULT_BUCKET_IMAGE}#CLOUD_AWS_S3_DEFAULT-BUCKET_IMAGE
       default-image:
         comment: ${S3_DEFAULT_IMAGE_COMMENT}
         like: ${S3_DEFAULT_IMAGE_LIKE}
