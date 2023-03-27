@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.report;
 
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryAddReportRequest;
+import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryReportImageRequest;
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryUpdateReportRequest;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
@@ -19,15 +20,6 @@ import java.util.List;
 public class BakeryReportController {
     private final BakeryReportService bakeryReportService;
 
-    @PostMapping("/{bakeryId}/bakery-update-reports")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void bakeryUpdateReport(
-            @CurrentUser String username, @PathVariable Long bakeryId,
-            @RequestPart @Validated(ValidationSequence.class) BakeryUpdateReportRequest request,
-            @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        bakeryReportService.bakeryUpdateReport(username, bakeryId, request, files);
-    }
-
     @PostMapping("/bakery-add-reports")
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryAddReport(
@@ -35,10 +27,19 @@ public class BakeryReportController {
         bakeryReportService.bakeryAddReport(username, request);
     }
 
+    @PostMapping("/{bakeryId}/bakery-update-reports")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void bakeryUpdateReport(
+            @CurrentUser String username, @PathVariable Long bakeryId,
+            @RequestBody @Validated(ValidationSequence.class) BakeryUpdateReportRequest request) {
+        bakeryReportService.bakeryUpdateReport(username, bakeryId, request);
+    }
+
     @PostMapping("/{bakeryId}/bakery-report-images")
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryReportImage(
-            @CurrentUser String username, @PathVariable Long bakeryId, @RequestPart List<MultipartFile> files) throws IOException {
-        bakeryReportService.bakeryReportImage(username, bakeryId, files);
+            @CurrentUser String username, @PathVariable Long bakeryId,
+            @RequestBody @Validated(ValidationSequence.class) BakeryReportImageRequest request) {
+        bakeryReportService.bakeryReportImage(username, bakeryId, request);
     }
 }

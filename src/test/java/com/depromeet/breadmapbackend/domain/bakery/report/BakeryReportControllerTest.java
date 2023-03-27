@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryAddReportRequest;
+import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryReportImageRequest;
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryUpdateReportRequest;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
@@ -67,36 +68,6 @@ class BakeryReportControllerTest extends ControllerTest {
     }
 
     @Test
-    void bakeryUpdateReport() throws Exception {
-        String object = objectMapper.writeValueAsString(BakeryUpdateReportRequest.builder().content("newContent").build());
-        MockMultipartFile request =
-                new MockMultipartFile("request", "", "application/json", object.getBytes());
-
-        mockMvc.perform(RestDocumentationRequestBuilders
-                        .fileUpload("/v1/bakeries/{bakeryId}/bakery-update-reports", bakery.getId())
-                        .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
-                        .file(request).accept(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("v1/bakery/report/update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestParts(
-                                partWithName("request").description("빵집 수정 제보"),
-                                partWithName("files").description("빵집 수정 이미지들")
-                        ),
-                        requestPartBody("request"),
-                        requestPartFields("request",
-//                                fieldWithPath("reason").description("빵집 수정 제보 이유"),
-                                fieldWithPath("content").optional().description("수정 사항")
-                        )
-                ))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
     void bakeryAddReport() throws Exception {
         String object = objectMapper.writeValueAsString(BakeryAddReportRequest.builder()
                 .name("newBakery").location("newLocation").content("newContent").build());
@@ -119,17 +90,45 @@ class BakeryReportControllerTest extends ControllerTest {
     }
 
     @Test
+    void bakeryUpdateReport() throws Exception {
+        String object = objectMapper.writeValueAsString(BakeryUpdateReportRequest.builder()
+                .content("newContent").images(List.of("image1", "image2")).build());
+
+        mockMvc.perform(post("/v1/bakeries/{bakeryId}/bakery-update-reports", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("v1/bakery/report/update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestFields(
+//                                fieldWithPath("reason").description("빵집 수정 제보 이유"),
+                                fieldWithPath("content").description("수정 사항"),
+                                fieldWithPath("images").optional().description("빵집 수정 제보 이미지들")
+                        )
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void bakeryReportImage() throws Exception {
-        mockMvc.perform(RestDocumentationRequestBuilders
-                        .fileUpload("/v1/bakeries/{bakeryId}/bakery-report-images", bakery.getId())
-                        .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
-                        .header("Authorization", "Bearer " + token.getAccessToken()))
+        String object = objectMapper.writeValueAsString(BakeryReportImageRequest.builder()
+                .images(List.of("image1", "image2")).build());
+
+        mockMvc.perform(post("/v1/bakeries/{bakeryId}/bakery-report-images", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andDo(document("v1/bakery/report/image",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호"))
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestFields(
+                                fieldWithPath("images").optional().description("빵집 사진 제보 이미지들")
+                        )
                 ))
                 .andExpect(status().isCreated());
     }
