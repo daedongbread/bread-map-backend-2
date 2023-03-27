@@ -55,8 +55,8 @@ public class BakeryProductControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        Product product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
-        Product product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price("4000").build();
+        Product product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        Product product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price(4000).build();
         productRepository.save(product1);
         productRepository.save(product2);
     }

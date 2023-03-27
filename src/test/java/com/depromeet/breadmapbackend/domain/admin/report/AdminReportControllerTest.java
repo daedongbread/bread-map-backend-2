@@ -60,7 +60,7 @@ class AdminReportControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
         productRepository.save(product);
 
         Review review = Review.builder().user(user).bakery(bakery).content("content1").build();

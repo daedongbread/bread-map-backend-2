@@ -32,7 +32,7 @@ public class Product extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private String price;
+    private Integer price;
 
     private String image;
 
@@ -44,7 +44,7 @@ public class Product extends BaseEntity {
     private boolean isTrue;
 
     @Builder
-    private Product(ProductType productType, String name, String price, Bakery bakery, Boolean isTrue) {
+    private Product(ProductType productType, String name, Integer price, Bakery bakery, Boolean isTrue) {
         this.productType = productType;
         this.name = name;
         this.price = price;
@@ -58,7 +58,7 @@ public class Product extends BaseEntity {
         this.image = image;
     }
 
-    public void update(ProductType productType, String name, String price) {
+    public void update(ProductType productType, String name, Integer price) {
         this.productType = productType;
         this.name = name;
         this.price = price;

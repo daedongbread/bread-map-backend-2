@@ -62,8 +62,8 @@ class BakeryControllerTest extends ControllerTest {
         bakeryRepository.save(bakery1);
         bakeryRepository.save(bakery2);
 
-        Product product1 = Product.builder().bakery(bakery1).productType(ProductType.BREAD).name("bread1").price("3000").build();
-        Product product2 = Product.builder().bakery(bakery2).productType(ProductType.BREAD).name("bread2").price("4000").build();
+        Product product1 = Product.builder().bakery(bakery1).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        Product product2 = Product.builder().bakery(bakery2).productType(ProductType.BREAD).name("bread2").price(4000).build();
         productRepository.save(product1);
         productRepository.save(product2);
 

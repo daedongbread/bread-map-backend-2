@@ -84,7 +84,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");
 
-        product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
         productRepository.save(product);
         product.updateImage(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg");
 
@@ -276,7 +276,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryAddRequest.ProductAddRequest.builder()
-                                .productType(ProductType.BREAD).productName("testBread").price("12000")
+                                .productType(ProductType.BREAD).productName("testBread").price(12000)
                                 .image("tempImage.jpg").build()
                 )).build());
 
@@ -324,9 +324,9 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
                                 .productId(product.getId()).productType(ProductType.BREAD)
-                                .productName("testBread").price("12000").image("tempImage.jpg").build(),//,
+                                .productName("testBread").price(12000).image("tempImage.jpg").build(),//,
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
-                                .productType(ProductType.BREAD).productName("newBread").price("10000").build()
+                                .productType(ProductType.BREAD).productName("newBread").price(10000).build()
                 )).build());
 
         mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}", bakery.getId())
