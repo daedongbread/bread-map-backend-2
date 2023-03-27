@@ -30,6 +30,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -54,8 +55,8 @@ public class BakeryProductControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        Product product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
-        Product product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price("4000").build();
+        Product product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        Product product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price(4000).build();
         productRepository.save(product1);
         productRepository.save(product2);
     }
@@ -95,14 +96,11 @@ public class BakeryProductControllerTest extends ControllerTest {
 
     @Test
     void productAddReport() throws Exception {
-        String object = objectMapper.writeValueAsString(ProductReportRequest.builder().name("newBread").price("4000").build());
-        MockMultipartFile request =
-                new MockMultipartFile("request", "", "application/json", object.getBytes());
+        String object = objectMapper.writeValueAsString(ProductReportRequest.builder()
+                .name("newBread").price("4000").images(List.of("image1", "image2")).build());
 
-        mockMvc.perform(RestDocumentationRequestBuilders
-                        .fileUpload("/v1/bakeries/{bakeryId}/product-add-reports", bakery.getId())
-                        .file(new MockMultipartFile("files", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
-                        .file(request).accept(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/v1/bakeries/{bakeryId}/product-add-reports", bakery.getId())
+                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/bakery/report/product",
@@ -110,14 +108,10 @@ public class BakeryProductControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestParts(
-                                partWithName("request").description("제보 상품 정보"),
-                                partWithName("files").description("제보 상품 이미지들")
-                        ),
-                        requestPartBody("request"),
-                        requestPartFields("request",
+                        requestFields(
                                 fieldWithPath("name").description("제보 상품 이름"),
-                                fieldWithPath("price").description("제보 상품 가격")
+                                fieldWithPath("price").description("제보 상품 가격"),
+                                fieldWithPath("images").optional().description("제보 상품 이미지들")
                         )
                 ))
                 .andExpect(status().isCreated());

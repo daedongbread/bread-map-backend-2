@@ -12,7 +12,7 @@ public class AdminProductDto {
     private Long productId;
     private ProductType productType;
     private String productName;
-    private String price;
+    private Integer price;
     private String image;
 
     @Builder

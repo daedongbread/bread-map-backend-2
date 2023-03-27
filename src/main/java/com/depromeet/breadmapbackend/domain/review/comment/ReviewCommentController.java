@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review.comment;
 
-import com.depromeet.breadmapbackend.domain.review.dto.ReviewCommentDto;
-import com.depromeet.breadmapbackend.domain.review.dto.ReviewCommentRequest;
+import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentDto;
+import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentRequest;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;

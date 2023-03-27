@@ -22,6 +22,8 @@ public class ReviewRequest {
     @Size(min=10, max=500, message = "10자 이상, 500자 이하 입력해주세요", groups = ValidationGroups.SizeCheckGroup.class)
     private String content;
 
+    private List<String> images;
+
     @Getter
     @Builder
     @NoArgsConstructor

@@ -51,7 +51,7 @@ class UserControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setUp() {
-        user = User.builder().username("testUserName1").nickName("testNickName1").roleType(RoleType.USER).build();
+        user = User.builder().username("testUserName").nickName("testNickName").roleType(RoleType.USER).build();
         userRepository.save(user);
 
         token = jwtTokenProvider.createJwtToken(user.getUsername(), RoleType.USER.getCode());
@@ -128,15 +128,13 @@ class UserControllerTest extends ControllerTest {
     @Test
     void updateNickName() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("testtest").build());
-        MockMultipartFile request =
-                new MockMultipartFile("request", "", "application/json", object.getBytes());
+        String object = objectMapper.writeValueAsString(UpdateNickNameRequest.builder().nickName("nickName").image("image").build());
 
         // when
-        ResultActions result = mockMvc.perform(RestDocumentationRequestBuilders
-                .fileUpload(("/v1/users/nickname"))
-                .file(new MockMultipartFile("file", UUID.randomUUID().toString() +".png", "image/png", "test".getBytes()))
-                .file(request).accept(MediaType.APPLICATION_JSON)
+        ResultActions result = mockMvc.perform(post(("/v1/users/nickname"))
+                .content(object)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -148,13 +146,9 @@ class UserControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestParts(
-                                partWithName("request").description("변경 닉네임 정보"),
-                                partWithName("file").description("변경 유저 이미지")
-                        ),
-                        requestPartBody("request"),
-                        requestPartFields("request",
-                                fieldWithPath("nickName").description("변경할 닉네임")
+                        requestFields(
+                                fieldWithPath("nickName").description("변경할 닉네임"),
+                                fieldWithPath("image").description("변경할 유저 이미지")
                         )
                 ))
                 .andExpect(status().isNoContent());

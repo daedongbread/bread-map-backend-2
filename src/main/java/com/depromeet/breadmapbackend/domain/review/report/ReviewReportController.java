@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review.report;
 
-import com.depromeet.breadmapbackend.domain.review.dto.ReviewReportRequest;
+import com.depromeet.breadmapbackend.domain.review.report.dto.ReviewReportRequest;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import lombok.RequiredArgsConstructor;

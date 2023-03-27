@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.user.dto;
+package com.depromeet.breadmapbackend.domain.user.block.dto;
 
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import lombok.AllArgsConstructor;

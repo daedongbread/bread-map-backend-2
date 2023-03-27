@@ -50,7 +50,7 @@ public class BakeryProductServiceImpl implements BakeryProductService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void productAddReport(String username, Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException {
+    public void productAddReport(String username, Long bakeryId, ProductReportRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
@@ -58,12 +58,9 @@ public class BakeryProductServiceImpl implements BakeryProductService {
                 .bakery(bakery).user(user).name(request.getName()).price(request.getPrice()).build();
         productAddReportRepository.save(productAddReport);
 
-        if (files != null) {
-            if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-            for (MultipartFile file : files) {
-                if (file.isEmpty()) continue;
-                String imagePath = fileConverter.parseFileInfo(file, ImageType.PRODUCT_ADD_REPORT_IMAGE, bakeryId);
-                String image = s3Uploader.upload(file, imagePath);
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            if (request.getImages().size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+            for (String image : request.getImages()) {
                 ProductAddReportImage.builder().productAddReport(productAddReport).image(image).build();
             }
         }

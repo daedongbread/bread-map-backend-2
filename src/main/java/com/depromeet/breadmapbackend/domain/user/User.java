@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
     private String email;

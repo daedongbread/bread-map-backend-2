@@ -1,22 +1,7 @@
 package com.depromeet.breadmapbackend.domain.user.block;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
-import com.depromeet.breadmapbackend.domain.bakery.product.Product;
-import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
-import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
-import com.depromeet.breadmapbackend.domain.flag.FlagColor;
-import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
-import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewImage;
-import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.block.BlockUser;
-import com.depromeet.breadmapbackend.domain.user.dto.BlockRequest;
-import com.depromeet.breadmapbackend.domain.user.follow.Follow;
-import com.depromeet.breadmapbackend.global.ImageType;
+import com.depromeet.breadmapbackend.domain.user.block.dto.BlockRequest;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -25,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;

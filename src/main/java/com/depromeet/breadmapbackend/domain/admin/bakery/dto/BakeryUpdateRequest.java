@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,6 +40,7 @@ public class BakeryUpdateRequest {
     private String blogURL;
     private String phoneNumber;
     private List<FacilityInfo> facilityInfoList;
+    @Valid
     private List<ProductUpdateRequest> productList;
     private BakeryStatus status;
 
@@ -49,8 +51,10 @@ public class BakeryUpdateRequest {
     public static class ProductUpdateRequest {
         private Long productId;
         private ProductType productType;
+        @NotBlank(message = "빵 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private String productName;
-        private String price;
+        @NotNull(message = "빵 가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private Integer price;
         private String image;
     }
 }

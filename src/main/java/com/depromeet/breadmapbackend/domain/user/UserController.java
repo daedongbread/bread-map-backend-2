@@ -35,10 +35,8 @@ public class UserController {
     @PostMapping("/nickname")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateNickName(
-            @CurrentUser String username,
-            @RequestPart @Validated(ValidationSequence.class) UpdateNickNameRequest request,
-            @RequestPart(required = false) MultipartFile file) throws IOException {
-        userService.updateNickName(username, request, file);
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) UpdateNickNameRequest request) {
+        userService.updateNickName(username, request);
     }
 
     @PostMapping("/logout")

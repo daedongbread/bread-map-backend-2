@@ -16,5 +16,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductAddImageRegisterRequest {
     @NotEmpty(message = "이미지 리스트는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-    private List<@NotNull(message = "이미지 고유 번호는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class) Long> imageIdList;
+    private List<Long> imageIdList;
 }

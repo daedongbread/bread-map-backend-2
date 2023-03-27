@@ -18,32 +18,32 @@
 - 리뷰 삭제 API
 
 === 빵집 리뷰 전체 조회 API [GET]
-operation::review/get/bakery[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::v1/review/get/bakery[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 === 상품 리뷰 전체 조회 API [GET]
-operation::review/get/product[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::v1/review/get/product[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 === 유저 리뷰 전체 조회 API [GET]
-operation::review/get/user[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::v1/review/get/user[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 === 리뷰 상세 조회 API [GET]
-operation::review/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::v1/review/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 추가 API [POST]
-operation::review/add[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
+operation::v1/review/add[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 === 리뷰 삭제 API [DELETE]
-operation::review/remove[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/review/remove[snippets='http-request,request-headers,path-parameters,http-response']
 
 == Review Like APIs
 - 리뷰 좋아요 API
 - 리뷰 좋아요 취소 API
 
 === 리뷰 좋아요 API [POST]
-operation::review/like[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/review/like[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 리뷰 좋아요 취소 API [DELETE]
-operation::review/unlike[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/review/unlike[snippets='http-request,request-headers,path-parameters,http-response']
 
 == Review Comment APIs
 - 리뷰 댓글 전체 조회 API
@@ -53,24 +53,24 @@ operation::review/unlike[snippets='http-request,request-headers,path-parameters,
 - 리뷰 댓글 좋아요 취소 API
 
 === 리뷰 댓글 전체 조회 API [GET]
-operation::review/comment/all[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::v1/review/comment/all[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 댓글 추가 API [POST]
 - 리뷰에 댓글을 달 경우 parentCommentId 를 0으로 줘야 한다.
 
-operation::review/comment/add[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
+operation::v1/review/comment/add[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === 리뷰 댓글 삭제 API [DELETE]
-operation::review/comment/remove[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/review/comment/remove[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 리뷰 댓글 좋아요 API [POST]
-operation::review/comment/like[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/review/comment/like[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 리뷰 댓글 좋아요 취소 API [DELETE]
-operation::review/comment/unlike[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/review/comment/unlike[snippets='http-request,request-headers,path-parameters,http-response']
 
 == Review Report APIs
 - 리뷰 신고 API
 
 === 리뷰 신고 API [POST]
-operation::review/report[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+operation::v1/review/report[snippets='http-request,request-headers,path-parameters,request-fields,http-response']

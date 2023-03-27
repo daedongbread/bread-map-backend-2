@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -371,11 +372,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
             bakeryId = "5690000";
         } else bakeryId = "9999999";
 
-        Random rand = new Random();
+        SecureRandom rand = new SecureRandom();
         do {
             String random = "";
             for (int i = 0; i < 5; i++) {
-                random += Integer.toString(rand.nextInt(9));
+                random += Integer.toString(rand.nextInt(10));
             }
             // 자치단체코드 7자리, 년도 뒷 2자리, 번호 5자리 -> 14자리
             String year = String.valueOf(LocalDateTime.now().getYear());
@@ -389,6 +390,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         Long bakeryId = createBakeryId(request.getAddress());
         Bakery bakery = Bakery.builder()
                 .id(bakeryId).name(request.getName())
+                .image((request.getImage() != null) ? request.getImage() :
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".jpg")
                 .address(request.getAddress()).latitude(request.getLatitude()).longitude(request.getLongitude())
                 .hours(request.getHours())
                 .websiteURL(request.getWebsiteURL()).instagramURL(request.getInstagramURL()).facebookURL(request.getFacebookURL()).blogURL(request.getBlogURL())
@@ -398,29 +401,33 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 .build();
         bakeryRepository.save(bakery);
 
-        if (request.getImage() != null) {
-            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
-            String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
-            s3Uploader.copy(oldImage, newImage);
-            if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.BAKERY_IMAGE.getCode()))
-                s3Uploader.deleteFileS3(oldImage);
-            bakeryRepository.findById(bakery.getId()).get().updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
-        }
+//        if (request.getImage() != null) {
+//            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+//            String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+//            s3Uploader.copy(oldImage, newImage);
+//            if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.BAKERY_IMAGE.getCode()))
+//                s3Uploader.deleteFileS3(oldImage);
+//            bakeryRepository.findById(bakery.getId()).get().updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage); // TODO : ID 직접 할당은 영속성 컨텍스트에서 관리 안되는 것 때문에
+//        }
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
             for (BakeryAddRequest.ProductAddRequest productAddRequest : request.getProductList()) {
-                Product product = Product.builder().bakery(bakery).productType(productAddRequest.getProductType())
-                        .name(productAddRequest.getProductName()).price(productAddRequest.getPrice()).build();
+                Product product = Product.builder()
+                        .productType(productAddRequest.getProductType())
+                        .name(productAddRequest.getProductName())
+                        .price(productAddRequest.getPrice())
+                        .image(productAddRequest.getImage())
+                        .bakery(bakery).build(); // TODO
                 productRepository.save(product);
 
-                if (productAddRequest.getImage() != null) {
-                    String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
-                    String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
-                    s3Uploader.copy(oldImage, newImage);
-                    if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
-                        s3Uploader.deleteFileS3(oldImage);
-                    product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
-                }
+//                if (productAddRequest.getImage() != null) {
+//                    String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+//                    String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+//                    s3Uploader.copy(oldImage, newImage);
+//                    if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
+//                        s3Uploader.deleteFileS3(oldImage);
+//                    product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+//                }
             }
         }
     }
@@ -432,46 +439,50 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         bakery.update(bakeryId, request.getName(),
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
-                request.getPhoneNumber(), request.getFacilityInfoList(), request.getStatus());
+                request.getPhoneNumber(), request.getImage(), request.getFacilityInfoList(), request.getStatus());
 
-        if (request.getImage() != null && !request.getImage().equals(bakery.getImage())) {
-            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
-            String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
-            s3Uploader.copy(oldImage, newImage);
-            if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.BAKERY_IMAGE.getCode()))
-                s3Uploader.deleteFileS3(oldImage);
-            bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
-        }
+//        if (request.getImage() != null && !request.getImage().equals(bakery.getImage())) {
+//            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+//            String newImage = ImageType.BAKERY_IMAGE.getCode() + "/" + bakeryId + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+//            s3Uploader.copy(oldImage, newImage);
+//            if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.BAKERY_IMAGE.getCode()))
+//                s3Uploader.deleteFileS3(oldImage);
+//            bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+//        }
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
             for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
                 Product product;
                 if (productUpdateRequest.getProductId() == null) { // 새로운 product 일 때
                     product = Product.builder()
-                            .productType(productUpdateRequest.getProductType()).bakery(bakery)
-                            .name(productUpdateRequest.getProductName()).price(productUpdateRequest.getPrice()).build();
+                            .productType(productUpdateRequest.getProductType())
+                            .name(productUpdateRequest.getProductName())
+                            .price(productUpdateRequest.getPrice())
+                            .image(productUpdateRequest.getImage())
+                            .bakery(bakery).build(); // TODO
                     productRepository.save(product);
 
-                    if (productUpdateRequest.getImage() != null) {
-                        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
-                        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
-                        s3Uploader.copy(oldImage, newImage);
-                        if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
-                            s3Uploader.deleteFileS3(oldImage);
-                        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
-                    }
+//                    if (productUpdateRequest.getImage() != null) {
+//                        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+//                        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+//                        s3Uploader.copy(oldImage, newImage);
+//                        if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
+//                            s3Uploader.deleteFileS3(oldImage);
+//                        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+//                    }
                 } else { // 기존 product 일 때
                     product = productRepository.findById(productUpdateRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
-                    product.update(productUpdateRequest.getProductType(), productUpdateRequest.getProductName(), productUpdateRequest.getPrice());
+                    product.update(productUpdateRequest.getProductType(), productUpdateRequest.getProductName(),
+                            productUpdateRequest.getPrice(), request.getImage());
 
-                    if (productUpdateRequest.getImage() != null && !productUpdateRequest.getImage().equals(product.getImage())) {
-                        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
-                        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
-                        s3Uploader.copy(oldImage, newImage);
-                        if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
-                            s3Uploader.deleteFileS3(oldImage);
-                        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
-                    }
+//                    if (productUpdateRequest.getImage() != null && !productUpdateRequest.getImage().equals(product.getImage())) {
+//                        String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
+//                        String newImage = ImageType.PRODUCT_IMAGE.getCode() + "/" + product.getId() + "/" + oldImage.split("/")[oldImage.split("/").length - 1];
+//                        s3Uploader.copy(oldImage, newImage);
+//                        if (oldImage.contains(ImageType.ADMIN_TEMP_IMAGE.getCode()) || oldImage.contains(ImageType.PRODUCT_IMAGE.getCode()))
+//                            s3Uploader.deleteFileS3(oldImage);
+//                        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + newImage);
+//                    }
                 }
 
             }

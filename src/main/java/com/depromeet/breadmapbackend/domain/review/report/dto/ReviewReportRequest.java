@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.review.dto;
+package com.depromeet.breadmapbackend.domain.review.report.dto;
 
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportReason;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;

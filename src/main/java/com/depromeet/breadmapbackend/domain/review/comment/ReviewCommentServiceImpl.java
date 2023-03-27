@@ -1,20 +1,13 @@
 package com.depromeet.breadmapbackend.domain.review.comment;
 
-import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLike;
 import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLikeEvent;
 import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.dto.ReviewCommentDto;
-import com.depromeet.breadmapbackend.domain.review.dto.ReviewCommentRequest;
-import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository;
+import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentDto;
+import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentRequest;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
-import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;

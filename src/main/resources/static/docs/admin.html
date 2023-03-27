@@ -523,26 +523,125 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_관리자_로그인_api_post"><a class="link" href="#_관리자_로그인_api_post">관리자 로그인 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_관리자_로그인_api_post_http_request"><a class="link" href="#_관리자_로그인_api_post_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/login</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/admin/login HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 53
+Host: localhost:8080
+
+{
+  "email" : "email",
+  "password" : "password"
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_관리자_로그인_api_post_request_fields"><a class="link" href="#_관리자_로그인_api_post_request_fields">Request fields</a></h4>
-<div class="paragraph">
-<p>Snippet request-fields not found for operation::admin/login</p>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">관리자 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">관리자 비밀번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_관리자_로그인_api_post_http_response"><a class="link" href="#_관리자_로그인_api_post_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/login</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 413
+
+{
+  "data" : {
+    "userId" : 2,
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMiwiZXhwIjoxNjc5OTE5MzAyfQ.kjgJQSGbEvWsHalcZJu2nQ1_8SCEbzLHveRC4a_eyA4",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODExMjUzMDJ9.AUNiXUWRTnEMjtdTDetaHJt-ULBOcsliq-LlOgTD4SE",
+    "accessTokenExpiredDate" : 3600000
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_관리자_로그인_api_post_response_fields"><a class="link" href="#_관리자_로그인_api_post_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/login</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessTokenExpiredDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰 만료시간</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -550,26 +649,125 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_토큰_재발급_api_post"><a class="link" href="#_토큰_재발급_api_post">토큰 재발급 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_토큰_재발급_api_post_http_request"><a class="link" href="#_토큰_재발급_api_post_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/reissue</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/admin/reissue HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 330
+Host: localhost:8080
+
+{
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMiwiZXhwIjoxNjc5OTE5MzAyfQ.kjgJQSGbEvWsHalcZJu2nQ1_8SCEbzLHveRC4a_eyA4",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODExMjUzMDJ9.AUNiXUWRTnEMjtdTDetaHJt-ULBOcsliq-LlOgTD4SE"
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_토큰_재발급_api_post_request_fields"><a class="link" href="#_토큰_재발급_api_post_request_fields">Request fields</a></h4>
-<div class="paragraph">
-<p>Snippet request-fields not found for operation::admin/reissue</p>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>accessToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_토큰_재발급_api_post_http_response"><a class="link" href="#_토큰_재발급_api_post_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/reissue</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 413
+
+{
+  "data" : {
+    "userId" : 4,
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMywiZXhwIjoxNjc5OTE5MzAzfQ.8Ypto9mwu0MU8oVhJItMl9ddKY6BwL0eX8fj690RtCo",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODExMjUzMDN9.dnWM4oc75cXQ_vV19LF6AV2P1LDUlJzrNR001otxGdA",
+    "accessTokenExpiredDate" : 3600000
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_토큰_재발급_api_post_response_fields"><a class="link" href="#_토큰_재발급_api_post_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/reissue</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.accessTokenExpiredDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">엑세스 토큰 만료시간</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -577,26 +775,100 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_메뉴바_api_get"><a class="link" href="#_메뉴바_api_get">메뉴바 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_메뉴바_api_get_http_request"><a class="link" href="#_메뉴바_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bar</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bar HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMywiZXhwIjoxNjc5OTE5MzAzfQ.8Ypto9mwu0MU8oVhJItMl9ddKY6BwL0eX8fj690RtCo
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴바_api_get_request_headers"><a class="link" href="#_메뉴바_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bar</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴바_api_get_http_response"><a class="link" href="#_메뉴바_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bar</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 109
+
+{
+  "data" : {
+    "bakeryAddReportCount" : 0,
+    "bakeryCount" : 0,
+    "reviewReportCount" : 1
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴바_api_get_response_fields"><a class="link" href="#_메뉴바_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bar</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryAddReportCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">`검토전`인 빵집 추가 제보 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">`미게시`인 빵집 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewReportCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숨김 처리하지 않은 리뷰 신고 수</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -604,26 +876,79 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_이미지_다운로드_api_get"><a class="link" href="#_이미지_다운로드_api_get">이미지 다운로드 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_이미지_다운로드_api_get_http_request"><a class="link" href="#_이미지_다운로드_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/image/download</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/images?image=bakeryImage.jpg HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMCwiZXhwIjoxNjc5OTE5MzAwfQ.pknFf2UegpShLIVW3enI4fioO98Qba4OSbvBc58KzFk
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_이미지_다운로드_api_get_request_headers"><a class="link" href="#_이미지_다운로드_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/image/download</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_이미지_다운로드_api_get_request_parameters"><a class="link" href="#_이미지_다운로드_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/image/download</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">다운로드할 이미지 경로</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_이미지_다운로드_api_get_http_response"><a class="link" href="#_이미지_다운로드_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/image/download</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/octet-stream;charset=UTF-8
+Content-Length: 4
+Content-Disposition: form-data; name="attachment"; filename="bakeryImage.jpg"
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+
+test</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -631,32 +956,117 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_임시_이미지_업로드_api_post"><a class="link" href="#_임시_이미지_업로드_api_post">임시 이미지 업로드 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_임시_이미지_업로드_api_post_http_request"><a class="link" href="#_임시_이미지_업로드_api_post_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/tempImage</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/admin/images HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMiwiZXhwIjoxNjc5OTE5MzAyfQ.kjgJQSGbEvWsHalcZJu2nQ1_8SCEbzLHveRC4a_eyA4
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=image; filename=ac9141d3-b5e9-43b3-bf1e-9136d9076e30.png
+Content-Type: image/png
+
+test
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_임시_이미지_업로드_api_post_request_headers"><a class="link" href="#_임시_이미지_업로드_api_post_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/tempImage</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_임시_이미지_업로드_api_post_request_parts"><a class="link" href="#_임시_이미지_업로드_api_post_request_parts">Request parts</a></h4>
-<div class="paragraph">
-<p>Snippet request-parts not found for operation::admin/tempImage</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Part</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업로드 이미지</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_임시_이미지_업로드_api_post_http_response"><a class="link" href="#_임시_이미지_업로드_api_post_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/tempImage</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 98
+
+{
+  "data" : {
+    "imagePath" : "cloudfront/image/9de1bd74cc287dac824dbdf93182129a.png"
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_임시_이미지_업로드_api_post_response_fields"><a class="link" href="#_임시_이미지_업로드_api_post_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/tempImage</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.imagePath</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업로드된 이미지</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -718,32 +1128,171 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_전체_조회_api_get"><a class="link" href="#_빵집_전체_조회_api_get">빵집 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_전체_조회_api_get_http_request"><a class="link" href="#_빵집_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakery/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNCwiZXhwIjoxNjc5OTE5MzA0fQ.ANXhUrr3Yh4JRcA2W-Q3qktSni5J8mIQJCgdl13n6Rs
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_전체_조회_api_get_request_headers"><a class="link" href="#_빵집_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakery/all</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_전체_조회_api_get_request_parameters"><a class="link" href="#_빵집_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/bakery/all</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_빵집_전체_조회_api_get_http_response"><a class="link" href="#_빵집_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakery/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 321
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 20,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "bakeryId" : 1,
+      "name" : "bakery",
+      "createdAt" : "2023-03-27",
+      "modifiedAt" : "2023-03-27",
+      "status" : "POSTING"
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_전체_조회_api_get_response_fields"><a class="link" href="#_빵집_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bakery/all</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 최초 등록일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].modifiedAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 마지막 수정일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 게시상태 (POSTING("게시중"),
+UNPOSTING("미게시"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -751,32 +1300,232 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_조회_api_get"><a class="link" href="#_빵집_조회_api_get">빵집 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_조회_api_get_http_request"><a class="link" href="#_빵집_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakery</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries/1 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNywiZXhwIjoxNjc5OTE5MzA3fQ.AKDQdlalArrh5wHc09cQJ7pEDFuu0ekLt-egEfq_gC4
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_조회_api_get_request_headers"><a class="link" href="#_빵집_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakery</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_조회_api_get_path_parameters"><a class="link" href="#_빵집_조회_api_get_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/bakery</p>
+<p>/v1/admin/bakeries/{bakeryId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_조회_api_get_http_response"><a class="link" href="#_빵집_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakery</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 607
+
+{
+  "data" : {
+    "name" : "bakery",
+    "image" : "cloudfront/bakeryImage.jpg",
+    "address" : "address",
+    "longitude" : 127.044235133983,
+    "latitude" : 37.5596080725671,
+    "hours" : null,
+    "websiteURL" : null,
+    "instagramURL" : null,
+    "facebookURL" : null,
+    "blogURL" : null,
+    "phoneNumber" : null,
+    "facilityInfoList" : [ "PARKING" ],
+    "status" : "POSTING",
+    "productList" : [ {
+      "productId" : 12,
+      "productType" : "BREAD",
+      "productName" : "bread1",
+      "price" : 3000,
+      "image" : "cloudfront/productImage.jpg"
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_조회_api_get_response_fields"><a class="link" href="#_빵집_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bakery</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 도로명 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 위도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 경도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.hours</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 영업 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.websiteURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 홈페이지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.instagramURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 인스타그램</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.facebookURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 페이스북</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.blogURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 블로그</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.phoneNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.facilityInfoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 시설 정보 (PARKING("주차 가능"),
+WIFI("와이파이"),
+DELIVERY("배달"),
+PET("반려동물"),
+SHIPPING("택배"),
+BOOKING("예약"))</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 게시 상태 (POSTING("게시중"), UNPOSTING("미게시"))</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 메뉴</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productList.[].productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productList.[].productType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 타입</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productList.[].productName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productList.[].price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.productList.[].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이미지</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -784,32 +1533,175 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_검색_api_get"><a class="link" href="#_빵집_검색_api_get">빵집 검색 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_검색_api_get_http_request"><a class="link" href="#_빵집_검색_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakery/search</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries/search?name=ake&amp;page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOCwiZXhwIjoxNjc5OTE5MzA4fQ.tQJIXyX_WLzNvT680jyo_riFv5tGDXrMrmtjyOKbC68
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_검색_api_get_request_headers"><a class="link" href="#_빵집_검색_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakery/search</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_검색_api_get_request_parameters"><a class="link" href="#_빵집_검색_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/bakery/search</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">검색어</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_빵집_검색_api_get_http_response"><a class="link" href="#_빵집_검색_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakery/search</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 321
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 20,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "bakeryId" : 1,
+      "name" : "bakery",
+      "createdAt" : "2023-03-27",
+      "modifiedAt" : "2023-03-27",
+      "status" : "POSTING"
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_검색_api_get_response_fields"><a class="link" href="#_빵집_검색_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bakery/search</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 최초 등록일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].modifiedAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 마지막 수정일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 게시 상태 (POSTING("게시중"),
+UNPOSTING("미게시"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -817,32 +1709,115 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_위도_경도_조회_api_get"><a class="link" href="#_빵집_위도_경도_조회_api_get">빵집 위도 경도 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_위도_경도_조회_api_get_http_request"><a class="link" href="#_빵집_위도_경도_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakery/location</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries/location?address=%EC%84%9C%EC%9A%B8%20%EC%A4%91%EA%B5%AC%20%EC%84%B8%EC%A2%85%EB%8C%80%EB%A1%9C%20110%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%EC%B2%AD HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNSwiZXhwIjoxNjc5OTE5MzA1fQ.s_KUIF-hj1mSrEKVqsCaCI1rD9niWj-FgBz6Y7JZY5U
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_위도_경도_조회_api_get_request_headers"><a class="link" href="#_빵집_위도_경도_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakery/location</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_위도_경도_조회_api_get_request_parameters"><a class="link" href="#_빵집_위도_경도_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/bakery/location</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">조회 주소</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_빵집_위도_경도_조회_api_get_http_response"><a class="link" href="#_빵집_위도_경도_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakery/location</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 99
+
+{
+  "data" : {
+    "latitude" : 37.566370292600006,
+    "longitude" : 126.97791833487734
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_위도_경도_조회_api_get_response_fields"><a class="link" href="#_빵집_위도_경도_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bakery/location</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 위도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 경도</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -850,26 +1825,211 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_추가_api_post"><a class="link" href="#_빵집_추가_api_post">빵집 추가 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_추가_api_post_http_request"><a class="link" href="#_빵집_추가_api_post_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakery/add</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/admin/bakeries HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNywiZXhwIjoxNjc5OTE5MzA3fQ.AKDQdlalArrh5wHc09cQJ7pEDFuu0ekLt-egEfq_gC4
+Content-Length: 528
+Host: localhost:8080
+
+{
+  "name" : "newBakery",
+  "image" : "tempImage.jpg",
+  "address" : "address",
+  "latitude" : 35.124124,
+  "longitude" : 127.312452,
+  "hours" : "09:00~20:00",
+  "websiteURL" : "website",
+  "instagramURL" : "insta",
+  "facebookURL" : "facebook",
+  "blogURL" : "blog",
+  "phoneNumber" : "010-1234-5678",
+  "facilityInfoList" : [ "PARKING" ],
+  "productList" : [ {
+    "productType" : "BREAD",
+    "productName" : "testBread",
+    "price" : 12000,
+    "image" : "tempImage.jpg"
+  } ],
+  "status" : "POSTING"
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_추가_api_post_request_headers"><a class="link" href="#_빵집_추가_api_post_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakery/add</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_추가_api_post_request_fields"><a class="link" href="#_빵집_추가_api_post_request_fields">Request fields</a></h4>
-<div class="paragraph">
-<p>Snippet request-fields not found for operation::admin/bakery/add</p>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 도로명 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 위도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 경도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hours</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 영업시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagramURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 인스타그램</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>facebookURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 페이스북</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blogURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 블로그</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>websiteURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 홈페이지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>phoneNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>facilityInfoList.[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].productType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 타입 (BREAD, BEVERAGE, ETC 중 하나</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].productName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 게시상태 (POSTING("게시중"),
+UNPOSTING("미게시"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_추가_api_post_http_response"><a class="link" href="#_빵집_추가_api_post_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakery/add</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -877,32 +2037,248 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_수정_api_patch"><a class="link" href="#_빵집_수정_api_patch">빵집 수정 API [PATCH]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_수정_api_patch_http_request"><a class="link" href="#_빵집_수정_api_patch_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakery/update</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/admin/bakeries/1 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNCwiZXhwIjoxNjc5OTE5MzA0fQ.ANXhUrr3Yh4JRcA2W-Q3qktSni5J8mIQJCgdl13n6Rs
+Content-Length: 688
+Host: localhost:8080
+
+{
+  "name" : "newBakery",
+  "image" : "tempImage.jpg",
+  "address" : "address",
+  "latitude" : 35.124124,
+  "longitude" : 127.312452,
+  "hours" : "09:00~20:00",
+  "websiteURL" : "website",
+  "instagramURL" : "insta",
+  "facebookURL" : "facebook",
+  "blogURL" : "blog",
+  "phoneNumber" : "010-1234-5678",
+  "facilityInfoList" : [ "PARKING" ],
+  "productList" : [ {
+    "productId" : 2,
+    "productType" : "BREAD",
+    "productName" : "testBread",
+    "price" : 12000,
+    "image" : "tempImage.jpg"
+  }, {
+    "productId" : null,
+    "productType" : "BREAD",
+    "productName" : "newBread",
+    "price" : 10000,
+    "image" : null
+  } ],
+  "status" : "POSTING"
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_수정_api_patch_request_headers"><a class="link" href="#_빵집_수정_api_patch_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakery/update</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_수정_api_patch_path_parameters"><a class="link" href="#_빵집_수정_api_patch_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/bakery/update</p>
+<p>/v1/admin/bakeries/{bakeryId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_수정_api_patch_request_fields"><a class="link" href="#_빵집_수정_api_patch_request_fields">Request fields</a></h4>
-<div class="paragraph">
-<p>Snippet request-fields not found for operation::admin/bakery/update</p>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 도로명 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 위도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 경도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hours</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 영업시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagramURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 인스타그램</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>facebookURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 페이스북</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blogURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 블로그</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>websiteURL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 홈페이지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>phoneNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>facilityInfoList.[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 고유 번호 (새로운 빵이면 null)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].productType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 타입 (BREAD, BEVERAGE, ETC 중 하나</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].productName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productList.[].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 게시상태 (POSTING("게시중"),
+UNPOSTING("미게시"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_수정_api_patch_http_response"><a class="link" href="#_빵집_수정_api_patch_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakery/update</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -910,26 +2286,87 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_상품_삭제_api_delete"><a class="link" href="#_빵집_상품_삭제_api_delete">빵집 상품 삭제 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_상품_삭제_api_delete_http_request"><a class="link" href="#_빵집_상품_삭제_api_delete_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/product/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/admin/bakeries/1/products/9 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNywiZXhwIjoxNjc5OTE5MzA3fQ.AKDQdlalArrh5wHc09cQJ7pEDFuu0ekLt-egEfq_gC4
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_상품_삭제_api_delete_request_headers"><a class="link" href="#_빵집_상품_삭제_api_delete_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/product/delete</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_상품_삭제_api_delete_path_parameters"><a class="link" href="#_빵집_상품_삭제_api_delete_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/product/delete</p>
+<p>/v1/admin/bakeries/{bakeryId}/products/{productId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_상품_삭제_api_delete_http_response"><a class="link" href="#_빵집_상품_삭제_api_delete_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/product/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -937,38 +2374,192 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get">빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_http_request"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/image/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries/1/images/bakeryReportImage?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNCwiZXhwIjoxNjc5OTE5MzA0fQ.ANXhUrr3Yh4JRcA2W-Q3qktSni5J8mIQJCgdl13n6Rs
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_request_headers"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/image/all</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_path_parameters"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/image/all</p>
+<p>/v1/admin/bakeries/{bakeryId}/images/{imageType}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 종류 (bakeryReportImage, productAddReportImage, reviewImage)</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_request_parameters"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/image/all</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_http_response"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/image/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 259
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 16,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "imageId" : 3,
+      "image" : "bakeryReportImage.jpg",
+      "isNew" : true
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_response_fields"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/image/all</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 이미지 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].imageId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 관련 이미지 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 관련 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].isNew</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 관련 이미지 신규 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -976,26 +2567,91 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete">빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 삭제, 숨김 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_http_request"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/image/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/admin/bakeries/1/images/bakeryReportImage/6 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNiwiZXhwIjoxNjc5OTE5MzA2fQ.TZ2x0CIPIT9EsRCtO8ZCpe8EzcyPQo2GoezSnyFwpAI
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_request_headers"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/image/delete</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_path_parameters"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/image/delete</p>
+<p>/v1/admin/bakeries/{bakeryId}/images/{imageType}/{imageId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 종류 (bakeryReportImage, productAddReportImage, reviewImage)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_http_response"><a class="link" href="#_빵집_관련_이미지_대표_이미지_메뉴제보_이미지_리뷰_이미지_삭제_숨김_api_delete_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/image/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1003,38 +2659,229 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_메뉴_제보_조회_api_get"><a class="link" href="#_메뉴_제보_조회_api_get">메뉴 제보 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_메뉴_제보_조회_api_get_http_request"><a class="link" href="#_메뉴_제보_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/productAddReport</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries/1/product-add-reports?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwNiwiZXhwIjoxNjc5OTE5MzA2fQ.TZ2x0CIPIT9EsRCtO8ZCpe8EzcyPQo2GoezSnyFwpAI
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_조회_api_get_request_headers"><a class="link" href="#_메뉴_제보_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/productAddReport</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_조회_api_get_path_parameters"><a class="link" href="#_메뉴_제보_조회_api_get_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/productAddReport</p>
+<p>/v1/admin/bakeries/{bakeryId}/product-add-reports</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_조회_api_get_request_parameters"><a class="link" href="#_메뉴_제보_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/productAddReport</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_조회_api_get_http_response"><a class="link" href="#_메뉴_제보_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/productAddReport</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 596
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 10,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "reportId" : 7,
+      "createdAt" : "2023-03-27T20:15:07.004215",
+      "name" : "newBread",
+      "price" : "1000",
+      "nickName" : "nickname",
+      "imageList" : [ {
+        "imageId" : 13,
+        "image" : "cloudfront/productImage1.jpg",
+        "isRegistered" : false
+      }, {
+        "imageId" : 14,
+        "image" : "cloudfront/productImage2.jpg",
+        "isRegistered" : false
+      } ]
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_조회_api_get_response_fields"><a class="link" href="#_메뉴_제보_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/productAddReport</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 날짜</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제보한 유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].imageList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 이미지 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].imageList.[].imageId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 이미지 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].imageList.[].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 이미지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].imageList.[].isRegistered</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 이미지 저장 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1042,32 +2889,124 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_메뉴_제보_이미지_등록_api_patch"><a class="link" href="#_메뉴_제보_이미지_등록_api_patch">메뉴 제보 이미지 등록 API [PATCH]</a></h3>
 <div class="sect3">
 <h4 id="_메뉴_제보_이미지_등록_api_patch_http_request"><a class="link" href="#_메뉴_제보_이미지_등록_api_patch_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/productAddReport/register</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/admin/bakeries/1/product-add-reports/15 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOSwiZXhwIjoxNjc5OTE5MzA5fQ._1F1x3VuzQWIEFzNZdkIaFZ9jQnr6DqpUzG_zULLMco
+Accept: application/json
+Content-Length: 34
+Host: localhost:8080
+
+{
+  "imageIdList" : [ 29, 30 ]
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_이미지_등록_api_patch_request_headers"><a class="link" href="#_메뉴_제보_이미지_등록_api_patch_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/productAddReport/register</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_이미지_등록_api_patch_path_parameters"><a class="link" href="#_메뉴_제보_이미지_등록_api_patch_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/productAddReport/register</p>
+<p>/v1/admin/bakeries/{bakeryId}/product-add-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_이미지_등록_api_patch_request_fields"><a class="link" href="#_메뉴_제보_이미지_등록_api_patch_request_fields">Request fields</a></h4>
-<div class="paragraph">
-<p>Snippet request-fields not found for operation::admin/productAddReport/register</p>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageIdList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">저장할 이미지 고유 번호 리스트</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_이미지_등록_api_patch_http_response"><a class="link" href="#_메뉴_제보_이미지_등록_api_patch_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/productAddReport/register</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1075,26 +3014,87 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_메뉴_제보_삭제_api_delete"><a class="link" href="#_메뉴_제보_삭제_api_delete">메뉴 제보 삭제 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_메뉴_제보_삭제_api_delete_http_request"><a class="link" href="#_메뉴_제보_삭제_api_delete_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/productAddReport/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/admin/bakeries/1/product-add-reports/11 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOCwiZXhwIjoxNjc5OTE5MzA4fQ.tQJIXyX_WLzNvT680jyo_riFv5tGDXrMrmtjyOKbC68
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_삭제_api_delete_request_headers"><a class="link" href="#_메뉴_제보_삭제_api_delete_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/productAddReport/delete</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_삭제_api_delete_path_parameters"><a class="link" href="#_메뉴_제보_삭제_api_delete_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/productAddReport/delete</p>
+<p>/v1/admin/bakeries/{bakeryId}/product-add-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상품 추가 제보 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_메뉴_제보_삭제_api_delete_http_response"><a class="link" href="#_메뉴_제보_삭제_api_delete_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/productAddReport/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1102,38 +3102,212 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_정보_수정_제보_조회_api_get"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get">빵집 정보 수정 제보 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_조회_api_get_http_request"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/updateReport</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakeries/1/update-reports?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOCwiZXhwIjoxNjc5OTE5MzA4fQ.tQJIXyX_WLzNvT680jyo_riFv5tGDXrMrmtjyOKbC68
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_조회_api_get_request_headers"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/updateReport</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_조회_api_get_path_parameters"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/updateReport</p>
+<p>/v1/admin/bakeries/{bakeryId}/update-reports</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_조회_api_get_request_parameters"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/updateReport</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_조회_api_get_http_response"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/updateReport</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 407
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 10,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "reportId" : 12,
+      "createdAt" : "2023-03-27T20:15:08.383985",
+      "nickName" : "nickname",
+      "reason" : "BAKERY_SHUTDOWN",
+      "content" : "content",
+      "imageList" : [ "image" ],
+      "isChange" : false
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_조회_api_get_response_fields"><a class="link" href="#_빵집_정보_수정_제보_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/updateReport</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 날짜</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제보한 유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reason</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 이유</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].imageList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 이미지 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].isChange</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 변경 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1141,26 +3315,87 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_정보_수정_제보_변경_완료_api_patch"><a class="link" href="#_빵집_정보_수정_제보_변경_완료_api_patch">빵집 정보 수정 제보 변경 완료 API [PATCH]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_변경_완료_api_patch_http_request"><a class="link" href="#_빵집_정보_수정_제보_변경_완료_api_patch_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/updateReport/change</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/admin/bakeries/1/update-reports/14 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOCwiZXhwIjoxNjc5OTE5MzA4fQ.tQJIXyX_WLzNvT680jyo_riFv5tGDXrMrmtjyOKbC68
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_변경_완료_api_patch_request_headers"><a class="link" href="#_빵집_정보_수정_제보_변경_완료_api_patch_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/updateReport/change</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_변경_완료_api_patch_path_parameters"><a class="link" href="#_빵집_정보_수정_제보_변경_완료_api_patch_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/updateReport/change</p>
+<p>/v1/admin/bakeries/{bakeryId}/update-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_변경_완료_api_patch_http_response"><a class="link" href="#_빵집_정보_수정_제보_변경_완료_api_patch_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/updateReport/change</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1168,26 +3403,87 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_정보_수정_제보_삭제_api_delete"><a class="link" href="#_빵집_정보_수정_제보_삭제_api_delete">빵집 정보 수정 제보 삭제 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_삭제_api_delete_http_request"><a class="link" href="#_빵집_정보_수정_제보_삭제_api_delete_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/updateReport/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/admin/bakeries/1/update-reports/1 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwMywiZXhwIjoxNjc5OTE5MzAzfQ.8Ypto9mwu0MU8oVhJItMl9ddKY6BwL0eX8fj690RtCo
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_삭제_api_delete_request_headers"><a class="link" href="#_빵집_정보_수정_제보_삭제_api_delete_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/updateReport/delete</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_삭제_api_delete_path_parameters"><a class="link" href="#_빵집_정보_수정_제보_삭제_api_delete_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/updateReport/delete</p>
+<p>/v1/admin/bakeries/{bakeryId}/update-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 수정 제보 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_정보_수정_제보_삭제_api_delete_http_response"><a class="link" href="#_빵집_정보_수정_제보_삭제_api_delete_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/updateReport/delete</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1213,32 +3509,184 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_제보_전체_조회_api_get"><a class="link" href="#_빵집_제보_전체_조회_api_get">빵집 제보 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_제보_전체_조회_api_get_http_request"><a class="link" href="#_빵집_제보_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakeryReport/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakery-add-reports?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOSwiZXhwIjoxNjc5OTE5MzA5fQ._1F1x3VuzQWIEFzNZdkIaFZ9jQnr6DqpUzG_zULLMco
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_전체_조회_api_get_request_headers"><a class="link" href="#_빵집_제보_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakeryReport/all</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_전체_조회_api_get_request_parameters"><a class="link" href="#_빵집_제보_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/bakeryReport/all</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_전체_조회_api_get_http_response"><a class="link" href="#_빵집_제보_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakeryReport/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 407
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 20,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "reportId" : 1,
+      "nickName" : "nickname",
+      "bakeryName" : "test Report",
+      "location" : "test location",
+      "content" : "test content",
+      "createdAt" : "2023-03-27",
+      "status" : "BEFORE_REFLECT"
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_전체_조회_api_get_response_fields"><a class="link" href="#_빵집_제보_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bakeryReport/all</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 위치</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 처리 상태 (BEFORE_REFLECT("검토전"),
+NOT_REFLECT("미반영"),
+REFLECT("반영완료"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1246,32 +3694,144 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_제보_상세_조회_api_get"><a class="link" href="#_빵집_제보_상세_조회_api_get">빵집 제보 상세 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_제보_상세_조회_api_get_http_request"><a class="link" href="#_빵집_제보_상세_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakeryReport</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/bakery-add-reports/2 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOSwiZXhwIjoxNjc5OTE5MzA5fQ._1F1x3VuzQWIEFzNZdkIaFZ9jQnr6DqpUzG_zULLMco
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_상세_조회_api_get_request_headers"><a class="link" href="#_빵집_제보_상세_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakeryReport</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_상세_조회_api_get_path_parameters"><a class="link" href="#_빵집_제보_상세_조회_api_get_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/bakeryReport</p>
+<p>/v1/admin/bakery-add-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_상세_조회_api_get_http_response"><a class="link" href="#_빵집_제보_상세_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakeryReport</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 189
+
+{
+  "data" : {
+    "nickName" : "nickname",
+    "bakeryName" : "test Report",
+    "location" : "test location",
+    "content" : "test content",
+    "status" : "BEFORE_REFLECT"
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_상세_조회_api_get_response_fields"><a class="link" href="#_빵집_제보_상세_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/bakeryReport</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 위치</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 처리 상태 (BEFORE_REFLECT("검토전"),
+NOT_REFLECT("미반영"),
+REFLECT("반영완료"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1279,32 +3839,122 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_제보_처리_상태_변경_api_patch"><a class="link" href="#_빵집_제보_처리_상태_변경_api_patch">빵집 제보 처리 상태 변경 API [PATCH]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_제보_처리_상태_변경_api_patch_http_request"><a class="link" href="#_빵집_제보_처리_상태_변경_api_patch_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/bakeryReport/update</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/admin/bakery-add-reports/3 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcwOSwiZXhwIjoxNjc5OTE5MzA5fQ._1F1x3VuzQWIEFzNZdkIaFZ9jQnr6DqpUzG_zULLMco
+Accept: application/json
+Content-Length: 28
+Host: localhost:8080
+
+{
+  "status" : "REFLECT"
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_처리_상태_변경_api_patch_request_headers"><a class="link" href="#_빵집_제보_처리_상태_변경_api_patch_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/bakeryReport/update</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_처리_상태_변경_api_patch_path_parameters"><a class="link" href="#_빵집_제보_처리_상태_변경_api_patch_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/bakeryReport/update</p>
+<p>/v1/admin/bakery-add-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_처리_상태_변경_api_patch_request_fields"><a class="link" href="#_빵집_제보_처리_상태_변경_api_patch_request_fields">Request fields</a></h4>
-<div class="paragraph">
-<p>Snippet request-fields not found for operation::admin/bakeryReport/update</p>
+<div class="sect4">
+<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 제보 처리 상태 (BEFORE_REFLECT("검토전"),
+NOT_REFLECT("미반영"),
+REFLECT("반영완료"))</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_제보_처리_상태_변경_api_patch_http_response"><a class="link" href="#_빵집_제보_처리_상태_변경_api_patch_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/bakeryReport/update</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1327,32 +3977,193 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_리뷰_신고_전체_조회_api_get"><a class="link" href="#_리뷰_신고_전체_조회_api_get">리뷰 신고 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_신고_전체_조회_api_get_http_request"><a class="link" href="#_리뷰_신고_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/reviewReport/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/review-reports?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcxMCwiZXhwIjoxNjc5OTE5MzEwfQ.ISebPzrQ0N4YGgjO0_UB9NqirvxtsSTyAcudM41atew
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_전체_조회_api_get_request_headers"><a class="link" href="#_리뷰_신고_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/reviewReport/all</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_전체_조회_api_get_request_parameters"><a class="link" href="#_리뷰_신고_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/reviewReport/all</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_전체_조회_api_get_http_response"><a class="link" href="#_리뷰_신고_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/reviewReport/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 442
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 20,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "reviewReportId" : 21,
+      "reporterNickName" : "nickname",
+      "reason" : "COPYRIGHT_THEFT",
+      "respondentNickName" : "nickname",
+      "reportedReviewId" : 21,
+      "content" : "content",
+      "createdAt" : "2023-03-27",
+      "block" : false
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_전체_조회_api_get_response_fields"><a class="link" href="#_리뷰_신고_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/reviewReport/all</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewReportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reporterNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">신고자 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reason</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 이유 (IRRELEVANT_CONTENT("리뷰와 관계없는 내용"),
+INAPPROPRIATE_CONTENT("음란성, 욕설 등 부적절한 내용"),
+IRRELEVANT_IMAGE("리뷰와 관련없는 사진 게시"),
+UNFIT_CONTENT("리뷰 작성 취지에 맞지 않는 내용(복사글 등)"),
+COPYRIGHT_THEFT("저작권 도용 의심(사진 등)"),
+ETC("기타(하단 내용 작성)"))</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].respondentNickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">피신고자 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reportedReviewId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">신고된 리뷰 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].block</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 차단 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1360,26 +4171,83 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_리뷰_게시_상태_변경_api_patch"><a class="link" href="#_리뷰_게시_상태_변경_api_patch">리뷰 게시 상태 변경 API [PATCH]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_게시_상태_변경_api_patch_http_request"><a class="link" href="#_리뷰_게시_상태_변경_api_patch_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/reviewReport/update</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/admin/review-reports/22 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcxMCwiZXhwIjoxNjc5OTE5MzEwfQ.ISebPzrQ0N4YGgjO0_UB9NqirvxtsSTyAcudM41atew
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_게시_상태_변경_api_patch_request_headers"><a class="link" href="#_리뷰_게시_상태_변경_api_patch_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/reviewReport/update</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_게시_상태_변경_api_patch_path_parameters"><a class="link" href="#_리뷰_게시_상태_변경_api_patch_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/reviewReport/update</p>
+<p>/v1/admin/review-reports/{reportId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_게시_상태_변경_api_patch_http_response"><a class="link" href="#_리뷰_게시_상태_변경_api_patch_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/reviewReport/update</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1402,32 +4270,182 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_유저_전체_조회_api_get"><a class="link" href="#_유저_전체_조회_api_get">유저 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_유저_전체_조회_api_get_http_request"><a class="link" href="#_유저_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/user/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/admin/users?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcxMCwiZXhwIjoxNjc5OTE5MzEwfQ.ISebPzrQ0N4YGgjO0_UB9NqirvxtsSTyAcudM41atew
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_전체_조회_api_get_request_headers"><a class="link" href="#_유저_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/user/all</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_전체_조회_api_get_request_parameters"><a class="link" href="#_유저_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<div class="paragraph">
-<p>Snippet request-parameters not found for operation::admin/user/all</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 숫자</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_유저_전체_조회_api_get_http_response"><a class="link" href="#_유저_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/user/all</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 378
+
+{
+  "data" : {
+    "pageNumber" : 0,
+    "numberOfElements" : 1,
+    "size" : 10,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "contents" : [ {
+      "id" : 27,
+      "username" : "username",
+      "nickName" : "nickname",
+      "email" : null,
+      "createdAt" : "2023-03-27",
+      "lastAccessAt" : "2023-03-27",
+      "roleType" : "USER"
+    } ]
+  }
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_전체_조회_api_get_response_fields"><a class="link" href="#_유저_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::admin/user/all</p>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].nickName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 가입 날짜</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].lastAccessAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 최종 접속</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].roleType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 권한</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -1435,26 +4453,83 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_유저_차단_api_patch"><a class="link" href="#_유저_차단_api_patch">유저 차단 API [PATCH]</a></h3>
 <div class="sect3">
 <h4 id="_유저_차단_api_patch_http_request"><a class="link" href="#_유저_차단_api_patch_http_request">Example Request</a></h4>
-<div class="paragraph">
-<p>Snippet http-request not found for operation::admin/user/block</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/admin/users/26/block HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbCIsInJvbGVzIjoiUk9MRV9BRE1JTiIsImlhdCI6MTY3OTkxNTcxMCwiZXhwIjoxNjc5OTE5MzEwfQ.ISebPzrQ0N4YGgjO0_UB9NqirvxtsSTyAcudM41atew
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_차단_api_patch_request_headers"><a class="link" href="#_유저_차단_api_patch_request_headers">Request headers</a></h4>
-<div class="paragraph">
-<p>Snippet request-headers not found for operation::admin/user/block</p>
+<div class="sect4">
+<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>관리자의 Access Token</code></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_차단_api_patch_path_parameters"><a class="link" href="#_유저_차단_api_patch_path_parameters">Path parameters</a></h4>
+<div class="sect4">
+<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>Snippet path-parameters not found for operation::admin/user/block</p>
+<p>/v1/admin/users/{userId}/block</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">차단 유저 고유 번호</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_차단_api_patch_http_response"><a class="link" href="#_유저_차단_api_patch_http_response">Example Response</a></h4>
-<div class="paragraph">
-<p>Snippet http-response not found for operation::admin/user/block</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1464,7 +4539,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-24 20:53:49 +0900
+Last updated 2023-03-26 01:41:26 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -12,7 +12,7 @@ public class ProductDto {
     private String name;
     private Double rating;
     private Integer reviewNum;
-    private String price;
+    private Integer price;
     private String image;
 
     @Builder

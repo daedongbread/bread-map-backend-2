@@ -62,9 +62,10 @@ class AdminControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
+                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
+                .image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
         bakeryRepository.save(bakery);
-        bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg");
+
         s3Uploader.upload(
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");
@@ -183,9 +184,9 @@ class AdminControllerTest extends ControllerTest {
     }
 
     @Test
-    void uploadTempImage() throws Exception {
+    void uploadImage() throws Exception {
         mockMvc.perform(multipart("/v1/admin/images")
-                        .file(new MockMultipartFile("file", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
+                        .file(new MockMultipartFile("image", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/admin/tempImage",
@@ -193,9 +194,9 @@ class AdminControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         requestParts(
-                                partWithName("file").description("업로드 이미지")),
+                                partWithName("image").description("업로드 이미지")),
                         responseFields(
-                                fieldWithPath("data.image").description("업로드된 이미지"))
+                                fieldWithPath("data.imagePath").description("업로드된 이미지"))
                 ))
                 .andExpect(status().isCreated());
     }

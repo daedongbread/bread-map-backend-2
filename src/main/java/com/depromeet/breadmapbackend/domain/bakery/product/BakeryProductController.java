@@ -5,11 +5,12 @@ import com.depromeet.breadmapbackend.domain.bakery.product.dto.ProductReportRequ
 import com.depromeet.breadmapbackend.domain.bakery.product.dto.SimpleProductDto;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
+import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -30,9 +31,9 @@ public class BakeryProductController {
     @PostMapping("/{bakeryId}/product-add-reports")
     @ResponseStatus(HttpStatus.CREATED)
     public void productAddReport(
-            @CurrentUser String username, @PathVariable Long bakeryId, @RequestPart ProductReportRequest request,
-            @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        bakeryProductService.productAddReport(username, bakeryId, request, files);
+            @CurrentUser String username, @PathVariable Long bakeryId,
+            @RequestBody @Validated(ValidationSequence.class) ProductReportRequest request) {
+        bakeryProductService.productAddReport(username, bakeryId, request);
     }
 
     @GetMapping("/{bakeryId}/products/search")

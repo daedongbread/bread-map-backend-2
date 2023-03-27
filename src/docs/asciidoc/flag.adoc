@@ -19,22 +19,22 @@
 - 깃발에 등록된 빵집 삭제 API
 
 === 깃발 리스트 조회 API [GET]
-operation::flag/find[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::v1/flag/find[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 깃발 추가 API [POST]
-operation::flag/add[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/flag/add[snippets='http-request,request-headers,request-fields,http-response']
 
 === 깃발 업데이트 API [PATCH]
-operation::flag/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+operation::v1/flag/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 === 깃발 삭제 API [DELETE]
-operation::flag/delete[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/flag/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 깃발에 추가된 빵집 리스트 조회 [GET]
-operation::flag/bakeryFind[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::v1/flag/bakeryFind[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 깃발에 빵집 추가 API [POST]
-operation::flag/bakeryAdd[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/flag/bakeryAdd[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 깃발에 등록된 빵집 삭제 [DELETE]
-operation::flag/bakeryDelete[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/flag/bakeryDelete[snippets='http-request,request-headers,path-parameters,http-response']

@@ -1,8 +1,12 @@
 package com.depromeet.breadmapbackend.domain.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
+import com.depromeet.breadmapbackend.domain.admin.dto.AdminImageDto;
 import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
+import com.depromeet.breadmapbackend.domain.image.Image;
+import com.depromeet.breadmapbackend.domain.image.ImageRepository;
+import com.depromeet.breadmapbackend.domain.image.dto.ImageDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.converter.FileConverter;
@@ -41,6 +45,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final BakeryAddReportRepository bakeryAddReportRepository;
     private final ReviewReportRepository reviewReportRepository;
+    private final ImageRepository imageRepository;
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
     private final PasswordEncoder passwordEncoder;
@@ -118,9 +123,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public TempImageDto uploadTempImage(MultipartFile file) throws IOException {
-        String imagePath = fileConverter.parseFileInfo(file, ImageType.ADMIN_TEMP_IMAGE, 0L);
-        String image = s3Uploader.upload(file, imagePath);
-        return TempImageDto.builder().image(image).build(); // cloudFrontDomain/adminTempImage/0/image.jpg
+    public AdminImageDto uploadImage(MultipartFile image) throws IOException {
+        String hashValue = fileConverter.generateImageHash(image);
+        String imagePath = customAWSS3Properties.getDefaultBucket().getImage() + "/" + hashValue + fileConverter.generateImageExtension(image);
+
+        if (imageRepository.findByHashValue(hashValue).isPresent())
+            return AdminImageDto.builder().imagePath(s3Uploader.alreadyUpload(imagePath)).build();
+
+        imageRepository.save(Image.builder().hashValue(hashValue).build());
+        return AdminImageDto.builder().imagePath(s3Uploader.upload(image, imagePath)).build();
     }
 }

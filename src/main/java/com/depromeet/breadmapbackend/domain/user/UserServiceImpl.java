@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -94,18 +95,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateNickName(String username, UpdateNickNameRequest request, MultipartFile file) throws IOException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if (userRepository.findByNickName(request.getNickName()).isEmpty())
-            user.updateNickName(request.getNickName());
-        else if (!user.equals(userRepository.findByNickName(request.getNickName()).get()))
-            throw new DaedongException(DaedongStatus.NICKNAME_DUPLICATE_EXCEPTION);
-
-        if (file != null && !file.isEmpty()) {
-            String imagePath = fileConverter.parseFileInfo(file, ImageType.USER_IMAGE, user.getId());
-            String image = s3Uploader.upload(file, imagePath);
-            user.updateImage(image);
+    public void updateNickName(String username, UpdateNickNameRequest request){
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if (request.getNickName() != null) {
+            Optional<User> user = userRepository.findByNickName(request.getNickName());
+            if (user.isEmpty()) me.updateNickName(request.getNickName());
+            else if (!me.equals(user.get()))
+                throw new DaedongException(DaedongStatus.NICKNAME_DUPLICATE_EXCEPTION);
         }
+
+        if (request.getImage() != null) me.updateImage(request.getImage());
     }
 
     @Transactional(rollbackFor = Exception.class)
