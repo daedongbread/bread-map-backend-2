@@ -16,5 +16,5 @@ public interface AdminService {
     JwtToken reissue(ReissueRequest reissueRequest);
     AdminBarDto getAdminBar();
     ResponseEntity<byte[]> downloadAdminImage(String image) throws IOException;
-    TempImageDto uploadTempImage(MultipartFile file) throws IOException;
+    AdminImageDto uploadImage(MultipartFile image) throws IOException;
 }

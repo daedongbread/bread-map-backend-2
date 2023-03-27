@@ -12,5 +12,5 @@
 == Image APIs
 - 이미지 업로드 API
 
-=== 임시 이미지 업로드 API [POST]
+=== 이미지 업로드 API [POST]
 operation::v1/image[snippets='http-request,request-headers,request-parts,http-response,response-fields']

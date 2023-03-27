@@ -55,7 +55,7 @@ public class AdminController {
 
     @PostMapping("/images")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<TempImageDto> uploadTempImage(@RequestPart MultipartFile file) throws IOException {
-        return new ApiResponse<>(adminService.uploadTempImage(file));
+    public ApiResponse<AdminImageDto> uploadImage(@RequestPart MultipartFile image) throws IOException {
+        return new ApiResponse<>(adminService.uploadImage(image));
     }
 }
