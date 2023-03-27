@@ -50,15 +50,14 @@ class FlagControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
-        bakery.updateImage("testImage");
+                .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).image("bakeryImage").build();
         bakeryRepository.save(bakery);
 
         flag = Flag.builder().user(user).name("testFlagName").color(FlagColor.ORANGE).build();
         flagRepository.save(flag);
 
-        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
-
+        Product product = Product.builder()
+                .bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).image("productImage").build();
         productRepository.save(product);
 
         Review review = Review.builder().user(user).bakery(bakery).content("content1").build();

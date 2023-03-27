@@ -62,9 +62,10 @@ class AdminControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
+                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
+                .image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
         bakeryRepository.save(bakery);
-        bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg");
+
         s3Uploader.upload(
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");

@@ -77,16 +77,16 @@ class AdminBakeryControllerTest extends ControllerTest {
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
-                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
+                .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
+                .image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
         bakeryRepository.save(bakery);
-        bakery.updateImage(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg");
         s3Uploader.upload(
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");
 
-        product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        product = Product.builder()
+                .bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
         productRepository.save(product);
-        product.updateImage(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg");
 
         bakeryUpdateReport = BakeryUpdateReport.builder()
                 .bakery(bakery).user(user).reason(BakeryUpdateReason.BAKERY_SHUTDOWN).content("content").build();

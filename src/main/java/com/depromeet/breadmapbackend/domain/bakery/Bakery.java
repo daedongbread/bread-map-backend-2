@@ -64,7 +64,7 @@ public class Bakery extends BaseEntity {
     @Builder
     public Bakery(Long id, String name, Double latitude, Double longitude,
                   String address, String hours, String phoneNumber,
-                  String websiteURL, String instagramURL, String facebookURL, String blogURL,
+                  String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
                   User user, List<FacilityInfo> facilityInfoList, BakeryStatus status) {
         this.id = id;
         this.name = name;
@@ -75,6 +75,7 @@ public class Bakery extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.bakeryURL = BakeryURL.builder()
                 .websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
+        this.image = image;
         this.flagNum = 0;
         this.user = user;
         this.facilityInfoList = facilityInfoList;
@@ -101,7 +102,7 @@ public class Bakery extends BaseEntity {
     public void updateImage(String image) { this.image = image; }
 
     public void update(Long id, String name, String address, Double latitude, Double longitude, String hours,
-                       String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber,
+                       String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
                        List<FacilityInfo> facilityInfoList, BakeryStatus status) {
         this.id = id;
         this.name = name;
