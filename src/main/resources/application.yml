@@ -113,12 +113,6 @@ cloud:
       bucket: s3-bucket
       cloud-front: cloudfront
       default-bucket:
-        bakery: bakery
-        product: product
-        review: review
-        bakery-delete-report: bakeryDeleteReport
-        product-add-report: productAddReport
-        user: user
         image: image
       default-image:
         bakery: S3_DEFAULT_BAKERY

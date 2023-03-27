@@ -28,18 +28,6 @@ public class CustomAWSS3Properties {
     @RequiredArgsConstructor
     public static class DefaultBucket {
         @NotBlank(message = "해당값은 필수 값입니다")
-        private final String bakery;
-        @NotBlank(message = "해당값은 필수 값입니다")
-        private final String product;
-        @NotBlank(message = "해당값은 필수 값입니다")
-        private final String review;
-        @NotBlank(message = "해당값은 필수 값입니다")
-        private final String bakeryDeleteReport;
-        @NotBlank(message = "해당값은 필수 값입니다")
-        private final String productAddReport;
-        @NotBlank(message = "해당값은 필수 값입니다")
-        private final String user;
-        @NotBlank(message = "해당값은 필수 값입니다")
         private final String image;
     }
 
