@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -121,7 +122,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addReview(String username, Long bakeryId, ReviewRequest request, List<MultipartFile> files) throws IOException {
+    public void addReview(String username, Long bakeryId, ReviewRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
@@ -129,7 +130,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
         reviewRepository.save(review);
 
-        if(request.getProductRatingList() != null) {
+        if(request.getProductRatingList() != null && !request.getProductRatingList().isEmpty()) {
             request.getProductRatingList().forEach(productRatingRequest -> {
                 Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
                 if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
@@ -139,7 +140,7 @@ public class ReviewServiceImpl implements ReviewService {
             });
         }
 
-        if(request.getNoExistProductRatingRequestList() != null) {
+        if(request.getNoExistProductRatingRequestList() != null && !request.getNoExistProductRatingRequestList().isEmpty()) {
             request.getNoExistProductRatingRequestList().forEach(noExistProductRatingRequest -> {
                 if(productRepository.findByBakeryAndName(bakery, noExistProductRatingRequest.getProductName()).isPresent())
                     throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
@@ -152,12 +153,9 @@ public class ReviewServiceImpl implements ReviewService {
             });
         }
 
-        if (files != null) {
-            if (files.size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
-            for (MultipartFile file : files) {
-                if (file.isEmpty()) continue;
-                String imagePath = fileConverter.parseFileInfo(file, ImageType.REVIEW_IMAGE, bakery.getId());
-                String image = s3Uploader.upload(file, imagePath);
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            if (request.getImages().size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+            for (String image : request.getImages()) {
                 ReviewImage.builder()
                         .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
             }

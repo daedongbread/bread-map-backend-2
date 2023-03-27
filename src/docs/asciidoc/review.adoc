@@ -30,7 +30,7 @@ operation::v1/review/get/user[snippets='http-request,request-headers,path-parame
 operation::v1/review/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 리뷰 추가 API [POST]
-operation::v1/review/add[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
+operation::v1/review/add[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 === 리뷰 삭제 API [DELETE]
 operation::v1/review/remove[snippets='http-request,request-headers,path-parameters,http-response']

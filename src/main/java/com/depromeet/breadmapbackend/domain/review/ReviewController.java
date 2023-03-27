@@ -56,8 +56,8 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addReview(
             @CurrentUser String username, @PathVariable Long bakeryId,
-            @RequestPart ReviewRequest request, @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        reviewService.addReview(username, bakeryId, request, files);
+            @RequestBody @Validated(ValidationSequence.class) ReviewRequest request) {
+        reviewService.addReview(username, bakeryId, request);
     }
 
     @DeleteMapping("/{reviewId}")
