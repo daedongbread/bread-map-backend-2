@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface BakeryProductService {
     List<ProductDto> findProductList(Long bakeryId);
-    void productAddReport(String username, Long bakeryId, ProductReportRequest request, List<MultipartFile> files) throws IOException;
+    void productAddReport(String username, Long bakeryId, ProductReportRequest request);
 
     List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name);
 }

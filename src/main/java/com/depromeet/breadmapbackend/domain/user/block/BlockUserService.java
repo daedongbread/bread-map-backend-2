@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.user.block;
 
-import com.depromeet.breadmapbackend.domain.user.dto.BlockRequest;
-import com.depromeet.breadmapbackend.domain.user.dto.BlockUserDto;
+import com.depromeet.breadmapbackend.domain.user.block.dto.BlockRequest;
+import com.depromeet.breadmapbackend.domain.user.block.dto.BlockUserDto;
 
 import java.util.List;
 

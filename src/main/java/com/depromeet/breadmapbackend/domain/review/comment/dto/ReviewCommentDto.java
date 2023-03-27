@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.review.dto;
+package com.depromeet.breadmapbackend.domain.review.comment.dto;
 
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewComment;
 import lombok.Builder;

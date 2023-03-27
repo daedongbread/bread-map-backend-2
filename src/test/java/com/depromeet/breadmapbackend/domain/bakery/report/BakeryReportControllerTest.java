@@ -127,7 +127,7 @@ class BakeryReportControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestFields(
-                                fieldWithPath("images").optional().description("빵집 사진 제보 이미지들")
+                                fieldWithPath("images").description("빵집 사진 제보 이미지들")
                         )
                 ))
                 .andExpect(status().isCreated());

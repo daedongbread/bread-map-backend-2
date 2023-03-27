@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Builder
@@ -20,4 +21,6 @@ public class ProductReportRequest {
     @NotBlank(message = "가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     @Size(min=3, max=10, message = "3자 이상, 10자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
     private String price;
+
+    private List<String> images;
 }

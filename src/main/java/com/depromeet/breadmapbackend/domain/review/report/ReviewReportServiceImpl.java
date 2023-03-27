@@ -1,24 +1,13 @@
 package com.depromeet.breadmapbackend.domain.review.report;
 
-import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository;
-import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
-import com.depromeet.breadmapbackend.domain.review.comment.ReviewCommentRepository;
-import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLikeRepository;
-import com.depromeet.breadmapbackend.domain.review.dto.ReviewReportRequest;
-import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeRepository;
+import com.depromeet.breadmapbackend.domain.review.report.dto.ReviewReportRequest;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
-import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

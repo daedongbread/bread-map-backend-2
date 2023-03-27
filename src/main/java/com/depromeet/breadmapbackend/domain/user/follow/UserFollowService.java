@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.user.follow;
 
-import com.depromeet.breadmapbackend.domain.user.dto.FollowRequest;
-import com.depromeet.breadmapbackend.domain.user.dto.FollowUserDto;
+import com.depromeet.breadmapbackend.domain.user.follow.dto.FollowRequest;
+import com.depromeet.breadmapbackend.domain.user.follow.dto.FollowUserDto;
 
 import java.util.List;
 

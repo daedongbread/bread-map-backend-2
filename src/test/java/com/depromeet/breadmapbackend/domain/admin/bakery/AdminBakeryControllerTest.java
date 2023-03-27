@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
-import com.depromeet.breadmapbackend.domain.admin.bakery.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.ProductAddImageRegisterRequest;
@@ -353,7 +352,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("websiteURL").description("빵집 홈페이지"),
                                 fieldWithPath("phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
-                                fieldWithPath("productList.[].productId").optional().description("상품 고유 번호 (새로운 빵 추가시 제외)"),
+                                fieldWithPath("productList.[].productId").optional().description("상품 고유 번호 (새로운 빵이면 null)"),
                                 fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
@@ -468,7 +467,7 @@ class AdminBakeryControllerTest extends ControllerTest {
     @Test
     void registerProductAddImage() throws Exception {
         String object = objectMapper.writeValueAsString(ProductAddImageRegisterRequest.builder()
-                .imageIdList(Arrays.asList(productAddReportImage1.getId(), productAddReportImage2.getId())).build());
+                .imageIdList(List.of(productAddReportImage1.getId(), productAddReportImage2.getId())).build());
 
         mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}/product-add-reports/{reportId}", bakery.getId(), productAddReport.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken())

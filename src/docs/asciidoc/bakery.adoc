@@ -28,7 +28,7 @@ operation::v1/bakery/find[snippets='http-request,path-parameters,http-response,r
 operation::v1/bakery/product[snippets='http-request,path-parameters,http-response,response-fields']
 
 === 상품 추가 요청 API [POST]
-operation::v1/bakery/report/product[snippets='http-request,request-headers,path-parameters,request-parts,request-part-request-fields,http-response']
+operation::v1/bakery/report/product[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 === 리뷰용 상품 검색 API [GET]
 operation::v1/bakery/review/product/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
