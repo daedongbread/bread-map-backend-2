@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
     JwtToken reissue(ReissueRequest reissueRequest);
     ProfileDto profile(String username, Long userId);
-    void updateNickName(String username, UpdateNickNameRequest request, MultipartFile file) throws IOException;
+    void updateNickName(String username, UpdateNickNameRequest request);
     void logout(LogoutRequest reissueRequest);
     void deleteUser(String username);
     AlarmDto getAlarmStatus(String username);
