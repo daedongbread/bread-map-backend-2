@@ -120,6 +120,7 @@ cloud:
       default-bucket:
         image: ${S3_DEFAULT_BUCKET_IMAGE}
       default-image:
+        bakery: ${S3_DEFAULT_IMAGE_BAKERY}
         comment: ${S3_DEFAULT_IMAGE_COMMENT}
         like: ${S3_DEFAULT_IMAGE_LIKE}
         report: ${S3_DEFAULT_IMAGE_REPORT}

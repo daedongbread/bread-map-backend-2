@@ -113,7 +113,7 @@ cloud:
       bucket: s3-bucket
       cloud-front: cloudfront
       default-bucket:
-        image: image
+        image: S3_DEFAULT_IMAGE
       default-image:
         bakery: S3_DEFAULT_BAKERY
         comment: S3_DEFAULT_COMMENT
