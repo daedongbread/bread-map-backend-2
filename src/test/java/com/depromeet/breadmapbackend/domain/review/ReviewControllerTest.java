@@ -72,14 +72,32 @@ class ReviewControllerTest extends ControllerTest {
         reviewRepository.save(review2);
         reviewImageRepository.save(image2);
 
-        ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review1).rating(5L).build();
-        reviewProductRatingRepository.save(rating1);
-        ReviewProductRating rating2 = ReviewProductRating.builder().bakery(bakery).product(product2).review(review1).rating(4L).build();
-        reviewProductRatingRepository.save(rating2);
-        ReviewProductRating rating3 = ReviewProductRating.builder().bakery(bakery).product(product1).review(review2).rating(4L).build();
-        reviewProductRatingRepository.save(rating3);
-        ReviewProductRating rating4 = ReviewProductRating.builder().bakery(bakery).product(product2).review(review2).rating(3L).build();
-        reviewProductRatingRepository.save(rating4);
+        Review review3 = Review.builder().user(user).bakery(bakery).content("content3").build();
+        reviewRepository.save(review3);
+        Review review4 = Review.builder().user(user).bakery(bakery).content("content3").build();
+        reviewRepository.save(review4);
+        Review review5 = Review.builder().user(user).bakery(bakery).content("content3").build();
+        reviewRepository.save(review5);
+        Review review6 = Review.builder().user(user).bakery(bakery).content("content3").build();
+        reviewRepository.save(review6);
+
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product1).review(review1).rating(5L).build());
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product2).review(review1).rating(4L).build());
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product1).review(review2).rating(4L).build());
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product2).review(review2).rating(3L).build());
+
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product1).review(review3).rating(4L).build());
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product1).review(review4).rating(4L).build());
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product1).review(review5).rating(4L).build());
+        reviewProductRatingRepository.save(ReviewProductRating.builder()
+                .bakery(bakery).product(product1).review(review6).rating(4L).build());
     }
 
     @AfterEach
@@ -283,7 +301,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.reviewDto.reviewInfo.productRatingList").description("리뷰 상품 점수 리스트"),
                                 fieldWithPath("data.reviewDto.reviewInfo.productRatingList.[].productName").description("리뷰 상품 이름"),
                                 fieldWithPath("data.reviewDto.reviewInfo.productRatingList.[].rating").description("리뷰 상품 점수"),
-                                fieldWithPath("data.reviewDto.reviewInfo.imageList").description("리뷰 이미지"),
+                                fieldWithPath("data.reviewDto.reviewInfo.imageList").description("리뷰 이미지들"),
                                 fieldWithPath("data.reviewDto.reviewInfo.content").description("리뷰 내용"),
                                 fieldWithPath("data.reviewDto.reviewInfo.isLike").description("리뷰 좋아요 여부"),
                                 fieldWithPath("data.reviewDto.reviewInfo.likeNum").description("리뷰 좋아요 수"),
@@ -292,11 +310,11 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("data.reviewDto.reviewInfo.averageRating").description("리뷰 평균 점수"),
                                 fieldWithPath("data.userOtherReviews").description("유저 다른 빵집 리뷰 리스트"),
                                 fieldWithPath("data.userOtherReviews.[].id").description("리뷰 고유 번호"),
-                                fieldWithPath("data.userOtherReviews.[].image").description("리뷰 이미지"),
+                                fieldWithPath("data.userOtherReviews.[].image").optional().description("리뷰 이미지"),
                                 fieldWithPath("data.userOtherReviews.[].rating").description("리뷰 점수"),
                                 fieldWithPath("data.bakeryOtherReviews").description("빵집 다른 리뷰 리스트"),
                                 fieldWithPath("data.bakeryOtherReviews.[].id").description("리뷰 고유 번호"),
-                                fieldWithPath("data.bakeryOtherReviews.[].image").description("리뷰 이미지"),
+                                fieldWithPath("data.bakeryOtherReviews.[].image").optional().description("리뷰 이미지"),
                                 fieldWithPath("data.bakeryOtherReviews.[].rating").description("리뷰 점수")
                         )
                 ))

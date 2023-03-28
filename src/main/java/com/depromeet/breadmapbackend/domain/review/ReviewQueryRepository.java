@@ -50,7 +50,7 @@ public class ReviewQueryRepository {
                 .where(review.bakery.eq(bakery),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
-                .groupBy(reviewProductRating.review.id)
+                .groupBy(review.id, reviewProductRating.review.id)
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset((long) page * BAKERY_REVIEW_SIZE)
                 .limit(BAKERY_REVIEW_SIZE)
@@ -83,7 +83,7 @@ public class ReviewQueryRepository {
                         reviewProductRating.product.eq(product),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
-                .groupBy(reviewProductRating.review.id)
+                .groupBy(review.id, reviewProductRating.review.id)
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset((long) page * PRODUCT_REVIEW_SIZE)
                 .limit(PRODUCT_REVIEW_SIZE)
@@ -95,7 +95,6 @@ public class ReviewQueryRepository {
                         reviewProductRating.product.eq(product),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
-                .groupBy(reviewProductRating.review.id)
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);

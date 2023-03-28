@@ -94,7 +94,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         List<AdminProductDto> productList = productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(AdminProductDto::new).collect(Collectors.toList());
-        return AdminBakeryDto.builder().bakery(bakery).productList(productList).build();
+
+        String image = (bakery.getImage().contains(customAWSS3Properties.getDefaultImage().getBakery())) ? null : bakery.getImage();
+        return AdminBakeryDto.builder().bakery(bakery).image(image).productList(productList).build();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -439,7 +441,10 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         bakery.update(bakeryId, request.getName(),
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
-                request.getPhoneNumber(), request.getImage(), request.getFacilityInfoList(), request.getStatus());
+                request.getPhoneNumber(),
+                (request.getImage() != null) ? request.getImage() :
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".jpg",
+                request.getFacilityInfoList(), request.getStatus());
 
 //        if (request.getImage() != null && !request.getImage().equals(bakery.getImage())) {
 //            String oldImage = request.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
