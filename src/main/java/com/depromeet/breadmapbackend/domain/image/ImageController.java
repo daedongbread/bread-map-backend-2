@@ -17,7 +17,7 @@ public class ImageController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<ImageDto> uploadImage(@RequestPart MultipartFile image) throws IOException {
+    public ApiResponse<ImageDto> uploadImage(@RequestPart MultipartFile image) throws IOException { // TODO 비동기
         return new ApiResponse<>(imageService.uploadImage(image));
     }
 }

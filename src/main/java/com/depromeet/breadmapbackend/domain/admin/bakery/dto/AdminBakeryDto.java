@@ -31,9 +31,9 @@ public class AdminBakeryDto {
     private List<AdminProductDto> productList;
 
     @Builder
-    public AdminBakeryDto(Bakery bakery, List<AdminProductDto> productList) {
+    public AdminBakeryDto(Bakery bakery, String image, List<AdminProductDto> productList) {
         this.name = bakery.getName();
-        this.image = bakery.getImage();
+        this.image = image;
         this.address = bakery.getAddress();
         this.latitude = bakery.getLatitude();
         this.longitude = bakery.getLongitude();
