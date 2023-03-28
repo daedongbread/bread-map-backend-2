@@ -1,0 +1,63 @@
+package com.depromeet.breadmapbackend.domain.image;
+
+import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.token.JwtToken;
+import com.depromeet.breadmapbackend.utils.ControllerTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+class ImageControllerTest extends ControllerTest {
+    private JwtToken token;
+
+
+    @BeforeEach
+    public void setup() {
+        User user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        userRepository.save(user);
+        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+    }
+
+
+    @AfterEach
+    public void setDown() {
+        userRepository.deleteAllInBatch();
+    }
+
+    @Test
+    void uploadImage() throws Exception {
+        mockMvc.perform(multipart("/v1/images")
+                        .file(new MockMultipartFile("image", UUID.randomUUID() +".png", "image/png", "test".getBytes()))
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/image",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저/관리자의 Access Token")),
+                        requestParts(
+                                partWithName("image").description("업로드 이미지")),
+                        responseFields(
+                                fieldWithPath("data.imagePath").description("업로드된 이미지 경로"))
+                ))
+                .andExpect(status().isCreated());
+    }
+}

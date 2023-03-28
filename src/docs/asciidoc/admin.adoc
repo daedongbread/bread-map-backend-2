@@ -9,10 +9,29 @@
 :operation-http-request-title: Example Request
 :operation-http-response-title: Example Response
 
-== APIs
+== Admin APIs
 - 관리자 로그인 API
 - 토큰 재발급 API
 - 메뉴바 API
+- 이미지 다운로드 API
+- 임시 이미지 업로드 API
+
+=== 관리자 로그인 API [POST]
+operation::v1/admin/login[snippets='http-request,request-fields,http-response,response-fields']
+
+=== 토큰 재발급 API [POST]
+operation::v1/admin/reissue[snippets='http-request,request-fields,http-response,response-fields']
+
+=== 메뉴바 API [GET]
+operation::v1/admin/bar[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 이미지 다운로드 API [GET]
+operation::v1/admin/image/download[snippets='http-request,request-headers,request-parameters,http-response']
+
+=== 임시 이미지 업로드 API [POST]
+operation::v1/admin/tempImage[snippets='http-request,request-headers,request-parts,http-response,response-fields']
+
+== Admin Bakery APIs
 - 빵집 전체 조회 API
 - 빵집 상세 조회 API
 - 빵집 검색 API
@@ -21,104 +40,93 @@
 - 빵집 수정 API
 - 빵집 상품 삭제 API
 - 빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 조회 API
-- 이미지 다운로드 API
 - 빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 삭제, 숨김 API
 - 메뉴 제보 조회 API
-- 메뉴 제보 이미지 저장 API
+- 메뉴 제보 이미지 등록 API
 - 메뉴 제보 삭제 API
 - 빵집 정보 수정 제보 조회 API
 - 빵집 정보 수정 제보 변경 완료 API
 - 빵집 정보 수정 제보 삭제 API
-- 빵집 삭제 API
-- 빵집 제보 전체 조회 API
-- 빵집 제보 상세 조회 API
-- 빵집 게시 상태 변경 API
-- 리뷰 신고 전체 조회 API
-- 리뷰 게시 상태 변경 API
-- 유저 전체 조회 API
-- 유저 차단 API
-- 임시 이미지 업로드 API
-
-=== 관리자 로그인 API [POST]
-operation::admin/login[snippets='http-request,request-fields,http-response,response-fields']
-
-=== 토큰 재발급 API [POST]
-operation::admin/reissue[snippets='http-request,request-fields,http-response,response-fields']
-
-=== 메뉴바 API [GET]
-operation::admin/bar[snippets='http-request,request-headers,http-response,response-fields']
+// - 빵집 삭제 API
 
 === 빵집 전체 조회 API [GET]
-operation::admin/bakery/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::v1/admin/bakery/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 조회 API [GET]
-operation::admin/bakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::v1/admin/bakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 빵집 검색 API [GET]
-operation::admin/bakery/search[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::v1/admin/bakery/search[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 위도 경도 조회 API [GET]
-operation::admin/bakery/location[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::v1/admin/bakery/location[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 추가 API [POST]
-operation::admin/bakery/add[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/admin/bakery/add[snippets='http-request,request-headers,request-fields,http-response']
 
-=== 빵집 수정 API [POST]
-operation::admin/bakery/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+=== 빵집 수정 API [PATCH]
+operation::v1/admin/bakery/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 === 빵집 상품 삭제 API [DELETE]
-operation::admin/product/delete[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/admin/product/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 조회 API [GET]
-operation::admin/image/all[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
-
-=== 이미지 다운로드 API [GET]
-operation::admin/image/download[snippets='http-request,request-headers,request-parameters,http-response']
+operation::v1/admin/image/all[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 === 빵집 관련 이미지 (대표 이미지, 메뉴제보 이미지, 리뷰 이미지) 삭제, 숨김 API [DELETE]
-operation::admin/image/delete[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/admin/image/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 메뉴 제보 조회 API [GET]
-operation::admin/productAddReport[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::v1/admin/productAddReport[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
-=== 메뉴 제보 이미지 저장 API [PATCH]
-operation::admin/productAddReport/register[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+=== 메뉴 제보 이미지 등록 API [PATCH]
+operation::v1/admin/productAddReport/register[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
 === 메뉴 제보 삭제 API [DELETE]
-operation::admin/productAddReport/delete[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/admin/productAddReport/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 빵집 정보 수정 제보 조회 API [GET]
-operation::admin/updateReport[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::v1/admin/updateReport[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 === 빵집 정보 수정 제보 변경 완료 API [PATCH]
-operation::admin/updateReport/change[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/admin/updateReport/change[snippets='http-request,request-headers,path-parameters,http-response']
 
 === 빵집 정보 수정 제보 삭제 API [DELETE]
-operation::admin/updateReport/delete[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/admin/updateReport/delete[snippets='http-request,request-headers,path-parameters,http-response']
 
-=== 빵집 삭제 API [DELETE]
-operation::admin/bakery/delete[snippets='http-request,request-headers,path-parameters,http-response']
+// === 빵집 삭제 API [DELETE]
+// operation::admin/bakery/delete[snippets='http-request,request-headers,path-parameters,http-response']
+
+== Admin Bakery Add Report APIs
+- 빵집 추가 제보 전체 조회 API
+- 빵집 추가 제보 상세 조회 API
+- 빵집 게시 상태 변경 API
 
 === 빵집 제보 전체 조회 API [GET]
-operation::admin/bakeryReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::v1/admin/bakeryReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 제보 상세 조회 API [GET]
-operation::admin/bakeryReport[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+operation::v1/admin/bakeryReport[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === 빵집 제보 처리 상태 변경 API [PATCH]
-operation::admin/bakeryReport/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+operation::v1/admin/bakeryReport/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+== Admin Report APIs
+- 리뷰 신고 전체 조회 API
+- 리뷰 게시 상태 변경 API
 
 === 리뷰 신고 전체 조회 API [GET]
-operation::admin/reviewReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::v1/admin/reviewReport/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 리뷰 게시 상태 변경 API [PATCH]
-operation::admin/reviewReport/update[snippets='http-request,request-headers,path-parameters,http-response']
+operation::v1/admin/reviewReport/update[snippets='http-request,request-headers,path-parameters,http-response']
+
+== Admin User APIs
+- 유저 전체 조회 API
+- 유저 차단 API
 
 === 유저 전체 조회 API [GET]
-operation::admin/user/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::v1/admin/user/all[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 유저 차단 API [PATCH]
-operation::admin/user/block[snippets='http-request,request-headers,path-parameters,http-response']
-
-=== 임시 이미지 업로드 API [POST]
-operation::admin/tempImage[snippets='http-request,request-headers,request-parts,http-response,response-fields']
+operation::v1/admin/user/block[snippets='http-request,request-headers,path-parameters,http-response']

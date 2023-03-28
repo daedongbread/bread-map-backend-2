@@ -118,12 +118,7 @@ cloud:
       bucket: ${S3_BUCKET}
       cloud-front: ${S3_CLOUDFRONT}
       default-bucket:
-        bakery: ${S3_DEFAULT_BUCKET_BAKERY}
-        product: ${S3_DEFAULT_BUCKET_PRODUCT}
-        review: ${S3_DEFAULT_BUCKET_REVIEW}
-        bakery-delete-report: ${S3_DEFAULT_BUCKET_BAKERY_DELETE_REPORT}
-        product-add-report: ${S3_DEFAULT_BUCKET_PRODUCT_ADD_REPORT}
-        user: ${S3_DEFAULT_BUCKET_USER}
+        image: ${S3_DEFAULT_BUCKET_IMAGE}
       default-image:
         comment: ${S3_DEFAULT_IMAGE_COMMENT}
         like: ${S3_DEFAULT_IMAGE_LIKE}

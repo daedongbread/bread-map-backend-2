@@ -1,0 +1,16 @@
+= 이미지 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:site-url: /build/asciidoc/html5/
+:operation-http-request-title: Example Request
+:operation-http-response-title: Example Response
+
+== Image APIs
+- 이미지 업로드 API
+
+=== 이미지 업로드 API [POST]
+operation::v1/image[snippets='http-request,request-headers,request-parts,http-response,response-fields']

@@ -1,19 +1,19 @@
 package com.depromeet.breadmapbackend.domain.user;
 
-import com.depromeet.breadmapbackend.domain.common.BaseEntity;
-import com.depromeet.breadmapbackend.domain.common.converter.BooleanToYNConverter;
+import com.depromeet.breadmapbackend.global.BaseEntity;
+import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.security.domain.ProviderType;
-import com.depromeet.breadmapbackend.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.domain.ProviderType;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
     private String email;
