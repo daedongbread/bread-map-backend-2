@@ -247,16 +247,16 @@ class FlagControllerTest extends ControllerTest {
     @Test
 //    @Transactional
     void addBakeryToFlag() throws Exception {
-        mockMvc.perform(post("/v1/flags/{flagId}", flag.getId())
-                .param("bakeryId", String.valueOf(bakery.getId()))
+        mockMvc.perform(post("/v1/flags/{flagId}/bakeries/{bakeryId}" , flag.getId(), bakery.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/flag/bakeryAdd",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("flagId").description("깃발 고유번호")),
-                        requestParameters(parameterWithName("bakeryId").description("깃발에 추가할 빵집 고유번호"))
+                        pathParameters(
+                                parameterWithName("flagId").description("깃발 고유번호"),
+                                parameterWithName("bakeryId").description("깃발에 추가할 빵집 고유번호"))
                 ))
                 .andExpect(status().isCreated());
 
