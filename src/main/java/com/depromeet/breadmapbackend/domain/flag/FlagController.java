@@ -52,9 +52,9 @@ public class FlagController {
         return new ApiResponse<>(flagService.findBakeryByFlag(flagId));
     }
 
-    @PostMapping("/{flagId}")
+    @PostMapping("/{flagId}/bakeries/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @RequestParam Long bakeryId) {
+    public void addBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @PathVariable Long bakeryId) {
         flagService.addBakeryToFlag(username, flagId, bakeryId);
     }
 
