@@ -21,7 +21,8 @@ public class BlockUser extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "block_user_id")
     private User blockUser;
 
     @Builder

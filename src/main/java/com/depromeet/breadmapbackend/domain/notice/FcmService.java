@@ -39,6 +39,7 @@ public class FcmService {
 
         List<String> tokens = noticeTokenRepository.findByUser(user)
                 .stream().map(NoticeToken::getDeviceToken).collect(Collectors.toList());
+        if (tokens.isEmpty()) return;
 
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(new Notification(title, content))
