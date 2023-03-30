@@ -27,8 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("[" + request.getMethod() + "] : " + request.getRequestURI());
-        if(request.getQueryString() != null) log.info("query : " + request.getQueryString());
+        if (!request.getRequestURI().equals("/actuator/health")) {
+            log.info("[" + request.getMethod() + "] : " + request.getRequestURI());
+            if (request.getQueryString() != null) log.info("query : " + request.getQueryString());
+        }
 //        if(!readBody(request).equals("")) log.info("request body : " + readBody(request)); // TODO : request body
 
         if (request.getHeader("Authorization") != null) {

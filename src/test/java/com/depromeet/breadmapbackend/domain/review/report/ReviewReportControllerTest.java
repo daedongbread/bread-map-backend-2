@@ -73,7 +73,13 @@ class ReviewReportControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(parameterWithName("reviewId").description("리뷰 고유 번호")),
                         requestFields(
-                                fieldWithPath("reason").description("리뷰 신고 이유"),
+                                fieldWithPath("reason").description("리뷰 신고 이유 " +
+                                        "(IRRELEVANT_CONTENT(\"리뷰와 관계없는 내용\"),\n" +
+                                        "    INAPPROPRIATE_CONTENT(\"음란성, 욕설 등 부적절한 내용\"),\n" +
+                                        "    IRRELEVANT_IMAGE(\"리뷰와 관련없는 사진 게시\"),\n" +
+                                        "    UNFIT_CONTENT(\"리뷰 작성 취지에 맞지 않는 내용(복사글 등)\"),\n" +
+                                        "    COPYRIGHT_THEFT(\"저작권 도용 의심(사진 등)\"),\n" +
+                                        "    ETC(\"기타(하단 내용 작성)\"))"),
                                 fieldWithPath("content").optional().description("리뷰 신고 내용")
                         )
                 ))
