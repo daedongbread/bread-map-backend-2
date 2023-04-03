@@ -13,7 +13,6 @@
 - 관리자 로그인 API
 - 토큰 재발급 API
 - 메뉴바 API
-- 이미지 다운로드 API
 - 임시 이미지 업로드 API
 
 === 관리자 로그인 API [POST]
@@ -24,9 +23,6 @@ operation::v1/admin/reissue[snippets='http-request,request-fields,http-response,
 
 === 메뉴바 API [GET]
 operation::v1/admin/bar[snippets='http-request,request-headers,http-response,response-fields']
-
-=== 이미지 다운로드 API [GET]
-operation::v1/admin/image/download[snippets='http-request,request-headers,request-parameters,http-response']
 
 === 임시 이미지 업로드 API [POST]
 operation::v1/admin/tempImage[snippets='http-request,request-headers,request-parts,http-response,response-fields']

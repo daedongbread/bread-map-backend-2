@@ -53,8 +53,8 @@ public class BakeryUpdateRequest {
         private ProductType productType;
         @NotBlank(message = "빵 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private String productName;
-        @NotNull(message = "빵 가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-        private Integer price;
+        @NotBlank(message = "빵 가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+        private String price;
         private String image;
     }
 }

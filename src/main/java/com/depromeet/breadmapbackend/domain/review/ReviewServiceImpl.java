@@ -146,7 +146,7 @@ public class ReviewServiceImpl implements ReviewService {
                     throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
-                        .price(0).bakery(bakery).isTrue(false).build();
+                        .price("0").bakery(bakery).isTrue(false).build();
                 productRepository.save(product);
                 ReviewProductRating.builder()
                         .bakery(bakery).product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();

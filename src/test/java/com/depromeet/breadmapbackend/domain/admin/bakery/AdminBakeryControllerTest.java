@@ -76,7 +76,7 @@ class AdminBakeryControllerTest extends ControllerTest {
         userRepository.save(user);
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+        bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
                 .image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
         bakeryRepository.save(bakery);
@@ -85,7 +85,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                 "bakeryImage.jpg");
 
         product = Product.builder()
-                .bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
+                .bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
         productRepository.save(product);
 
         bakeryUpdateReport = BakeryUpdateReport.builder()
@@ -276,7 +276,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryAddRequest.ProductAddRequest.builder()
-                                .productType(ProductType.BREAD).productName("testBread").price(12000)
+                                .productType(ProductType.BREAD).productName("testBread").price("12000")
                                 .image("tempImage.jpg").build()
                 )).build());
 
@@ -324,9 +324,9 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
                                 .productId(product.getId()).productType(ProductType.BREAD)
-                                .productName("testBread").price(12000).image("tempImage.jpg").build(),//,
+                                .productName("testBread").price("12000").image("tempImage.jpg").build(),//,
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
-                                .productType(ProductType.BREAD).productName("newBread").price(10000).build()
+                                .productType(ProductType.BREAD).productName("newBread").price("10000").build()
                 )).build());
 
         mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}", bakery.getId())
