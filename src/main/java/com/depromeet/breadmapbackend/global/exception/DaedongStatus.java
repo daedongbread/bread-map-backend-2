@@ -42,6 +42,7 @@ public enum DaedongStatus {
     FOLLOW_NOT_FOUND(NOT_FOUND, 40411, "follow not found"), // 팔로우가 되어 있지 않을 때
     BLOCK_NOT_FOUND(NOT_FOUND, 40412, "block not found"), // 차단하지 않은 유저일 때
     BAKERY_NOT_FOUND(NOT_FOUND, 40420, "bakery not found"), // 빵집이 존재하지 않을 때
+    BAKERY_VIEW_NOT_FOUND(NOT_FOUND, 40421, "bakery view not found"), // 상품이 존재하지 않을 때
     PRODUCT_NOT_FOUND(NOT_FOUND, 40430, "product not found"), // 상품이 존재하지 않을 때
     FLAG_NOT_FOUND(NOT_FOUND, 40440, "flag not found"), // 존재하지 않은 리스트일 때
     FLAG_BAKERY_NOT_FOUND(NOT_FOUND, 40041, "bakery not found in flag"), // 해당 리스트에 없는 빵집일 때

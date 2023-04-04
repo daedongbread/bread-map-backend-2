@@ -12,11 +12,13 @@ import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportReason;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
@@ -83,6 +85,7 @@ class AdminBakeryControllerTest extends ControllerTest {
         s3Uploader.upload(
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");
+        bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
 
         product = Product.builder()
                 .bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
@@ -108,6 +111,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
+        reviewViewRepository.save(ReviewView.builder().review(review).build());
         ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
         reviewImageRepository.save(image);
         ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
@@ -134,8 +138,10 @@ class AdminBakeryControllerTest extends ControllerTest {
         reviewProductRatingRepository.deleteAllInBatch();
         reviewReportRepository.deleteAllInBatch();
         reviewImageRepository.deleteAllInBatch();
+        reviewViewRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
+        bakeryViewRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
         adminRepository.deleteAllInBatch();

@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.*;
@@ -63,13 +64,14 @@ class ReviewControllerTest extends ControllerTest {
         productRepository.save(product2);
 
         review1 = Review.builder().user(user).bakery(bakery).content("content1").build();
-        ReviewImage image1 = ReviewImage.builder().review(review1).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
         reviewRepository.save(review1);
+        reviewViewRepository.save(ReviewView.builder().review(review1).build());
+        ReviewImage image1 = ReviewImage.builder().review(review1).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
         reviewImageRepository.save(image1);
 
         Review review2 = Review.builder().user(user).bakery(bakery).content("content2").build();
-        ReviewImage image2 = ReviewImage.builder().review(review2).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image2").build();
         reviewRepository.save(review2);
+        ReviewImage image2 = ReviewImage.builder().review(review2).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image2").build();
         reviewImageRepository.save(image2);
 
         Review review3 = Review.builder().user(user).bakery(bakery).content("content3").build();
@@ -104,6 +106,7 @@ class ReviewControllerTest extends ControllerTest {
     public void setDown() {
         reviewProductRatingRepository.deleteAllInBatch();
         reviewImageRepository.deleteAllInBatch();
+        reviewViewRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();

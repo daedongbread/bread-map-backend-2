@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
-import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
@@ -11,16 +10,15 @@ import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddRepo
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository;
-import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -30,25 +28,18 @@ import com.depromeet.breadmapbackend.global.infra.feign.dto.SgisTokenDto;
 import com.depromeet.breadmapbackend.global.infra.feign.dto.SgisTranscoordDto;
 import com.depromeet.breadmapbackend.global.infra.feign.exception.SgisFeignException;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomJWTKeyProperties;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomSGISKeyProperties;
-import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,9 +48,7 @@ import java.util.stream.Collectors;
 public class AdminBakeryServiceImpl implements AdminBakeryService {
     private final ProductRepository productRepository;
     private final BakeryRepository bakeryRepository;
-    private final UserRepository userRepository;
-    private final AdminRepository adminRepository;
-    private final BakeryAddReportRepository bakeryAddReportRepository;
+    private final BakeryViewRepository bakeryViewRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryReportImageRepository bakeryReportImageRepository;
     private final ProductAddReportRepository productAddReportRepository;
@@ -69,15 +58,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     private final FlagBakeryRepository flagBakeryRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewProductRatingRepository reviewProductRatingRepository;
-    private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
     private final SgisClient sgisClient;
-
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final StringRedisTemplate redisTemplate;
-    private final CustomRedisProperties customRedisProperties;
-    private final CustomJWTKeyProperties customJWTKeyProperties;
     private final CustomSGISKeyProperties customSGISKeyProperties;
     private final CustomAWSS3Properties customAWSS3Properties;
 
@@ -133,6 +115,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 .status(request.getStatus())
                 .build();
         bakeryRepository.save(bakery);
+        bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
             for (BakeryAddRequest.ProductAddRequest productAddRequest : request.getProductList()) {
