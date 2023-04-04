@@ -60,6 +60,12 @@ public class AdminBakeryController {
         adminBakeryService.deleteProduct(bakeryId, productId);
     }
 
+    @GetMapping("/{bakeryId}/image-bar")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminImageBarDto> getAdminImageBar(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(adminBakeryService.getAdminImageBar(bakeryId));
+    }
+
     @GetMapping("/{bakeryId}/images/{imageType}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminImageDto>> getAdminImages(

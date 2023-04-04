@@ -389,6 +389,26 @@ class AdminBakeryControllerTest extends ControllerTest {
     }
 
     @Test
+    void getAdminImageBar() throws Exception {
+        mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/image-bar", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/image-bar",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        responseFields(
+                                fieldWithPath("data.bakeryReportImageNum").description("대표 이미지 갯수"),
+                                fieldWithPath("data.productAddReportImageNum").description("메뉴제보 이미지 갯수"),
+                                fieldWithPath("data.reviewImageNum").description("리뷰 이미지 갯수")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getAdminImages() throws Exception {
         mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/images/{imageType}?page=0",
                         bakery.getId(), AdminBakeryImageType.bakeryReportImage)

@@ -170,6 +170,16 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         productRepository.delete(product);
     }
 
+    @Transactional(readOnly = true, rollbackFor = Exception.class)@Override
+    public AdminImageBarDto getAdminImageBar(Long bakeryId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        return AdminImageBarDto.builder()
+                .bakeryReportImageNum((int) bakeryReportImageRepository.countByBakery(bakery))
+                .productAddReportImageNum((int) productAddReportImageRepository.countByBakery(bakery))
+                .reviewImageNum((int) reviewImageRepository.countByBakery(bakery))
+                .build();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType type, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
