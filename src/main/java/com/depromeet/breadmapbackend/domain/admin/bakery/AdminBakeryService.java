@@ -11,6 +11,8 @@ public interface AdminBakeryService {
     void addBakery(BakeryAddRequest request);
     void updateBakery(Long bakeryId, BakeryUpdateRequest request);
     void deleteProduct(Long bakeryId, Long productId);
+
+    AdminImageBarDto getAdminImageBar(Long bakeryId);
     PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType imageType, int page);
     void deleteAdminImage(Long bakeryId, AdminBakeryImageType type, Long imageId);
     PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page);

@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -38,6 +40,7 @@ import static java.lang.Math.toRadians;
 @RequiredArgsConstructor
 public class BakeryServiceImpl implements BakeryService {
     private final BakeryRepository bakeryRepository;
+    private final BakeryViewRepository bakeryViewRepository;
     private final UserRepository userRepository;
     private final FlagBakeryRepository flagBakeryRepository;
 
@@ -105,7 +108,11 @@ public class BakeryServiceImpl implements BakeryService {
     public BakeryDto findBakery(String username, Long bakeryId) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        bakery.addViews();
+        bakeryViewRepository.findByBakery(bakery)
+                .orElseGet(() -> {
+                    BakeryView bakeryView = BakeryView.builder().bakery(bakery).build();
+                    return bakeryViewRepository.save(bakeryView);
+                }).viewBakery();
 
         BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)

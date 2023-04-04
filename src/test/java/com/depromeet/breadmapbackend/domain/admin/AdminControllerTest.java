@@ -61,7 +61,7 @@ class AdminControllerTest extends ControllerTest {
         userRepository.save(user);
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+        Bakery bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
                 .image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
         bakeryRepository.save(bakery);
@@ -164,21 +164,6 @@ class AdminControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryCount").description("`미게시`인 빵집 수"),
                                 fieldWithPath("data.reviewReportCount").description("숨김 처리하지 않은 리뷰 신고 수")
                         )
-                ))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void downloadAdminImage() throws Exception {
-        mockMvc.perform(get("/v1/admin/images?image=bakeryImage.jpg")
-                        .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("v1/admin/image/download",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-                        requestParameters(
-                                parameterWithName("image").optional().description("다운로드할 이미지 경로"))
                 ))
                 .andExpect(status().isOk());
     }

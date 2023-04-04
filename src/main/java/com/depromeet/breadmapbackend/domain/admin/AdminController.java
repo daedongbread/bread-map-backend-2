@@ -48,11 +48,6 @@ public class AdminController {
         return new ApiResponse<>(adminService.getAdminBar());
     }
 
-    @GetMapping("/images")
-    public ResponseEntity<byte[]> downloadAdminImage(@RequestParam String image) throws IOException {
-        return adminService.downloadAdminImage(image);
-    }
-
     @PostMapping("/images")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AdminImageDto> uploadImage(@RequestPart MultipartFile image) throws IOException {

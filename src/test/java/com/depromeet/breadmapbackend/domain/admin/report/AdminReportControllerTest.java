@@ -56,11 +56,11 @@ class AdminReportControllerTest extends ControllerTest {
         userRepository.save(user);
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+        Bakery bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
+        Product product = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
         productRepository.save(product);
 
         Review review = Review.builder().user(user).bakery(bakery).content("content1").build();

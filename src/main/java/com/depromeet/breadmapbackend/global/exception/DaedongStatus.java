@@ -17,6 +17,7 @@ public enum DaedongStatus {
     FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 40041,"unedit flag"), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
     REVIEW_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40050, "invalid review sort type"), // 리뷰 정렬 조건이 틀렸을 때
     REVIEW_PAGE_EXCEPTION(BAD_REQUEST, 40050, "invalid review page request"), // 리뷰 페이지 조건이 틀렸을 때
+    REVIEW_COMMENT_UNDELETE_EXCEPTION(BAD_REQUEST, 40050, "review comment undelete"), // 리뷰 댓글을 지울 수 없을 때
     NOTICE_TYPE_EXCEPTION(BAD_REQUEST, 40060, "invalid notice type"), // 알림 타입이 틀렸을 때
     NOTICE_DAY_TYPE_EXCEPTION(BAD_REQUEST, 40061, "invalid notice day type"), // 알림 날짜 조건이 틀렸을 때
     NOTICE_PAGE_EXCEPTION(BAD_REQUEST, 40062, "invalid notice page request"), // 알림 페이지 조건이 틀렸을 때
@@ -42,6 +43,7 @@ public enum DaedongStatus {
     FOLLOW_NOT_FOUND(NOT_FOUND, 40411, "follow not found"), // 팔로우가 되어 있지 않을 때
     BLOCK_NOT_FOUND(NOT_FOUND, 40412, "block not found"), // 차단하지 않은 유저일 때
     BAKERY_NOT_FOUND(NOT_FOUND, 40420, "bakery not found"), // 빵집이 존재하지 않을 때
+    BAKERY_VIEW_NOT_FOUND(NOT_FOUND, 40421, "bakery view not found"), // 상품이 존재하지 않을 때
     PRODUCT_NOT_FOUND(NOT_FOUND, 40430, "product not found"), // 상품이 존재하지 않을 때
     FLAG_NOT_FOUND(NOT_FOUND, 40440, "flag not found"), // 존재하지 않은 리스트일 때
     FLAG_BAKERY_NOT_FOUND(NOT_FOUND, 40041, "bakery not found in flag"), // 해당 리스트에 없는 빵집일 때
