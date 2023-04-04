@@ -119,9 +119,9 @@ public class AdminBakeryController {
         adminBakeryService.deleteBakeryUpdateReport(bakeryId, reportId);
     }
 
-//    @DeleteMapping("/{bakeryId}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deleteBakery(@PathVariable Long bakeryId) {
-//        adminBakeryService.deleteBakery(bakeryId);
-//    }
+    @DeleteMapping("/{bakeryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBakery(@PathVariable Long bakeryId) {
+        adminBakeryService.deleteBakery(bakeryId);
+    }
 }

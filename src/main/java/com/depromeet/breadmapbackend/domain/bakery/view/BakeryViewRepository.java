@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BakeryViewRepository extends JpaRepository<BakeryView, Long> {
     Optional<BakeryView> findByBakery(Bakery bakery);
+    void deleteByBakery(Bakery bakery);
 }

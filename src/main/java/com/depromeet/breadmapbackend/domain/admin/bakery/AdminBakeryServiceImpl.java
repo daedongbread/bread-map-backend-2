@@ -18,6 +18,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewViewRepository;
 import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -55,6 +56,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     private final ProductAddReportImageRepository productAddReportImageRepository;
     private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
+    private final ReviewViewRepository reviewViewRepository;
     private final FlagBakeryRepository flagBakeryRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewProductRatingRepository reviewProductRatingRepository;
@@ -105,8 +107,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public void addBakery(BakeryAddRequest request) {
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
-                .image((request.getImage() != null) ? request.getImage() :
-                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".jpg")
+                .image((request.getImage() == null || request.getImage().isBlank()) ?
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".jpg" :
+                        request.getImage())
                 .address(request.getAddress()).latitude(request.getLatitude()).longitude(request.getLongitude())
                 .hours(request.getHours())
                 .websiteURL(request.getWebsiteURL()).instagramURL(request.getInstagramURL()).facebookURL(request.getFacebookURL()).blogURL(request.getBlogURL())
@@ -138,8 +141,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(),
-                (request.getImage() != null) ? request.getImage() :
-                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".jpg",
+                (request.getImage() == null || request.getImage().isBlank()) ?
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".jpg" :
+                        request.getImage(),
                 request.getFacilityInfoList(), request.getStatus());
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
@@ -325,7 +329,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         productAddReportRepository.deleteByBakery(bakery);
         reviewImageRepository.deleteByBakery(bakery);
         reviewProductRatingRepository.deleteByBakeryId(bakeryId);
-        reviewRepository.findByBakery(bakery).forEach(reviewReportRepository::deleteByReview);
+        reviewRepository.findByBakery(bakery).forEach(review -> {
+            reviewReportRepository.deleteByReview(review);
+            reviewViewRepository.deleteByReview(review);
+        });
+        bakeryViewRepository.deleteByBakery(bakery);
         bakeryRepository.deleteById(bakeryId);
     }
 }

@@ -593,18 +593,18 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-//    @Test
-//    void deleteBakery() throws Exception {
-//        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}", bakery.getId())
-//                        .header("Authorization", "Bearer " + token.getAccessToken()))
-//                .andDo(print())
-//                .andDo(document("v1/admin/bakery/delete",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-//                        pathParameters(
-//                                parameterWithName("bakeryId").description("빵집 고유 번호"))
-//                ))
-//                .andExpect(status().isNoContent());
-//    }
+    @Test
+    void deleteBakery() throws Exception {
+        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/bakery/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
 }

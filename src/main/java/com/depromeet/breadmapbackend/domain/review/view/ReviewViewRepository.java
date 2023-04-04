@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ReviewViewRepository extends JpaRepository<ReviewView, Long> {
     Optional<ReviewView> findByReview(Review review);
+    void deleteByReview(Review review);
 }
