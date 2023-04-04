@@ -511,8 +511,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_빵집_리뷰_전체_조회_api_get_http_request"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/1?sortBy=high&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU5LCJleHAiOjE2ODAxNzA1NTl9.6zpKl4M1ZXp2aEtDAKrHrDC4rxc1aLhGEeD_t7jd2bc
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/55?sortBy=high&amp;page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -611,7 +611,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 4081
+Content-Length: 4086
 
 {
   "data" : {
@@ -622,13 +622,13 @@ Content-Length: 4081
     "totalPages" : 2,
     "contents" : [ {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 55,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 62,
+        "userId" : 63,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -637,7 +637,7 @@ Content-Length: 4081
         "isMe" : true
       },
       "reviewInfo" : {
-        "id" : 75,
+        "id" : 76,
         "productRatingList" : [ {
           "productName" : "bread1",
           "rating" : 5
@@ -650,18 +650,48 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.5
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 55,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 62,
+        "userId" : 63,
+        "userImage" : null,
+        "nickName" : "nickname",
+        "reviewNum" : 6,
+        "followerNum" : 0,
+        "isFollow" : false,
+        "isMe" : true
+      },
+      "reviewInfo" : {
+        "id" : 81,
+        "productRatingList" : [ {
+          "productName" : "bread1",
+          "rating" : 4
+        } ],
+        "imageList" : [ ],
+        "content" : "content3",
+        "isLike" : false,
+        "likeNum" : 0,
+        "commentNum" : 0,
+        "createdAt" : "2023.04.04",
+        "averageRating" : 4.0
+      }
+    }, {
+      "bakeryInfo" : {
+        "bakeryId" : 55,
+        "bakeryImage" : null,
+        "bakeryName" : "bakery1",
+        "bakeryAddress" : "address"
+      },
+      "userInfo" : {
+        "userId" : 63,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -680,18 +710,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 55,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 62,
+        "userId" : 63,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -710,18 +740,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 55,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 62,
+        "userId" : 63,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -740,37 +770,7 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 1,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 62,
-        "userImage" : null,
-        "nickName" : "nickname",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 77,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     } ]
@@ -968,8 +968,8 @@ Content-Length: 4081
 <h4 id="_상품_리뷰_전체_조회_api_get_http_request"><a class="link" href="#_상품_리뷰_전체_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/1/products/39?sortBy=low&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU4LCJleHAiOjE2ODAxNzA1NTh9.kMrTZsKFU0YkEmkO4A-5H4qRyqeaXXSUpNuzZeRheGk
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/51/products/41?sortBy=low&amp;page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1072,7 +1072,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 4081
+Content-Length: 4086
 
 {
   "data" : {
@@ -1083,13 +1083,43 @@ Content-Length: 4081
     "totalPages" : 2,
     "contents" : [ {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 51,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 58,
+        "userId" : 59,
+        "userImage" : null,
+        "nickName" : "nickname",
+        "reviewNum" : 6,
+        "followerNum" : 0,
+        "isFollow" : false,
+        "isMe" : true
+      },
+      "reviewInfo" : {
+        "id" : 56,
+        "productRatingList" : [ {
+          "productName" : "bread1",
+          "rating" : 4
+        } ],
+        "imageList" : [ ],
+        "content" : "content3",
+        "isLike" : false,
+        "likeNum" : 0,
+        "commentNum" : 0,
+        "createdAt" : "2023.04.04",
+        "averageRating" : 4.0
+      }
+    }, {
+      "bakeryInfo" : {
+        "bakeryId" : 51,
+        "bakeryImage" : null,
+        "bakeryName" : "bakery1",
+        "bakeryAddress" : "address"
+      },
+      "userInfo" : {
+        "userId" : 59,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1108,18 +1138,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 51,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 58,
+        "userId" : 59,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1138,18 +1168,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 51,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 58,
+        "userId" : 59,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1168,18 +1198,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 51,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 58,
+        "userId" : 59,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1192,36 +1222,6 @@ Content-Length: 4081
         "productRatingList" : [ {
           "productName" : "bread1",
           "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.03.30",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 1,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 58,
-        "userImage" : null,
-        "nickName" : "nickname",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 51,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
         }, {
           "productName" : "bread2",
           "rating" : 3
@@ -1231,7 +1231,7 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 3.5
       }
     } ]
@@ -1424,8 +1424,8 @@ Content-Length: 4081
 <h4 id="_유저_리뷰_전체_조회_api_get_http_request"><a class="link" href="#_유저_리뷰_전체_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/users/57?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU4LCJleHAiOjE2ODAxNzA1NTh9.kMrTZsKFU0YkEmkO4A-5H4qRyqeaXXSUpNuzZeRheGk
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/users/58?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1520,7 +1520,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 4081
+Content-Length: 4086
 
 {
   "data" : {
@@ -1531,13 +1531,43 @@ Content-Length: 4081
     "totalPages" : 2,
     "contents" : [ {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 50,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 57,
+        "userId" : 58,
+        "userImage" : null,
+        "nickName" : "nickname",
+        "reviewNum" : 6,
+        "followerNum" : 0,
+        "isFollow" : false,
+        "isMe" : true
+      },
+      "reviewInfo" : {
+        "id" : 50,
+        "productRatingList" : [ {
+          "productName" : "bread1",
+          "rating" : 4
+        } ],
+        "imageList" : [ ],
+        "content" : "content3",
+        "isLike" : false,
+        "likeNum" : 0,
+        "commentNum" : 0,
+        "createdAt" : "2023.04.04",
+        "averageRating" : 4.0
+      }
+    }, {
+      "bakeryInfo" : {
+        "bakeryId" : 50,
+        "bakeryImage" : null,
+        "bakeryName" : "bakery1",
+        "bakeryAddress" : "address"
+      },
+      "userInfo" : {
+        "userId" : 58,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1556,18 +1586,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 50,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 57,
+        "userId" : 58,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1586,18 +1616,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 50,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 57,
+        "userId" : 58,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1616,18 +1646,18 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 50,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 57,
+        "userId" : 58,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1640,36 +1670,6 @@ Content-Length: 4081
         "productRatingList" : [ {
           "productName" : "bread1",
           "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.03.30",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 1,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 57,
-        "userImage" : null,
-        "nickName" : "nickname",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 45,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
         }, {
           "productName" : "bread2",
           "rating" : 3
@@ -1679,7 +1679,7 @@ Content-Length: 4081
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 3.5
       }
     } ]
@@ -1872,8 +1872,8 @@ Content-Length: 4081
 <h4 id="_리뷰_상세_조회_api_get_http_request"><a class="link" href="#_리뷰_상세_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/69 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU5LCJleHAiOjE2ODAxNzA1NTl9.6zpKl4M1ZXp2aEtDAKrHrDC4rxc1aLhGEeD_t7jd2bc
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/70 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1947,19 +1947,19 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1692
+Content-Length: 1693
 
 {
   "data" : {
     "reviewDto" : {
       "bakeryInfo" : {
-        "bakeryId" : 1,
+        "bakeryId" : 54,
         "bakeryImage" : null,
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
       "userInfo" : {
-        "userId" : 61,
+        "userId" : 62,
         "userImage" : null,
         "nickName" : "nickname",
         "reviewNum" : 6,
@@ -1968,7 +1968,7 @@ Content-Length: 1692
         "isMe" : true
       },
       "reviewInfo" : {
-        "id" : 69,
+        "id" : 70,
         "productRatingList" : [ {
           "productName" : "bread1",
           "rating" : 5
@@ -1981,11 +1981,15 @@ Content-Length: 1692
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.03.30",
+        "createdAt" : "2023.04.04",
         "averageRating" : 4.5
       }
     },
     "userOtherReviews" : [ {
+      "id" : 75,
+      "image" : null,
+      "rating" : 4.0
+    }, {
       "id" : 74,
       "image" : null,
       "rating" : 4.0
@@ -1999,14 +2003,14 @@ Content-Length: 1692
       "rating" : 4.0
     }, {
       "id" : 71,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 70,
       "image" : "image2",
       "rating" : 3.5
     } ],
     "bakeryOtherReviews" : [ {
+      "id" : 75,
+      "image" : null,
+      "rating" : 4.0
+    }, {
       "id" : 74,
       "image" : null,
       "rating" : 4.0
@@ -2020,10 +2024,6 @@ Content-Length: 1692
       "rating" : 4.0
     }, {
       "id" : 71,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 70,
       "image" : "image2",
       "rating" : 3.5
     } ]
@@ -2231,19 +2231,19 @@ Content-Length: 1692
 <h4 id="_리뷰_추가_api_post_http_request"><a class="link" href="#_리뷰_추가_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/bakeries/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/bakeries/53 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU4LCJleHAiOjE2ODAxNzA1NTh9.kMrTZsKFU0YkEmkO4A-5H4qRyqeaXXSUpNuzZeRheGk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Content-Length: 427
 Host: localhost:8080
 
 {
   "productRatingList" : [ {
-    "productId" : 43,
+    "productId" : 45,
     "rating" : 5
   }, {
-    "productId" : 44,
+    "productId" : 46,
     "rating" : 4
   } ],
   "noExistProductRatingRequestList" : [ {
@@ -2417,8 +2417,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_삭제_api_delete_http_request"><a class="link" href="#_리뷰_삭제_api_delete_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/56 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU4LCJleHAiOjE2ODAxNzA1NTh9.kMrTZsKFU0YkEmkO4A-5H4qRyqeaXXSUpNuzZeRheGk
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/57 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2516,8 +2516,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_좋아요_api_post_http_request"><a class="link" href="#_리뷰_좋아요_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/39/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/40/like HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2600,8 +2600,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_좋아요_취소_api_delete_http_request"><a class="link" href="#_리뷰_좋아요_취소_api_delete_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/42/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/43/unlike HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2708,8 +2708,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_댓글_전체_조회_api_get_http_request"><a class="link" href="#_리뷰_댓글_전체_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/35/comments HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/36/comments HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2788,21 +2788,21 @@ Content-Length: 516
 {
   "data" : [ {
     "id" : 3,
-    "userId" : 49,
+    "userId" : 50,
     "userImage" : null,
     "nickName" : "nickname",
     "commentNickName" : null,
     "content" : "comment1",
-    "createdAt" : "2023.03.30",
+    "createdAt" : "2023.04.04",
     "likeNum" : 1,
     "commentList" : [ {
       "id" : 4,
-      "userId" : 49,
+      "userId" : 50,
       "userImage" : null,
       "nickName" : "nickname",
       "commentNickName" : "nickname",
       "content" : "comment2",
-      "createdAt" : "2023.03.30",
+      "createdAt" : "2023.04.04",
       "likeNum" : 0,
       "commentList" : [ ]
     } ]
@@ -2937,10 +2937,10 @@ Content-Length: 516
 <h4 id="_리뷰_댓글_추가_api_post_http_request"><a class="link" href="#_리뷰_댓글_추가_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/37/comments HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/38/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Content-Length: 71
 Host: localhost:8080
 
@@ -3065,8 +3065,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_댓글_삭제_api_delete_http_request"><a class="link" href="#_리뷰_댓글_삭제_api_delete_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/38/comments/10 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/39/comments/10 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3153,8 +3153,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_댓글_좋아요_api_post_http_request"><a class="link" href="#_리뷰_댓글_좋아요_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/34/comments/2/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/35/comments/2/like HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3241,8 +3241,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_댓글_좋아요_취소_api_delete_http_request"><a class="link" href="#_리뷰_댓글_좋아요_취소_api_delete_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/36/comments/5/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU3LCJleHAiOjE2ODAxNzA1NTd9.KGPqxhi0Klyjlf4VOnnijbZAi-NW7x0XmzhhF2XO4Ws
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/37/comments/5/unlike HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA2LCJleHAiOjE2ODA2MDQzMDZ9.60TOeA-NrpyxHL9ohdAQ72RJPGaMARlRQOwROx1HR_E
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3341,9 +3341,9 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰_신고_api_post_http_request"><a class="link" href="#_리뷰_신고_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/43/report HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/44/report HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY4MDE2Njk1OCwiZXhwIjoxNjgwMTcwNTU4fQ.Eao6nx7ccsG5mxflCX7kLtdBBDECrZ0RFz8Y_SqnNTs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY4MDYwMDcwNiwiZXhwIjoxNjgwNjA0MzA2fQ.Wq1lTCg_4CGNDTTnmVJpa8eyt1RyeNVDJSWHFVVLl34
 Accept: application/json
 Content-Length: 57
 Host: localhost:8080
