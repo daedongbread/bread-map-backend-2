@@ -60,7 +60,7 @@ public class User extends BaseEntity {
         this.roleType = roleType;
         this.image = image;
         this.status = UserStatus.UNBLOCK;
-        this.isAlarmOn = true;
+        this.isAlarmOn = false;
     }
 
     public void updateNickName(String nickName) {
