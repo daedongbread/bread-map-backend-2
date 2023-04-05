@@ -29,6 +29,7 @@ public class BakeryUpdateReport extends BaseEntity {
     private User user;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BakeryUpdateReason reason;
 
     @Column(nullable = false)
