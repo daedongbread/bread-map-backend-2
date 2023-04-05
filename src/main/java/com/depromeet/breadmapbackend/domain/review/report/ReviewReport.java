@@ -31,6 +31,7 @@ public class ReviewReport extends BaseEntity {
     private Review review;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReviewReportReason reason;
 
     private String content;
