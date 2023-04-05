@@ -187,13 +187,13 @@ public class NoticeServiceImpl implements NoticeService{
     private String noticeImage(Notice notice) {
         if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getImage();
         else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
-            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getComment();
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getComment() + ".png";
         else if(notice.getType().equals(NoticeType.REVIEW_LIKE) || notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))
-            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getLike();
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getLike() + ".png";
         else if(notice.getType().equals(NoticeType.ADD_BAKERY) || notice.getType().equals(NoticeType.ADD_PRODUCT))
-            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getReport();
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getReport() + ".png";
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
-            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getFlag();
+            return customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getFlag() + ".png";
         else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
     }
 }
