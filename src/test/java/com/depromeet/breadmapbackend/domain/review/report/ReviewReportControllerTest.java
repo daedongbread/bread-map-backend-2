@@ -43,7 +43,7 @@ class ReviewReportControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user1.getUsername(), user1.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        Bakery bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+        Bakery bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 

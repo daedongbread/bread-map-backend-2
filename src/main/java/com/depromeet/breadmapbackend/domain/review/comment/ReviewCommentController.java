@@ -38,6 +38,8 @@ public class ReviewCommentController {
         reviewCommentService.removeReviewComment(username, reviewId, commentId);
     }
 
+    // TODO 댓글 신고
+
     @PostMapping("/{reviewId}/comments/{commentId}/like")
     @ResponseStatus(HttpStatus.CREATED)
     public void reviewCommentLike(@CurrentUser String username, @PathVariable Long reviewId, @PathVariable Long commentId) {

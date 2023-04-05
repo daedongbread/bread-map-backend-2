@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReportReposit
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportRepository;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
 import com.depromeet.breadmapbackend.domain.notice.NoticeRepository;
@@ -20,6 +21,7 @@ import com.depromeet.breadmapbackend.domain.review.comment.ReviewCommentReposito
 import com.depromeet.breadmapbackend.domain.review.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeRepository;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewViewRepository;
 import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -77,10 +79,16 @@ public abstract class ControllerTest {
     protected BakeryRepository bakeryRepository;
 
     @Autowired
+    protected BakeryViewRepository bakeryViewRepository;
+
+    @Autowired
     protected ProductRepository productRepository;
 
     @Autowired
     protected ReviewRepository reviewRepository;
+
+    @Autowired
+    protected ReviewViewRepository reviewViewRepository;
 
     @Autowired
     protected ReviewImageRepository reviewImageRepository;

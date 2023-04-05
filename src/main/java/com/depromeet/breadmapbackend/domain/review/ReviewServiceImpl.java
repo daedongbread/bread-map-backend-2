@@ -1,18 +1,19 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewViewRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.domain.review.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +35,13 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewQueryRepository reviewQueryRepository;
+    private final ReviewViewRepository reviewViewRepository;
     private final UserRepository userRepository;
     private final BakeryRepository bakeryRepository;
     private final ProductRepository productRepository;
     private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final FollowRepository followRepository;
-    private final FileConverter fileConverter;
-    private final S3Uploader s3Uploader;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<ReviewDto> getBakeryReviewList(String username, Long bakeryId, ReviewSortType sortBy, int page) {
@@ -100,7 +100,11 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
-        review.addViews();
+        reviewViewRepository.findByReview(review)
+                .orElseGet(() -> {
+                    ReviewView reviewView = ReviewView.builder().review(review).build();
+                    return reviewViewRepository.save(reviewView);
+                }).viewReview();
 
         List<SimpleReviewDto> userOtherReviews = reviewRepository.findByUser(review.getUser()).stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
@@ -129,6 +133,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = Review.builder()
                 .user(user).bakery(bakery).content(request.getContent())/*.isUse(true)*/.build();
         reviewRepository.save(review);
+        reviewViewRepository.save(ReviewView.builder().review(review).build());
 
         if(request.getProductRatingList() != null && !request.getProductRatingList().isEmpty()) {
             request.getProductRatingList().forEach(productRatingRequest -> {
@@ -146,7 +151,7 @@ public class ReviewServiceImpl implements ReviewService {
                     throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
-                        .price(0).bakery(bakery).isTrue(false).build();
+                        .price("0").bakery(bakery).isTrue(false).build();
                 productRepository.save(product);
                 ReviewProductRating.builder()
                         .bakery(bakery).product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
@@ -167,6 +172,7 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findByIdAndUser(reviewId, user)
                 /*.filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK))*/.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        reviewViewRepository.findByReview(review).ifPresent(reviewViewRepository::delete);
         reviewRepository.delete(review);
 //        review.useChange();
     }

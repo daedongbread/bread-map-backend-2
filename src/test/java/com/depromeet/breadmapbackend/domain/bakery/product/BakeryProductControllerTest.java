@@ -51,12 +51,12 @@ public class BakeryProductControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery = Bakery.builder().id(1L).address("address1").latitude(37.5596080725671).longitude(127.044235133983)
+        bakery = Bakery.builder().address("address1").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery);
 
-        Product product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).build();
-        Product product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price(4000).build();
+        Product product1 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        Product product2 = Product.builder().bakery(bakery).productType(ProductType.BREAD).name("bread2").price("4000").build();
         productRepository.save(product1);
         productRepository.save(product2);
     }

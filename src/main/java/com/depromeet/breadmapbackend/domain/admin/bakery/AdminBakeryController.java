@@ -60,6 +60,12 @@ public class AdminBakeryController {
         adminBakeryService.deleteProduct(bakeryId, productId);
     }
 
+    @GetMapping("/{bakeryId}/image-bar")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminImageBarDto> getAdminImageBar(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(adminBakeryService.getAdminImageBar(bakeryId));
+    }
+
     @GetMapping("/{bakeryId}/images/{imageType}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminImageDto>> getAdminImages(
@@ -113,9 +119,9 @@ public class AdminBakeryController {
         adminBakeryService.deleteBakeryUpdateReport(bakeryId, reportId);
     }
 
-//    @DeleteMapping("/{bakeryId}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deleteBakery(@PathVariable Long bakeryId) {
-//        adminBakeryService.deleteBakery(bakeryId);
-//    }
+    @DeleteMapping("/{bakeryId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBakery(@PathVariable Long bakeryId) {
+        adminBakeryService.deleteBakery(bakeryId);
+    }
 }

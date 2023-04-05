@@ -60,10 +60,11 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     @Transactional(rollbackFor = Exception.class)
     public void removeReviewComment(String username, Long reviewId, Long commentId) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user)
-                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        ReviewComment reviewComment = reviewCommentRepository.findById(commentId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
+        if (!reviewComment.getUser().equals(user) && !reviewComment.getReview().getUser().equals(user))
+            throw new DaedongException(DaedongStatus.REVIEW_COMMENT_UNDELETE_EXCEPTION);
 
         if(reviewComment.getParent() == null) { // 부모 댓글
             if(reviewComment.getChildList().isEmpty()) { // 자식 댓글이 없으면
@@ -104,7 +105,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
-        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
+        ReviewComment reviewComment = reviewCommentRepository.findById(commentId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
         if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent())
             throw new DaedongException(DaedongStatus.REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION);
@@ -120,7 +121,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(reviewRepository.findById(reviewId)
                 .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
-        ReviewComment reviewComment = reviewCommentRepository.findByIdAndUser(commentId, user).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
+        ReviewComment reviewComment = reviewCommentRepository.findById(commentId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
         ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment)
                 .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION));

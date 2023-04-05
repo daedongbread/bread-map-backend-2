@@ -488,7 +488,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/search/auto?word=ba&amp;latitude=37.560992&amp;longitude=127.044174 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU5LCJleHAiOjE2ODAxNzA1NTl9.6zpKl4M1ZXp2aEtDAKrHrDC4rxc1aLhGEeD_t7jd2bc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -561,16 +561,16 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 231
+Content-Length: 233
 
 {
   "data" : [ {
-    "bakeryId" : 1,
+    "bakeryId" : 62,
     "bakeryName" : "bakery1",
     "reviewNum" : 1,
     "distance" : 153.0
   }, {
-    "bakeryId" : 2,
+    "bakeryId" : 63,
     "bakeryName" : "bakery2",
     "reviewNum" : 1,
     "distance" : 165.0
@@ -629,7 +629,7 @@ Content-Length: 231
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/search?word=bakery1&amp;latitude=37.560992&amp;longitude=127.044174 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU5LCJleHAiOjE2ODAxNzA1NTl9.6zpKl4M1ZXp2aEtDAKrHrDC4rxc1aLhGEeD_t7jd2bc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -702,11 +702,11 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 125
+Content-Length: 126
 
 {
   "data" : [ {
-    "bakeryId" : 1,
+    "bakeryId" : 60,
     "bakeryName" : "bakery1",
     "reviewNum" : 1,
     "distance" : 153.0
@@ -765,7 +765,7 @@ Content-Length: 125
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/search/keywords HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU5LCJleHAiOjE2ODAxNzA1NTl9.6zpKl4M1ZXp2aEtDAKrHrDC4rxc1aLhGEeD_t7jd2bc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -852,7 +852,7 @@ Content-Length: 20
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/search/keywords?keyword=bakery HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTYwLCJleHAiOjE2ODAxNzA1NjB9.4PYmkCIuo7xf9O1JoFJtRGuc82bCiB0fQERNPTa29HQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA4LCJleHAiOjE2ODA2MDQzMDh9.oKZlPfIJAzb-riTD4Nt1X7l_1_7N_w8Gzp4hcpYIwXg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -927,7 +927,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/search/keywords/all HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwMTY2OTU5LCJleHAiOjE2ODAxNzA1NTl9.6zpKl4M1ZXp2aEtDAKrHrDC4rxc1aLhGEeD_t7jd2bc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA3LCJleHAiOjE2ODA2MDQzMDd9.UhKSFbvKtWIzW6BbEX3aAPdW5QjJvEgYilBBdzO-3mU
 Host: localhost:8080</code></pre>
 </div>
 </div>

@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
@@ -54,16 +55,16 @@ class BakeryControllerTest extends ControllerTest {
         token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery1 = Bakery.builder().id(1L).address("address1").latitude(37.5596080725671).longitude(127.044235133983)
+        bakery1 = Bakery.builder().address("address1").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
-        bakery2 = Bakery.builder().id(2L).address("address2").latitude(37.55950448505721).longitude(127.04416263787213)
-                .facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.POSTING).build();
-
         bakeryRepository.save(bakery1);
+        bakeryViewRepository.save(BakeryView.builder().bakery(bakery1).build());
+        bakery2 = Bakery.builder().address("address2").latitude(37.55950448505721).longitude(127.04416263787213)
+                .facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.POSTING).build();
         bakeryRepository.save(bakery2);
 
-        Product product1 = Product.builder().bakery(bakery1).productType(ProductType.BREAD).name("bread1").price(3000).build();
-        Product product2 = Product.builder().bakery(bakery2).productType(ProductType.BREAD).name("bread2").price(4000).build();
+        Product product1 = Product.builder().bakery(bakery1).productType(ProductType.BREAD).name("bread1").price("3000").build();
+        Product product2 = Product.builder().bakery(bakery2).productType(ProductType.BREAD).name("bread2").price("4000").build();
         productRepository.save(product1);
         productRepository.save(product2);
 
@@ -83,6 +84,7 @@ class BakeryControllerTest extends ControllerTest {
         reviewProductRatingRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
+        bakeryViewRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }

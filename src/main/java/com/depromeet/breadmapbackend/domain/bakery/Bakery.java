@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bakery extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -58,15 +59,13 @@ public class Bakery extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private Integer views;
-
     @Builder
-    public Bakery(Long id, String name, Double latitude, Double longitude,
-                  String address, String hours, String phoneNumber,
-                  String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
-                  User user, List<FacilityInfo> facilityInfoList, BakeryStatus status) {
-        this.id = id;
+    public Bakery(
+            String name, Double latitude, Double longitude,
+            String address, String hours, String phoneNumber,
+            String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
+            User user, List<FacilityInfo> facilityInfoList, BakeryStatus status
+    ) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -80,12 +79,7 @@ public class Bakery extends BaseEntity {
         this.user = user;
         this.facilityInfoList = facilityInfoList;
         this.status = status;
-        this.views = 0;
     }
-
-//    public BakeryURL getBakeryURL() {
-//        return this.bakeryURL == null ? new BakeryURL() : this.bakeryURL;
-//    }
 
     public void addFlagNum() {
         this.flagNum += 1;
@@ -101,20 +95,20 @@ public class Bakery extends BaseEntity {
 
     public void updateImage(String image) { this.image = image; }
 
-    public void update(Long id, String name, String address, Double latitude, Double longitude, String hours,
-                       String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
-                       List<FacilityInfo> facilityInfoList, BakeryStatus status) {
-        this.id = id;
+    public void update(
+            String name, String address, Double latitude, Double longitude, String hours,
+            String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
+            List<FacilityInfo> facilityInfoList, BakeryStatus status
+    ) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.hours = hours;
         this.phoneNumber = phoneNumber;
+        this.image = image;
         this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
         this.facilityInfoList = facilityInfoList;
         this.status = status;
     }
-
-    public void addViews() { this.views += 1; }
 }

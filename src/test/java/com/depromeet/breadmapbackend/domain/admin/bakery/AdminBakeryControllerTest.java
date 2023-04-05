@@ -12,11 +12,13 @@ import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportReason;
+import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
@@ -76,16 +78,17 @@ class AdminBakeryControllerTest extends ControllerTest {
         userRepository.save(user);
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-        bakery = Bakery.builder().id(1L).address("address").latitude(37.5596080725671).longitude(127.044235133983)
+        bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
                 .facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
                 .image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
         bakeryRepository.save(bakery);
         s3Uploader.upload(
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");
+        bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
 
         product = Product.builder()
-                .bakery(bakery).productType(ProductType.BREAD).name("bread1").price(3000).image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
+                .bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
         productRepository.save(product);
 
         bakeryUpdateReport = BakeryUpdateReport.builder()
@@ -108,6 +111,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 
         review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
+        reviewViewRepository.save(ReviewView.builder().review(review).build());
         ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
         reviewImageRepository.save(image);
         ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
@@ -134,8 +138,10 @@ class AdminBakeryControllerTest extends ControllerTest {
         reviewProductRatingRepository.deleteAllInBatch();
         reviewReportRepository.deleteAllInBatch();
         reviewImageRepository.deleteAllInBatch();
+        reviewViewRepository.deleteAllInBatch();
         reviewRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
+        bakeryViewRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
         adminRepository.deleteAllInBatch();
@@ -276,7 +282,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryAddRequest.ProductAddRequest.builder()
-                                .productType(ProductType.BREAD).productName("testBread").price(12000)
+                                .productType(ProductType.BREAD).productName("testBread").price("12000")
                                 .image("tempImage.jpg").build()
                 )).build());
 
@@ -324,9 +330,9 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
                                 .productId(product.getId()).productType(ProductType.BREAD)
-                                .productName("testBread").price(12000).image("tempImage.jpg").build(),//,
+                                .productName("testBread").price("12000").image("tempImage.jpg").build(),//,
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
-                                .productType(ProductType.BREAD).productName("newBread").price(10000).build()
+                                .productType(ProductType.BREAD).productName("newBread").price("10000").build()
                 )).build());
 
         mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}", bakery.getId())
@@ -380,6 +386,26 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 parameterWithName("productId").description("상품 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getAdminImageBar() throws Exception {
+        mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/image-bar", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/image-bar",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        responseFields(
+                                fieldWithPath("data.bakeryReportImageNum").description("대표 이미지 갯수"),
+                                fieldWithPath("data.productAddReportImageNum").description("메뉴제보 이미지 갯수"),
+                                fieldWithPath("data.reviewImageNum").description("리뷰 이미지 갯수")
+                        )
+                ))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -567,18 +593,18 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-//    @Test
-//    void deleteBakery() throws Exception {
-//        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}", bakery.getId())
-//                        .header("Authorization", "Bearer " + token.getAccessToken()))
-//                .andDo(print())
-//                .andDo(document("v1/admin/bakery/delete",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-//                        pathParameters(
-//                                parameterWithName("bakeryId").description("빵집 고유 번호"))
-//                ))
-//                .andExpect(status().isNoContent());
-//    }
+    @Test
+    void deleteBakery() throws Exception {
+        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/bakery/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
 }

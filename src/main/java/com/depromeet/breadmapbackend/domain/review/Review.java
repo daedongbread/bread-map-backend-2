@@ -56,16 +56,12 @@ public class Review extends BaseEntity {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewComment> comments = new ArrayList<>();
 
-    @Column(nullable = false)
-    private Integer views;
-
     @Builder
     private Review(User user, Bakery bakery, String content) {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
         this.status = ReviewStatus.UNBLOCK;
-        this.views = 0;
         this.bakery.getReviewList().add(this);
     }
 
@@ -79,6 +75,4 @@ public class Review extends BaseEntity {
     public void minusLike(ReviewLike reviewLike){ this.likes.remove(reviewLike); }
 
     public void removeComment(ReviewComment reviewComment){ this.comments.remove(reviewComment); }
-
-    public void addViews() { this.views += 1; }
 }
