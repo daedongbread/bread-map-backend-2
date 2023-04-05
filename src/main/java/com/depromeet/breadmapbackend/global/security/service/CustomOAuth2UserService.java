@@ -59,6 +59,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
         User user = null;
         if (userRepository.findByUsername(username).isPresent()) {
             user = userRepository.findByUsername(username).get();
+
+            if (flagRepository.findByUserAndName(user, "가고싶어요").isEmpty()) {
+                Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
+                flagRepository.save(wantToGo);
+                user.addFlag(wantToGo);
+            }
+            if (flagRepository.findByUserAndName(user, "가봤어요").isEmpty()) {
+                Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
+                flagRepository.save(alreadyGo);
+                user.addFlag(alreadyGo);
+            }
         } else {
             user = createUser(oAuth2UserInfo, providerType);
         }
