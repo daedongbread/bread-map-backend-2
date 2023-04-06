@@ -15,7 +15,7 @@ import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
-import com.depromeet.breadmapbackend.domain.notice.dto.NoticeTokenRequest;
+import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
@@ -41,25 +41,25 @@ public class NoticeServiceImpl implements NoticeService{
     private final FcmService fcmService;
     private final CustomAWSS3Properties customAwss3Properties;
 
-    @Transactional(rollbackFor = Exception.class)
-    public void addNoticeToken(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent())
-            throw new DaedongException(DaedongStatus.NOTICE_TOKEN_DUPLICATE_EXCEPTION);
-        NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
-        noticeTokenRepository.save(noticeToken);
-        user.changeAlarm();
-    }
-
-    @Async("notice")
-    @TransactionalEventListener
-    public void deleteNoticeToken(NoticeTokenDeleteEvent event) {
-        User user = userRepository.findByUsername(event.getUsername()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).isPresent()) {
-            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).get();
-            noticeTokenRepository.delete(noticeToken);
-        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
-    }
+//    @Transactional(rollbackFor = Exception.class)
+//    public void addNoticeToken(String username, NoticeTokenRequest request) {
+//        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+//        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent())
+//            throw new DaedongException(DaedongStatus.NOTICE_TOKEN_DUPLICATE_EXCEPTION);
+//        NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
+//        noticeTokenRepository.save(noticeToken);
+//        user.changeAlarm();
+//    }
+//
+//    @Async("notice")
+//    @TransactionalEventListener
+//    public void deleteNoticeToken(NoticeTokenDeleteEvent event) {
+//        User user = userRepository.findByUsername(event.getUsername()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+//        if(noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).isPresent()) {
+//            NoticeToken noticeToken = noticeTokenRepository.findByUserAndDeviceToken(user, event.getDeviceToken()).get();
+//            noticeTokenRepository.delete(noticeToken);
+//        } else throw new DaedongException(DaedongStatus.NOTICE_TOKEN_NOT_FOUND);
+//    }
 
     @Async("notice")
     @TransactionalEventListener
