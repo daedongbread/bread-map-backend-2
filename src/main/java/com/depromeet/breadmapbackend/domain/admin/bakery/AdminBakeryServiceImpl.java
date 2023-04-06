@@ -108,6 +108,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
                 .image((request.getImage() == null || request.getImage().isBlank()) ?
+                        customAWSS3Properties.getBucket() + "/" +
                         customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png" :
                         request.getImage())
                 .address(request.getAddress()).latitude(request.getLatitude()).longitude(request.getLongitude())
@@ -142,6 +143,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(),
                 (request.getImage() == null || request.getImage().isBlank()) ?
+                        customAWSS3Properties.getBucket() + "/" +
                         customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png" :
                         request.getImage(),
                 request.getFacilityInfoList(), request.getStatus());

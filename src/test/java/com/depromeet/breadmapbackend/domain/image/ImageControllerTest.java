@@ -60,4 +60,23 @@ class ImageControllerTest extends ControllerTest {
                 ))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    void uploadImages() throws Exception {
+        mockMvc.perform(multipart("/v1/images/multi")
+                        .file(new MockMultipartFile("images", UUID.randomUUID() +".png", "image/png", "test1".getBytes()))
+                        .file(new MockMultipartFile("images", UUID.randomUUID() +".png", "image/png", "test2".getBytes()))
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/image/multi",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저/관리자의 Access Token")),
+                        requestParts(
+                                partWithName("images").description("업로드 이미지들")),
+                        responseFields(
+                                fieldWithPath("data.[].imagePath").description("업로드된 이미지들 경로"))
+                ))
+                .andExpect(status().isCreated());
+    }
 }
