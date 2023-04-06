@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.user;
 
-import com.depromeet.breadmapbackend.global.ImageType;
+import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
+import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -28,14 +29,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,8 +53,6 @@ public class UserServiceImpl implements UserService {
     private final BlockUserRepository blockUserRepository;
     private final StringRedisTemplate redisTemplate;
     private final ApplicationEventPublisher eventPublisher;
-    private final FileConverter fileConverter;
-    private final S3Uploader s3Uploader;
     private final CustomRedisProperties customRedisProperties;
 
     @Transactional(rollbackFor = Exception.class)
@@ -116,7 +111,12 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
 
         // 알람 가지 않게 처리
-        eventPublisher.publishEvent(new NoticeTokenDeleteEvent(username, request.getDeviceToken()));
+//        eventPublisher.publishEvent(new NoticeTokenDeleteEvent(username, request.getDeviceToken()));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+
+        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
+            noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
+        }
 
         // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
         if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getRefresh() + ":" + username))) {
@@ -131,36 +131,36 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteUser(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
-        reviewCommentLikeRepository.deleteByUser(user);
-        reviewCommentRepository.deleteByUser(user);
-        reviewLikeRepository.deleteByUser(user);
-        reviewRepository.findByUser(user).forEach(reviewImageRepository::deleteByReview);
-        reviewRepository.deleteByUser(user);
-
-        noticeTokenRepository.deleteByUser(user);
-        noticeRepository.deleteByUser(user);
-
-        flagRepository.findByUser(user).forEach(flagBakeryRepository::deleteByFlag);
-        flagRepository.deleteByUser(user);
-
-        blockUserRepository.deleteByUser(user);
-        blockUserRepository.deleteByBlockUser(user);
-
-        followRepository.deleteByFromUser(user);
-        followRepository.deleteByToUser(user);
-
-        userRepository.delete(user);
-
-        redisTemplate.delete(Arrays.asList(customRedisProperties.getKey().getAccess() + ":" + username, customRedisProperties.getKey().getRefresh() + ":" + username));
+//    @Transactional(rollbackFor = Exception.class)
+//    public void deleteUser(String username) {
+//        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+//
+//        reviewCommentLikeRepository.deleteByUser(user);
+//        reviewCommentRepository.deleteByUser(user);
+//        reviewLikeRepository.deleteByUser(user);
+//        reviewRepository.findByUser(user).forEach(reviewImageRepository::deleteByReview);
+//        reviewRepository.deleteByUser(user);
+//
+//        noticeTokenRepository.deleteByUser(user);
+//        noticeRepository.deleteByUser(user);
+//
+//        flagRepository.findByUser(user).forEach(flagBakeryRepository::deleteByFlag);
+//        flagRepository.deleteByUser(user);
+//
+//        blockUserRepository.deleteByUser(user);
+//        blockUserRepository.deleteByBlockUser(user);
+//
+//        followRepository.deleteByFromUser(user);
+//        followRepository.deleteByToUser(user);
+//
+//        userRepository.delete(user);
+//
+//        redisTemplate.delete(Arrays.asList(customRedisProperties.getKey().getAccess() + ":" + username, customRedisProperties.getKey().getRefresh() + ":" + username));
 
 //        ValueOperations<String, String> redisDeleteUser = redisTemplate.opsForValue();
 //        redisDeleteUser.set(customRedisProperties.getKey().getDelete() + ":" + username, username);
 //        redisTemplate.expire(customRedisProperties.getKey().getDelete() + ":" + username, 7, TimeUnit.DAYS);
-    }
+//    }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AlarmDto getAlarmStatus(String username) {
@@ -169,8 +169,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateAlarmStatus(String username) {
+    public void alarmOn(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        user.changeAlarm();
+        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isEmpty()) {
+            NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
+            noticeTokenRepository.save(noticeToken);
+        }
+        user.alarmOn();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void alarmOff(String username, NoticeTokenRequest request) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
+            noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
+        }
+        user.alarmOff();
     }
 }

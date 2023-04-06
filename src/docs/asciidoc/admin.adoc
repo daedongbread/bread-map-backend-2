@@ -12,6 +12,7 @@
 == Admin APIs
 - 관리자 로그인 API
 - 토큰 재발급 API
+- 빵집 관련 신규 데이터 여부 API
 - 메뉴바 API
 - 임시 이미지 업로드 API
 
@@ -20,6 +21,9 @@ operation::v1/admin/login[snippets='http-request,request-fields,http-response,re
 
 === 토큰 재발급 API [POST]
 operation::v1/admin/reissue[snippets='http-request,request-fields,http-response,response-fields']
+
+=== 빵집 관련 신규 데이터 여부 API [GET]
+operation::v1/admin/is-new-bar[snippets='http-request,request-headers,http-response,response-fields']
 
 === 메뉴바 API [GET]
 operation::v1/admin/bar[snippets='http-request,request-headers,http-response,response-fields']

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
+import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
@@ -18,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeController {
     private final NoticeService noticeService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addNoticeToken(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
-        noticeService.addNoticeToken(username, request);
-    }
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void addNoticeToken(
+//            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
+//        noticeService.addNoticeToken(username, request);
+//    }
 
     @GetMapping("/{type}")
     @ResponseStatus(HttpStatus.OK)

@@ -1,15 +1,12 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
-import com.depromeet.breadmapbackend.domain.notice.Notice;
-import com.depromeet.breadmapbackend.domain.notice.NoticeDayType;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.user.follow.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
-import com.depromeet.breadmapbackend.domain.notice.dto.NoticeTokenRequest;
+import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,30 +57,30 @@ class NoticeControllerTest extends ControllerTest {
         userRepository.deleteAllInBatch();
     }
 
-    @Test
-    void addNoticeToken() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(
-                NoticeTokenRequest.builder().deviceToken("newDeviceToken").build());
-
-        // when
-        ResultActions result = mockMvc.perform(post("/v1/notices")
-                .header("Authorization", "Bearer " + token.getAccessToken())
-                .content(object)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        // then
-        result
-                .andDo(print())
-                .andDo(document("v1/notice/token/add",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰"))
-                ))
-                .andExpect(status().isNoContent());
-    }
+//    @Test
+//    void addNoticeToken() throws Exception {
+//        // given
+//        String object = objectMapper.writeValueAsString(
+//                NoticeTokenRequest.builder().deviceToken("newDeviceToken").build());
+//
+//        // when
+//        ResultActions result = mockMvc.perform(post("/v1/notices")
+//                .header("Authorization", "Bearer " + token.getAccessToken())
+//                .content(object)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON));
+//
+//        // then
+//        result
+//                .andDo(print())
+//                .andDo(document("v1/notice/token/add",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰"))
+//                ))
+//                .andExpect(status().isNoContent());
+//    }
 
     @Test
     void getNoticeList() throws Exception {

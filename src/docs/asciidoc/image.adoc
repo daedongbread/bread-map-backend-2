@@ -11,6 +11,10 @@
 
 == Image APIs
 - 이미지 업로드 API
+- 다중 이미지 업로드 API
 
 === 이미지 업로드 API [POST]
 operation::v1/image[snippets='http-request,request-headers,request-parts,http-response,response-fields']
+
+=== 다중 이미지 업로드 API [POST]
+operation::v1/image/multi[snippets='http-request,request-headers,request-parts,http-response,response-fields']

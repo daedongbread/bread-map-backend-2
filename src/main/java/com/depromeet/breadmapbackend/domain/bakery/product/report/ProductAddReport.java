@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery.product.report;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,11 +38,20 @@ public class ProductAddReport extends BaseEntity {
     @OneToMany(mappedBy = "productAddReport", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductAddReportImage> images = new ArrayList<>();
 
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isNew;
+
     @Builder
     public ProductAddReport(Bakery bakery, User user, String name, String price) {
         this.bakery = bakery;
         this.user = user;
         this.name = name;
         this.price = price;
+        this.isNew = true;
+    }
+
+    public void unNew() {
+        this.isNew = false;
     }
 }

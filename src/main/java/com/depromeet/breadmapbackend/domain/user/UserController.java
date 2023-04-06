@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.user;
 
+import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
@@ -9,10 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -57,9 +54,17 @@ public class UserController {
         return new ApiResponse<>(userService.getAlarmStatus(username));
     }
 
-    @PatchMapping("/alarm")
+    @PatchMapping("/alarm-on")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateAlarmStatus(@CurrentUser String username) {
-        userService.updateAlarmStatus(username);
+    public void alarmOn(
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
+        userService.alarmOn(username, request);
+    }
+
+    @PatchMapping("/alarm-off")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void alarmOff(
+            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
+        userService.alarmOff(username, request);
     }
 }
