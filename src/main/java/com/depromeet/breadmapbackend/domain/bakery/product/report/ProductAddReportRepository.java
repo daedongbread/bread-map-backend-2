@@ -8,9 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ProductAddReportRepository extends JpaRepository<ProductAddReport, Long> {
+    boolean existsByBakeryAndIsNewIsTrue(Bakery bakery);
     Page<ProductAddReport> findPageByBakery(Bakery bakery, Pageable pageable);
-
     Optional<ProductAddReport> findByIdAndBakery(Long id, Bakery bakery);
-    void deleteByIdAndBakery(Long id, Bakery bakery);
     void deleteByBakery(Bakery bakery);
 }

@@ -176,7 +176,19 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         productRepository.delete(product);
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)@Override
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public AdminBakeryIsNewDto getAdminBakeryIsNewBar(Long bakeryId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        return AdminBakeryIsNewDto.builder()
+                .adminImageIsNew(bakeryReportImageRepository.existsByBakeryAndIsNewIsTrue(bakery) ||
+                        productAddReportImageRepository.existsByBakeryAndIsNewIsTrue(bakery) ||
+                        reviewImageRepository.existsByBakeryAndIsNewIsTrue(bakery))
+                .productAddReportIsNew(productAddReportRepository.existsByBakeryAndIsNewIsTrue(bakery))
+                .bakeryUpdateReportIsNew(bakeryUpdateReportRepository.existsByBakeryAndIsNewIsTrue(bakery))
+                .build();
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminImageBarDto getAdminImageBar(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return AdminImageBarDto.builder()
@@ -262,13 +274,15 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         return usedImage.contains(image);
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
         Page<ProductAddReport> contents = productAddReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
-        return PageResponseDto.of(contents, ProductAddReportDto::new);
+        PageResponseDto<ProductAddReportDto> productAddReports = PageResponseDto.of(contents, ProductAddReportDto::new);
+        contents.forEach(ProductAddReport::unNew);
+        return productAddReports;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -300,13 +314,15 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         productAddReportRepository.delete(productAddReport);
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
         Page<BakeryUpdateReport> contents = bakeryUpdateReportRepository.findPageByBakery(bakery, pageable); // TODO N+1
-        return PageResponseDto.of(contents, BakeryUpdateReportDto::new);
+        PageResponseDto<BakeryUpdateReportDto> bakeryUpdateReports = PageResponseDto.of(contents, BakeryUpdateReportDto::new);
+        contents.forEach(BakeryUpdateReport::unNew);
+        return bakeryUpdateReports;
     }
 
     @Transactional(rollbackFor = Exception.class)
