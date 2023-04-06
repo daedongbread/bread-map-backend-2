@@ -389,6 +389,26 @@ class AdminBakeryControllerTest extends ControllerTest {
     }
 
     @Test
+    void getAdminBakeryIsNewBar() throws Exception {
+        mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/is-new-bar", bakery.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/is-new-bar",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        responseFields(
+                                fieldWithPath("data.adminImageIsNew").description("대표/메뉴 이미지 신규 여부"),
+                                fieldWithPath("data.productAddReportIsNew").description("메뉴제보 신규 여부"),
+                                fieldWithPath("data.bakeryUpdateReportIsNew").description("정보수정 신규 여부")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getAdminImageBar() throws Exception {
         mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/image-bar", bakery.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))

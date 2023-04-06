@@ -212,14 +212,43 @@ class UserControllerTest extends ControllerTest {
     }
 
     @Test
-    void updateAlarmStatus() throws Exception {
-        mockMvc.perform(patch("/v1/users/alarm")
-                .header("Authorization", "Bearer " + token.getAccessToken()))
+    void alarmOn() throws Exception {
+        String object = objectMapper.writeValueAsString(NoticeTokenRequest.builder()
+                .deviceToken(noticeToken.getDeviceToken()).build());
+
+        mockMvc.perform(patch("/v1/users/alarm-on")
+                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .content(object)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("v1/user/alarm/update",
+                .andDo(document("v1/user/alarm/on",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token"))
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(
+                                fieldWithPath("deviceToken").description("유저의 디바이스 토큰"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void alarmOff() throws Exception {
+        String object = objectMapper.writeValueAsString(NoticeTokenRequest.builder()
+                .deviceToken(noticeToken.getDeviceToken()).build());
+
+        mockMvc.perform(patch("/v1/users/alarm-off")
+                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .content(object)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("v1/user/alarm/off",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+                        requestFields(
+                                fieldWithPath("deviceToken").description("유저의 디바이스 토큰"))
                 ))
                 .andExpect(status().isNoContent());
     }

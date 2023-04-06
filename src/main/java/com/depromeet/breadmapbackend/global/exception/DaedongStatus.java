@@ -50,7 +50,7 @@ public enum DaedongStatus {
     REVIEW_NOT_FOUND(NOT_FOUND, 40450, "review not found"), // 존재하지 않은 리뷰일 때
     REVIEW_COMMENT_NOT_FOUND(NOT_FOUND, 40451, "review comment not found"), // 존재하지 않은 리뷰일 때
     REVIEW_IMAGE_NOT_FOUND(NOT_FOUND, 40452, "review image not found"), // 존재하지 않은 리뷰 이미지일 때
-    NOTICE_TOKEN_NOT_FOUND(NOT_FOUND, 40460, "notice token not found"), // 알림 토큰이 존재하지 않을 때
+//    NOTICE_TOKEN_NOT_FOUND(NOT_FOUND, 40460, "notice token not found"), // 알림 토큰이 존재하지 않을 때
     ADMIN_NOT_FOUND(NOT_FOUND, 40490, "admin not found"), // 관리자가 존재하지 않을 때
     BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40491, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
     BAKERY_IMAGE_REPORT_NOT_FOUND(NOT_FOUND, 40491, "bakery image report not found"), // 빵집 이미지 제보가 존재하지 않을 때
@@ -70,7 +70,7 @@ public enum DaedongStatus {
     REVIEW_UNLIKE_DUPLICATE_EXCEPTION(CONFLICT, 40951, "already unlike review"), // 이미 좋아요를 취소한 리뷰일 때
     REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION(CONFLICT, 40952, "already lik review comment"), // 이미 좋아요를 누른 댓글일 때
     REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION(CONFLICT, 40953, "already unlike review comment"), // 이미 좋아요를 취소한 댓글일 때
-    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
+//    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
     ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate") // 관리자 이메일 중복일 때
     ;
 

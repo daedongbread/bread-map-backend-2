@@ -104,7 +104,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
                 .providerType(providerType)
                 .roleType(RoleType.USER)
 //                .image(oAuth2UserInfo.getImageUrl())
-                .image(customAwss3Properties.getCloudFront() + "/" + customAwss3Properties.getDefaultImage().getUser() + ".png")
+                .image(customAwss3Properties.getCloudFront() + "/" +
+                        customAwss3Properties.getDefaultImage().getUser() + ".png")
                 .build();
         userRepository.save(user);
 

@@ -7,13 +7,13 @@ import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLik
 import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeEvent;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowEvent;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
-import com.depromeet.breadmapbackend.domain.notice.dto.NoticeTokenRequest;
+import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.google.firebase.messaging.FirebaseMessagingException;
 
 public interface NoticeService {
-    void addNoticeToken(String username, NoticeTokenRequest request);
-    void deleteNoticeToken(NoticeTokenDeleteEvent event);
+//    void addNoticeToken(String username, NoticeTokenRequest request);
+//    void deleteNoticeToken(NoticeTokenDeleteEvent event);
     void addFollowNotice(FollowEvent event) throws FirebaseMessagingException;
     void addReviewCommentNotice(ReviewCommentEvent event) throws FirebaseMessagingException;
     void addReviewLikeNotice(ReviewLikeEvent event) throws FirebaseMessagingException;

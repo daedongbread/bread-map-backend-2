@@ -490,7 +490,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries?sortBy=distance&amp;filterBy=false&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -557,14 +557,14 @@ Content-Length: 754
   "data" : [ {
     "latitude" : 37.5596080725671,
     "longitude" : 127.044235133983,
-    "id" : 25,
+    "id" : 26,
     "image" : null,
     "name" : "bakery1",
     "flagNum" : 0,
     "rating" : 4.0,
     "reviewNum" : 1,
     "simpleReviewList" : [ {
-      "id" : 24,
+      "id" : 25,
       "content" : "content1"
     } ],
     "distance" : 153.0,
@@ -573,14 +573,14 @@ Content-Length: 754
   }, {
     "latitude" : 37.55950448505721,
     "longitude" : 127.04416263787213,
-    "id" : 26,
+    "id" : 27,
     "image" : null,
     "name" : "bakery2",
     "flagNum" : 0,
     "rating" : 4.0,
     "reviewNum" : 1,
     "simpleReviewList" : [ {
-      "id" : 25,
+      "id" : 26,
       "content" : "content1"
     } ],
     "distance" : 165.0,
@@ -690,8 +690,8 @@ Content-Length: 754
 <h4 id="_빵집_단건_조회_api_get_http_request"><a class="link" href="#_빵집_단건_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/27 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/28 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -901,8 +901,8 @@ BOOKING("예약"))</p></td>
 <h4 id="_빵집_상품_리스트_조회_api_get_http_request"><a class="link" href="#_빵집_상품_리스트_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/29/products HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/30/products HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -956,14 +956,14 @@ Content-Length: 287
 
 {
   "data" : [ {
-    "id" : 26,
+    "id" : 27,
     "name" : "bread1",
     "rating" : 0.0,
     "reviewNum" : 0,
     "price" : "3000",
     "image" : null
   }, {
-    "id" : 27,
+    "id" : 28,
     "name" : "bread2",
     "rating" : 0.0,
     "reviewNum" : 0,
@@ -1033,10 +1033,10 @@ Content-Length: 287
 <h4 id="_상품_추가_요청_api_post_http_request"><a class="link" href="#_상품_추가_요청_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/30/product-add-reports HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/31/product-add-reports HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Content-Length: 86
 Host: localhost:8080
 
@@ -1168,8 +1168,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_리뷰용_상품_검색_api_get_http_request"><a class="link" href="#_리뷰용_상품_검색_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/31/products/search?name=bread HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/32/products/search?name=bread HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1268,12 +1268,12 @@ Content-Length: 201
 
 {
   "data" : [ {
-    "id" : 30,
+    "id" : 31,
     "name" : "bread1",
     "price" : "3000",
     "image" : null
   }, {
-    "id" : 31,
+    "id" : 32,
     "name" : "bread2",
     "price" : "4000",
     "image" : null
@@ -1351,7 +1351,7 @@ Content-Length: 201
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/bakery-add-reports HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Accept: application/json
 Content-Length: 88
 Host: localhost:8080
@@ -1454,9 +1454,9 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_빵집_수정_요청_api_post_http_request"><a class="link" href="#_빵집_수정_요청_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/32/bakery-update-reports HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/33/bakery-update-reports HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Accept: application/json
 Content-Length: 70
 Host: localhost:8080
@@ -1582,9 +1582,9 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_빵집_이미지_제보_api_post_http_request"><a class="link" href="#_빵집_이미지_제보_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/34/bakery-report-images HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/35/bakery-report-images HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNjAwNzA0LCJleHAiOjE2ODA2MDQzMDR9.afVppfvmy23ywgft6XQo2pVVv9uBaZ6nBZplb1rlLcQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgwNzkyNTg3LCJleHAiOjE2ODA3OTYxODd9._fD2l-c7a_RxrL4e6ESTj4cJxBi1s25Xpg_s4tlfY3Y
 Accept: application/json
 Content-Length: 41
 Host: localhost:8080

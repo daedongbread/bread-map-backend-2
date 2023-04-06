@@ -82,7 +82,11 @@ public class User extends BaseEntity {
         else this.status = UserStatus.BLOCK;
     }
 
-    public void changeAlarm() {
-        this.isAlarmOn = !this.isAlarmOn.equals(true);
+    public void alarmOn() {
+        this.isAlarmOn = true;
+    }
+
+    public void alarmOff() {
+        this.isAlarmOn = false;
     }
 }
