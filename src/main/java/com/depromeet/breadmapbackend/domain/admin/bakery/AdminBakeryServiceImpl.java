@@ -162,7 +162,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 } else { // 기존 product 일 때
                     product = productRepository.findById(productUpdateRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
                     product.update(productUpdateRequest.getProductType(), productUpdateRequest.getProductName(),
-                            productUpdateRequest.getPrice(), request.getImage());
+                            productUpdateRequest.getPrice(), productUpdateRequest.getImage());
                 }
             }
         }
