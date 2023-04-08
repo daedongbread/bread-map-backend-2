@@ -6,9 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ProductType {
-    BREAD("빵"),
-    BEVERAGE("음료"),
-    ETC("기타");
+    BREAD("빵", 1),
+    BEVERAGE("음료", 2),
+    ETC("기타", 3);
 
     private final String code;
+    private final Integer priority;
 }

@@ -31,7 +31,7 @@ public class JwtTokenProvider {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final CustomJWTKeyProperties customJWTKeyProperties;
-    private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hour/
+    private final Long accessTokenExpiredDate = 10 * 60 * 1000L; // 10 minutes/
     private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 day
 
     private static final String ROLES = "roles";

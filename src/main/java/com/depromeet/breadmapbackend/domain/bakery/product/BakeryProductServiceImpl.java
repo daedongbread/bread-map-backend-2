@@ -11,15 +11,11 @@ import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddRepo
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.ImageType;
-import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -34,18 +30,18 @@ public class BakeryProductServiceImpl implements BakeryProductService {
     private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final UserRepository userRepository;
     private final ProductAddReportRepository productAddReportRepository;
-    private final FileConverter fileConverter;
-    private final S3Uploader s3Uploader;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ProductDto> findProductList(Long bakeryId) {
+    public List<ProductDto> getProductList(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return productRepository.findByBakery(bakery).stream()
                 .filter(Product::isTrue)
                 .map(product -> new ProductDto(product,
                         Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
                         reviewProductRatingRepository.countByProductId(product.getId())))
-                .sorted(Comparator.comparing(ProductDto::getRating).reversed().thenComparing(ProductDto::getName))
+                .sorted(Comparator.comparing((ProductDto productDto) -> productDto.getProductType().getPriority())
+                        .thenComparing(ProductDto::getRating, Comparator.reverseOrder())
+                        .thenComparing(ProductDto::getName))
                 .collect(Collectors.toList());
     }
 
@@ -71,6 +67,8 @@ public class BakeryProductServiceImpl implements BakeryProductService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return productRepository.findByBakeryAndNameStartsWith(bakery, name).stream()
                 .filter(Product::isTrue)
-                .map(SimpleProductDto::new).collect(Collectors.toList());
+                .map(SimpleProductDto::new)
+                .sorted(Comparator.comparing((SimpleProductDto simpleProductDto) -> simpleProductDto.getProductType().getPriority())
+                        .thenComparing(SimpleProductDto::getName)).collect(Collectors.toList());
     }
 }

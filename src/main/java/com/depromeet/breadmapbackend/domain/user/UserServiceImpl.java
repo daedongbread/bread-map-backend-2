@@ -169,21 +169,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void alarmOn(String username, NoticeTokenRequest request) {
+    public void alarmChange(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isEmpty()) {
-            NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
-            noticeTokenRepository.save(noticeToken);
+        if(!user.getIsAlarmOn()) { // 알림 off이면
+            if (noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isEmpty()) {
+                noticeTokenRepository.save(NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build());
+            }
+            user.alarmOn();
         }
-        user.alarmOn();
+        else { // 알림 on이면
+            if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
+                noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
+            }
+            user.alarmOff();
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void alarmOff(String username, NoticeTokenRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
-            noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
-        }
-        user.alarmOff();
+
     }
 }
