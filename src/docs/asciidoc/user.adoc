@@ -16,8 +16,7 @@
 - 로그아웃 API
 // - 유저 탈퇴 API
 - 알림 상태 조회 API
-- 알림 ON API
-- 알림 OFF API
+- 알림 상태 변경 API
 
 === 토큰 재발급 API [POST]
 operation::v1/user/reissue[snippets='http-request,request-fields,http-response,response-fields']
@@ -37,11 +36,8 @@ operation::v1/user/logout[snippets='http-request,request-headers,request-fields,
 === 알림 상태 조회 API [GET]
 operation::v1/user/alarm[snippets='http-request,request-headers,http-response,response-fields']
 
-=== 알림 ON API [PATCH]
-operation::v1/user/alarm/on[snippets='http-request,request-headers,request-fields,http-response']
-
-=== 알림 OFF API [PATCH]
-operation::v1/user/alarm/off[snippets='http-request,request-headers,request-fields,http-response']
+=== 알림 상태 변경 API [PATCH]
+operation::v1/user/alarm[snippets='http-request,request-headers,request-fields,http-response']
 
 == User Follow APIs
 - 팔로우 API

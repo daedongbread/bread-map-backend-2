@@ -24,8 +24,8 @@ public class BakeryProductController {
     private final BakeryProductService bakeryProductService;
     @GetMapping("/{bakeryId}/products")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<ProductDto>> findProductList(@PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryProductService.findProductList(bakeryId));
+    public ApiResponse<List<ProductDto>> getProductList(@PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryProductService.getProductList(bakeryId));
     }
 
     @PostMapping("/{bakeryId}/product-add-reports")
