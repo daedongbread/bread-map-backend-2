@@ -54,17 +54,10 @@ public class UserController {
         return new ApiResponse<>(userService.getAlarmStatus(username));
     }
 
-    @PatchMapping("/alarm-on")
+    @PatchMapping("/alarm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void alarmOn(
+    public void alarmChange(
             @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
-        userService.alarmOn(username, request);
-    }
-
-    @PatchMapping("/alarm-off")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void alarmOff(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
-        userService.alarmOff(username, request);
+        userService.alarmChange(username, request);
     }
 }

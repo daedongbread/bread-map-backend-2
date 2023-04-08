@@ -12,6 +12,5 @@ public interface UserService {
     void logout(LogoutRequest reissueRequest);
 //    void deleteUser(String username);
     AlarmDto getAlarmStatus(String username);
-    void alarmOn(String username, NoticeTokenRequest request);
-    void alarmOff(String username, NoticeTokenRequest request);
+    void alarmChange(String username, NoticeTokenRequest request);
 }
