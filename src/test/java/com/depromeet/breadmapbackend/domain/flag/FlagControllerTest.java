@@ -83,7 +83,7 @@ class FlagControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void findFlags() throws Exception {
+    void getFlags() throws Exception {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
@@ -110,6 +110,7 @@ class FlagControllerTest extends ControllerTest {
                                                 "PURPLE(\"보라색\"),\n" +
                                                 "RED(\"빨간색\"),\n" +
                                                 "PINK(\"핑크색\"))"),
+                                fieldWithPath("data.[].flagInfo.bakeryNum").description("깃발에 속한 빵집 갯수"),
                                 fieldWithPath("data.[].bakeryImageList").description("깃발 빵집 사진 리스트 (최대 3개)")
                         )
                 ))
@@ -202,7 +203,7 @@ class FlagControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void findBakeryByFlag() throws Exception {
+    void getBakeryByFlag() throws Exception {
         FlagBakery flagBakery = FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
         flagBakeryRepository.save(flagBakery);
 
@@ -229,6 +230,7 @@ class FlagControllerTest extends ControllerTest {
                                                 "PURPLE(\"보라색\"),\n" +
                                                 "RED(\"빨간색\"),\n" +
                                                 "PINK(\"핑크색\"))"),
+                                fieldWithPath("data.flagInfo.bakeryNum").description("깃발에 속한 빵집 갯수"),
                                 fieldWithPath("data.flagBakeryInfoList").description("깃발에 속한 빵집 리스트"),
                                 fieldWithPath("data.flagBakeryInfoList.[].image").description("빵집 이미지"),
                                 fieldWithPath("data.flagBakeryInfoList.[].id").description("빵집 고유 번호"),

@@ -23,8 +23,8 @@ public class FlagController {
 
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<FlagDto>> findFlags(@PathVariable Long userId) {
-        return new ApiResponse<>(flagService.findFlags(userId));
+    public ApiResponse<List<FlagDto>> getFlags(@PathVariable Long userId) {
+        return new ApiResponse<>(flagService.getFlags(userId));
     }
 
     @PostMapping
@@ -48,8 +48,8 @@ public class FlagController {
 
     @GetMapping("/{flagId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<FlagBakeryDto> findBakeryByFlag(@PathVariable Long flagId) {
-        return new ApiResponse<>(flagService.findBakeryByFlag(flagId));
+    public ApiResponse<FlagBakeryDto> getBakeryByFlag(@PathVariable Long flagId) {
+        return new ApiResponse<>(flagService.getBakeryByFlag(flagId));
     }
 
     @PostMapping("/{flagId}/bakeries/{bakeryId}")

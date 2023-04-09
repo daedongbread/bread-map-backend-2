@@ -7,11 +7,11 @@ import com.depromeet.breadmapbackend.domain.flag.dto.FlagBakeryDto;
 import java.util.List;
 
 public interface FlagService {
-    List<FlagDto> findFlags(Long userId);
+    List<FlagDto> getFlags(Long userId);
     void addFlag(String username, FlagRequest request);
     void updateFlag(String username, Long flagId, FlagRequest request);
     void removeFlag(String username, Long flagId);
-    FlagBakeryDto findBakeryByFlag(Long flagId);
+    FlagBakeryDto getBakeryByFlag(Long flagId);
     void addBakeryToFlag(String username, Long flagId, Long bakeryId);
     void removeBakeryToFlag(String username, Long flagId, Long bakeryId);
 }
