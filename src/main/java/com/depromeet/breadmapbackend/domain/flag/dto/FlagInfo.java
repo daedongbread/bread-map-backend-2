@@ -12,11 +12,13 @@ public class FlagInfo {
     private Long id;
     private String name;
     private FlagColor color;
+    private Integer bakeryNum;
 
     @Builder
     public FlagInfo(Flag flag) {
         this.id = flag.getId();
         this.name = flag.getName();
         this.color = flag.getColor();
+        this.bakeryNum = flag.getFlagBakeryList().size();
     }
 }
