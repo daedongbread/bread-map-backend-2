@@ -6,8 +6,8 @@ spring:
     url: jdbc:h2:mem:bread_map
   servlet:
     multipart:
-      maxFileSize: 10MB
-      maxRequestSize: 10MB
+      maxFileSize: 20MB
+      maxRequestSize: 20MB
   mvc:
     throw-exception-if-no-handler-found: true
   web:

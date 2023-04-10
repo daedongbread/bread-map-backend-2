@@ -22,8 +22,8 @@ spring:
           enabled: true
   servlet:
     multipart:
-      maxFileSize: 10MB
-      maxRequestSize: 10MB
+      maxFileSize: 20MB
+      maxRequestSize: 20MB
   mvc:
     throw-exception-if-no-handler-found: true
   web:
