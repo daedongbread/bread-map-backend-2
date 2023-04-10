@@ -193,8 +193,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return AdminImageBarDto.builder()
                 .bakeryReportImageNum((int) bakeryReportImageRepository.countByBakery(bakery))
-                .productAddReportImageNum((int) productAddReportImageRepository.countByBakery(bakery))
-                .reviewImageNum((int) reviewImageRepository.countByBakery(bakery))
+                .productAddReportImageNum((int) productAddReportImageRepository.countByBakeryAndIsRegisteredIsTrue(bakery))
+                .reviewImageNum((int) reviewImageRepository.countByBakeryAndIsHideIsFalse(bakery))
                 .build();
     }
 

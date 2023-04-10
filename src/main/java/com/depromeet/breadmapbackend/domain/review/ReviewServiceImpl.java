@@ -142,7 +142,7 @@ public class ReviewServiceImpl implements ReviewService {
             request.getProductRatingList().forEach(productRatingRequest -> {
                 Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
                 if(reviewProductRatingRepository.findByProductAndReview(product, review).isEmpty()) {
-                    ReviewProductRating.builder()
+                    ReviewProductRating.builder().user(user)
                             .bakery(bakery).product(product).review(review).rating(productRatingRequest.getRating()).build();
                 }
             });
@@ -156,7 +156,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .name(noExistProductRatingRequest.getProductName())
                         .price("0").bakery(bakery).isTrue(false).build();
                 productRepository.save(product);
-                ReviewProductRating.builder()
+                ReviewProductRating.builder().user(user)
                         .bakery(bakery).product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
             });
         }
