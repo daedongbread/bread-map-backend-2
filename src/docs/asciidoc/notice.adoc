@@ -13,8 +13,8 @@
 // - 알림 토큰 추가 API
 - 알림 조회 API
 
-=== 알림 토큰 추가 API [POST]
+// === 알림 토큰 추가 API [POST]
 // operation::v1/notice/token/add[snippets='http-request,request-headers,request-fields,http-response']
 
 === 알림 조회 API [GET]
-operation::notice[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+operation::v1/notice[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']

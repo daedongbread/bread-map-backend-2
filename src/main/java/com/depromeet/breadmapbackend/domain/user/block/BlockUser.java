@@ -18,16 +18,16 @@ public class BlockUser extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "from_user_id")
+    private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "block_user_id")
-    private User blockUser;
+    @JoinColumn(name = "to_user_id")
+    private User toUser;
 
     @Builder
-    public BlockUser(User user, User blockUser) {
-        this.user = user;
-        this.blockUser = blockUser;
+    public BlockUser(User fromUser, User toUser) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
     }
 }
