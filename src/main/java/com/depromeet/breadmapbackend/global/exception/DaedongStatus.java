@@ -15,6 +15,7 @@ public enum DaedongStatus {
     PRODUCT_ADD_REPORT_IMAGE_NOT_MAIN_EXCEPTION(BAD_REQUEST, 40030, "product add report image is not main"), // 상품 추가 제보 이미지가 메인이 아닐 때
     FLAG_COLOR_EXCEPTION(BAD_REQUEST, 40040, "invalid flag color"), // 올바르지 않은 깃발 색깔일 때
     FLAG_UNEDIT_EXCEPTION(BAD_REQUEST, 40041,"unedit flag"), // 수정 또는 삭제할 수 없는 리스트(기본 리스트 : 가봤어요, 가고싶어요)일 때
+    REVIEW_NEED_PRODUCT_EXCEPTION(BAD_REQUEST, 40050, "review must need product"), // 리뷰 추가 시 메뉴를 선택하지 않으면
     REVIEW_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40050, "invalid review sort type"), // 리뷰 정렬 조건이 틀렸을 때
     REVIEW_PAGE_EXCEPTION(BAD_REQUEST, 40050, "invalid review page request"), // 리뷰 페이지 조건이 틀렸을 때
     REVIEW_COMMENT_UNDELETE_EXCEPTION(BAD_REQUEST, 40050, "review comment undelete"), // 리뷰 댓글을 지울 수 없을 때

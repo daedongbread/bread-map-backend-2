@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BlockUserRepository extends JpaRepository<BlockUser, Long> {
-    Optional<BlockUser> findByUserAndBlockUser(User user, User blockUser);
-    List<BlockUser> findByUser(User user);
-    void deleteByUser(User user);
-    void deleteByBlockUser(User blockUser);
+    Optional<BlockUser> findByFromUserAndToUser(User fromUser, User toUser);
+    List<BlockUser> findByFromUser(User fromUser);
 }

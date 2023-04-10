@@ -8,6 +8,7 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.depromeet.breadmapbackend.domain.review.QReview.review;
 import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.reviewProductRating;
+import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.blockUser;
 
 @Slf4j
 @Repository
@@ -47,7 +49,12 @@ public class ReviewQueryRepository {
 
         List<Review> content = queryFactory.selectFrom(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
-                .where(review.bakery.eq(bakery),
+                .where(review.user.notIn(
+                                JPAExpressions.select(blockUser.fromUser)
+                                        .from(blockUser)
+                                        .where(blockUser.toUser.eq(me))
+                        ),
+                        review.bakery.eq(bakery),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
                 .groupBy(review.id, reviewProductRating.review.id)
@@ -57,7 +64,12 @@ public class ReviewQueryRepository {
                 .fetch();
 
         Long count = queryFactory.select(review.count()).from(review)
-                .where(review.bakery.eq(bakery),
+                .where(review.user.notIn(
+                                JPAExpressions.select(blockUser.fromUser)
+                                        .from(blockUser)
+                                        .where(blockUser.toUser.eq(me))
+                        ),
+                        review.bakery.eq(bakery),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
                 .fetchOne();
@@ -79,7 +91,12 @@ public class ReviewQueryRepository {
 
         List<Review> content = queryFactory.selectFrom(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
-                .where(review.bakery.eq(bakery),
+                .where(review.user.notIn(
+                                JPAExpressions.select(blockUser.fromUser)
+                                        .from(blockUser)
+                                        .where(blockUser.toUser.eq(me))
+                        ),
+                        review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
@@ -91,7 +108,12 @@ public class ReviewQueryRepository {
 
         Long count = queryFactory.select(review.count()).from(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
-                .where(review.bakery.eq(bakery),
+                .where(review.user.notIn(
+                                JPAExpressions.select(blockUser.fromUser)
+                                        .from(blockUser)
+                                        .where(blockUser.toUser.eq(me))
+                        ),
+                        review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
@@ -113,7 +135,12 @@ public class ReviewQueryRepository {
         else firstTime = LocalDateTime.parse(firstTimeString);
 
         List<Review> content = queryFactory.selectFrom(review)
-                .where(review.user.eq(user),
+                .where(review.user.notIn(
+                                JPAExpressions.select(blockUser.fromUser)
+                                        .from(blockUser)
+                                        .where(blockUser.toUser.eq(me))
+                        ),
+                        review.user.eq(user),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
                 .orderBy(review.createdAt.desc())
@@ -122,7 +149,12 @@ public class ReviewQueryRepository {
                 .fetch();
 
         Long count = queryFactory.select(review.count()).from(review)
-                .where(review.user.eq(user),
+                .where(review.user.notIn(
+                                JPAExpressions.select(blockUser.fromUser)
+                                        .from(blockUser)
+                                        .where(blockUser.toUser.eq(me))
+                        ),
+                        review.user.eq(user),
                         review.status.eq(ReviewStatus.UNBLOCK),
                         review.createdAt.before(firstTime))
                 .fetchOne();

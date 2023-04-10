@@ -135,6 +135,9 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.save(review);
         reviewViewRepository.save(ReviewView.builder().review(review).build());
 
+        if ((request.getProductRatingList() == null && request.getProductRatingList().isEmpty()) && (request.getNoExistProductRatingRequestList() == null && request.getNoExistProductRatingRequestList().isEmpty()))
+            throw new DaedongException(DaedongStatus.REVIEW_NEED_PRODUCT_EXCEPTION);
+
         if(request.getProductRatingList() != null && !request.getProductRatingList().isEmpty()) {
             request.getProductRatingList().forEach(productRatingRequest -> {
                 Product product = productRepository.findById(productRatingRequest.getProductId()).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
