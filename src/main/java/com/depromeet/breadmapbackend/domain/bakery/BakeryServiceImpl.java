@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
+import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
 import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -42,10 +43,11 @@ public class BakeryServiceImpl implements BakeryService {
     private final BakeryRepository bakeryRepository;
     private final BakeryViewRepository bakeryViewRepository;
     private final UserRepository userRepository;
+    private final BlockUserRepository blockUserRepository;
     private final FlagBakeryRepository flagBakeryRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<BakeryCardDto> findBakeryList(
+    public List<BakeryCardDto> getBakeryList(
             String username, BakerySortType sortBy, boolean filterBy,
             Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta) {
 
@@ -53,19 +55,24 @@ public class BakeryServiceImpl implements BakeryService {
         if(sortBy.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
         else if(sortBy.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         if (!filterBy) {
             return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                     .map(bakery -> BakeryCardDto.builder()
                             .bakery(bakery)
                             .rating(Math.floor(bakery.getReviewList()
-                                    .stream().map(br -> Math.floor(br.getRatings()
+                                    .stream()
+                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+                                    .map(br -> Math.floor(br.getRatings()
                                             .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
                                             .orElse(0)*10)/ 10.0).collect(Collectors.toList())
                                     .stream().mapToDouble(Double::doubleValue)
                                     .average().orElse(0)*10)/10.0)
-                            .reviewNum(bakery.getReviewList().size())
+                            .reviewNum((int) bakery.getReviewList().stream()
+                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
                             .simpleReviewList(bakery.getReviewList().stream()
+                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
                                     .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
                                     .limit(3).collect(Collectors.toList()))
                             .distance(floor(acos(cos(toRadians(latitude))
@@ -78,26 +85,29 @@ public class BakeryServiceImpl implements BakeryService {
                     .collect(Collectors.toList());
         }
         else {
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
             return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                     .map(bakery -> BakeryCardDto.builder()
                             .bakery(bakery)
                             .rating(Math.floor(bakery.getReviewList()
-                                    .stream().map(br -> Math.floor(br.getRatings()
+                                    .stream()
+                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+                                    .map(br -> Math.floor(br.getRatings()
                                             .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
                                             .orElse(0)*10)/ 10.0).collect(Collectors.toList())
                                     .stream().mapToDouble(Double::doubleValue)
                                     .average().orElse(0)*10)/10.0)
-                            .reviewNum(bakery.getReviewList().size())
+                            .reviewNum((int) bakery.getReviewList().stream()
+                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
                             .simpleReviewList(bakery.getReviewList().stream()
+                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
                                     .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
                                     .limit(3).collect(Collectors.toList()))
                             .distance(floor(acos(cos(toRadians(latitude))
                                     * cos(toRadians(bakery.getLatitude()))
                                     * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
                                     + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
-                            .color(flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).isPresent() ?
-                                    flagBakeryRepository.findFlagByBakeryAndUser(bakery, user).get().getColor():FlagColor.GRAY)
+                            .color(flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).isPresent() ?
+                                    flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).get().getColor():FlagColor.GRAY)
                             .build())
                     .sorted(comparing)
                     .collect(Collectors.toList());
@@ -105,8 +115,8 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public BakeryDto findBakery(String username, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public BakeryDto getBakery(String username, Long bakeryId) {
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         bakeryViewRepository.findByBakery(bakery)
                 .orElseGet(() -> {
@@ -117,16 +127,19 @@ public class BakeryServiceImpl implements BakeryService {
         BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)
                 .rating(Math.floor(bakery.getReviewList()
-                        .stream().map(br -> Math.floor(br.getRatings()
+                        .stream()
+                        .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+                        .map(br -> Math.floor(br.getRatings()
                                 .stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).average()
                                 .orElse(0)*10)/ 10.0).collect(Collectors.toList())
                         .stream().mapToDouble(Double::doubleValue)
                         .average().orElse(0)*10)/10.0)
-                .reviewNum(bakery.getReviewList().size()).build();
+                .reviewNum((int) bakery.getReviewList().stream()
+                        .map(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count()).build();
         BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
-                .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, user).orElse(null)).build();
+                .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, me).orElse(null)).build();
 
         return BakeryDto.builder()
-                .bakeryInfo(bakeryInfo).flagInfo(flagInfo)./*review(review).*/facilityInfoList(bakery.getFacilityInfoList()).build();
+                .bakeryInfo(bakeryInfo).flagInfo(flagInfo).facilityInfoList(bakery.getFacilityInfoList()).build();
     }
 }

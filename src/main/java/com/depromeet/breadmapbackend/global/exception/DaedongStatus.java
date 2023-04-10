@@ -19,6 +19,7 @@ public enum DaedongStatus {
     REVIEW_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40050, "invalid review sort type"), // 리뷰 정렬 조건이 틀렸을 때
     REVIEW_PAGE_EXCEPTION(BAD_REQUEST, 40050, "invalid review page request"), // 리뷰 페이지 조건이 틀렸을 때
     REVIEW_COMMENT_UNDELETE_EXCEPTION(BAD_REQUEST, 40050, "review comment undelete"), // 리뷰 댓글을 지울 수 없을 때
+    REVIEW_REPORT_CONTENT_EXCEPTION(BAD_REQUEST, 40050, "review report content "), // 리뷰 댓글을 지울 수 없을 때
     NOTICE_TYPE_EXCEPTION(BAD_REQUEST, 40060, "invalid notice type"), // 알림 타입이 틀렸을 때
     NOTICE_DAY_TYPE_EXCEPTION(BAD_REQUEST, 40061, "invalid notice day type"), // 알림 날짜 조건이 틀렸을 때
     NOTICE_PAGE_EXCEPTION(BAD_REQUEST, 40062, "invalid notice page request"), // 알림 페이지 조건이 틀렸을 때

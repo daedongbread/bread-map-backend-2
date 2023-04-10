@@ -84,22 +84,22 @@ class ReviewControllerTest extends ControllerTest {
         reviewRepository.save(review6);
 
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product1).review(review1).rating(5L).build());
+                .user(user).bakery(bakery).product(product1).review(review1).rating(5L).build());
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product2).review(review1).rating(4L).build());
+                .user(user).bakery(bakery).product(product2).review(review1).rating(4L).build());
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product1).review(review2).rating(4L).build());
+                .user(user).bakery(bakery).product(product1).review(review2).rating(4L).build());
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product2).review(review2).rating(3L).build());
+                .user(user).bakery(bakery).product(product2).review(review2).rating(3L).build());
 
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product1).review(review3).rating(4L).build());
+                .user(user).bakery(bakery).product(product1).review(review3).rating(4L).build());
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product1).review(review4).rating(4L).build());
+                .user(user).bakery(bakery).product(product1).review(review4).rating(4L).build());
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product1).review(review5).rating(4L).build());
+                .user(user).bakery(bakery).product(product1).review(review5).rating(4L).build());
         reviewProductRatingRepository.save(ReviewProductRating.builder()
-                .bakery(bakery).product(product1).review(review6).rating(4L).build());
+                .user(user).bakery(bakery).product(product1).review(review6).rating(4L).build());
     }
 
     @AfterEach

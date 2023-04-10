@@ -7,6 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BakeryService {
-    List<BakeryCardDto> findBakeryList(String username, BakerySortType sortBy, boolean filterBy, Double latitude, Double longitude, Double height, Double width);
-    BakeryDto findBakery(String username, Long bakeryId);
+    List<BakeryCardDto> getBakeryList(String username, BakerySortType sortBy, boolean filterBy, Double latitude, Double longitude, Double height, Double width);
+    BakeryDto getBakery(String username, Long bakeryId);
 }
