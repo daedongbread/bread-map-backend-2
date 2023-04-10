@@ -73,8 +73,8 @@ class BakeryControllerTest extends ControllerTest {
         reviewRepository.save(review1);
         reviewRepository.save(review2);
 
-        ReviewProductRating rating1 = ReviewProductRating.builder().bakery(bakery1).product(product1).review(review1).rating(4L).build();
-        ReviewProductRating rating2 = ReviewProductRating.builder().bakery(bakery1).product(product2).review(review2).rating(4L).build();
+        ReviewProductRating rating1 = ReviewProductRating.builder().user(user).bakery(bakery1).product(product1).review(review1).rating(4L).build();
+        ReviewProductRating rating2 = ReviewProductRating.builder().user(user).bakery(bakery1).product(product2).review(review2).rating(4L).build();
         reviewProductRatingRepository.save(rating1);
         reviewProductRatingRepository.save(rating2);
     }
@@ -91,7 +91,7 @@ class BakeryControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void findBakeryList() throws Exception {
+    void getBakeryList() throws Exception {
         mockMvc.perform(get("/v1/bakeries?sortBy=distance&filterBy=false&latitude=37.560992&longitude=127.044174&latitudeDelta=0.01&longitudeDelta=0.02")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
@@ -130,7 +130,7 @@ class BakeryControllerTest extends ControllerTest {
 
     @Test
 //    @Transactional
-    void findBakery() throws Exception {
+    void getBakery() throws Exception {
         mockMvc.perform(get("/v1/bakeries/{bakeryId}", bakery1.getId())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())

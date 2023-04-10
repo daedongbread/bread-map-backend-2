@@ -67,7 +67,7 @@ class AdminReportControllerTest extends ControllerTest {
         reviewRepository.save(review);
         ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
         reviewImageRepository.save(image);
-        ReviewProductRating rating = ReviewProductRating.builder().bakery(bakery).product(product).review(review).rating(4L).build();
+        ReviewProductRating rating = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
 
         reviewReport = ReviewReport.builder()

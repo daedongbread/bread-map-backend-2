@@ -19,17 +19,17 @@ public class BakeryController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<BakeryCardDto>> findBakeryList(
+    public ApiResponse<List<BakeryCardDto>> getBakeryList(
             @CurrentUser String username,
             @RequestParam BakerySortType sortBy, @RequestParam boolean filterBy,
             @RequestParam Double latitude, @RequestParam Double longitude,
             @RequestParam Double latitudeDelta, @RequestParam Double longitudeDelta) {
-        return new ApiResponse<>(bakeryService.findBakeryList(username, sortBy, filterBy, latitude, longitude, latitudeDelta, longitudeDelta));
+        return new ApiResponse<>(bakeryService.getBakeryList(username, sortBy, filterBy, latitude, longitude, latitudeDelta, longitudeDelta));
     }
 
     @GetMapping("/{bakeryId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<BakeryDto> findBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
-        return new ApiResponse<>(bakeryService.findBakery(username, bakeryId));
+    public ApiResponse<BakeryDto> getBakery(@CurrentUser String username, @PathVariable Long bakeryId) {
+        return new ApiResponse<>(bakeryService.getBakery(username, bakeryId));
     }
 }
