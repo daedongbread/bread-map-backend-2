@@ -50,9 +50,9 @@ public class ReviewQueryRepository {
         List<Review> content = queryFactory.selectFrom(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
                 .where(review.user.notIn(
-                                JPAExpressions.select(blockUser.fromUser)
+                                JPAExpressions.select(blockUser.toUser)
                                         .from(blockUser)
-                                        .where(blockUser.toUser.eq(me))
+                                        .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
                         review.status.eq(ReviewStatus.UNBLOCK),
@@ -65,9 +65,9 @@ public class ReviewQueryRepository {
 
         Long count = queryFactory.select(review.count()).from(review)
                 .where(review.user.notIn(
-                                JPAExpressions.select(blockUser.fromUser)
+                                JPAExpressions.select(blockUser.toUser)
                                         .from(blockUser)
-                                        .where(blockUser.toUser.eq(me))
+                                        .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
                         review.status.eq(ReviewStatus.UNBLOCK),
@@ -92,9 +92,9 @@ public class ReviewQueryRepository {
         List<Review> content = queryFactory.selectFrom(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
                 .where(review.user.notIn(
-                                JPAExpressions.select(blockUser.fromUser)
+                                JPAExpressions.select(blockUser.toUser)
                                         .from(blockUser)
-                                        .where(blockUser.toUser.eq(me))
+                                        .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
@@ -109,9 +109,9 @@ public class ReviewQueryRepository {
         Long count = queryFactory.select(review.count()).from(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
                 .where(review.user.notIn(
-                                JPAExpressions.select(blockUser.fromUser)
+                                JPAExpressions.select(blockUser.toUser)
                                         .from(blockUser)
-                                        .where(blockUser.toUser.eq(me))
+                                        .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
@@ -136,9 +136,9 @@ public class ReviewQueryRepository {
 
         List<Review> content = queryFactory.selectFrom(review)
                 .where(review.user.notIn(
-                                JPAExpressions.select(blockUser.fromUser)
+                                JPAExpressions.select(blockUser.toUser)
                                         .from(blockUser)
-                                        .where(blockUser.toUser.eq(me))
+                                        .where(blockUser.fromUser.eq(me))
                         ),
                         review.user.eq(user),
                         review.status.eq(ReviewStatus.UNBLOCK),
@@ -150,9 +150,9 @@ public class ReviewQueryRepository {
 
         Long count = queryFactory.select(review.count()).from(review)
                 .where(review.user.notIn(
-                                JPAExpressions.select(blockUser.fromUser)
+                                JPAExpressions.select(blockUser.toUser)
                                         .from(blockUser)
-                                        .where(blockUser.toUser.eq(me))
+                                        .where(blockUser.fromUser.eq(me))
                         ),
                         review.user.eq(user),
                         review.status.eq(ReviewStatus.UNBLOCK),

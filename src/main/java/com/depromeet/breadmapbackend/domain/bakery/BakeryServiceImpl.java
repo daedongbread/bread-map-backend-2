@@ -135,7 +135,8 @@ public class BakeryServiceImpl implements BakeryService {
                         .stream().mapToDouble(Double::doubleValue)
                         .average().orElse(0)*10)/10.0)
                 .reviewNum((int) bakery.getReviewList().stream()
-                        .map(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count()).build();
+                        .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
+                .build();
         BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
                 .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, me).orElse(null)).build();
 

@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
     private final FlagBakeryRepository flagBakeryRepository;
     private final BlockUserRepository blockUserRepository;
     private final StringRedisTemplate redisTemplate;
-    private final ApplicationEventPublisher eventPublisher;
     private final CustomRedisProperties customRedisProperties;
 
     @Transactional(rollbackFor = Exception.class)
@@ -60,20 +59,17 @@ public class UserServiceImpl implements UserService {
         if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         String accessToken = request.getAccessToken();
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, false);
         String username = authentication.getName();
         User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         String refreshToken = redisTemplate.opsForValue().get(customRedisProperties.getKey().getRefresh() + ":" + user.getUsername());
         if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
-//        RefreshToken refreshToken = refreshTokenRepository.findByUsername(username).orElseThrow(RefreshTokenNotFoundException::new);
-//        if(!refreshToken.getToken().equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         JwtToken reissueToken = jwtTokenProvider.createJwtToken(username, user.getRoleType().getCode());
         redisTemplate.opsForValue()
                 .set(customRedisProperties.getKey().getRefresh() + ":" + user.getUsername(),
                         reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-//        refreshToken.updateToken(reissueToken.getRefreshToken());
 
         return reissueToken;
     }
@@ -107,7 +103,7 @@ public class UserServiceImpl implements UserService {
         String accessToken = request.getAccessToken();
         if (!jwtTokenProvider.verifyToken(accessToken)) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, true);
         String username = authentication.getName();
 
         // 알람 가지 않게 처리
@@ -183,11 +179,5 @@ public class UserServiceImpl implements UserService {
             }
             user.alarmOff();
         }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void alarmOff(String username, NoticeTokenRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
     }
 }

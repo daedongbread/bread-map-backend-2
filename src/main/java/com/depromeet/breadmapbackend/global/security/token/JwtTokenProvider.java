@@ -102,12 +102,25 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token).getBody();
     }
 
+    private Claims parseClaimsIgnoringExpiration(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
+
     public String getUsername(String token) {
         return parseClaims(token).getSubject();
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = parseClaims(token);
+    public Authentication getAuthentication(String token, boolean unexpired) {
+        Claims claims;
+        if (unexpired) claims = parseClaims(token);
+        else claims = parseClaimsIgnoringExpiration(token);
 
         // 권한 정보가 없음
         if (claims.get(ROLES) == null) {

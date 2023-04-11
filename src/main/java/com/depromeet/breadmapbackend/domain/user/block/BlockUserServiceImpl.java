@@ -25,9 +25,9 @@ public class BlockUserServiceImpl implements BlockUserService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BlockUserDto> blockList(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-        return blockUserRepository.findByFromUser(user).stream()
+        return blockUserRepository.findByFromUser(me).stream()
                 .map(blockUser -> new BlockUserDto(blockUser.getToUser(),
                         reviewRepository.countByUser(blockUser.getToUser()),
                         followRepository.countByToUser(blockUser.getToUser())))
