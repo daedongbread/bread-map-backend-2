@@ -11,7 +11,7 @@ public interface FlagService {
     void addFlag(String username, FlagRequest request);
     void updateFlag(String username, Long flagId, FlagRequest request);
     void removeFlag(String username, Long flagId);
-    FlagBakeryDto getBakeryByFlag(Long flagId);
+    FlagBakeryDto getBakeryByFlag(String username, Long flagId);
     void addBakeryToFlag(String username, Long flagId, Long bakeryId);
     void removeBakeryToFlag(String username, Long flagId, Long bakeryId);
 }
