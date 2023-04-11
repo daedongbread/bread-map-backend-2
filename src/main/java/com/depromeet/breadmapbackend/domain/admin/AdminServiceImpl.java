@@ -85,7 +85,7 @@ public class AdminServiceImpl implements AdminService {
             throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
         String accessToken = request.getAccessToken();
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, false);
         String email = authentication.getName();
         Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
 

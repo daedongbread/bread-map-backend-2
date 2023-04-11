@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtHeader != null && jwtHeader.startsWith("Bearer ")) {
                 String accessToken = jwtHeader.replace("Bearer ", "");
                 if(jwtTokenProvider.verifyToken(accessToken)) {
-                    Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                    Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, true);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
