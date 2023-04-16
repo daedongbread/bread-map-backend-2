@@ -90,7 +90,7 @@ jobs:
       with:
         task-definition: task-definition.json
         container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.docker_build.outputs.image }}
+        image: ${{ steps.docker_build.outputs.digest }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
