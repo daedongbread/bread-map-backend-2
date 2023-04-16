@@ -48,21 +48,19 @@ public class AuthServiceImpl implements AuthService {
     private final CustomAWSS3Properties customAWSS3Properties;
 
     private String getOAuthId(OAuthType oAuthType, String sub) {
-        return oAuthType.getCode() + "_" + sub;
+        return oAuthType + "_" + sub;
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public Boolean checkToLoginOrRegister(LoginRequest request) {
         String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
-        return userRepository.findByOAuthId(request.getType().getCode() + "_" + sub).isPresent();
+        return userRepository.findByOAuthId(request.getType() + "_" + sub).isPresent();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public JwtToken login(LoginRequest request) {
         String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
-//        log.info("sub : " + sub);
         String oAuthId = getOAuthId(request.getType(), sub);
-//        log.info("A");
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(user.getIsBlock()) throw new DaedongException(DaedongStatus.BLOCK_USER);
 
