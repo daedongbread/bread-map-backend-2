@@ -31,9 +31,9 @@ public class BakeryProductController {
     @PostMapping("/{bakeryId}/product-add-reports")
     @ResponseStatus(HttpStatus.CREATED)
     public void productAddReport(
-            @CurrentUser String username, @PathVariable Long bakeryId,
+            @CurrentUser String oAuthId, @PathVariable Long bakeryId,
             @RequestBody @Validated(ValidationSequence.class) ProductReportRequest request) {
-        bakeryProductService.productAddReport(username, bakeryId, request);
+        bakeryProductService.productAddReport(oAuthId, bakeryId, request);
     }
 
     @GetMapping("/{bakeryId}/products/search")

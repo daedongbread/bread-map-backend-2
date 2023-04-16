@@ -24,6 +24,9 @@ endif::[]
 |===
 
 == APIs
+=== Auth API
+- xref:auth.adoc[Auth APIs]
+
 === User API
 - xref:user.adoc[User APIs]
 

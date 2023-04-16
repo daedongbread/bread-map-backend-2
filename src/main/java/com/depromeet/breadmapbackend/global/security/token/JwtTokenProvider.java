@@ -31,8 +31,8 @@ public class JwtTokenProvider {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final CustomJWTKeyProperties customJWTKeyProperties;
-    private final Long accessTokenExpiredDate = 10 * 60 * 1000L; // 10 minutes/
-    private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 day
+    private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hours
+    private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 days
 
     private static final String ROLES = "roles";
 
@@ -47,15 +47,15 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public JwtToken createJwtToken(String username, String role) {
+    public JwtToken createJwtToken(String oAuthId, String role) {
         Long id = null;
         if (role.equals(RoleType.USER.getCode())) {
-            id = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND)).getId();
+            id = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND)).getId();
         } else if (role.equals(RoleType.ADMIN.getCode())) {
-            id = adminRepository.findByEmail(username).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND)).getId();
+            id = adminRepository.findByEmail(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND)).getId();
         }
 
-        Claims claims = Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(oAuthId);
         claims.put(ROLES, role);
 
         Date now = new Date();
@@ -64,6 +64,32 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenExpiredDate))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        String refreshToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        return JwtToken.builder().userId(id)
+                .accessToken(accessToken).refreshToken(refreshToken)
+                .accessTokenExpiredDate(accessTokenExpiredDate).build();
+    }
+
+    public JwtToken createTestJwtToken(String oAuthId, String role) {
+        Long id = adminRepository.findByEmail(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND)).getId();
+
+        Claims claims = Jwts.claims().setSubject(oAuthId);
+        claims.put(ROLES, role);
+
+        Date now = new Date();
+        String accessToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + 60 * 1000L))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 

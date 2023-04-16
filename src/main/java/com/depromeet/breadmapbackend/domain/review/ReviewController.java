@@ -25,44 +25,44 @@ public class ReviewController {
     @GetMapping("/bakeries/{bakeryId}") // TODO : 상하관계
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ReviewDto>> getBakeryReviewList(
-            @CurrentUser String username, @PathVariable Long bakeryId,
+            @CurrentUser String oAuthId, @PathVariable Long bakeryId,
             @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
-        return new ApiResponse<>(reviewService.getBakeryReviewList(username, bakeryId, sortBy, page));
+        return new ApiResponse<>(reviewService.getBakeryReviewList(oAuthId, bakeryId, sortBy, page));
     }
 
     @GetMapping("/bakeries/{bakeryId}/products/{productId}") // TODO : 상하관계
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ReviewDto>> getProductReviewList(
-            @CurrentUser String username, @PathVariable Long bakeryId, @PathVariable Long productId,
+            @CurrentUser String oAuthId, @PathVariable Long bakeryId, @PathVariable Long productId,
             @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
-        return new ApiResponse<>(reviewService.getProductReviewList(username, bakeryId, productId, sortBy, page));
+        return new ApiResponse<>(reviewService.getProductReviewList(oAuthId, bakeryId, productId, sortBy, page));
     }
 
     @GetMapping("/users/{userId}") // TODO : 상하관계
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ReviewDto>> getUserReviewList(
-            @CurrentUser String username, @PathVariable Long userId,
+            @CurrentUser String oAuthId, @PathVariable Long userId,
             @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
-        return new ApiResponse<>(reviewService.getUserReviewList(username, userId, page));
+        return new ApiResponse<>(reviewService.getUserReviewList(oAuthId, userId, page));
     }
 
     @GetMapping("/{reviewId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ReviewDetailDto> getReview(@CurrentUser String username, @PathVariable Long reviewId) {
-        return new ApiResponse<>(reviewService.getReview(username, reviewId));
+    public ApiResponse<ReviewDetailDto> getReview(@CurrentUser String oAuthId, @PathVariable Long reviewId) {
+        return new ApiResponse<>(reviewService.getReview(oAuthId, reviewId));
     }
 
     @PostMapping("/bakeries/{bakeryId}") // TODO : 상하관계
     @ResponseStatus(HttpStatus.CREATED)
     public void addReview(
-            @CurrentUser String username, @PathVariable Long bakeryId,
+            @CurrentUser String oAuthId, @PathVariable Long bakeryId,
             @RequestBody @Validated(ValidationSequence.class) ReviewRequest request) {
-        reviewService.addReview(username, bakeryId, request);
+        reviewService.addReview(oAuthId, bakeryId, request);
     }
 
     @DeleteMapping("/{reviewId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeReview(@CurrentUser String username, @PathVariable Long reviewId) {
-        reviewService.removeReview(username, reviewId);
+    public void removeReview(@CurrentUser String oAuthId, @PathVariable Long reviewId) {
+        reviewService.removeReview(oAuthId, reviewId);
     }
 }

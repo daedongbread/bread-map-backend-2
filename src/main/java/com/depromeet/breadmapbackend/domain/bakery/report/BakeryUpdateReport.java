@@ -40,11 +40,11 @@ public class BakeryUpdateReport extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isChange;
+    private Boolean isChange = Boolean.FALSE;
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isNew;
+    private Boolean isNew = Boolean.TRUE;
 
     @Builder
     public BakeryUpdateReport(Bakery bakery, User user, BakeryUpdateReason reason, String content) {
@@ -52,8 +52,6 @@ public class BakeryUpdateReport extends BaseEntity {
         this.user = user;
         this.reason = reason;
         this.content = content;
-        this.isChange = false;
-        this.isNew = true;
     }
 
     public void change() {

@@ -23,9 +23,9 @@ public class AdminReviewReportDto {
     @Builder
     public AdminReviewReportDto(ReviewReport reviewReport) {
         this.reviewReportId = reviewReport.getId();
-        this.reporterNickName = reviewReport.getReporter().getNickName();
+        this.reporterNickName = reviewReport.getReporter().getUserInfo().getNickName();
         this.reason = reviewReport.getReason();
-        this.respondentNickName = reviewReport.getReview().getUser().getNickName();
+        this.respondentNickName = reviewReport.getReview().getUser().getUserInfo().getNickName();
         this.reportedReviewId = reviewReport.getReview().getId();
         this.content = reviewReport.getContent();
         this.createdAt = reviewReport.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

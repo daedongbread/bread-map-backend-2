@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BakeryReportService {
-    void bakeryAddReport(String username, BakeryAddReportRequest request);
-    void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateReportRequest request);
-    void bakeryReportImage(String username, Long bakeryId, BakeryReportImageRequest request);
+    void bakeryAddReport(String oAuthId, BakeryAddReportRequest request);
+    void bakeryUpdateReport(String oAuthId, Long bakeryId, BakeryUpdateReportRequest request);
+    void bakeryReportImage(String oAuthId, Long bakeryId, BakeryReportImageRequest request);
 }

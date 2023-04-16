@@ -17,47 +17,35 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/auth/reissue")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<JwtToken> reissue(@RequestBody @Validated(ValidationSequence.class) ReissueRequest request) {
-        return new ApiResponse<>(userService.reissue(request));
-    }
-
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ProfileDto> profile(@CurrentUser String username, @PathVariable Long userId) {
-        return new ApiResponse<>(userService.profile(username, userId));
+    public ApiResponse<ProfileDto> profile(@CurrentUser String oAuthId, @PathVariable Long userId) {
+        return new ApiResponse<>(userService.profile(oAuthId, userId));
     }
 
     @PostMapping("/nickname")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateNickName(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) UpdateNickNameRequest request) {
-        userService.updateNickName(username, request);
-    }
-
-    @PostMapping("/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(@RequestBody @Validated(ValidationSequence.class) LogoutRequest request) {
-        userService.logout(request);
+            @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) UpdateNickNameRequest request) {
+        userService.updateNickName(oAuthId, request);
     }
 
 //    @DeleteMapping
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void deleteUser(@CurrentUser String username) {
+//    public void deleteUser(@CurrentUser String oAuthId) {
 //        userService.deleteUser(username);
 //    }
 
     @GetMapping("/alarm")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<AlarmDto> getAlarmStatus(@CurrentUser String username) {
-        return new ApiResponse<>(userService.getAlarmStatus(username));
+    public ApiResponse<AlarmDto> getAlarmStatus(@CurrentUser String oAuthId) {
+        return new ApiResponse<>(userService.getAlarmStatus(oAuthId));
     }
 
     @PatchMapping("/alarm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alarmChange(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
-        userService.alarmChange(username, request);
+            @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
+        userService.alarmChange(oAuthId, request);
     }
 }

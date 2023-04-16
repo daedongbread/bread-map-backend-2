@@ -15,6 +15,7 @@
 - 빵집 관련 신규 데이터 여부 API
 - 메뉴바 API
 - 임시 이미지 업로드 API
+- 토큰 test API
 
 === 관리자 로그인 API [POST]
 operation::v1/admin/login[snippets='http-request,request-fields,http-response,response-fields']
@@ -30,6 +31,9 @@ operation::v1/admin/bar[snippets='http-request,request-headers,http-response,res
 
 === 임시 이미지 업로드 API [POST]
 operation::v1/admin/tempImage[snippets='http-request,request-headers,request-parts,http-response,response-fields']
+
+=== 토큰 test [POST]
+operation::v1/admin/test[snippets='http-request,http-response,response-fields']
 
 == Admin Bakery APIs
 - 빵집 전체 조회 API

@@ -2,11 +2,13 @@ package com.depromeet.breadmapbackend.domain.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminJoinRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminLoginRequest;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.domain.admin.dto.*;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
-import com.depromeet.breadmapbackend.domain.user.dto.ReissueRequest;
+import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
+import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,5 +54,11 @@ public class AdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AdminImageDto> uploadImage(@RequestPart MultipartFile image) throws IOException {
         return new ApiResponse<>(adminService.uploadImage(image));
+    }
+
+    @PostMapping("/test")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<JwtToken> testToken() {
+        return new ApiResponse<>(jwtTokenProvider.createTestJwtToken("Deadong01", RoleType.ADMIN.getCode()));
     }
 }

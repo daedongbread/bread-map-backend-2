@@ -10,7 +10,10 @@ import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
@@ -44,9 +47,10 @@ class FlagControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
-        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+        token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)

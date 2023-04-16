@@ -22,14 +22,14 @@ public class NoticeController {
 //    @PostMapping
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
 //    public void addNoticeToken(
-//            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
-//        noticeService.addNoticeToken(username, request);
+//            @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
+//        noticeService.addNoticeToken(oAuthId, request);
 //    }
 
     @GetMapping("/{type}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<NoticeDto>> getNoticeList(
-            @CurrentUser String username, @PathVariable NoticeDayType type, @RequestParam(required = false) Long lastId, @RequestParam int page) {
-        return new ApiResponse<>(noticeService.getNoticeList(username, type, lastId, page));
+            @CurrentUser String oAuthId, @PathVariable NoticeDayType type, @RequestParam(required = false) Long lastId, @RequestParam int page) {
+        return new ApiResponse<>(noticeService.getNoticeList(oAuthId, type, lastId, page));
     }
 }

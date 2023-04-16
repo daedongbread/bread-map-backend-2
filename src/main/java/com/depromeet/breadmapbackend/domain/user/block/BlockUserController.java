@@ -20,19 +20,19 @@ public class BlockUserController {
 
     @GetMapping("/block")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<BlockUserDto>> blockList(@CurrentUser String username) {
-        return new ApiResponse<>(blockUserService.blockList(username));
+    public ApiResponse<List<BlockUserDto>> blockList(@CurrentUser String oAuthId) {
+        return new ApiResponse<>(blockUserService.blockList(oAuthId));
     }
 
     @PostMapping("/block")
     @ResponseStatus(HttpStatus.CREATED)
-    public void block(@CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BlockRequest request) {
-        blockUserService.block(username, request);
+    public void block(@CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) BlockRequest request) {
+        blockUserService.block(oAuthId, request);
     }
 
     @DeleteMapping("/block")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unblock(@CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BlockRequest request) {
-        blockUserService.unblock(username, request);
+    public void unblock(@CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) BlockRequest request) {
+        blockUserService.unblock(oAuthId, request);
     }
 }

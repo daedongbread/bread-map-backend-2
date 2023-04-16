@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BakeryProductService {
     List<ProductDto> getProductList(Long bakeryId);
-    void productAddReport(String username, Long bakeryId, ProductReportRequest request);
+    void productAddReport(String oAuthId, Long bakeryId, ProductReportRequest request);
 
     List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name);
 }

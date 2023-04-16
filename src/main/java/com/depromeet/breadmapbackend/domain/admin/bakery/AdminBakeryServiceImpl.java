@@ -23,11 +23,11 @@ import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.global.infra.feign.client.SgisClient;
-import com.depromeet.breadmapbackend.global.infra.feign.dto.SgisGeocodeDto;
-import com.depromeet.breadmapbackend.global.infra.feign.dto.SgisTokenDto;
-import com.depromeet.breadmapbackend.global.infra.feign.dto.SgisTranscoordDto;
-import com.depromeet.breadmapbackend.global.infra.feign.exception.SgisFeignException;
+import com.depromeet.breadmapbackend.global.infra.feign.sgis.client.SgisClient;
+import com.depromeet.breadmapbackend.global.infra.feign.sgis.dto.SgisGeocodeDto;
+import com.depromeet.breadmapbackend.global.infra.feign.sgis.dto.SgisTokenDto;
+import com.depromeet.breadmapbackend.global.infra.feign.sgis.dto.SgisTranscoordDto;
+import com.depromeet.breadmapbackend.global.infra.feign.exception.FeignException;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomSGISKeyProperties;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +94,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
         SgisTokenDto token = sgisClient.getToken(customSGISKeyProperties.getKey(), customSGISKeyProperties.getSecret());
         SgisGeocodeDto geocode = sgisClient.getGeocode(token.getResult().getAccessToken(), address);
-        if (geocode.getResult() == null) throw new SgisFeignException();
+        if (geocode.getResult() == null) throw new FeignException();
         SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
                 5179, 4326, geocode.getResult().getResultdata().get(0).getX(), geocode.getResult().getResultdata().get(0).getY());
 

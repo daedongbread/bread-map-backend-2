@@ -1,8 +1,11 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.domain.user.follow.Follow;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -29,11 +32,13 @@ class NoticeControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        User user = User.builder().nickName("nickname1").roleType(RoleType.USER).username("username1").build();
-        User fromUser = User.builder().nickName("nickname2").roleType(RoleType.USER).username("username2").build();
+        User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
+        User fromUser = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId2").build())
+                .userInfo(UserInfo.builder().nickName("nickname2").build()).build();
         userRepository.save(user);
         userRepository.save(fromUser);
-        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+        token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
 
         NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken("deviceToken").build();
         noticeTokenRepository.save(noticeToken);

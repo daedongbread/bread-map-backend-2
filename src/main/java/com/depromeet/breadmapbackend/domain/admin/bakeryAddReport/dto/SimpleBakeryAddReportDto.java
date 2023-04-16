@@ -23,7 +23,7 @@ public class SimpleBakeryAddReportDto {
     @Builder
     public SimpleBakeryAddReportDto(BakeryAddReport bakeryAddReport) {
         this.reportId = bakeryAddReport.getId();
-        this.nickName = bakeryAddReport.getUser().getNickName();
+        this.nickName = bakeryAddReport.getUser().getUserInfo().getNickName();
         this.bakeryName = bakeryAddReport.getName();
         this.location = bakeryAddReport.getLocation();
         this.content = bakeryAddReport.getContent();

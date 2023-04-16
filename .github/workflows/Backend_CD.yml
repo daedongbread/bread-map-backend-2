@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: bread-map
+  ECS_TASK_DEFINITION: api-server-tmp-task
+  CONTAINER_NAME: api-server-tmp
+  ECS_SERVICE: tmp-api-server-service
+  ECS_CLUSTER: tmp-cluster
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -19,6 +29,16 @@ jobs:
         sgis.key: ${{ secrets.SGIS_KEY }}
         sgis.secret: ${{ secrets.SGIS_SECRET }}
 
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.AWS_GITHUB_ACTION_ROLE }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
     - name: Build with Gradle
       run: |
         chmod +x ./gradlew
@@ -32,39 +52,48 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-latest
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
-
-    - name: Login to ghcr
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.CR_PAT }}
 
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
       with:
         context: .
         builder: ${{ steps.buildx.outputs.name }}
         push: ${{ github.event_name != 'pull_request' }}
-        tags: ghcr.io/grand7070/bread-map-backend-2:latest
+        tags: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+    - name: Download Task Definition Template
+      run: |
+        aws ecs describe-task-definition \
+          --task-definition ${{ env.ECS_TASK_DEFINITION }} \
+          --query taskDefinition \
+          > task-definition.json
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        aws-access-key-id: ${{ secrets.TMP_AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.TMP_AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
+        task-definition: task-definition.json
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: ${{ steps.build-image.outputs.image }}
 
-    - name: Force new deploy ECS service
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.TMP_AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.TMP_AWS_SECRET_ACCESS_KEY }}
-      run: aws ecs update-service --cluster tmp-cluster --service tmp-api-server-service --force-new-deployment
-    
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
+
     - name: CD notification to Slack
       uses: 8398a7/action-slack@v3
       with:

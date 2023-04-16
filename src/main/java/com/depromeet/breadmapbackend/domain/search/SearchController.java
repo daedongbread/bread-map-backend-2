@@ -34,30 +34,30 @@ public class SearchController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<SearchDto>> search(
-            @CurrentUser String username,
+            @CurrentUser String oAuthId,
             @RequestParam
             @NotBlank(message = "검색어는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
             @Size(min=1, max=20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
             String word,
             @RequestParam Double latitude, @RequestParam Double longitude) {
-        return new ApiResponse<>(searchService.search(username, word, latitude, longitude));
+        return new ApiResponse<>(searchService.search(oAuthId, word, latitude, longitude));
     }
 
     @GetMapping("/keywords")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<String>> recentKeywords(@CurrentUser String username) {
-        return new ApiResponse<>(searchService.recentKeywords(username));
+    public ApiResponse<List<String>> recentKeywords(@CurrentUser String oAuthId) {
+        return new ApiResponse<>(searchService.recentKeywords(oAuthId));
     }
 
     @DeleteMapping("/keywords")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteRecentKeyword(@CurrentUser String username, @RequestParam String keyword) {
-        searchService.deleteRecentKeyword(username, keyword);
+    public void deleteRecentKeyword(@CurrentUser String oAuthId, @RequestParam String keyword) {
+        searchService.deleteRecentKeyword(oAuthId, keyword);
     }
 
     @DeleteMapping("/keywords/all")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteRecentKeywordAll(@CurrentUser String username) {
-        searchService.deleteRecentKeywordAll(username);
+    public void deleteRecentKeywordAll(@CurrentUser String oAuthId) {
+        searchService.deleteRecentKeywordAll(oAuthId);
     }
 }

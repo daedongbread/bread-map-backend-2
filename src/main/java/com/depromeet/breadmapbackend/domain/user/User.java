@@ -3,7 +3,6 @@ package com.depromeet.breadmapbackend.domain.user;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.global.security.domain.ProviderType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import lombok.*;
 
@@ -13,73 +12,49 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Embedded
+    private OAuthInfo oAuthInfo;
+
+    @Embedded
+    private UserInfo userInfo;
+
     @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false, unique = true)
-    private String nickName;
-
-    private String email;
-
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private final RoleType roleType = RoleType.USER;
 
-    @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isBlock = Boolean.FALSE;
 
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isMarketingInfoReceptionAgreed;
 
-    private String image;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isAlarmOn = Boolean.FALSE;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flag> flagList = new ArrayList<>();
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
-
-    @Column(nullable = false)
-    @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isAlarmOn;
-
-    @Builder
-    private User(String username, String nickName, String email, Gender gender,
-                 ProviderType providerType, RoleType roleType, String image) {
-        this.username = username;
-        this.nickName = nickName;
-        this.email = email;
-        this.gender = gender;
-        this.providerType = providerType;
-        this.roleType = roleType;
-        this.image = image;
-        this.status = UserStatus.UNBLOCK;
-        this.isAlarmOn = false;
+    public String getOAuthId() {
+        return this.oAuthInfo.getOAuthId();
     }
 
-    public void updateNickName(String nickName) {
-        this.nickName = nickName;
+    public String getNickName() {
+        return this.userInfo.getNickName();
     }
-
-    public void updateImage(String image) {
-        this.image = image;
-    }
-
-    public void addFlag(Flag flag) {
-        this.flagList.add(flag);
-    }
-
-    public void removeFlag(Flag flag) { this.flagList.remove(flag); }
 
     public void changeBlock() {
-        if(this.status.equals(UserStatus.BLOCK)) this.status = UserStatus.UNBLOCK;
-        else this.status = UserStatus.BLOCK;
+        this.isBlock = !this.isBlock;
     }
 
     public void alarmOn() {

@@ -11,8 +11,8 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @NoArgsConstructor
 public class AdminUserDto {
-    private Long id;
-    private String username;
+    private Long userId;
+    private String userOAuthId;
     private String nickName;
     private String email;
     private String createdAt;
@@ -21,10 +21,10 @@ public class AdminUserDto {
 
     @Builder
     public AdminUserDto(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.nickName = user.getNickName();
-        this.email = user.getEmail();
+        this.userId = user.getId();
+        this.userOAuthId = user.getOAuthId();
+        this.nickName = user.getUserInfo().getNickName();
+        this.email = user.getUserInfo().getEmail();
         this.createdAt = user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.lastAccessAt = user.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.roleType = user.getRoleType();

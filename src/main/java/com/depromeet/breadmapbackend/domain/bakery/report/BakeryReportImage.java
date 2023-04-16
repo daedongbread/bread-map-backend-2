@@ -29,14 +29,13 @@ public class BakeryReportImage extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isNew;
+    private Boolean isNew = Boolean.TRUE;
 
     @Builder
     public BakeryReportImage(Bakery bakery, String image, User user) {
         this.bakery = bakery;
         this.image = image;
         this.user = user;
-        this.isNew = true;
     }
 
     public void unNew() {

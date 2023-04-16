@@ -15,8 +15,11 @@ import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportReason;
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.global.ImageType;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -58,7 +61,8 @@ class AdminBakeryAddReportControllerTest extends ControllerTest {
                 .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
                         token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
-        User user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
 
         bakeryAddReport = BakeryAddReport.builder().user(user).content("test content").location("test location")
@@ -72,6 +76,7 @@ class AdminBakeryAddReportControllerTest extends ControllerTest {
         userRepository.deleteAllInBatch();
         adminRepository.deleteAllInBatch();
     }
+
     @Test
     void getBakeryAddReportList() throws Exception {
         mockMvc.perform(get("/v1/admin/bakery-add-reports?page=0")
