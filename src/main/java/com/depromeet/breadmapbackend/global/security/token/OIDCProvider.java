@@ -31,7 +31,7 @@ public class OIDCProvider {
     private final AppleOAuthClient appleOAuthClient;
     private final CustomOAuthProperties customOAuthProperties;
 
-    public Claims verifyToken(OAuthType OAuthType, String idToken) {// throws JwkException {
+    public Claims verifyToken(OAuthType oAuthType, String idToken) {// throws JwkException {
         String[] tokenParts = idToken.split("\\.");
         String kid = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[0])), "$.kid");
         String iss = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[1])), "$.iss");
@@ -40,13 +40,13 @@ public class OIDCProvider {
 
         String clientId;
         OIDCPublicKeysDto oidcPublicKeysDto;
-        if (iss.equals("https://accounts.google.com") && OAuthType.equals(OAuthType.GOOGLE)) {
+        if (iss.equals("https://accounts.google.com") && oAuthType.equals(OAuthType.GOOGLE)) {
             clientId = customOAuthProperties.getGoogle();
             oidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
-        } else if (iss.equals("https://kauth.kakao.com") && OAuthType.equals(OAuthType.KAKAO)) {
+        } else if (iss.equals("https://kauth.kakao.com") && oAuthType.equals(OAuthType.KAKAO)) {
             clientId = customOAuthProperties.getKakao();
             oidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
-        } else if (iss.equals("https://appleid.apple.com") && OAuthType.equals(OAuthType.APPLE)) {
+        } else if (iss.equals("https://appleid.apple.com") && oAuthType.equals(OAuthType.APPLE)) {
             clientId = customOAuthProperties.getApple();
             oidcPublicKeysDto = appleOAuthClient.getOIDCPublicKeys();
         } else throw new DaedongException(DaedongStatus.OIDC_ISSUER_WRONG); // TODO
@@ -55,7 +55,7 @@ public class OIDCProvider {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getRSAPublicKey(oidcPublicKey.getN(), oidcPublicKey.getE()))
-//                    .requireAudience(clientId) TODO
+//                    .requireAudience(clientId) // TODO
                     .build()
                     .parseClaimsJws(idToken).getBody();
         } catch (ExpiredJwtException e) {
