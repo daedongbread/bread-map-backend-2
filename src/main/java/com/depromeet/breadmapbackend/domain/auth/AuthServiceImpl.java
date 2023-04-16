@@ -1,0 +1,178 @@
+package com.depromeet.breadmapbackend.domain.auth;
+
+import com.depromeet.breadmapbackend.domain.auth.dto.LogoutRequest;
+import com.depromeet.breadmapbackend.domain.auth.dto.RegisterRequest;
+import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
+import com.depromeet.breadmapbackend.domain.flag.Flag;
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
+import com.depromeet.breadmapbackend.domain.user.*;
+import com.depromeet.breadmapbackend.domain.auth.dto.LoginRequest;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
+import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.domain.UserPrincipal;
+import com.depromeet.breadmapbackend.global.security.token.JwtToken;
+import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.global.security.token.OIDCProvider;
+import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfo;
+import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfoFactory;
+import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
+    private final UserRepository userRepository;
+    private final NoticeTokenRepository noticeTokenRepository;
+    private final FlagRepository flagRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final OIDCProvider oidcProvider;
+    private final StringRedisTemplate redisTemplate;
+    private final CustomRedisProperties customRedisProperties;
+    private final CustomAWSS3Properties customAWSS3Properties;
+
+    private String getOAuthId(OAuthType oAuthType, String sub) {
+        return oAuthType.getCode() + "_" + sub;
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public Boolean checkToLoginOrRegister(LoginRequest request) {
+        String sub = oidcProvider.verifyToken(request.getOAuthType(), request.getIdToken()).getSubject();
+        return userRepository.findByOAuthId(request.getOAuthType().getCode() + "_" + sub).isPresent();
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public JwtToken login(LoginRequest request) {
+        String sub = oidcProvider.verifyToken(request.getOAuthType(), request.getIdToken()).getSubject();
+        String oAuthId = getOAuthId(request.getOAuthType(), sub);
+
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if(user.getIsBlock()) throw new DaedongException(DaedongStatus.BLOCK_USER);
+
+        JwtToken jwtToken = jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
+        redisTemplate.opsForValue()
+                .set(customRedisProperties.getKey().getRefresh() + ":" + oAuthId,
+                        jwtToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+        return jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public JwtToken register(RegisterRequest request) {
+        Claims body = oidcProvider.verifyToken(request.getOAuthType(), request.getIdToken());
+        OIDCUserInfo oidcUserInfo = OIDCUserInfoFactory.getOIDCUserInfo(request.getOAuthType(), body);
+        String oAuthId = getOAuthId(request.getOAuthType(), oidcUserInfo.getOAuthId());
+
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getDelete() + ":" + oAuthId)))
+            throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
+
+        if (userRepository.findByOAuthId(oAuthId).isEmpty()) {
+            createUser(oidcUserInfo, request.getOAuthType(), request.getIsMarketingInfoReceptionAgreed());
+        }
+        return jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
+    }
+
+    private String createNickName() {
+        List<String> adjectiveList =
+                Arrays.asList("맛있는", "달콤한", "매콤한", "바삭한", "짭잘한", "고소한", "알싸한", "새콤한", "느끼한", "무서운");
+        List<String> breadNameList =
+                Arrays.asList("식빵", "소금빵", "바게트", "마카롱", "마늘빵", "베이글", "도넛", "꽈배기", "피자빵", "크루아상");
+
+        String nickName;
+        do {
+            String adjective = adjectiveList.get(new SecureRandom().nextInt(adjectiveList.size()));
+            String breadName = breadNameList.get(new SecureRandom().nextInt(breadNameList.size()));
+
+            int num = new SecureRandom().nextInt(9999) + 1;
+
+            nickName = adjective + breadName + num;
+        } while (userRepository.findByNickName(nickName).isPresent());
+        return nickName;
+    }
+
+    private void createUser(OIDCUserInfo oidcUserInfo, OAuthType oAuthType, Boolean isMarketingInfoReceptionAgreed) {
+        User user = User.builder()
+                .oAuthInfo(OAuthInfo.builder()
+                        .oAuthType(oAuthType)
+                        .oAuthId(getOAuthId(oAuthType, oidcUserInfo.getOAuthId())).build())
+                .userInfo(UserInfo.builder()
+                        .nickName(createNickName())
+                        .email(oidcUserInfo.getEmail())
+                        .image(customAWSS3Properties.getCloudFront() + "/" +
+                                customAWSS3Properties.getDefaultImage().getUser() + ".png").build())
+                .isMarketingInfoReceptionAgreed(isMarketingInfoReceptionAgreed)
+                .build();
+        userRepository.save(user);
+
+        Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
+        flagRepository.save(wantToGo);
+        user.getFlagList().add(wantToGo);
+        Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
+        flagRepository.save(alreadyGo);
+        user.getFlagList().add(alreadyGo);
+
+//        UserPrincipal.create(user); // TODO
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public JwtToken reissue(ReissueRequest request) {
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+
+        String accessToken = request.getAccessToken();
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, false);
+        String oAuthId = authentication.getName();
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+
+        String refreshToken = redisTemplate.opsForValue().get(customRedisProperties.getKey().getRefresh() + ":" + user.getOAuthId());
+        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+
+        JwtToken reissueToken = jwtTokenProvider.createJwtToken(oAuthId, user.getRoleType().getCode());
+        redisTemplate.opsForValue()
+                .set(customRedisProperties.getKey().getRefresh() + ":" + user.getOAuthId(),
+                        reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+
+        return reissueToken;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void logout(LogoutRequest request) {  // TODO
+        String accessToken = request.getAccessToken();
+        if (!jwtTokenProvider.verifyToken(accessToken)) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, true);
+        String oAuthId = authentication.getName();
+
+        // 알람 가지 않게 처리
+//        eventPublisher.publishEvent(new NoticeTokenDeleteEvent(oAuthId, request.getDeviceToken()));
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+
+        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
+            noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
+        }
+
+        // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getRefresh() + ":" + oAuthId))) {
+            redisTemplate.delete(customRedisProperties.getKey().getRefresh() + ":" + oAuthId);
+        }
+
+        // 해당 Access Token 남은 유효시간 가지고 와서 BlackList 로 저장하기
+        Long expiration = jwtTokenProvider.getExpiration(request.getAccessToken());
+        redisTemplate.opsForValue()
+                .set(request.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+    }
+}

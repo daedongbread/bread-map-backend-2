@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewComment;
 import com.depromeet.breadmapbackend.domain.review.like.ReviewLike;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,9 +44,9 @@ public class Review extends BaseEntity {
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> imageList = new ArrayList<>();
 
-    @Column(nullable = false/*, columnDefinition = "boolean default 1"*/)
-    @Enumerated(EnumType.STRING)
-    private ReviewStatus status;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isBlock = Boolean.FALSE;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewProductRating> ratings = new ArrayList<>();
@@ -61,13 +62,11 @@ public class Review extends BaseEntity {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
-        this.status = ReviewStatus.UNBLOCK;
         this.bakery.getReviewList().add(this);
     }
 
-    public void useChange() {
-        if(this.status.equals(ReviewStatus.BLOCK)) this.status = ReviewStatus.UNBLOCK;
-        else this.status = ReviewStatus.BLOCK;
+    public void changeBlock() {
+        this.isBlock = !this.isBlock;
     }
 
     public void plusLike(ReviewLike reviewLike){ this.likes.add(reviewLike); }

@@ -23,23 +23,23 @@ public class BakeryReportController {
     @PostMapping("/bakery-add-reports")
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryAddReport(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) BakeryAddReportRequest request) {
-        bakeryReportService.bakeryAddReport(username, request);
+            @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) BakeryAddReportRequest request) {
+        bakeryReportService.bakeryAddReport(oAuthId, request);
     }
 
     @PostMapping("/{bakeryId}/bakery-update-reports")
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryUpdateReport(
-            @CurrentUser String username, @PathVariable Long bakeryId,
+            @CurrentUser String oAuthId, @PathVariable Long bakeryId,
             @RequestBody @Validated(ValidationSequence.class) BakeryUpdateReportRequest request) {
-        bakeryReportService.bakeryUpdateReport(username, bakeryId, request);
+        bakeryReportService.bakeryUpdateReport(oAuthId, bakeryId, request);
     }
 
     @PostMapping("/{bakeryId}/bakery-report-images")
     @ResponseStatus(HttpStatus.CREATED)
     public void bakeryReportImage(
-            @CurrentUser String username, @PathVariable Long bakeryId,
+            @CurrentUser String oAuthId, @PathVariable Long bakeryId,
             @RequestBody @Validated(ValidationSequence.class) BakeryReportImageRequest request) {
-        bakeryReportService.bakeryReportImage(username, bakeryId, request);
+        bakeryReportService.bakeryReportImage(oAuthId, bakeryId, request);
     }
 }

@@ -42,8 +42,8 @@ public class NoticeServiceImpl implements NoticeService{
     private final CustomAWSS3Properties customAwss3Properties;
 
 //    @Transactional(rollbackFor = Exception.class)
-//    public void addNoticeToken(String username, NoticeTokenRequest request) {
-//        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+//    public void addNoticeToken(String oAuthId, NoticeTokenRequest request) {
+//        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 //        if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent())
 //            throw new DaedongException(DaedongStatus.NOTICE_TOKEN_DUPLICATE_EXCEPTION);
 //        NoticeToken noticeToken = NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build();
@@ -69,7 +69,7 @@ public class NoticeServiceImpl implements NoticeService{
         // TODO : User 정보로 NoticeToken들 가져오기
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title(fromUser.getNickName() + "님이 회원님을 팔로우하기 시작했어요")
+                .title(fromUser.getUserInfo().getNickName() + "님이 회원님을 팔로우하기 시작했어요")
                 .contentId(fromUser.getId())
                 .type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice);
@@ -83,7 +83,7 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 리뷰에 " + fromUser.getNickName() + "님이 댓글을 달았어요!")
+                .title("내 리뷰에 " + fromUser.getUserInfo().getNickName() + "님이 댓글을 달았어요!")
                 // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_COMMENT).build();
@@ -98,7 +98,7 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 리뷰를 " + fromUser.getNickName() + "님이 좋아해요!")
+                .title("내 리뷰를 " + fromUser.getUserInfo().getNickName() + "님이 좋아해요!")
                 // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_LIKE).build();
@@ -113,7 +113,7 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 댓글에 " + fromUser.getNickName() + "님이 대댓글을 달았어요!")
+                .title("내 댓글에 " + fromUser.getUserInfo().getNickName() + "님이 대댓글을 달았어요!")
                 // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.RECOMMENT).build();
@@ -128,7 +128,7 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 댓글을 " + fromUser.getNickName() + "님이 좋아해요!")
+                .title("내 댓글을 " + fromUser.getUserInfo().getNickName() + "님이 좋아해요!")
                 // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.REVIEW_COMMENT_LIKE).build();
@@ -173,8 +173,8 @@ public class NoticeServiceImpl implements NoticeService{
 //    }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<NoticeDto> getNoticeList(String username, NoticeDayType type, Long lastId, int page) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public PageResponseDto<NoticeDto> getNoticeList(String oAuthId, NoticeDayType type, Long lastId, int page) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         Page<Notice> content = noticeQueryRepository.findNotice(user, type, lastId, page);
         return PageResponseDto.of(content,
@@ -186,7 +186,7 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     private String noticeImage(Notice notice) {
-        if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getImage();
+        if(notice.getType().equals(NoticeType.FOLLOW)) return notice.getFromUser().getUserInfo().getImage();
         else if(notice.getType().equals(NoticeType.REVIEW_COMMENT) || notice.getType().equals(NoticeType.RECOMMENT))
             return customAwss3Properties.getCloudFront() + "/" +
                     customAwss3Properties.getDefaultImage().getComment() + ".png";

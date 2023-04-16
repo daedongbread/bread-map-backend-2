@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.utils;
 
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
+import com.depromeet.breadmapbackend.domain.auth.AuthService;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImageRepository;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -62,6 +64,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected PasswordEncoder passwordEncoder;
+
+    @MockBean
+    protected AuthService authService;
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;

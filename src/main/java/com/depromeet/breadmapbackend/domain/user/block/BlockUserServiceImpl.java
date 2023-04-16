@@ -24,8 +24,8 @@ public class BlockUserServiceImpl implements BlockUserService {
     private final BlockUserRepository blockUserRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<BlockUserDto> blockList(String username) {
-        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public List<BlockUserDto> blockList(String oAuthId) {
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         return blockUserRepository.findByFromUser(me).stream()
                 .map(blockUser -> new BlockUserDto(blockUser.getToUser(),
@@ -35,8 +35,8 @@ public class BlockUserServiceImpl implements BlockUserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void block(String username, BlockRequest request) {
-        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void block(String oAuthId, BlockRequest request) {
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if (me.equals(user)) throw new DaedongException(DaedongStatus.BLOCK_MYSELF);
         if (blockUserRepository.findByFromUserAndToUser(me, user).isPresent()) throw new DaedongException(DaedongStatus.BLOCK_DUPLICATE_EXCEPTION);
@@ -46,8 +46,8 @@ public class BlockUserServiceImpl implements BlockUserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void unblock(String username, BlockRequest request) {
-        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void unblock(String oAuthId, BlockRequest request) {
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if (me.equals(user)) throw new DaedongException(DaedongStatus.BLOCK_MYSELF);
         BlockUser blockUser = blockUserRepository.findByFromUserAndToUser(me, user).orElseThrow(() -> new DaedongException(DaedongStatus.BLOCK_NOT_FOUND));

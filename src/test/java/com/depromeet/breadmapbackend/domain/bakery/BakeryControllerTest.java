@@ -13,7 +13,10 @@ import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewComment;
 import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLike;
 import com.depromeet.breadmapbackend.domain.review.like.ReviewLike;
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
@@ -50,9 +53,10 @@ class BakeryControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId").build())
+                .userInfo(UserInfo.builder().nickName("nickname").build()).build();
         userRepository.save(user);
-        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+        token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         bakery1 = Bakery.builder().address("address1").latitude(37.5596080725671).longitude(127.044235133983)

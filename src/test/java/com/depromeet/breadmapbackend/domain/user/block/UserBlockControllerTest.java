@@ -1,7 +1,10 @@
 package com.depromeet.breadmapbackend.domain.user.block;
 
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.domain.user.block.dto.BlockRequest;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -30,18 +33,21 @@ class UserBlockControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setUp() {
-        User user1 = User.builder().username("testUserName1").nickName("testNickName1").roleType(RoleType.USER).build();
-        user2 = User.builder().username("testUserName2").nickName("testNickName2").roleType(RoleType.USER).build();
-        userToBlock = User.builder().username("testBlockUserName").nickName("testBlockUserNickName").roleType(RoleType.USER).build();
+        User user1 = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
+        user2 = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId2").build())
+                .userInfo(UserInfo.builder().nickName("nickname2").build()).build();
+        userToBlock = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId3").build())
+                .userInfo(UserInfo.builder().nickName("nickname3").build()).build();
         userRepository.save(user1);
         userRepository.save(user2);
         userRepository.save(userToBlock);
 
-        token1 = jwtTokenProvider.createJwtToken(user1.getUsername(), RoleType.USER.getCode());
+        token1 = jwtTokenProvider.createJwtToken(user1.getOAuthId(), RoleType.USER.getCode());
         redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getUsername(),
+                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getOAuthId(),
                         token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        JwtToken token2 = jwtTokenProvider.createJwtToken(user2.getUsername(), RoleType.USER.getCode());
+        JwtToken token2 = jwtTokenProvider.createJwtToken(user2.getOAuthId(), RoleType.USER.getCode());
 
         BlockUser blockUser = BlockUser.builder().fromUser(user1).toUser(userToBlock).build();
         blockUserRepository.save(blockUser);

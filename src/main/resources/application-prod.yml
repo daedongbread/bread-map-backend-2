@@ -22,8 +22,8 @@ spring:
           enabled: true
   servlet:
     multipart:
-      maxFileSize: 20MB
-      maxRequestSize: 20MB
+      maxFileSize: 10MB
+      maxRequestSize: 100MB
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -85,12 +85,17 @@ spring:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
+            user-name-attribute: sub
           apple:
             authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post
             token-uri: https://appleid.apple.com/auth/token
             jwk-set-uri: https://appleid.apple.com/auth/keys
             user-name-attribute: sub
+
+oauth:
+  google: ${GOOGLE_ID}
+  kakao: ${KAKAO_ID}
+  apple: ${APPLE_ID}
 
 management:
   endpoint:

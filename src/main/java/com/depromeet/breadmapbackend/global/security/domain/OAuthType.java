@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ProviderType {
+public enum OAuthType {
 
     GOOGLE("구글"),
     KAKAO("카카오"),

@@ -17,8 +17,8 @@ public class BlockUserDto {
     @Builder
     public BlockUserDto(User user, Integer reviewNum, Integer followerNum) {
         this.userId = user.getId();
-        this.userImage = user.getImage();
-        this.nickName = user.getNickName();
+        this.userImage = user.getUserInfo().getImage();
+        this.nickName = user.getUserInfo().getNickName();
         this.reviewNum = reviewNum;
         this.followerNum = followerNum;
     }

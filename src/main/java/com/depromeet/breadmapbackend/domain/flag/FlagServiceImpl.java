@@ -47,19 +47,19 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addFlag(String username, FlagRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void addFlag(String oAuthId, FlagRequest request) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(flagRepository.findByUserAndName(user, request.getName()).isPresent()) throw new DaedongException(DaedongStatus.FLAG_DUPLICATE_EXCEPTION);
         if(request.getColor().equals(FlagColor.GRAY)) throw new DaedongException(DaedongStatus.FLAG_COLOR_EXCEPTION);
 
         Flag flag = Flag.builder().user(user).name(request.getName()).color(request.getColor()).build();
         flagRepository.save(flag);
-        user.addFlag(flag);
+        user.getFlagList().add(flag);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateFlag(String username, Long flagId, FlagRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void updateFlag(String oAuthId, Long flagId, FlagRequest request) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
 
         if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
@@ -69,18 +69,18 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void removeFlag(String username, Long flagId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void removeFlag(String oAuthId, Long flagId) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
         if(flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요")) throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
 
-        user.removeFlag(flag);
+        user.getFlagList().remove(flag);
         flagRepository.delete(flag);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public FlagBakeryDto getBakeryByFlag(String username, Long flagId) { // TODO page?
-        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public FlagBakeryDto getBakeryByFlag(String oAuthId, Long flagId) { // TODO page?
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
         return FlagBakeryDto.builder().flag(flag)
                 .flagBakeryInfoList(
@@ -104,8 +104,8 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addBakeryToFlag(String username, Long flagId, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void addBakeryToFlag(String oAuthId, Long flagId, Long bakeryId) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
@@ -124,8 +124,8 @@ public class FlagServiceImpl implements FlagService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void removeBakeryToFlag(String username, Long flagId, Long bakeryId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void removeBakeryToFlag(String oAuthId, Long flagId, Long bakeryId) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findByUserAndId(user, flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         FlagBakery flagBakery = flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));

@@ -48,8 +48,8 @@ public class ReviewDto {
         @Builder
         public UserInfo(Review review, Integer reviewNum, Integer followerNum, Boolean isFollow, Boolean isMe) {
             this.userId = review.getUser().getId();
-            this.userImage = review.getUser().getImage();
-            this.nickName = review.getUser().getNickName();
+            this.userImage = review.getUser().getUserInfo().getImage();
+            this.nickName = review.getUser().getUserInfo().getNickName();
             this.reviewNum = reviewNum;
             this.followerNum = followerNum;
             this.isFollow = isFollow;

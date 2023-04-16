@@ -1,7 +1,10 @@
 package com.depromeet.breadmapbackend.domain.admin.user;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -39,7 +42,8 @@ class AdminUserControllerTest extends ControllerTest {
                 .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
                         token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
-        user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
     }
 
@@ -67,8 +71,8 @@ class AdminUserControllerTest extends ControllerTest {
                                 fieldWithPath("data.totalElements").description("전체 데이터 수"),
                                 fieldWithPath("data.totalPages").description("전체 페이지 수"),
                                 fieldWithPath("data.contents").description("유저 리스트"),
-                                fieldWithPath("data.contents.[].id").description("유저 고유 번호"),
-                                fieldWithPath("data.contents.[].username").description("유저 식별자"),
+                                fieldWithPath("data.contents.[].userId").description("유저 고유 번호"),
+                                fieldWithPath("data.contents.[].userOAuthId").description("유저 식별자"),
                                 fieldWithPath("data.contents.[].nickName").description("유저 닉네임"),
                                 fieldWithPath("data.contents.[].email").description("유저 이메일").optional(),
                                 fieldWithPath("data.contents.[].createdAt").description("유저 가입 날짜"),

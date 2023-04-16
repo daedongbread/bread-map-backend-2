@@ -4,8 +4,7 @@ import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminJoinRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminLoginRequest;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.domain.admin.dto.*;
-import com.depromeet.breadmapbackend.domain.user.dto.ReissueRequest;
-import org.springframework.http.ResponseEntity;
+import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

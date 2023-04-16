@@ -30,8 +30,8 @@ public class BakeryReportServiceImpl implements BakeryReportService {
     private final BakeryReportImageRepository bakeryReportImageRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryAddReport(String username, BakeryAddReportRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void bakeryAddReport(String oAuthId, BakeryAddReportRequest request) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         BakeryAddReport bakeryAddReport = BakeryAddReport.builder()
                 .name(request.getName()).location(request.getLocation()).content(request.getContent())
                 .user(user).build();
@@ -39,8 +39,8 @@ public class BakeryReportServiceImpl implements BakeryReportService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryUpdateReport(String username, Long bakeryId, BakeryUpdateReportRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void bakeryUpdateReport(String oAuthId, Long bakeryId, BakeryUpdateReportRequest request) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
                 .bakery(bakery).user(user).reason(BakeryUpdateReason.ETC).content(request.getContent()).build();
@@ -55,8 +55,8 @@ public class BakeryReportServiceImpl implements BakeryReportService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void bakeryReportImage(String username, Long bakeryId, BakeryReportImageRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void bakeryReportImage(String oAuthId, Long bakeryId, BakeryReportImageRequest request) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         if (request.getImages() != null && !request.getImages().isEmpty()) {

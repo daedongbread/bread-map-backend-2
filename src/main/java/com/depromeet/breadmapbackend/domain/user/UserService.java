@@ -6,11 +6,9 @@ import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.domain.user.dto.*;
 
 public interface UserService {
-    JwtToken reissue(ReissueRequest reissueRequest);
-    ProfileDto profile(String username, Long userId);
-    void updateNickName(String username, UpdateNickNameRequest request);
-    void logout(LogoutRequest reissueRequest);
+    ProfileDto profile(String oAuthId, Long userId);
+    void updateNickName(String oAuthId, UpdateNickNameRequest request);
 //    void deleteUser(String username);
-    AlarmDto getAlarmStatus(String username);
-    void alarmChange(String username, NoticeTokenRequest request);
+    AlarmDto getAlarmStatus(String oAuthId);
+    void alarmChange(String oAuthId, NoticeTokenRequest request);
 }

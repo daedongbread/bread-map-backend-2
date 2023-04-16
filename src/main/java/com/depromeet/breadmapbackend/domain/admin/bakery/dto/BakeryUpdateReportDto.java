@@ -26,7 +26,7 @@ public class BakeryUpdateReportDto {
     public BakeryUpdateReportDto(BakeryUpdateReport report) {
         this.reportId = report.getId();
         this.createdAt = report.getCreatedAt();
-        this.nickName = report.getUser().getNickName();
+        this.nickName = report.getUser().getUserInfo().getNickName();
         this.reason = report.getReason();
         this.content = report.getContent();
         this.imageList = report.getImages().stream().map(BakeryUpdateReportImage::getImage).collect(Collectors.toList());

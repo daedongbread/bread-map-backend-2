@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class NoticeTokenDeleteEvent {
-    private String username;
+    private String oAuthId;
     private String deviceToken;
 }

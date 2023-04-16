@@ -21,26 +21,26 @@ public class UserFollowController {
     @PostMapping("/follow")
     @ResponseStatus(HttpStatus.CREATED)
     public void follow(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) FollowRequest request) {
-        userFollowService.follow(username, request);
+            @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) FollowRequest request) {
+        userFollowService.follow(oAuthId, request);
     }
 
     @DeleteMapping("/follow")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFollowing(
-            @CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) FollowRequest request) {
-        userFollowService.unfollow(username, request);
+            @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) FollowRequest request) {
+        userFollowService.unfollow(oAuthId, request);
     }
 
     @GetMapping("/{userId}/follower")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<FollowUserDto>> followerList(@CurrentUser String username, @PathVariable Long userId) {
-        return new ApiResponse<>(userFollowService.followerList(username, userId));
+    public ApiResponse<List<FollowUserDto>> followerList(@CurrentUser String oAuthId, @PathVariable Long userId) {
+        return new ApiResponse<>(userFollowService.followerList(oAuthId, userId));
     }
 
     @GetMapping("/{userId}/following")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<FollowUserDto>> followingList(@CurrentUser String username, @PathVariable Long userId) {
-        return new ApiResponse<>(userFollowService.followingList(username, userId));
+    public ApiResponse<List<FollowUserDto>> followingList(@CurrentUser String oAuthId, @PathVariable Long userId) {
+        return new ApiResponse<>(userFollowService.followingList(oAuthId, userId));
     }
 }

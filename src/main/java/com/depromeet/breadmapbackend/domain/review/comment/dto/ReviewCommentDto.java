@@ -31,8 +31,8 @@ public class ReviewCommentDto {
         this.id = reviewComment.getId();
         if(reviewComment.getUser() != null) {
             this.userId = reviewComment.getUser().getId();
-            this.userImage = reviewComment.getUser().getImage();
-            this.nickName = reviewComment.getUser().getNickName();
+            this.userImage = reviewComment.getUser().getUserInfo().getImage();
+            this.nickName = reviewComment.getUser().getUserInfo().getNickName();
         }
         else {
             this.userId = null;
@@ -44,7 +44,7 @@ public class ReviewCommentDto {
         else {
             ReviewComment parent = reviewComment.getParent();
             if(parent.getUser() == null) this.commentNickName = null;
-            else this.commentNickName = reviewComment.getParent().getUser().getNickName();
+            else this.commentNickName = reviewComment.getParent().getUser().getUserInfo().getNickName();
         }
 
         this.content = reviewComment.getContent();

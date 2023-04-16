@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface FlagService {
     List<FlagDto> getFlags(Long userId);
-    void addFlag(String username, FlagRequest request);
-    void updateFlag(String username, Long flagId, FlagRequest request);
-    void removeFlag(String username, Long flagId);
-    FlagBakeryDto getBakeryByFlag(String username, Long flagId);
-    void addBakeryToFlag(String username, Long flagId, Long bakeryId);
-    void removeBakeryToFlag(String username, Long flagId, Long bakeryId);
+    void addFlag(String oAuthId, FlagRequest request);
+    void updateFlag(String oAuthId, Long flagId, FlagRequest request);
+    void removeFlag(String oAuthId, Long flagId);
+    FlagBakeryDto getBakeryByFlag(String oAuthId, Long flagId);
+    void addBakeryToFlag(String oAuthId, Long flagId, Long bakeryId);
+    void removeBakeryToFlag(String oAuthId, Long flagId, Long bakeryId);
 }
