@@ -59,6 +59,6 @@ public class AdminController {
     @PostMapping("/test")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<JwtToken> testToken() {
-        return new ApiResponse<>(jwtTokenProvider.createTestJwtToken("Deadong01", RoleType.ADMIN.getCode()));
+        return new ApiResponse<>(adminService.testToken("Deadong01", RoleType.ADMIN));
     }
 }

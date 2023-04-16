@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.admin;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminJoinRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminLoginRequest;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.domain.admin.dto.*;
 import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
@@ -15,4 +16,5 @@ public interface AdminService {
     JwtToken reissue(ReissueRequest reissueRequest);
     AdminBarDto getAdminBar();
     AdminImageDto uploadImage(MultipartFile image) throws IOException;
+    JwtToken testToken(String o, RoleType roleType);
 }

@@ -12,7 +12,7 @@ public class OIDCPublicKeysDto {
 
     @Getter
     @NoArgsConstructor
-    public class OIDCPublicKeyDto {
+    public static class OIDCPublicKeyDto {
         private String kid;
         private String n;
         private String e;
