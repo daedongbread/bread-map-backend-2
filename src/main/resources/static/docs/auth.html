@@ -490,12 +490,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/auth/valid HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 57
+Content-Length: 52
 Host: localhost:8080
 
 {
-  "idToken" : "oAuthId1",
-  "oauthType" : "GOOGLE"
+  "type" : "GOOGLE",
+  "idToken" : "oAuthId1"
 }</code></pre>
 </div>
 </div>
@@ -521,7 +521,7 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oauthType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idToken 프로바이더 (GOOGLE, KAKAO, APPLE)</p></td>
@@ -596,12 +596,12 @@ Content-Length: 21
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 57
+Content-Length: 52
 Host: localhost:8080
 
 {
-  "idToken" : "oAuthId1",
-  "oauthType" : "GOOGLE"
+  "type" : "GOOGLE",
+  "idToken" : "oAuthId1"
 }</code></pre>
 </div>
 </div>
@@ -627,7 +627,7 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oauthType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idToken 프로바이더 (GOOGLE, KAKAO, APPLE)</p></td>
@@ -657,14 +657,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 415
+Content-Length: 416
 
 {
   "data" : {
     "userId" : 33,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjI2OTk0LCJleHAiOjE2ODE2Mjc1OTR9.vCa4ypzOmcxiHitkXQAOi8H3I_PI7w2TjHvDDc9BblM",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4MzY1OTR9.W_eC0oL5gY23Ng8qVP9AiUKH2TA-c9dv88T4JJuEbqo",
-    "accessTokenExpiredDate" : 600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcxLCJleHAiOjE2ODE2NDExNzF9.j0IvOUfwxYGUAZ3N-zLahWdcIoPRFvI__2svbWxYrQg",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzF9.s3BjFQGEL8gm1VORfsLzDGRyJyhJzHChzbDxq8-_JCQ",
+    "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
 </div>
@@ -722,15 +722,15 @@ Content-Length: 415
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/register HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 182
+Content-Length: 177
 Host: localhost:8080
 
 {
+  "type" : "GOOGLE",
   "idToken" : "oAuthId1",
   "isTermsOfServiceAgreed" : true,
   "isPersonalInfoCollectionAgreed" : true,
-  "isMarketingInfoReceptionAgreed" : false,
-  "oauthType" : "GOOGLE"
+  "isMarketingInfoReceptionAgreed" : false
 }</code></pre>
 </div>
 </div>
@@ -756,7 +756,7 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oauthType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idToken 프로바이더 (GOOGLE, KAKAO, APPLE)</p></td>
@@ -804,14 +804,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 415
+Content-Length: 416
 
 {
   "data" : {
     "userId" : 32,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjI2OTk0LCJleHAiOjE2ODE2Mjc1OTR9.vCa4ypzOmcxiHitkXQAOi8H3I_PI7w2TjHvDDc9BblM",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4MzY1OTR9.W_eC0oL5gY23Ng8qVP9AiUKH2TA-c9dv88T4JJuEbqo",
-    "accessTokenExpiredDate" : 600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcwLCJleHAiOjE2ODE2NDExNzB9.fBwa6OQwrvAm5DVfzeDcKG9QtBYttw5_cltpYdPb98o",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzB9.LvnIqwGdOdCYzAU7EhcFm5IFUd2w7_juvajvOSY289k",
+    "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
 </div>
@@ -873,8 +873,8 @@ Content-Length: 332
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjI2OTk0LCJleHAiOjE2ODE2Mjc1OTR9.vCa4ypzOmcxiHitkXQAOi8H3I_PI7w2TjHvDDc9BblM",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4MzY1OTR9.W_eC0oL5gY23Ng8qVP9AiUKH2TA-c9dv88T4JJuEbqo"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcxLCJleHAiOjE2ODE2NDExNzF9.j0IvOUfwxYGUAZ3N-zLahWdcIoPRFvI__2svbWxYrQg",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzF9.s3BjFQGEL8gm1VORfsLzDGRyJyhJzHChzbDxq8-_JCQ"
 }</code></pre>
 </div>
 </div>
@@ -930,14 +930,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 415
+Content-Length: 416
 
 {
   "data" : {
     "userId" : 34,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjI2OTk0LCJleHAiOjE2ODE2Mjc1OTR9.vCa4ypzOmcxiHitkXQAOi8H3I_PI7w2TjHvDDc9BblM",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4MzY1OTR9.W_eC0oL5gY23Ng8qVP9AiUKH2TA-c9dv88T4JJuEbqo",
-    "accessTokenExpiredDate" : 600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcxLCJleHAiOjE2ODE2NDExNzF9.j0IvOUfwxYGUAZ3N-zLahWdcIoPRFvI__2svbWxYrQg",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzF9.s3BjFQGEL8gm1VORfsLzDGRyJyhJzHChzbDxq8-_JCQ",
+    "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
 </div>
@@ -994,14 +994,14 @@ Content-Length: 415
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjI2OTk0LCJleHAiOjE2ODE2Mjc1OTR9.vCa4ypzOmcxiHitkXQAOi8H3I_PI7w2TjHvDDc9BblM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcwLCJleHAiOjE2ODE2NDExNzB9.fBwa6OQwrvAm5DVfzeDcKG9QtBYttw5_cltpYdPb98o
 Accept: application/json
 Content-Length: 367
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjI2OTk0LCJleHAiOjE2ODE2Mjc1OTR9.vCa4ypzOmcxiHitkXQAOi8H3I_PI7w2TjHvDDc9BblM",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4MzY1OTR9.W_eC0oL5gY23Ng8qVP9AiUKH2TA-c9dv88T4JJuEbqo",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcwLCJleHAiOjE2ODE2NDExNzB9.fBwa6OQwrvAm5DVfzeDcKG9QtBYttw5_cltpYdPb98o",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzB9.LvnIqwGdOdCYzAU7EhcFm5IFUd2w7_juvajvOSY289k",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>
@@ -1097,7 +1097,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-04-13 20:13:48 +0900
+Last updated 2023-04-16 16:09:12 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequest {
-    private OAuthType oAuthType;
+    private OAuthType type; // TODO
     @NotBlank(message = "ID Token은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private String idToken;
 }

@@ -42,6 +42,7 @@ public class User extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isAlarmOn = Boolean.FALSE;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flag> flagList = new ArrayList<>();
 

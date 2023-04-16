@@ -13,6 +13,7 @@ import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomJWTKeyProperties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.global.S3Uploader;
@@ -113,5 +114,13 @@ public class AdminServiceImpl implements AdminService {
 
         imageRepository.save(Image.builder().hashValue(hashValue).build());
         return AdminImageDto.builder().imagePath(s3Uploader.upload(image, imagePath)).build();
+    }
+
+    public JwtToken testToken(String o, RoleType roleType) {
+        JwtToken testJwtToken = jwtTokenProvider.createTestJwtToken(o, roleType.getCode());
+        redisTemplate.opsForValue()
+                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + 1,
+                        testJwtToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+        return testJwtToken;
     }
 }

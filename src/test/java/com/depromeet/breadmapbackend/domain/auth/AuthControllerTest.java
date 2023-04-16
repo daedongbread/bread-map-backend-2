@@ -66,7 +66,7 @@ class AuthControllerTest extends ControllerTest {
     @Test
     void checkToLoginOrRegister() throws Exception {
         String object = objectMapper.writeValueAsString(LoginRequest.builder()
-                .oAuthType(OAuthType.GOOGLE).idToken("oAuthId1").build());
+                .type(OAuthType.GOOGLE).idToken("oAuthId1").build());
 
         given(authService.checkToLoginOrRegister(any())).willReturn(Boolean.TRUE);
 
@@ -79,7 +79,7 @@ class AuthControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("oauthType").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
+                                fieldWithPath("type").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
                                 fieldWithPath("idToken").description("idToken")
                         ),
                         responseFields(
@@ -92,7 +92,7 @@ class AuthControllerTest extends ControllerTest {
     @Test
     void login() throws Exception {
         String object = objectMapper.writeValueAsString(LoginRequest.builder()
-                .oAuthType(OAuthType.GOOGLE).idToken("oAuthId1").build());
+                .type(OAuthType.GOOGLE).idToken("oAuthId1").build());
 
         given(authService.login(any())).willReturn(token);
 
@@ -105,7 +105,7 @@ class AuthControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("oauthType").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
+                                fieldWithPath("type").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
                                 fieldWithPath("idToken").description("idToken")
                         ),
                         responseFields(
@@ -121,7 +121,7 @@ class AuthControllerTest extends ControllerTest {
     @Test
     void register() throws Exception {
         String object = objectMapper.writeValueAsString(RegisterRequest.builder()
-                .oAuthType(OAuthType.GOOGLE).idToken("oAuthId1")
+                .type(OAuthType.GOOGLE).idToken("oAuthId1")
                 .isTermsOfServiceAgreed(Boolean.TRUE).isPersonalInfoCollectionAgreed(Boolean.TRUE)
                 .isMarketingInfoReceptionAgreed(Boolean.FALSE).build());
 
@@ -136,7 +136,7 @@ class AuthControllerTest extends ControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("oauthType").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
+                                fieldWithPath("type").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
                                 fieldWithPath("idToken").description("idToken"),
                                 fieldWithPath("isTermsOfServiceAgreed").description("서비스 이용약관 동의 여부 (반드시 True)"),
                                 fieldWithPath("isPersonalInfoCollectionAgreed").description("개인정보 수집 및 이용 동의 여부 (반드시 True)"),
