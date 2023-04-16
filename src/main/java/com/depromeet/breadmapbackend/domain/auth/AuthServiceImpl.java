@@ -53,15 +53,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public Boolean checkToLoginOrRegister(LoginRequest request) {
-        String sub = oidcProvider.verifyToken(request.getOAuthType(), request.getIdToken()).getSubject();
-        return userRepository.findByOAuthId(request.getOAuthType().getCode() + "_" + sub).isPresent();
+        String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
+        return userRepository.findByOAuthId(request.getType().getCode() + "_" + sub).isPresent();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public JwtToken login(LoginRequest request) {
-        String sub = oidcProvider.verifyToken(request.getOAuthType(), request.getIdToken()).getSubject();
-        String oAuthId = getOAuthId(request.getOAuthType(), sub);
-
+        String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
+//        log.info("sub : " + sub);
+        String oAuthId = getOAuthId(request.getType(), sub);
+//        log.info("A");
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(user.getIsBlock()) throw new DaedongException(DaedongStatus.BLOCK_USER);
 
@@ -74,15 +75,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken register(RegisterRequest request) {
-        Claims body = oidcProvider.verifyToken(request.getOAuthType(), request.getIdToken());
-        OIDCUserInfo oidcUserInfo = OIDCUserInfoFactory.getOIDCUserInfo(request.getOAuthType(), body);
-        String oAuthId = getOAuthId(request.getOAuthType(), oidcUserInfo.getOAuthId());
+        Claims body = oidcProvider.verifyToken(request.getType(), request.getIdToken());
+        OIDCUserInfo oidcUserInfo = OIDCUserInfoFactory.getOIDCUserInfo(request.getType(), body);
+        String oAuthId = getOAuthId(request.getType(), oidcUserInfo.getOAuthId());
 
         if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getDelete() + ":" + oAuthId)))
             throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
 
         if (userRepository.findByOAuthId(oAuthId).isEmpty()) {
-            createUser(oidcUserInfo, request.getOAuthType(), request.getIsMarketingInfoReceptionAgreed());
+            createUser(oidcUserInfo, request.getType(), request.getIsMarketingInfoReceptionAgreed());
         }
         return jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
     }

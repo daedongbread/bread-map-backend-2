@@ -55,7 +55,7 @@ public class OIDCProvider {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getRSAPublicKey(oidcPublicKey.getN(), oidcPublicKey.getE()))
-                    .requireAudience(clientId)
+//                    .requireAudience(clientId) TODO
                     .build()
                     .parseClaimsJws(idToken).getBody();
         } catch (ExpiredJwtException e) {
