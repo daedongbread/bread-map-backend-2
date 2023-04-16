@@ -13,6 +13,11 @@ env:
   CONTAINER_NAME: api-server-tmp
   ECS_SERVICE: tmp-api-server-service
   ECS_CLUSTER: tmp-cluster
+  
+permissions:
+  id-token: write
+  contents: read
+  actions: read
 
 jobs:
   build-and-push:
