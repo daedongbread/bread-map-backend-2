@@ -27,28 +27,28 @@ public class ReviewCommentController {
     @PostMapping("/{reviewId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void addReviewComment(
-            @CurrentUser String username, @PathVariable Long reviewId,
+            @CurrentUser String oAuthId, @PathVariable Long reviewId,
             @RequestBody @Validated(ValidationSequence.class) ReviewCommentRequest request) {
-        reviewCommentService.addReviewComment(username, reviewId, request);
+        reviewCommentService.addReviewComment(oAuthId, reviewId, request);
     }
 
     @DeleteMapping("/{reviewId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeReviewComment(@CurrentUser String username, @PathVariable Long reviewId, @PathVariable Long commentId) {
-        reviewCommentService.removeReviewComment(username, reviewId, commentId);
+    public void removeReviewComment(@CurrentUser String oAuthId, @PathVariable Long reviewId, @PathVariable Long commentId) {
+        reviewCommentService.removeReviewComment(oAuthId, reviewId, commentId);
     }
 
     // TODO 댓글 신고
 
     @PostMapping("/{reviewId}/comments/{commentId}/like")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewCommentLike(@CurrentUser String username, @PathVariable Long reviewId, @PathVariable Long commentId) {
-        reviewCommentService.reviewCommentLike(username, reviewId, commentId);
+    public void reviewCommentLike(@CurrentUser String oAuthId, @PathVariable Long reviewId, @PathVariable Long commentId) {
+        reviewCommentService.reviewCommentLike(oAuthId, reviewId, commentId);
     }
 
     @DeleteMapping("/{reviewId}/comments/{commentId}/unlike")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewCommentUnlike(@CurrentUser String username, @PathVariable Long reviewId, @PathVariable Long commentId) {
-        reviewCommentService.reviewCommentUnlike(username, reviewId, commentId);
+    public void reviewCommentUnlike(@CurrentUser String oAuthId, @PathVariable Long reviewId, @PathVariable Long commentId) {
+        reviewCommentService.reviewCommentUnlike(oAuthId, reviewId, commentId);
     }
 }

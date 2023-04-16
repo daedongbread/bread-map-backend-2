@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.global.exception;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.depromeet.breadmapbackend.global.infra.feign.exception.SgisFeignException;
+import com.depromeet.breadmapbackend.global.infra.feign.exception.FeignException;
 import com.depromeet.breadmapbackend.global.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -146,6 +147,16 @@ public class ExceptionAdvice {
     }
 
     /*
+     * 업로드된 파일이 크기 제한을 초과할 경우
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    public ErrorResponse maxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse(413, "upload limit exception");
+    }
+
+    /*
      * JWT Signature Exception
      */
     @ExceptionHandler(SignatureException.class)
@@ -178,9 +189,9 @@ public class ExceptionAdvice {
     /**
      * Sgis Feign Exception
      */
-    @ExceptionHandler(SgisFeignException.class)
+    @ExceptionHandler(FeignException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse sgisFeignException(SgisFeignException e) {
+    public ErrorResponse sgisFeignException(FeignException e) {
         log.error("message : \"{}\"", e.getMessage());
         return new ErrorResponse(400, "SGIS Exception");
     }

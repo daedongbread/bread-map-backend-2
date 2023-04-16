@@ -1,7 +1,10 @@
 package com.depromeet.breadmapbackend.domain.user.follow;
 
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.domain.user.follow.dto.FollowRequest;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -32,16 +35,18 @@ class UserFollowControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setUp() {
-        user1 = User.builder().username("testUserName1").nickName("testNickName1").roleType(RoleType.USER).build();
-        user2 = User.builder().username("testUserName2").nickName("testNickName2").roleType(RoleType.USER).build();
+        user1 = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
+        user2 = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId2").build())
+                .userInfo(UserInfo.builder().nickName("nickname2").build()).build();
         userRepository.save(user1);
         userRepository.save(user2);
 
-        token1 = jwtTokenProvider.createJwtToken(user1.getUsername(), RoleType.USER.getCode());
+        token1 = jwtTokenProvider.createJwtToken(user1.getOAuthId(), RoleType.USER.getCode());
         redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getUsername(),
+                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getOAuthId(),
                         token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        token2 = jwtTokenProvider.createJwtToken(user2.getUsername(), RoleType.USER.getCode());
+        token2 = jwtTokenProvider.createJwtToken(user2.getOAuthId(), RoleType.USER.getCode());
 
         Follow follow1 = Follow.builder().fromUser(user1).toUser(user2).build();
         Follow follow2 = Follow.builder().fromUser(user2).toUser(user1).build();

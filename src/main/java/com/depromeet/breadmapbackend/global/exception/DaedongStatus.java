@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum DaedongStatus {
     // 400 BAD REQUEST
+    OIDC_ISSUER_WRONG(BAD_REQUEST, 40000, "wrong oidc issuer"), // OIDC issuer가 구글, 카카오, 애플이 아닐 때
     BLOCK_MYSELF(BAD_REQUEST, 40012, "cannot block myself"), // 나를 차단/차단 해제할 때
     BAKERY_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40020, "invalid bakery sort type"), // 빵집 정렬 조건이 틀렸을 때
     PRODUCT_ADD_REPORT_IMAGE_NOT_MAIN_EXCEPTION(BAD_REQUEST, 40030, "product add report image is not main"), // 상품 추가 제보 이미지가 메인이 아닐 때
@@ -34,6 +35,7 @@ public enum DaedongStatus {
     // 401 UNAUTHORIZED
     CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
     TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"), // access or refresh token이 유효하지 않을 때
+//    OIDC_TOKEN_EXPIRED_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"),
 
     // 403 FORBIDDEN
     CUSTOM_ACCESS_DENIED(FORBIDDEN, 40300, "access denied"), // 권한이 없는 리소스를 요청한 경우 발생 시키는 예외

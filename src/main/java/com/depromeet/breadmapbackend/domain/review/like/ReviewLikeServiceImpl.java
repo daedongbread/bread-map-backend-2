@@ -27,10 +27,10 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(rollbackFor = Exception.class)
-    public void reviewLike(String username, Long reviewId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void reviewLike(String oAuthId, Long reviewId) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+                .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new DaedongException(DaedongStatus.REVIEW_LIKE_DUPLICATE_EXCEPTION);
 
@@ -42,10 +42,10 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void reviewUnlike(String username, Long reviewId) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public void reviewUnlike(String oAuthId, Long reviewId) {
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Review review = reviewRepository.findById(reviewId)
-                .filter(r -> r.getStatus().equals(ReviewStatus.UNBLOCK)).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+                .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review)
                 .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_UNLIKE_DUPLICATE_EXCEPTION));

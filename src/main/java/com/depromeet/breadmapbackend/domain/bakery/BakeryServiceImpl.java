@@ -48,14 +48,14 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> getBakeryList(
-            String username, BakerySortType sortBy, boolean filterBy,
+            String oAuthId, BakerySortType sortBy, boolean filterBy,
             Double latitude, Double longitude, Double latitudeDelta, Double longitudeDelta) {
 
         Comparator<BakeryCardDto> comparing;
         if(sortBy.equals(BakerySortType.DISTANCE)) comparing = Comparator.comparing(BakeryCardDto::getDistance);
         else if(sortBy.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
-        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         if (!filterBy) {
             return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
@@ -115,8 +115,8 @@ public class BakeryServiceImpl implements BakeryService {
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public BakeryDto getBakery(String username, Long bakeryId) {
-        User me = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+    public BakeryDto getBakery(String oAuthId, Long bakeryId) {
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         bakeryViewRepository.findByBakery(bakery)
                 .orElseGet(() -> {

@@ -42,7 +42,7 @@ public class ProductAddReportDto {
         this.createdAt = report.getCreatedAt();
         this.name = report.getName();
         this.price = report.getPrice();
-        this.nickName = report.getUser().getNickName();
+        this.nickName = report.getUser().getUserInfo().getNickName();
         this.imageList = report.getImages().stream().map(ProductAddReportImageDto::new).collect(Collectors.toList());
     }
 }

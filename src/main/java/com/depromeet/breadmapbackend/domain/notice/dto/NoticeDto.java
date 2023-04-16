@@ -27,7 +27,7 @@ public class NoticeDto {
         this.noticeId = notice.getId();
         this.image = image;
         this.fromUserId = notice.getFromUser().getId();
-        this.fromUserNickName = notice.getFromUser().getNickName();
+        this.fromUserNickName = notice.getFromUser().getUserInfo().getNickName();
         this.title = notice.getTitle();
         this.contentId = notice.getContentId();
         this.content = notice.getContent();

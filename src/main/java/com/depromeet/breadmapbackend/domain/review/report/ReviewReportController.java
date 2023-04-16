@@ -17,8 +17,8 @@ public class ReviewReportController {
     @PostMapping("/{reviewId}/report")
     @ResponseStatus(HttpStatus.CREATED)
     public void reviewReport(
-            @CurrentUser String username, @PathVariable Long reviewId,
+            @CurrentUser String oAuthId, @PathVariable Long reviewId,
             @RequestBody @Validated(ValidationSequence.class) ReviewReportRequest request) {
-        reviewReportService.reviewReport(username, reviewId, request);
+        reviewReportService.reviewReport(oAuthId, reviewId, request);
     }
 }

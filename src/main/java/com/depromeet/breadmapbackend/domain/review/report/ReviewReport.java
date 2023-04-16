@@ -4,10 +4,7 @@ import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,7 +13,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ReviewReport extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -38,16 +37,7 @@ public class ReviewReport extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isBlock; // TODO
-
-    @Builder
-    public ReviewReport(User reporter, Review review, ReviewReportReason reason, String content) {
-        this.reporter = reporter;
-        this.review = review;
-        this.reason = reason;
-        this.content = content;
-        this.isBlock = false;
-    }
+    private Boolean isBlock = Boolean.FALSE;
 
     public void changeBlock() {
         this.isBlock = !this.isBlock;

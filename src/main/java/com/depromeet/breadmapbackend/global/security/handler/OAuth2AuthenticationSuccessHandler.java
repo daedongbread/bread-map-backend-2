@@ -3,7 +3,6 @@ package com.depromeet.breadmapbackend.global.security.handler;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.domain.user.UserStatus;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.domain.UserPrincipal;
@@ -36,14 +35,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        String username = userPrincipal.getUsername();
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(user.getStatus().equals(UserStatus.BLOCK)) throw new DaedongException(DaedongStatus.BLOCK_USER);
+        String oAuthId = userPrincipal.getOAuthId();
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if(user.getIsBlock()) throw new DaedongException(DaedongStatus.BLOCK_USER);
         RoleType roleType = hasAuthority(userPrincipal.getAuthorities(), RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
-        JwtToken jwtToken = jwtTokenProvider.createJwtToken(username, roleType.getCode());
+        JwtToken jwtToken = jwtTokenProvider.createJwtToken(oAuthId, roleType.getCode());
         redisTemplate.opsForValue()
-                .set(REDIS_KEY_REFRESH + ":" + username,
+                .set(REDIS_KEY_REFRESH + ":" + oAuthId,
                         jwtToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         ObjectMapper objectMapper = new ObjectMapper();

@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.global.infra.feign.dto;
+package com.depromeet.breadmapbackend.global.infra.feign.sgis.dto;
 
 import lombok.Getter;
 

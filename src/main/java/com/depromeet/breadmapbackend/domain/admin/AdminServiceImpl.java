@@ -6,11 +6,9 @@ import com.depromeet.breadmapbackend.domain.bakery.*;
 import com.depromeet.breadmapbackend.domain.bakery.report.*;
 import com.depromeet.breadmapbackend.domain.image.Image;
 import com.depromeet.breadmapbackend.domain.image.ImageRepository;
-import com.depromeet.breadmapbackend.domain.image.dto.ImageDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.converter.FileConverter;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomJWTKeyProperties;
@@ -19,14 +17,10 @@ import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.domain.admin.dto.*;
-import com.depromeet.breadmapbackend.domain.user.dto.ReissueRequest;
+import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j

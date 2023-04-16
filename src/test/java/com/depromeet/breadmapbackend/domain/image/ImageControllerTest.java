@@ -1,6 +1,9 @@
 package com.depromeet.breadmapbackend.domain.image;
 
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -32,9 +35,11 @@ class ImageControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() {
-        User user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
-        token = jwtTokenProvider.createJwtToken(user.getUsername(), user.getRoleType().getCode());
+        System.out.println("user.getRoleType().getCode() = " + user.getRoleType().getCode());
+        token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
     }
 
 

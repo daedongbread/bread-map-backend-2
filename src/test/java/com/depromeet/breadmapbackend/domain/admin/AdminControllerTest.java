@@ -1,24 +1,18 @@
 package com.depromeet.breadmapbackend.domain.admin;
 
-import com.depromeet.breadmapbackend.domain.admin.Admin;
-import com.depromeet.breadmapbackend.domain.admin.bakery.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
 import com.depromeet.breadmapbackend.domain.bakery.*;
-import com.depromeet.breadmapbackend.domain.bakery.report.*;
-import com.depromeet.breadmapbackend.global.ImageType;
-import com.depromeet.breadmapbackend.domain.bakery.product.Product;
-import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
-import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImage;
-import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.*;
-import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReport;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportReason;
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
-import com.depromeet.breadmapbackend.domain.user.dto.ReissueRequest;
+import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +21,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -50,14 +43,15 @@ class AdminControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        Admin admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
+        Admin admin = Admin.builder().email("Deadong01").password(passwordEncoder.encode("password")).build();
         adminRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
         redisTemplate.opsForValue()
                 .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
                         token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
-        User user = User.builder().nickName("nickname").roleType(RoleType.USER).username("username").build();
+        User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+                .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
 
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
@@ -92,7 +86,7 @@ class AdminControllerTest extends ControllerTest {
     @Test
     void adminLogin() throws Exception {
         String object = objectMapper.writeValueAsString(AdminLoginRequest.builder()
-                .email("email").password("password").build());
+                .email("Deadong01").password("password").build());
 
         ResultActions result = mockMvc.perform(post("/v1/admin/login")
                 .content(object)
@@ -182,6 +176,24 @@ class AdminControllerTest extends ControllerTest {
                                 partWithName("image").description("업로드 이미지")),
                         responseFields(
                                 fieldWithPath("data.imagePath").description("업로드된 이미지"))
+                ))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void testToken() throws Exception {
+        ResultActions result = mockMvc.perform(post("/v1/admin/test"));
+
+        result.andDo(print())
+                .andDo(document("v1/admin/test",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("data.userId").description("유저 고유 번호"),
+                                fieldWithPath("data.accessToken").description("엑세스 토큰"),
+                                fieldWithPath("data.refreshToken").description("리프레시 토큰"),
+                                fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
+                        )
                 ))
                 .andExpect(status().isCreated());
     }

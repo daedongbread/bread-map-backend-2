@@ -26,7 +26,7 @@ public class AdminReportServiceImpl implements AdminReportService {
     @Transactional(rollbackFor = Exception.class)
     public void updateReviewStatus(Long reportId) {
         ReviewReport reviewReport = reviewReportRepository.findById(reportId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_REPORT_NOT_FOUND));
-        reviewReport.getReview().useChange();
+        reviewReport.getReview().changeBlock();
         reviewReport.changeBlock();
     }
 }

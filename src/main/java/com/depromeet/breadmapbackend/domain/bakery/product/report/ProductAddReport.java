@@ -18,7 +18,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductAddReport extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,7 +41,7 @@ public class ProductAddReport extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isNew;
+    private Boolean isNew = Boolean.TRUE;
 
     @Builder
     public ProductAddReport(Bakery bakery, User user, String name, String price) {
@@ -48,7 +49,6 @@ public class ProductAddReport extends BaseEntity {
         this.user = user;
         this.name = name;
         this.price = price;
-        this.isNew = true;
     }
 
     public void unNew() {

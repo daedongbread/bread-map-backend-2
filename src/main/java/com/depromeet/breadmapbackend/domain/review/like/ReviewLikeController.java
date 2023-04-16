@@ -13,13 +13,13 @@ public class ReviewLikeController {
 
     @PostMapping("/{reviewId}/like")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reviewLike(@CurrentUser String username, @PathVariable Long reviewId) {
-        reviewLikeService.reviewLike(username, reviewId);
+    public void reviewLike(@CurrentUser String oAuthId, @PathVariable Long reviewId) {
+        reviewLikeService.reviewLike(oAuthId, reviewId);
     }
 
     @DeleteMapping("/{reviewId}/unlike")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void reviewUnlike(@CurrentUser String username, @PathVariable Long reviewId) {
-        reviewLikeService.reviewUnlike(username, reviewId);
+    public void reviewUnlike(@CurrentUser String oAuthId, @PathVariable Long reviewId) {
+        reviewLikeService.reviewUnlike(oAuthId, reviewId);
     }
 }

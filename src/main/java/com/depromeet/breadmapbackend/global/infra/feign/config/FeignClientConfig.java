@@ -1,13 +1,13 @@
 package com.depromeet.breadmapbackend.global.infra.feign.config;
 
-import com.depromeet.breadmapbackend.global.infra.feign.exception.SgisFeignError;
+import com.depromeet.breadmapbackend.global.infra.feign.exception.FeignError;
 import feign.Logger;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SgisClientConfig {
+public class FeignClientConfig {
     @Bean
     Logger.Level githubFeignClientLoggerLevel() {
         return Logger.Level.FULL;
@@ -15,6 +15,6 @@ public class SgisClientConfig {
 
     @Bean
     public ErrorDecoder errorDecoder() {
-        return new SgisFeignError();
+        return new FeignError();
     }
 }

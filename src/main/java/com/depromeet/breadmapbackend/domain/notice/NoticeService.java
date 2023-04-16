@@ -12,12 +12,12 @@ import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.google.firebase.messaging.FirebaseMessagingException;
 
 public interface NoticeService {
-//    void addNoticeToken(String username, NoticeTokenRequest request);
+//    void addNoticeToken(String oAuthId, NoticeTokenRequest request);
 //    void deleteNoticeToken(NoticeTokenDeleteEvent event);
     void addFollowNotice(FollowEvent event) throws FirebaseMessagingException;
     void addReviewCommentNotice(ReviewCommentEvent event) throws FirebaseMessagingException;
     void addReviewLikeNotice(ReviewLikeEvent event) throws FirebaseMessagingException;
     void addRecommentNotice(RecommentEvent event) throws FirebaseMessagingException;
     void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) throws FirebaseMessagingException;
-    PageResponseDto<NoticeDto> getNoticeList(String username, NoticeDayType type, Long lastId, int page);
+    PageResponseDto<NoticeDto> getNoticeList(String oAuthId, NoticeDayType type, Long lastId, int page);
 }

@@ -29,38 +29,38 @@ public class FlagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addFlag(@CurrentUser String username, @RequestBody @Validated(ValidationSequence.class) FlagRequest request) {
-        flagService.addFlag(username, request);
+    public void addFlag(@CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) FlagRequest request) {
+        flagService.addFlag(oAuthId, request);
     }
 
     @PatchMapping("/{flagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateFlag(
-            @CurrentUser String username, @PathVariable Long flagId, @RequestBody @Validated(ValidationSequence.class) FlagRequest request) {
-        flagService.updateFlag(username, flagId, request);
+            @CurrentUser String oAuthId, @PathVariable Long flagId, @RequestBody @Validated(ValidationSequence.class) FlagRequest request) {
+        flagService.updateFlag(oAuthId, flagId, request);
     }
 
     @DeleteMapping("/{flagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeFlag(@CurrentUser String username, @PathVariable Long flagId) {
-        flagService.removeFlag(username, flagId);
+    public void removeFlag(@CurrentUser String oAuthId, @PathVariable Long flagId) {
+        flagService.removeFlag(oAuthId, flagId);
     }
 
     @GetMapping("/{flagId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<FlagBakeryDto> getBakeryByFlag(@CurrentUser String username, @PathVariable Long flagId) {
-        return new ApiResponse<>(flagService.getBakeryByFlag(username, flagId));
+    public ApiResponse<FlagBakeryDto> getBakeryByFlag(@CurrentUser String oAuthId, @PathVariable Long flagId) {
+        return new ApiResponse<>(flagService.getBakeryByFlag(oAuthId, flagId));
     }
 
     @PostMapping("/{flagId}/bakeries/{bakeryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @PathVariable Long bakeryId) {
-        flagService.addBakeryToFlag(username, flagId, bakeryId);
+    public void addBakeryToFlag(@CurrentUser String oAuthId, @PathVariable Long flagId, @PathVariable Long bakeryId) {
+        flagService.addBakeryToFlag(oAuthId, flagId, bakeryId);
     }
 
     @DeleteMapping("/{flagId}/bakeries/{bakeryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeBakeryToFlag(@CurrentUser String username, @PathVariable Long flagId, @PathVariable Long bakeryId) {
-        flagService.removeBakeryToFlag(username, flagId, bakeryId);
+    public void removeBakeryToFlag(@CurrentUser String oAuthId, @PathVariable Long flagId, @PathVariable Long bakeryId) {
+        flagService.removeBakeryToFlag(oAuthId, flagId, bakeryId);
     }
 }

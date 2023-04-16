@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.global.security.service;
 
+import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
@@ -10,7 +12,7 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
-import com.depromeet.breadmapbackend.global.security.domain.ProviderType;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.domain.UserPrincipal;
 import com.depromeet.breadmapbackend.global.security.userinfo.OAuth2UserInfo;
@@ -37,8 +39,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
     private final UserRepository userRepository;
     private final FlagRepository flagRepository;
     private final StringRedisTemplate redisTemplate;
-    private final NoticeTokenRepository noticeTokenRepository;
-    private final CustomAWSS3Properties customAwss3Properties;
+    private final CustomAWSS3Properties customAWSS3Properties;
     private final CustomRedisProperties customRedisProperties;
 
     @Override
@@ -47,31 +48,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
+        OAuthType oAuthType = OAuthType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, oAuth2User.getAttributes());
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuthType, oAuth2User.getAttributes());
 
-        String username = providerType.name() + "_" + oAuth2UserInfo.getUsername();
+        String oAuthId = oAuthType.name() + "_" + oAuth2UserInfo.getUsername();
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getDelete() + ":" + username)))
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getDelete() + ":" + oAuthId)))
             throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
 
         User user = null;
-        if (userRepository.findByUsername(username).isPresent()) {
-            user = userRepository.findByUsername(username).get();
-
-            if (flagRepository.findByUserAndName(user, "가고싶어요").isEmpty()) {
-                Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
-                flagRepository.save(wantToGo);
-                user.addFlag(wantToGo);
-            }
-            if (flagRepository.findByUserAndName(user, "가봤어요").isEmpty()) {
-                Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
-                flagRepository.save(alreadyGo);
-                user.addFlag(alreadyGo);
-            }
+        if (userRepository.findByOAuthId(oAuthId).isPresent()) {
+            user = userRepository.findByOAuthId(oAuthId).get();
         } else {
-            user = createUser(oAuth2UserInfo, providerType);
+            user = createUser(oAuth2UserInfo, oAuthType, true);
         }
 
         return UserPrincipal.create(user, oAuth2User.getAttributes()); // TODO
@@ -96,34 +86,35 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService { // OAuth
         return nickName;
     }
 
-    private User createUser(OAuth2UserInfo oAuth2UserInfo, ProviderType providerType) {
+    private User createUser(OAuth2UserInfo oAuth2UserInfo, OAuthType oAuthType, Boolean isMarketingInfoReceptionAgreed) {
         User user = User.builder()
-                .username(providerType.name() + "_" + oAuth2UserInfo.getUsername())
-                .nickName(createNickName())
-                .email(oAuth2UserInfo.getEmail())
-                .providerType(providerType)
-                .roleType(RoleType.USER)
-//                .image(oAuth2UserInfo.getImageUrl())
-                .image(customAwss3Properties.getCloudFront() + "/" +
-                        customAwss3Properties.getDefaultImage().getUser() + ".png")
+                .oAuthInfo(OAuthInfo.builder()
+                        .oAuthType(oAuthType)
+                        .oAuthId(oAuthType.name() + "_" + oAuth2UserInfo.getUsername()).build())
+                .userInfo(UserInfo.builder()
+                        .nickName(createNickName())
+                        .email(oAuth2UserInfo.getEmail())
+                        .image(customAWSS3Properties.getCloudFront() + "/" +
+                                customAWSS3Properties.getDefaultImage().getUser() + ".png").build())
+                .isMarketingInfoReceptionAgreed(isMarketingInfoReceptionAgreed)
                 .build();
         userRepository.save(user);
 
         if (flagRepository.findByUserAndName(user, "가고싶어요").isEmpty()) {
             Flag wantToGo = Flag.builder().user(user).name("가고싶어요").color(FlagColor.ORANGE).build();
             flagRepository.save(wantToGo);
-            user.addFlag(wantToGo);
+            user.getFlagList().add(wantToGo);
         }
         if (flagRepository.findByUserAndName(user, "가봤어요").isEmpty()) {
             Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
             flagRepository.save(alreadyGo);
-            user.addFlag(alreadyGo);
+            user.getFlagList().add(alreadyGo);
         }
         return user;
     }
 
 //    private User updateUser(User user, OAuth2UserInfo oAuth2UserInfo) {
-//        if (oAuth2UserInfo.getNickName() != null && !user.getUsername().equals(oAuth2UserInfo.getNickName())) {
+//        if (oAuth2UserInfo.getNickName() != null && !user.getOAuthId().equals(oAuth2UserInfo.getNickName())) {
 //            user.updateNickName(oAuth2UserInfo.getNickName());
 //        }
 
