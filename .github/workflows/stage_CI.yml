@@ -1,9 +1,9 @@
-name: Backend_CI
+name: STAGE_CI
 on:
   pull_request:
     branches:
-      - main
       - develop
+
 jobs:
   backend:
     name: CI with Gradle
