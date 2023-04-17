@@ -9,8 +9,8 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: stage-bread-map
-  ECS_TASK_DEFINITION: stage-ecs-api-server-task-definition
-  CONTAINER_NAME: stage-ecs-api-server-container
+  ECS_TASK_DEFINITION: stage-api-server-task-definition
+  CONTAINER_NAME: stage-api-server-container
   ECS_SERVICE: stage-api-server-service
   ECS_CLUSTER: stage-cluster
   
