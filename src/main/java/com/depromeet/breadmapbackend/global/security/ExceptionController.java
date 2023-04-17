@@ -14,27 +14,31 @@ import org.springframework.web.bind.annotation.*;
 public class ExceptionController {
     @GetMapping("/entryPoint")
     public ErrorResponse getEntrypointException() {
-        log.info("E");
+        log.info("RD success1");
         throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @PostMapping("/entryPoint")
     public ErrorResponse postEntrypointException() {
+        log.info("RD success2");
         throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @PutMapping("/entryPoint")
     public ErrorResponse putEntrypointException() {
+        log.info("RD success3");
         throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @PatchMapping("/entryPoint")
     public ErrorResponse patchEntrypointException() {
+        log.info("RD success4");
         throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 
     @DeleteMapping("/entryPoint")
     public ErrorResponse deleteEntrypointException() {
+        log.info("RD success5");
         throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
     }
 

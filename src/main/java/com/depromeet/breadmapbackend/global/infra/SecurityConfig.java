@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue", "/exception/**").permitAll()
+                .antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue", "/exception/entryPoint", "/exception/accessDenied").permitAll()
                 .antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test").permitAll()
                 .antMatchers("/h2-console/**", "/favicon.ico", "/actuator/health").permitAll()
                 .antMatchers("/v1/bakeries/**", "/v1/flags/**", "/v1/reviews/**", "/v1/users/**", "/v1/notices/**", "/v1/search/**", "/v1/images/**", "/v1/auth/**").hasAuthority(RoleType.USER.getCode())

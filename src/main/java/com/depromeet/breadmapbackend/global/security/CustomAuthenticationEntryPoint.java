@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.global.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -17,8 +18,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
-        log.info("D");
+            AuthenticationException authException) throws IOException, ServletException, ExpiredJwtException {
+        log.info("BEFORE RD");
         response.sendRedirect("/exception/entryPoint");
     }
 }
