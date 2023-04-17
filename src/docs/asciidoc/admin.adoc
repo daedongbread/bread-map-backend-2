@@ -38,7 +38,7 @@ operation::v1/admin/test[snippets='http-request,http-response,response-fields']
 == Admin Bakery APIs
 - 빵집 전체 조회 API
 - 빵집 상세 조회 API
-- 빵집 검색 API
+// - 빵집 검색 API
 - 빵집 위도 경도 조회 API
 - 빵집 추가 API
 - 빵집 수정 API
@@ -60,8 +60,8 @@ operation::v1/admin/bakery/all[snippets='http-request,request-headers,request-pa
 === 빵집 조회 API [GET]
 operation::v1/admin/bakery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
-=== 빵집 검색 API [GET]
-operation::v1/admin/bakery/search[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+// === 빵집 검색 API [GET]
+// operation::v1/admin/bakery/search[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === 빵집 위도 경도 조회 API [GET]
 operation::v1/admin/bakery/location[snippets='http-request,request-headers,request-parameters,http-response,response-fields']

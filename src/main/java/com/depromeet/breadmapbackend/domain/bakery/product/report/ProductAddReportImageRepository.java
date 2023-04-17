@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ProductAddReportImageRepository extends JpaRepository<ProductAddReportImage, Long> {
     boolean existsByBakeryAndIsNewIsTrue(Bakery bakery);
-    long countByBakeryAndIsRegisteredIsTrue(Bakery bakery);
+    Integer countByBakeryAndIsRegisteredIsTrue(Bakery bakery);
     Page<ProductAddReportImage> findPageByBakeryAndIsRegisteredIsTrue(Bakery bakery, Pageable pageable);
     Optional<ProductAddReportImage> findByImageAndProductAddReport(String image, ProductAddReport report);
     Optional<ProductAddReportImage> findByIdAndProductAddReport(Long id, ProductAddReport report);

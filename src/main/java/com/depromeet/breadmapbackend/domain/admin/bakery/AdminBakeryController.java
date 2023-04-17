@@ -9,16 +9,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/admin/bakeries")
 @RequiredArgsConstructor
 public class AdminBakeryController {
     private final AdminBakeryService adminBakeryService;
 
+    @GetMapping("/alarm-bar")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBakeryAlarmBar> getBakeryAlarmBar() {
+        return new ApiResponse<>(adminBakeryService.getBakeryAlarmBar());
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(@RequestParam int page) {
-        return new ApiResponse<>(adminBakeryService.getBakeryList(page));
+    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(
+            @RequestParam(required = false) List<AdminBakeryFilter> filterBy,
+            @RequestParam(required = false) String name, @RequestParam int page) {
+        return new ApiResponse<>(adminBakeryService.getBakeryList(filterBy, name, page));
     }
 
     @GetMapping("/{bakeryId}")
@@ -27,12 +37,12 @@ public class AdminBakeryController {
         return new ApiResponse<>(adminBakeryService.getBakery(bakeryId));
     }
 
-    @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
-            @RequestParam String name, @RequestParam int page) {
-        return new ApiResponse<>(adminBakeryService.searchBakeryList(name, page));
-    }
+//    @GetMapping("/search")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
+//            @RequestParam String name, @RequestParam int page) {
+//        return new ApiResponse<>(adminBakeryService.searchBakeryList(name, page));
+//    }
 
     @GetMapping("/location")
     @ResponseStatus(HttpStatus.OK)

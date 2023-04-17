@@ -152,6 +152,22 @@ class AdminBakeryControllerTest extends ControllerTest {
     }
 
     @Test
+    void getBakeryAlarmBar() throws Exception {
+        mockMvc.perform(get("/v1/admin/bakeries/alarm-bar")
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/bakery/alarm-bar",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        responseFields(
+                                fieldWithPath("data.newAlarmNum").description("미확인 알람 갯수")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getBakeryList() throws Exception {
         mockMvc.perform(get("/v1/admin/bakeries?page=0")
                         .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -161,6 +177,11 @@ class AdminBakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         requestParameters(
+                                parameterWithName("filterBy").optional()
+                                        .description("빵집 필터 (없으면 전체 조회, 필터 여러 개 가능) " +
+                                                "(bakery_report_image (대표 이미지), product_add_report (메뉴 제보), " +
+                                                "bakery_update_report (정보 수정), new_review(신규 리뷰))"),
+                                parameterWithName("name").optional().description("검색어"),
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
                                 fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
@@ -171,6 +192,10 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.contents").description("빵집 리스트"),
                                 fieldWithPath("data.contents.[].bakeryId").description("빵집 고유 번호"),
                                 fieldWithPath("data.contents.[].name").description("빵집 이름"),
+                                fieldWithPath("data.contents.[].bakeryReportImageNum").description("미확인 대표 이미지 갯수"),
+                                fieldWithPath("data.contents.[].productAddReportNum").description("미확인 메뉴 제보 갯수"),
+                                fieldWithPath("data.contents.[].bakeryUpdateReportNum").description("미확인 정보 수정 갯수"),
+                                fieldWithPath("data.contents.[].newReviewNum").description("미확인 신규 리뷰 갯수"),
                                 fieldWithPath("data.contents.[].createdAt").description("빵집 최초 등록일"),
                                 fieldWithPath("data.contents.[].modifiedAt").description("빵집 마지막 수정일"),
                                 fieldWithPath("data.contents.[].status")
@@ -225,38 +250,38 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void searchBakeryList() throws Exception {
-        mockMvc.perform(get("/v1/admin/bakeries/search?name=ake&page=0")
-                        .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("v1/admin/bakery/search",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-                        requestParameters(
-                                parameterWithName("name").description("검색어"),
-                                parameterWithName("page").description("페이지 번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
-                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
-                                fieldWithPath("data.size").description("페이지 크기"),
-                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
-                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
-                                fieldWithPath("data.contents").description("빵집 리스트"),
-                                fieldWithPath("data.contents.[].bakeryId").description("빵집 고유 번호"),
-                                fieldWithPath("data.contents.[].name").description("빵집 이름"),
-                                fieldWithPath("data.contents.[].createdAt").description("빵집 최초 등록일"),
-                                fieldWithPath("data.contents.[].modifiedAt").description("빵집 마지막 수정일"),
-                                fieldWithPath("data.contents.[].status")
-                                        .description("빵집 게시 상태 (" +
-                                                "POSTING(\"게시중\"),\n" +
-                                                "UNPOSTING(\"미게시\"))")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    void searchBakeryList() throws Exception {
+//        mockMvc.perform(get("/v1/admin/bakeries/search?name=ake&page=0")
+//                        .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("v1/admin/bakery/search",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+//                        requestParameters(
+//                                parameterWithName("name").description("검색어"),
+//                                parameterWithName("page").description("페이지 번호")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+//                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+//                                fieldWithPath("data.size").description("페이지 크기"),
+//                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+//                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+//                                fieldWithPath("data.contents").description("빵집 리스트"),
+//                                fieldWithPath("data.contents.[].bakeryId").description("빵집 고유 번호"),
+//                                fieldWithPath("data.contents.[].name").description("빵집 이름"),
+//                                fieldWithPath("data.contents.[].createdAt").description("빵집 최초 등록일"),
+//                                fieldWithPath("data.contents.[].modifiedAt").description("빵집 마지막 수정일"),
+//                                fieldWithPath("data.contents.[].status")
+//                                        .description("빵집 게시 상태 (" +
+//                                                "POSTING(\"게시중\"),\n" +
+//                                                "UNPOSTING(\"미게시\"))")
+//                        )
+//                ))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     void getBakeryLatitudeLongitude() throws Exception {

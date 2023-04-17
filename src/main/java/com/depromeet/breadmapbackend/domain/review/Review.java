@@ -48,6 +48,10 @@ public class Review extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isBlock = Boolean.FALSE;
 
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isNew = Boolean.TRUE;
+
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewProductRating> ratings = new ArrayList<>();
 
@@ -74,4 +78,8 @@ public class Review extends BaseEntity {
     public void minusLike(ReviewLike reviewLike){ this.likes.remove(reviewLike); }
 
     public void removeComment(ReviewComment reviewComment){ this.comments.remove(reviewComment); }
+
+    public void unNew() {
+        this.isNew = Boolean.FALSE;
+    }
 }
