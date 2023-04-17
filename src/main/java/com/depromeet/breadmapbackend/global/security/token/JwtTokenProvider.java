@@ -107,11 +107,13 @@ public class JwtTokenProvider {
     // 만료된 토큰이거나 다른 에러가 발생한다면 false
     public boolean verifyToken(String token) {
         try {
+            log.info("VT");
             Claims claims = parseClaims(token);
             return claims.getExpiration().after(new Date());
         } catch (SecurityException | MalformedJwtException e) {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
+            log.info("EXP");
             log.error("만료된 토큰입니다.");
         } catch (UnsupportedJwtException e) {
             log.error("지원하지 않는 토큰입니다.");

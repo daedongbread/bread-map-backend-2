@@ -32,16 +32,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (request.getQueryString() != null) log.info("query : " + request.getQueryString());
         }
 //        if(!readBody(request).equals("")) log.info("request body : " + readBody(request)); // TODO : request body
+        log.info(request.getRemoteAddr());
+        log.info(String.valueOf(request.getServerPort()));
+        log.info(String.valueOf(request.getLocalPort()));
+        log.info(String.valueOf(request.getRemotePort()));
         if (request.getHeader("Authorization") != null && !request.getRequestURI().startsWith("/exception/")) {
+            log.info("A");
             String jwtHeader = request.getHeader("Authorization");
             if (jwtHeader != null && jwtHeader.startsWith("Bearer ")) {
                 String accessToken = jwtHeader.replace("Bearer ", "");
+                log.info("B");
                 if(jwtTokenProvider.verifyToken(accessToken)) {
                     Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, true);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }
+        log.info("C");
         filterChain.doFilter(request, response);
     }
 
