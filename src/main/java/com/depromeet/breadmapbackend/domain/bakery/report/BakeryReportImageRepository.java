@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface BakeryReportImageRepository extends JpaRepository<BakeryReportImage, Long> {
     boolean existsByBakeryAndIsNewIsTrue(Bakery bakery);
-    long countByBakery(Bakery bakery);
+    Integer countByBakery(Bakery bakery);
+    Integer countByBakeryAndIsNewIsTrue(Bakery bakery);
+    Integer countByIsNewIsTrue();
     Page<BakeryReportImage> findPageByBakery(Bakery bakery, Pageable pageable);
     void deleteByBakery(Bakery bakery);
 }

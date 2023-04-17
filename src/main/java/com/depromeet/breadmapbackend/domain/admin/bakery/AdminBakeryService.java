@@ -3,10 +3,13 @@ package com.depromeet.breadmapbackend.domain.admin.bakery;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 
+import java.util.List;
+
 public interface AdminBakeryService {
-    PageResponseDto<AdminSimpleBakeryDto> getBakeryList(int page);
+    AdminBakeryAlarmBar getBakeryAlarmBar();
+    PageResponseDto<AdminSimpleBakeryDto> getBakeryList(List<AdminBakeryFilter> filterBy, String name, int page);
     AdminBakeryDto getBakery(Long bakeryId);
-    PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page);
+//    PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page);
     BakeryLocationDto getBakeryLatitudeLongitude(String address);
     void addBakery(BakeryAddRequest request);
     void updateBakery(Long bakeryId, BakeryUpdateRequest request);
