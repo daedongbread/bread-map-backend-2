@@ -18,8 +18,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException, ExpiredJwtException {
-        log.info("BEFORE RD");
-        response.sendRedirect("/exception/entryPoint");
+            AuthenticationException authException) throws IOException, ServletException {
+        response.sendRedirect(request.getContextPath() + "/exception/entryPoint");
     }
 }
