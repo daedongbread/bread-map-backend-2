@@ -128,8 +128,7 @@ cloud:
         user: S3_DEFAULT_USER
 
 firebase:
-  url: FIREBASE_URL
-  path: FIREBASE_PATH
+  credentials: FIREBASE_CREDENTIALS
   scope: FIREBASE_SCOPE
   projectId: FIREBASE_PROJECTID
   message:

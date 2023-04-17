@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public Boolean checkToLoginOrRegister(LoginRequest request) {
         String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
-        return userRepository.findByOAuthId(request.getType() + "_" + sub).isPresent();
+        return userRepository.findByOAuthId(getOAuthId(request.getType(), sub)).isPresent();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
