@@ -27,7 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        request = requestLog(request);
+
+        if (!request.getRequestURI().equals("/v1/actuator/health")) {
+            request = requestLog(request);
+        }
 
         if (request.getHeader("Authorization") != null) {
             String jwtHeader = request.getHeader("Authorization");
@@ -44,12 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private HttpServletRequest requestLog(HttpServletRequest request) throws IOException {
         // [Method] : endpoint
-        if (!request.getRequestURI().equals("/v1/actuator/health")) {
-            log.info("[" + request.getMethod() + "] : " + request.getRequestURI());
-            // query :
-            if (request.getQueryString() != null) log.info("query : " + request.getQueryString());
-        }
-
+        log.info("[" + request.getMethod() + "] : " + request.getRequestURI());
+        // query :
+        if (request.getQueryString() != null) log.info("query : " + request.getQueryString());
 
         // request body :
         String requestBody = readBody(request);

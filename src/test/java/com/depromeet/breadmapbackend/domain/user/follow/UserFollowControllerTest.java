@@ -56,8 +56,9 @@ class UserFollowControllerTest extends ControllerTest {
 
     @AfterEach
     public void setDown() {
-        followRepository.deleteAllInBatch();
+        noticeTokenRepository.deleteAllInBatch();
         noticeRepository.deleteAllInBatch();
+        followRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
