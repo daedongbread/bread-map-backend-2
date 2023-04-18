@@ -109,7 +109,7 @@ public class JwtTokenProvider {
         try {
             Claims claims = parseClaims(token);
             return claims.getExpiration().after(new Date());
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다.");
