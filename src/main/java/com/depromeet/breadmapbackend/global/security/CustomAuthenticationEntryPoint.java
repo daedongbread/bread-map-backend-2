@@ -19,9 +19,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-//        response.sendRedirect( "/exception/entryPoint");
-//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//        response.sendRedirect(request.getContextPath() + "/exception/entryPoint");
-        request.getRequestDispatcher("/exception/entryPoint").forward(request, response);
+        request.getRequestDispatcher("/v1/exception/entryPoint").forward(request, response);
     }
 }

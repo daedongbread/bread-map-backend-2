@@ -26,7 +26,7 @@ public class S3Uploader {
     }
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {
-        log.info("upload file : " + multipartFile.getOriginalFilename());
+        log.info("originName : \"{}\", filePath : \"{}\"", multipartFile.getOriginalFilename(), fileName);
         newUpload(multipartFile, fileName);
         return customAwss3Properties.getCloudFront() + "/" + fileName;
     }
