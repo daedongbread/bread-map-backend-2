@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.user;
 
 import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
-import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;

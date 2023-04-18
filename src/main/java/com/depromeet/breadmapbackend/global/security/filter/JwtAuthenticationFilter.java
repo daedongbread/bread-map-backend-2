@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.global.security.filter;
 
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -51,12 +52,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // query :
         if (request.getQueryString() != null) log.info("query : " + request.getQueryString());
 
-        // request body :
-        String requestBody = readBody(request);
-        if (!requestBody.isEmpty()) {
-            log.info("request body : ");
-            log.info(requestBody);
-            request = new BufferedRequestWrapper(request, requestBody);
+        boolean isMultipartRequest = ServletFileUpload.isMultipartContent(request);
+        if (!isMultipartRequest) {
+            String requestBody = readBody(request);
+            if (!requestBody.isEmpty()) {
+                // request body :
+                log.info("request body : ");
+                log.info(requestBody);
+                request = new BufferedRequestWrapper(request, requestBody);
+            }
         }
         return request;
     }
