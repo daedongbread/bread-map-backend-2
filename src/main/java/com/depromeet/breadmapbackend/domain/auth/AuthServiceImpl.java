@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         JwtToken reissueToken = createNewToken(oAuthId, user.getRoleType());
-        makeTokenInvalid(request.getAccessToken(), request.getRefreshToken());
+        makeRefreshTokenInvalid(request.getRefreshToken());
         return reissueToken;
     }
 
@@ -163,6 +163,10 @@ public class AuthServiceImpl implements AuthService {
 
     private void makeTokenInvalid(String accessToken, String refreshToken) {
         redisTokenUtils.setAccessTokenBlackList(accessToken, jwtTokenProvider.getExpiration(accessToken));
+        redisTokenUtils.deleteRefreshToken(refreshToken);
+    }
+
+    private void makeRefreshTokenInvalid(String refreshToken) {
         redisTokenUtils.deleteRefreshToken(refreshToken);
     }
 }

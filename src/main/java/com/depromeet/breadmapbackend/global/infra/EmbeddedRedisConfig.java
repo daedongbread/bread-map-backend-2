@@ -12,7 +12,7 @@ import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 @Slf4j
-@Profile({"default"}) // TODO
+@Profile({"default", "local"}) // TODO
 @Configuration
 @RequiredArgsConstructor
 public class EmbeddedRedisConfig {

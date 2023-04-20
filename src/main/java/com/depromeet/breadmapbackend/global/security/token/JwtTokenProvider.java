@@ -65,13 +65,13 @@ public class JwtTokenProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenExpiredDate))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiredDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -91,13 +91,13 @@ public class JwtTokenProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + 60 * 1000L))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000L))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -161,7 +161,7 @@ public class JwtTokenProvider {
         // accessToken 남은 유효시간
         Date expiration = parseClaims(accessToken).getExpiration();
         // 현재 시간
-        Long now = new Date().getTime();
+        Long now = new Date(System.currentTimeMillis()).getTime();
         return (expiration.getTime() - now);
     }
 }
