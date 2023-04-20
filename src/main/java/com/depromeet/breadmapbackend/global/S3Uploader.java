@@ -56,10 +56,10 @@ public class S3Uploader {
         metadata.setContentType(multipartFile.getContentType());
         metadata.setContentLength(multipartFile.getSize());
         amazonS3Client.putObject(
-                new PutObjectRequest(customAwss3Properties.getBucket(), fileName, multipartFile.getInputStream(), metadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                new PutObjectRequest(customAwss3Properties.getBucket(), fileName, multipartFile.getInputStream(), metadata));
         log.info("File putS3 success");
-        return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
+        return get(fileName);
+//        return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
     }
 
     public void copy(String oldSource, String newSource) {
