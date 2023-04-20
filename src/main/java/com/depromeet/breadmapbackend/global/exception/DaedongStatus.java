@@ -64,6 +64,7 @@ public enum DaedongStatus {
     PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40494, "product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
 
     // 409 CONFLICT
+    ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때
     NICKNAME_DUPLICATE_EXCEPTION(CONFLICT, 40910, "nickname already exists"), // 유저 닉네임이 이미 존재할 때
     FOLLOW_DUPLICATE_EXCEPTION(CONFLICT, 40911, "already follow user"), // 이미 팔로우가 되어 있을 때
     SELF_FOLLOW_EXCEPTION(BAD_REQUEST, 40912, "self follow or unfollow exception"), // 본인을 팔로우/언팔로우 했을 때

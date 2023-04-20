@@ -38,9 +38,10 @@ class UserControllerTest extends ControllerTest {
         userRepository.save(user);
 
         token = jwtTokenProvider.createJwtToken(user.getOAuthId(), RoleType.USER.getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user.getOAuthId(),
-                        token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+        redisTokenUtils.setRefreshToken(
+                token.getRefreshToken(),
+                user.getOAuthId() + ":" + token.getAccessToken(),
+                jwtTokenProvider.getRefreshTokenExpiredDate());
 
         noticeToken = NoticeToken.builder().user(user).deviceToken("deviceToken1").build();
         noticeTokenRepository.save(noticeToken);
@@ -48,6 +49,7 @@ class UserControllerTest extends ControllerTest {
 
     @AfterEach
     public void setDown() {
+        redisTemplate.delete(token.getAccessToken());
         noticeTokenRepository.deleteAllInBatch();
         noticeRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();

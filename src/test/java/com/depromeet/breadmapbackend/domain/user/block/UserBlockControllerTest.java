@@ -44,10 +44,6 @@ class UserBlockControllerTest extends ControllerTest {
         userRepository.save(userToBlock);
 
         token1 = jwtTokenProvider.createJwtToken(user1.getOAuthId(), RoleType.USER.getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getOAuthId(),
-                        token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        JwtToken token2 = jwtTokenProvider.createJwtToken(user2.getOAuthId(), RoleType.USER.getCode());
 
         BlockUser blockUser = BlockUser.builder().fromUser(user1).toUser(userToBlock).build();
         blockUserRepository.save(blockUser);

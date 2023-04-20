@@ -51,9 +51,6 @@ class AdminReportControllerTest extends ControllerTest {
         Admin admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
         adminRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
-                        token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
                 .userInfo(UserInfo.builder().nickName("nickname1").build()).build();

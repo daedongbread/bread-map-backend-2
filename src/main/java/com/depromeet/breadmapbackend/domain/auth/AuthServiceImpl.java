@@ -19,6 +19,7 @@ import com.depromeet.breadmapbackend.global.security.domain.UserPrincipal;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.global.security.token.OIDCProvider;
+import com.depromeet.breadmapbackend.global.security.token.RedisTokenUtils;
 import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfo;
 import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfoFactory;
 import io.jsonwebtoken.Claims;
@@ -41,9 +42,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final NoticeTokenRepository noticeTokenRepository;
     private final FlagRepository flagRepository;
+    private final RedisTokenUtils redisTokenUtils;
     private final JwtTokenProvider jwtTokenProvider;
     private final OIDCProvider oidcProvider;
-    private final StringRedisTemplate redisTemplate;
     private final CustomRedisProperties customRedisProperties;
     private final CustomAWSS3Properties customAWSS3Properties;
 
@@ -64,11 +65,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(user.getIsBlock()) throw new DaedongException(DaedongStatus.BLOCK_USER);
 
-        JwtToken jwtToken = jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + oAuthId,
-                        jwtToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        return jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
+        return createNewToken(oAuthId, RoleType.USER);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -77,13 +74,13 @@ public class AuthServiceImpl implements AuthService {
         OIDCUserInfo oidcUserInfo = OIDCUserInfoFactory.getOIDCUserInfo(request.getType(), body);
         String oAuthId = getOAuthId(request.getType(), oidcUserInfo.getOAuthId());
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getDelete() + ":" + oAuthId)))
-            throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
+        if (!redisTokenUtils.isRejoinPossible(oAuthId)) throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
 
         if (userRepository.findByOAuthId(oAuthId).isEmpty()) {
             createUser(oidcUserInfo, request.getType(), request.getIsMarketingInfoReceptionAgreed());
+            return createNewToken(oAuthId, RoleType.USER);
         }
-        return jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode());
+        else throw new DaedongException(DaedongStatus.ALREADY_REGISTER_USER);
     }
 
     private String createNickName() {
@@ -124,54 +121,48 @@ public class AuthServiceImpl implements AuthService {
         Flag alreadyGo = Flag.builder().user(user).name("가봤어요").color(FlagColor.ORANGE).build();
         flagRepository.save(alreadyGo);
         user.getFlagList().add(alreadyGo);
-
-//        UserPrincipal.create(user); // TODO
     }
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
-        if(!jwtTokenProvider.verifyToken(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken()) ||
+                !redisTokenUtils.isRefreshTokenValid(request.getRefreshToken(), request.getAccessToken()) ||
+                redisTokenUtils.isBlackList(request.getAccessToken()))
+            throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
-        String accessToken = request.getAccessToken();
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, false);
-        String oAuthId = authentication.getName();
+        String oAuthId = redisTokenUtils.getOAuthIdFromRefreshToken(request.getRefreshToken());
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-        String refreshToken = redisTemplate.opsForValue().get(customRedisProperties.getKey().getRefresh() + ":" + user.getOAuthId());
-        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken())) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
-
-        JwtToken reissueToken = jwtTokenProvider.createJwtToken(oAuthId, user.getRoleType().getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user.getOAuthId(),
-                        reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-
+        JwtToken reissueToken = createNewToken(oAuthId, user.getRoleType());
+        makeTokenInvalid(request.getAccessToken(), request.getRefreshToken());
         return reissueToken;
+    }
+
+    private JwtToken createNewToken(String oAuthId, RoleType roleType) {
+        JwtToken jwtToken = jwtTokenProvider.createJwtToken(oAuthId, roleType.getCode());
+        // key : refreshToken, value : oAuthId:accessToken
+        redisTokenUtils.setRefreshToken(
+                jwtToken.getRefreshToken(),
+                oAuthId + ":" + jwtToken.getAccessToken(),
+                jwtTokenProvider.getRefreshTokenExpiredDate()
+        );
+        return jwtToken;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void logout(LogoutRequest request) {  // TODO
-        String accessToken = request.getAccessToken();
-        if (!jwtTokenProvider.verifyToken(accessToken)) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+        String oAuthId = jwtTokenProvider.getAuthentication(request.getAccessToken()).getName();
 
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, true);
-        String oAuthId = authentication.getName();
-
-        // 알람 가지 않게 처리
-//        eventPublisher.publishEvent(new NoticeTokenDeleteEvent(oAuthId, request.getDeviceToken()));
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
         if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
             noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
         }
 
-        // Redis 에서 해당  Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(customRedisProperties.getKey().getRefresh() + ":" + oAuthId))) {
-            redisTemplate.delete(customRedisProperties.getKey().getRefresh() + ":" + oAuthId);
-        }
+        makeTokenInvalid(request.getAccessToken(), request.getRefreshToken());
+    }
 
-        // 해당 Access Token 남은 유효시간 가지고 와서 BlackList 로 저장하기
-        Long expiration = jwtTokenProvider.getExpiration(request.getAccessToken());
-        redisTemplate.opsForValue()
-                .set(request.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+    private void makeTokenInvalid(String accessToken, String refreshToken) {
+        redisTokenUtils.setAccessTokenBlackList(accessToken, jwtTokenProvider.getExpiration(accessToken));
+        redisTokenUtils.deleteRefreshToken(refreshToken);
     }
 }

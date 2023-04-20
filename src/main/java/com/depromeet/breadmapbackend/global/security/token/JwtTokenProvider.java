@@ -30,11 +30,13 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
+    private final RedisTokenUtils redisTokenUtils;
     private final CustomJWTKeyProperties customJWTKeyProperties;
     private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hours
     private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 days
 
     private static final String ROLES = "roles";
+    private static final String TYPE = "type";
 
 //    @PostConstruct
 //    protected void init() {
@@ -108,7 +110,7 @@ public class JwtTokenProvider {
     public boolean verifyToken(String token) {
         try {
             Claims claims = parseClaims(token);
-            return claims.getExpiration().after(new Date());
+            return claims.getExpiration().after(new Date()) && !redisTokenUtils.isBlackList(token);
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
@@ -128,25 +130,13 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token).getBody();
     }
 
-    private Claims parseClaimsIgnoringExpiration(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
-
-    public String getUsername(String token) {
+    public String getSubject(String token) {
         return parseClaims(token).getSubject();
     }
 
-    public Authentication getAuthentication(String token, boolean unexpired) {
-        Claims claims;
-        if (unexpired) claims = parseClaims(token);
-        else claims = parseClaimsIgnoringExpiration(token);
+    public Authentication getAuthentication(String token) {
+        if (token.isBlank()) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+        Claims claims = parseClaims(token);
 
         // 권한 정보가 없음
         if (claims.get(ROLES) == null) {

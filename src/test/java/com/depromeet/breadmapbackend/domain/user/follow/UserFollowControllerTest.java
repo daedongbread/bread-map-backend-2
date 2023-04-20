@@ -43,9 +43,6 @@ class UserFollowControllerTest extends ControllerTest {
         userRepository.save(user2);
 
         token1 = jwtTokenProvider.createJwtToken(user1.getOAuthId(), RoleType.USER.getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user1.getOAuthId(),
-                        token1.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
         token2 = jwtTokenProvider.createJwtToken(user2.getOAuthId(), RoleType.USER.getCode());
 
         Follow follow1 = Follow.builder().fromUser(user1).toUser(user2).build();
