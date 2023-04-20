@@ -34,8 +34,9 @@ public class LoggingFilter extends OncePerRequestFilter {
         // query :
         if (request.getQueryString() != null) log.info("query : " + request.getQueryString());
 
+        String contentType = request.getContentType();
         boolean isMultipartRequest = ServletFileUpload.isMultipartContent(request);
-        if (!isMultipartRequest) {
+        if (!isMultipartRequest && contentType != null && !contentType.toLowerCase().startsWith("multipart/form-data")) {
             String requestBody = readBody(request);
             if (!requestBody.isEmpty()) {
                 // request body :

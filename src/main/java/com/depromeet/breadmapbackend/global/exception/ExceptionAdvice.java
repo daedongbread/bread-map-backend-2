@@ -139,6 +139,16 @@ public class ExceptionAdvice {
         return new ErrorResponse(400, "query parameter is missing");
     }
 
+    /*
+     * Query Parameter encoding Exception
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse illegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse(400, "invalid character in query parameter");
+    }
+
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ErrorResponse handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException e) {
@@ -155,16 +165,6 @@ public class ExceptionAdvice {
         log.error("message : \"{}\"", e.getMessage());
         return new ErrorResponse(413, "upload limit exception");
     }
-
-//    /*
-//     * JWT Signature Exception
-//     */
-//    @ExceptionHandler(SignatureException.class)
-//    @ResponseStatus(HttpStatus.CONFLICT)
-//    protected ErrorResponse signatureException(HttpServletRequest request, SignatureException e) {
-//        log.error("message : \"{}\"", e.getMessage());
-//        return new ErrorResponse(409, "JWT signature error");
-//    }
 
     /*
      * 틀린 URL 로 접근했을 경우 발생 시키는 예외
