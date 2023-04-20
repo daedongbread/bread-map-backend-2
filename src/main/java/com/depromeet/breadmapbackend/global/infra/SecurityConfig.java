@@ -70,8 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/admin/**").hasAuthority(RoleType.ADMIN.getCode())
 //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .anyRequest().denyAll()
+//                .anyRequest().denyAll()
 //                .anyRequest().authenticated()
+                // 설정 시
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
