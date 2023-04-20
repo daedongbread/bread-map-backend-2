@@ -14,7 +14,7 @@ plugins {
 
 group = 'com.depromeet'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '15'
 
 configurations {
 	compileOnly {

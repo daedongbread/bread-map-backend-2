@@ -156,15 +156,15 @@ public class ExceptionAdvice {
         return new ErrorResponse(413, "upload limit exception");
     }
 
-    /*
-     * JWT Signature Exception
-     */
-    @ExceptionHandler(SignatureException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    protected ErrorResponse signatureException(HttpServletRequest request, SignatureException e) {
-        log.error("message : \"{}\"", e.getMessage());
-        return new ErrorResponse(409, "JWT signature error");
-    }
+//    /*
+//     * JWT Signature Exception
+//     */
+//    @ExceptionHandler(SignatureException.class)
+//    @ResponseStatus(HttpStatus.CONFLICT)
+//    protected ErrorResponse signatureException(HttpServletRequest request, SignatureException e) {
+//        log.error("message : \"{}\"", e.getMessage());
+//        return new ErrorResponse(409, "JWT signature error");
+//    }
 
     /*
      * 틀린 URL 로 접근했을 경우 발생 시키는 예외

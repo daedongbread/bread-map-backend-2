@@ -38,7 +38,6 @@ class ImageControllerTest extends ControllerTest {
         User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
                 .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
-        System.out.println("user.getRoleType().getCode() = " + user.getRoleType().getCode());
         token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
     }
 

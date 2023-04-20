@@ -36,6 +36,7 @@ import com.depromeet.breadmapbackend.domain.bakery.BakeryService;
 import com.depromeet.breadmapbackend.domain.flag.FlagService;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.user.UserService;
+import com.depromeet.breadmapbackend.global.security.token.RedisTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected StringRedisTemplate redisTemplate;
+
+    @Autowired
+    protected RedisTokenUtils redisTokenUtils;
 
     @Autowired
     protected CustomRedisProperties customRedisProperties;
