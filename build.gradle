@@ -25,6 +25,8 @@ configurations {
 
 repositories {
 	mavenCentral()
+	jcenter()
+	google()
 }
 
 ext {
