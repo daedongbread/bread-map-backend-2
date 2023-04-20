@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 
 @Slf4j
 @Configuration
-@Profile("prod")
+@Profile("prod & stage")
 public class AmazonS3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
