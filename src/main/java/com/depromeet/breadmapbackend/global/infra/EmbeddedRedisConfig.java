@@ -12,7 +12,7 @@ import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 @Slf4j
-@Profile("!prod & !stage")
+@Profile({"!prod", "!stage"})
 @Configuration
 @RequiredArgsConstructor
 public class EmbeddedRedisConfig {
