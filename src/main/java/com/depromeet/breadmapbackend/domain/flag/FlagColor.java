@@ -1,23 +1,34 @@
 package com.depromeet.breadmapbackend.domain.flag;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.util.stream.Stream;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum FlagColor {
-    ORANGE("주황색"),
-    GREEN("초록색"),
-    YELLOW("노란색"),
-    CYAN("청록색"),
-    BLUE("초록색"),
-    SKY("하늘색"),
-    NAVY("네이비색"),
-    PURPLE("보라색"),
-    RED("빨간색"),
-    PINK("핑크색"),
-    GRAY("회색"),
+    ORANGE("ORANGE"), // 주황색
+    GREEN("GREEN"), // 주황색
+    YELLOW("YELLOW"), // 주황색
+    CYAN("CYAN"), // 주황색
+    BLUE("BLUE"), // 주황색
+    SKY("SKY"), // 주황색
+    NAVY("NAVY"), // 주황색
+    PURPLE("PURPLE"), // 주황색
+    RED("RED"), // 주황색
+    PINK("PINK"), // 주황색
+    GRAY("GRAY"), // 주황색
     ;
 
     private final String code;
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static FlagColor findByCode(String code) {
+        return Stream.of(FlagColor.values())
+                .filter(c -> c.code.equalsIgnoreCase(code)) // 대소문자로 받음
+                .findFirst()
+                .orElse(null);
+    }
 }

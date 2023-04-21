@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
+import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
@@ -26,7 +28,7 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ReviewDto>> getBakeryReviewList(
             @CurrentUser String oAuthId, @PathVariable Long bakeryId,
-            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+            @RequestParam(defaultValue = "latest") @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) ReviewSortType sortBy, @RequestParam int page){
         return new ApiResponse<>(reviewService.getBakeryReviewList(oAuthId, bakeryId, sortBy, page));
     }
 
@@ -34,15 +36,15 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ReviewDto>> getProductReviewList(
             @CurrentUser String oAuthId, @PathVariable Long bakeryId, @PathVariable Long productId,
-            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+            @RequestParam(defaultValue = "latest") @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) ReviewSortType sortBy,
+            @RequestParam int page){
         return new ApiResponse<>(reviewService.getProductReviewList(oAuthId, bakeryId, productId, sortBy, page));
     }
 
     @GetMapping("/users/{userId}") // TODO : 상하관계
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<ReviewDto>> getUserReviewList(
-            @CurrentUser String oAuthId, @PathVariable Long userId,
-            @RequestParam(defaultValue = "latest") ReviewSortType sortBy, @RequestParam int page){
+            @CurrentUser String oAuthId, @PathVariable Long userId, @RequestParam int page){
         return new ApiResponse<>(reviewService.getUserReviewList(oAuthId, userId, page));
     }
 

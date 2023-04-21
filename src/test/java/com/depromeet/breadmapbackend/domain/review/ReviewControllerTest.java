@@ -7,7 +7,6 @@ import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewComment;
@@ -70,12 +69,12 @@ class ReviewControllerTest extends ControllerTest {
         review1 = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review1);
         reviewViewRepository.save(ReviewView.builder().review(review1).build());
-        ReviewImage image1 = ReviewImage.builder().review(review1).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image1").build();
+        ReviewImage image1 = ReviewImage.builder().review(review1).bakery(bakery).image("image1").build();
         reviewImageRepository.save(image1);
 
         Review review2 = Review.builder().user(user).bakery(bakery).content("content2").build();
         reviewRepository.save(review2);
-        ReviewImage image2 = ReviewImage.builder().review(review2).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("image2").build();
+        ReviewImage image2 = ReviewImage.builder().review(review2).bakery(bakery).image("image2").build();
         reviewImageRepository.save(image2);
 
         Review review3 = Review.builder().user(user).bakery(bakery).content("content3").build();
@@ -358,7 +357,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("productRatingList.[].productId").description("리뷰 상품 고유 번호"),
                                 fieldWithPath("productRatingList.[].rating").description("리뷰 상품 점수"),
                                 fieldWithPath("noExistProductRatingRequestList").description("빵집에 없는 상품 점수 리스트"),
-                                fieldWithPath("noExistProductRatingRequestList.[].productType").description("상품 타입"),
+                                fieldWithPath("noExistProductRatingRequestList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
                                 fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
                                 fieldWithPath("content").description("리뷰 내용"),

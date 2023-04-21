@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.admin.bakery.dto;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,7 +40,7 @@ public class BakeryUpdateRequest {
     private String facebookURL;
     private String blogURL;
     private String phoneNumber;
-    private List<FacilityInfo> facilityInfoList;
+    private List<@EnumCheck FacilityInfo> facilityInfoList;
     @Valid
     private List<ProductUpdateRequest> productList;
     private BakeryStatus status;
@@ -50,6 +51,7 @@ public class BakeryUpdateRequest {
     @AllArgsConstructor
     public static class ProductUpdateRequest {
         private Long productId;
+        @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class)
         private ProductType productType;
         @NotBlank(message = "빵 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private String productName;

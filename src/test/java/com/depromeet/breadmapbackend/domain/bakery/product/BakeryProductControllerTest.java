@@ -88,7 +88,7 @@ public class BakeryProductControllerTest extends ControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("data.[].id").description("상품 고유번호"),
-                                fieldWithPath("data.[].productType").description("상품 종류"),
+                                fieldWithPath("data.[].productType").description("상품 종류 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("data.[].name").description("상품 이름"),
                                 fieldWithPath("data.[].rating").description("상품 평점"),
                                 fieldWithPath("data.[].reviewNum").description("상품 리뷰 수"),
@@ -135,7 +135,7 @@ public class BakeryProductControllerTest extends ControllerTest {
                         requestParameters(parameterWithName("name").description("검색 키워드")),
                         responseFields(
                                 fieldWithPath("data.[].id").description("상품 고유 번호"),
-                                fieldWithPath("data.[].productType").description("상품 종류"),
+                                fieldWithPath("data.[].productType").description("상품 종류 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("data.[].name").description("상품 이름"),
                                 fieldWithPath("data.[].price").description("상품 가격"),
                                 fieldWithPath("data.[].image").description("상품 이미지")
