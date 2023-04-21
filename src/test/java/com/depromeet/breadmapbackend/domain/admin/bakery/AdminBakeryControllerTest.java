@@ -22,9 +22,7 @@ import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
-import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import org.junit.jupiter.api.AfterEach;
@@ -37,7 +35,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -53,28 +50,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AdminBakeryControllerTest extends ControllerTest {
-
-    private Admin admin;
-    private User user;
     private Bakery bakery;
     private Product product;
-    private Review review;
-    private BakeryAddReport bakeryAddReport;
     private BakeryUpdateReport bakeryUpdateReport;
     private ProductAddReport productAddReport;
     private ProductAddReportImage productAddReportImage1;
     private ProductAddReportImage productAddReportImage2;
     private BakeryReportImage bakeryReportImage;
     private JwtToken token;
-    private ReviewReport reviewReport;
 
     @BeforeEach
     public void setup() throws IOException {
-        admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
+        Admin admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
         adminRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
 
-        user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
+        User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
                 .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
         userRepository.save(user);
 
@@ -110,15 +101,15 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage2.jpg").build();
         productAddReportImageRepository.save(productAddReportImage2);
 
-        review = Review.builder().user(user).bakery(bakery).content("content1").build();
+        Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
         reviewViewRepository.save(ReviewView.builder().review(review).build());
-        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).image("reviewImage.jpg").build();
         reviewImageRepository.save(image);
         ReviewProductRating rating = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
 
-        reviewReport = ReviewReport.builder()
+        ReviewReport reviewReport = ReviewReport.builder()
                 .reporter(user).review(review).reason(ReviewReportReason.COPYRIGHT_THEFT).content("content").build();
         reviewReportRepository.save(reviewReport);
 
@@ -228,7 +219,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.blogURL").description("빵집 블로그"),
                                 fieldWithPath("data.phoneNumber").description("빵집 전화번호"),
                                 fieldWithPath("data.facilityInfoList")
-                                        .description("빵집 시설 정보 (PARKING(\"주차 가능\"),\n" +
+                                        .description("빵집 시설 정보 (PARKING(\"주차가능\"),\n" +
                                                 "WIFI(\"와이파이\"),\n" +
                                                 "DELIVERY(\"배달\"),\n" +
                                                 "PET(\"반려동물\"),\n" +
@@ -246,39 +237,6 @@ class AdminBakeryControllerTest extends ControllerTest {
                 ))
                 .andExpect(status().isOk());
     }
-
-//    @Test
-//    void searchBakeryList() throws Exception {
-//        mockMvc.perform(get("/v1/admin/bakeries/search?name=ake&page=0")
-//                        .header("Authorization", "Bearer " + token.getAccessToken()))
-//                .andDo(print())
-//                .andDo(document("v1/admin/bakery/search",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
-//                        requestParameters(
-//                                parameterWithName("name").description("검색어"),
-//                                parameterWithName("page").description("페이지 번호")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
-//                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
-//                                fieldWithPath("data.size").description("페이지 크기"),
-//                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
-//                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
-//                                fieldWithPath("data.contents").description("빵집 리스트"),
-//                                fieldWithPath("data.contents.[].bakeryId").description("빵집 고유 번호"),
-//                                fieldWithPath("data.contents.[].name").description("빵집 이름"),
-//                                fieldWithPath("data.contents.[].createdAt").description("빵집 최초 등록일"),
-//                                fieldWithPath("data.contents.[].modifiedAt").description("빵집 마지막 수정일"),
-//                                fieldWithPath("data.contents.[].status")
-//                                        .description("빵집 게시 상태 (" +
-//                                                "POSTING(\"게시중\"),\n" +
-//                                                "UNPOSTING(\"미게시\"))")
-//                        )
-//                ))
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     void getBakeryLatitudeLongitude() throws Exception {
@@ -332,16 +290,20 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("blogURL").optional().description("빵집 블로그"),
                                 fieldWithPath("websiteURL").optional().description("빵집 홈페이지"),
                                 fieldWithPath("phoneNumber").optional().description("빵집 전화번호"),
-                                fieldWithPath("facilityInfoList.[]").description("빵집 정보"),
-                                fieldWithPath("productList").optional().optional().description("상품 리스트"),
-                                fieldWithPath("productList.[].productType").optional().description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
+                                fieldWithPath("facilityInfoList.[]").optional()
+                                        .description("빵집 시설 정보 (PARKING(\"주차가능\"),\n" +
+                                                "WIFI(\"와이파이\"),\n" +
+                                                "DELIVERY(\"배달\"),\n" +
+                                                "PET(\"반려동물\"),\n" +
+                                                "SHIPPING(\"택배\"),\n" +
+                                                "BOOKING(\"예약\"))"),
+                                fieldWithPath("productList").optional().description("상품 리스트"),
+                                fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
                                 fieldWithPath("productList.[].image").optional().description("상품 이미지"),
-                                fieldWithPath("status")
-                                        .description("빵집 게시상태 (" +
-                                                "POSTING(\"게시중\"),\n" +
-                                                "UNPOSTING(\"미게시\"))")
+                                fieldWithPath("status").description("빵집 게시 상태 (" +
+                                        "POSTING(\"게시중\"), UNPOSTING(\"미게시\"))")
                         )
                 ))
                 .andExpect(status().isCreated());
@@ -383,17 +345,21 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("blogURL").optional().description("빵집 블로그"),
                                 fieldWithPath("websiteURL").optional().description("빵집 홈페이지"),
                                 fieldWithPath("phoneNumber").optional().description("빵집 전화번호"),
-                                fieldWithPath("facilityInfoList.[]").optional().description("빵집 정보"),
+                                fieldWithPath("facilityInfoList.[]").optional()
+                                        .description("빵집 시설 정보 (PARKING(\"주차가능\"),\n" +
+                                                "WIFI(\"와이파이\"),\n" +
+                                                "DELIVERY(\"배달\"),\n" +
+                                                "PET(\"반려동물\"),\n" +
+                                                "SHIPPING(\"택배\"),\n" +
+                                                "BOOKING(\"예약\"))"),
                                 fieldWithPath("productList").optional().description("상품 리스트"),
                                 fieldWithPath("productList.[].productId").optional().description("상품 고유 번호 (새로운 빵이면 null)"),
-                                fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC 중 하나"),
+                                fieldWithPath("productList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("productList.[].productName").description("상품 이름"),
                                 fieldWithPath("productList.[].price").description("상품 가격"),
                                 fieldWithPath("productList.[].image").optional().optional().description("상품 이미지"),
-                                fieldWithPath("status")
-                                        .description("빵집 게시상태 (" +
-                                                "POSTING(\"게시중\"),\n" +
-                                                "UNPOSTING(\"미게시\"))")
+                                fieldWithPath("status").description("빵집 게시 상태 (" +
+                                        "POSTING(\"게시중\"), UNPOSTING(\"미게시\"))")
                         )
                 ))
                 .andExpect(status().isNoContent());
@@ -458,7 +424,7 @@ class AdminBakeryControllerTest extends ControllerTest {
     @Test
     void getAdminImages() throws Exception {
         mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/images/{imageType}?page=0",
-                        bakery.getId(), AdminBakeryImageType.bakeryReportImage)
+                        bakery.getId(), AdminBakeryImageType.BAKERY_REPORT_IMAGE)
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/admin/image/all",
@@ -467,7 +433,10 @@ class AdminBakeryControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
-                                parameterWithName("imageType").description("이미지 종류 (bakeryReportImage, productAddReportImage, reviewImage)")),
+                                parameterWithName("imageType").description("이미지 종류 " +
+                                        "(bakery_report_image (대표이미지), " +
+                                        "product_add_report_image (메뉴제보이미지), " +
+                                        "review_image (리뷰이미지))")),
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
@@ -488,7 +457,7 @@ class AdminBakeryControllerTest extends ControllerTest {
     @Test
     void deleteAdminImage() throws Exception {
         mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}/images/{imageType}/{imageId}",
-                        bakery.getId(), AdminBakeryImageType.bakeryReportImage, bakeryReportImage.getId())
+                        bakery.getId(), AdminBakeryImageType.BAKERY_REPORT_IMAGE, bakeryReportImage.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/admin/image/delete",
@@ -497,7 +466,10 @@ class AdminBakeryControllerTest extends ControllerTest {
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
-                                parameterWithName("imageType").description("이미지 종류 (bakeryReportImage, productAddReportImage, reviewImage)"),
+                                parameterWithName("imageType").description("이미지 종류 " +
+                                        "(bakery_report_image (대표이미지), " +
+                                        "product_add_report_image (메뉴제보이미지), " +
+                                        "review_image (리뷰이미지))"),
                                 parameterWithName("imageId").description("이미지 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());

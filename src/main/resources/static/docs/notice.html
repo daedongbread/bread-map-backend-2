@@ -472,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/notices/TODAY?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzExLCJleHAiOjE2ODE5NTYzMTF9.Sy0av6tEv1cjbRokiQzsn865X2AiGhwYBwouP70WSlA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI5LCJleHAiOjE2ODIwNzI1ODl9.rW1hCViLq-ANH0_-5FhKh8Yxrz9a9Jvwi8Y_Xz1uHqw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -589,7 +589,7 @@ Content-Length: 825
       "contentId" : null,
       "content" : null,
       "isFollow" : true,
-      "createdAt" : "2023-04-20T10:05:11.348203",
+      "createdAt" : "2023-04-21T19:22:09.648366",
       "noticeType" : "FOLLOW"
     }, {
       "noticeId" : 1,
@@ -600,7 +600,7 @@ Content-Length: 825
       "contentId" : 1,
       "content" : "content1",
       "isFollow" : true,
-      "createdAt" : "2023-04-20T10:05:11.344216",
+      "createdAt" : "2023-04-21T19:22:09.643383",
       "noticeType" : "REVIEW_COMMENT"
     } ]
   }
@@ -704,7 +704,15 @@ Content-Length: 825
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].noticeType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">알람 타입</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알람 타입 (FOLLOW("팔로우"),
+REVIEW_COMMENT("리뷰 댓글"),
+REVIEW_LIKE("리뷰 좋아요"),
+RECOMMENT("대댓글"),
+REVIEW_COMMENT_LIKE("리뷰 댓글 좋아요"),
+ADD_BAKERY("제보한 빵집 추가"),
+ADD_PRODUCT("제보한 상품 추가"),
+FLAG_BAKERY_CHANGE("즐겨찾기 빵집 변동사항"),
+FLAG_BAKERY_ADMIN_NOTICE("즐겨찾기 빵집 관리자 새 글"))</p></td>
 </tr>
 </tbody>
 </table>

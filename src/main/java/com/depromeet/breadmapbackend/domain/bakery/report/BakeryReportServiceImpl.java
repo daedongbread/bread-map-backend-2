@@ -7,18 +7,12 @@ import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryReportImageR
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryUpdateReportRequest;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.ImageType;
-import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

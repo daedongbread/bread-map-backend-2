@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
 import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
+import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
@@ -29,7 +31,9 @@ public class NoticeController {
     @GetMapping("/{type}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<NoticeDto>> getNoticeList(
-            @CurrentUser String oAuthId, @PathVariable NoticeDayType type, @RequestParam(required = false) Long lastId, @RequestParam int page) {
+            @CurrentUser String oAuthId,
+            @PathVariable @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) NoticeDayType type,
+            @RequestParam(required = false) Long lastId, @RequestParam int page) {
         return new ApiResponse<>(noticeService.getNoticeList(oAuthId, type, lastId, page));
     }
 }

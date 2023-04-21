@@ -1,35 +1,23 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import com.depromeet.breadmapbackend.domain.bakery.report.*;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
-import com.depromeet.breadmapbackend.global.converter.FileConverter;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.product.Product;
-import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
-import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImage;
-import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportRepository;
-import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.domain.bakery.dto.*;
 import com.depromeet.breadmapbackend.domain.review.dto.MapSimpleReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 

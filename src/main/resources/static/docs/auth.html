@@ -541,7 +541,16 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
 Content-Length: 21
 
 {
@@ -638,15 +647,24 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 416
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 414
 
 {
   "data" : {
     "userId" : 33,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzEwLCJleHAiOjE2ODE5NTYzMTB9.3GNEq3KcxYaB7eZHpFOgjfUb4CmICtLSTQRmbxmpOIU",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMxNjIzMTB9.xPhHnEOSiG5WbU8eo_iP39dqSj2BYO7SG2jgXYHfljE",
-    "accessTokenExpiredDate" : 3600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI3LCJleHAiOjE2ODIwNzI1ODd9.6fnANojAqIJuEVU5ds7hbSmwE7hJPwUC6UXA9cahg9I",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMyODIxMjd9.YZM9qQTGrqdHKZdD6l_ghxfpf3zfLBSX28GbQkZmKbI",
+    "accessTokenExpiredDate" : 60000
   }
 }</code></pre>
 </div>
@@ -776,15 +794,24 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 416
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 414
 
 {
   "data" : {
     "userId" : 32,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzEwLCJleHAiOjE2ODE5NTYzMTB9.3GNEq3KcxYaB7eZHpFOgjfUb4CmICtLSTQRmbxmpOIU",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMxNjIzMTB9.xPhHnEOSiG5WbU8eo_iP39dqSj2BYO7SG2jgXYHfljE",
-    "accessTokenExpiredDate" : 3600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI3LCJleHAiOjE2ODIwNzI1ODd9.6fnANojAqIJuEVU5ds7hbSmwE7hJPwUC6UXA9cahg9I",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMyODIxMjd9.YZM9qQTGrqdHKZdD6l_ghxfpf3zfLBSX28GbQkZmKbI",
+    "accessTokenExpiredDate" : 60000
   }
 }</code></pre>
 </div>
@@ -846,8 +873,8 @@ Content-Length: 332
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzEwLCJleHAiOjE2ODE5NTYzMTB9.3GNEq3KcxYaB7eZHpFOgjfUb4CmICtLSTQRmbxmpOIU",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMxNjIzMTB9.xPhHnEOSiG5WbU8eo_iP39dqSj2BYO7SG2jgXYHfljE"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI3LCJleHAiOjE2ODIwNzI1ODd9.6fnANojAqIJuEVU5ds7hbSmwE7hJPwUC6UXA9cahg9I",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMyODIxMjd9.YZM9qQTGrqdHKZdD6l_ghxfpf3zfLBSX28GbQkZmKbI"
 }</code></pre>
 </div>
 </div>
@@ -893,15 +920,24 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 416
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 414
 
 {
   "data" : {
     "userId" : 34,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzEwLCJleHAiOjE2ODE5NTYzMTB9.3GNEq3KcxYaB7eZHpFOgjfUb4CmICtLSTQRmbxmpOIU",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMxNjIzMTB9.xPhHnEOSiG5WbU8eo_iP39dqSj2BYO7SG2jgXYHfljE",
-    "accessTokenExpiredDate" : 3600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI3LCJleHAiOjE2ODIwNzI1ODd9.6fnANojAqIJuEVU5ds7hbSmwE7hJPwUC6UXA9cahg9I",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMyODIxMjd9.YZM9qQTGrqdHKZdD6l_ghxfpf3zfLBSX28GbQkZmKbI",
+    "accessTokenExpiredDate" : 60000
   }
 }</code></pre>
 </div>
@@ -958,14 +994,14 @@ Content-Length: 416
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzA5LCJleHAiOjE2ODE5NTYzMDl9.ZpxHGR-phvbDecNBqOIs_Ez_U7BUFykwgBT1K7-KjrI
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI3LCJleHAiOjE2ODIwNzI1ODd9.6fnANojAqIJuEVU5ds7hbSmwE7hJPwUC6UXA9cahg9I
 Accept: application/json
 Content-Length: 367
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxOTUyNzA5LCJleHAiOjE2ODE5NTYzMDl9.ZpxHGR-phvbDecNBqOIs_Ez_U7BUFykwgBT1K7-KjrI",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMxNjIzMDl9.HumJUr_Jy_PLEjF3SbUARyVOvkP4FCmIXU8BOiEcDjo",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyMDcyNTI3LCJleHAiOjE2ODIwNzI1ODd9.6fnANojAqIJuEVU5ds7hbSmwE7hJPwUC6UXA9cahg9I",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMyODIxMjd9.YZM9qQTGrqdHKZdD6l_ghxfpf3zfLBSX28GbQkZmKbI",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>

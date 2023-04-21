@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery.report.dto;
 
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BakeryUpdateReportRequest {
+//    @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class)
 //    private BakeryUpdateReason reason;
 
     @NotBlank(message = "수정 사항은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)

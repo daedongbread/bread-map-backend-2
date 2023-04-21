@@ -227,15 +227,15 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         PageRequest pageable = PageRequest.of(page, 16, Sort.by("createdAt").descending());
 
         PageResponseDto<AdminImageDto> adminImages;
-        if (type.equals(AdminBakeryImageType.bakeryReportImage)) {
+        if (type.equals(AdminBakeryImageType.BAKERY_REPORT_IMAGE)) {
             Page<BakeryReportImage> bakeryReportImages = bakeryReportImageRepository.findPageByBakery(bakery, pageable);
             adminImages = PageResponseDto.of(bakeryReportImages, AdminImageDto::new);
             bakeryReportImages.forEach(BakeryReportImage::unNew);
-        } else if (type.equals(AdminBakeryImageType.productAddReportImage)) {
+        } else if (type.equals(AdminBakeryImageType.PRODUCT_ADD_REPORT_IMAGE)) {
             Page<ProductAddReportImage> productAddReportImages = productAddReportImageRepository.findPageByBakeryAndIsRegisteredIsTrue(bakery, pageable);
             adminImages = PageResponseDto.of(productAddReportImages, AdminImageDto::new);
             productAddReportImages.forEach(ProductAddReportImage::unNew);
-        } else if (type.equals(AdminBakeryImageType.reviewImage)) {
+        } else if (type.equals(AdminBakeryImageType.REVIEW_IMAGE)) {
             Page<ReviewImage> reviewImages = reviewImageRepository.findPageByBakeryAndIsHideIsFalse(bakery, pageable);
             adminImages = PageResponseDto.of(reviewImages, AdminImageDto::new);
             reviewImages.forEach(ReviewImage::unNew);
@@ -247,7 +247,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public void deleteAdminImage(Long bakeryId, AdminBakeryImageType type, Long imageId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
-        if (type.equals(AdminBakeryImageType.bakeryReportImage)) {
+        if (type.equals(AdminBakeryImageType.BAKERY_REPORT_IMAGE)) {
             BakeryReportImage bakeryReportImage = bakeryReportImageRepository.findById(imageId)
                     .orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_IMAGE_REPORT_NOT_FOUND));
             String replace = bakeryReportImage.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
@@ -258,7 +258,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 bakeryReportImageRepository.delete(bakeryReportImage);
                 s3Uploader.deleteFileS3(replace);
             }
-        } else if (type.equals(AdminBakeryImageType.productAddReportImage)) {
+        } else if (type.equals(AdminBakeryImageType.PRODUCT_ADD_REPORT_IMAGE)) {
             ProductAddReportImage productAddReportImage = productAddReportImageRepository.findById(imageId)
                     .orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND));
 
@@ -270,7 +270,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 productAddReportImageRepository.delete(productAddReportImage);
                 s3Uploader.deleteFileS3(replace);
             }
-        } else if (type.equals(AdminBakeryImageType.reviewImage)) {
+        } else if (type.equals(AdminBakeryImageType.REVIEW_IMAGE)) {
             ReviewImage reviewImage = reviewImageRepository.findByIdAndBakery(imageId, bakery)
                     .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_IMAGE_NOT_FOUND));
 

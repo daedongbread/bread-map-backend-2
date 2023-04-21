@@ -48,25 +48,25 @@ public class BakeryQueryRepository {
         BooleanBuilder conditions = new BooleanBuilder();
         if (filterBy != null) {
             for (AdminBakeryFilter filter : filterBy) {
-                if (filter.equals(AdminBakeryFilter.bakery_report_image)) {
+                if (filter.equals(AdminBakeryFilter.BAKERY_REPORT_IMAGE)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(bakeryReportImage.bakery.id)
                                     .from(bakeryReportImage)
                                     .groupBy(bakeryReportImage.bakery.id)
                                     .having(bakeryReportImage.count().gt(0L))));
-                } else if (filter.equals(AdminBakeryFilter.product_add_report)) {
+                } else if (filter.equals(AdminBakeryFilter.PRODUCT_ADD_REPORT)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(productAddReportImage.bakery.id)
                                     .from(productAddReportImage)
                                     .groupBy(productAddReportImage.bakery.id)
                                     .having(productAddReportImage.count().gt(0L))));
-                } else if (filter.equals(AdminBakeryFilter.bakery_update_report)) {
+                } else if (filter.equals(AdminBakeryFilter.BAKERY_UPDATE_REPORT)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(bakeryUpdateReport.bakery.id)
                                     .from(bakeryUpdateReport)
                                     .groupBy(bakeryUpdateReport.bakery.id)
                                     .having(bakeryUpdateReport.count().gt(0L))));
-                } else if (filter.equals(AdminBakeryFilter.new_review)) {
+                } else if (filter.equals(AdminBakeryFilter.NEW_REVIEW)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(review.bakery.id)
                                     .from(review)

@@ -153,7 +153,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ErrorResponse handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException e) {
         log.error("message : \"{}\"", e.getMessage());
-        return new ErrorResponse(406, "not acceptable");
+        return new ErrorResponse(406, "Media type not acceptable");
     }
 
     /*

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.auth.dto;
 
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
+    @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class)
     private OAuthType type;
 
     @NotBlank(message = "ID Token은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
