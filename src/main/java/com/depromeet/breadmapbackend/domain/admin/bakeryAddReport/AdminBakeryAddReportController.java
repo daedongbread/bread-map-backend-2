@@ -23,9 +23,8 @@ public class AdminBakeryAddReportController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryAddReportList(
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminBakeryAddReportService.getBakeryAddReportList(PageableSortConverter.convertSort(pageable)));
+    public ApiResponse<PageResponseDto<SimpleBakeryAddReportDto>> getBakeryAddReportList(@RequestParam int page) {
+        return new ApiResponse<>(adminBakeryAddReportService.getBakeryAddReportList(page));
     }
 
     @GetMapping("/{reportId}")

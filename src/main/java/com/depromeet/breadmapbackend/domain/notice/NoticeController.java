@@ -1,9 +1,7 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
-import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
-import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
@@ -11,7 +9,6 @@ import com.depromeet.breadmapbackend.domain.notice.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j

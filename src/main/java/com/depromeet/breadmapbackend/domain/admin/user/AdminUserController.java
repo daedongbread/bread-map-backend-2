@@ -19,9 +19,8 @@ public class AdminUserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminUserDto>> getUserList(
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminUserService.getUserList(PageableSortConverter.convertSort(pageable)));
+    public ApiResponse<PageResponseDto<AdminUserDto>> getUserList(@RequestParam int page) {
+        return new ApiResponse<>(adminUserService.getUserList(page));
     }
 
     @PatchMapping("/{userId}/block")

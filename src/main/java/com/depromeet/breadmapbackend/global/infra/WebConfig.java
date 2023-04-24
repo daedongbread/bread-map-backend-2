@@ -1,8 +1,10 @@
 package com.depromeet.breadmapbackend.global.infra;
 
-import com.depromeet.breadmapbackend.global.converter.BakerySortTypeConverter;
-import com.depromeet.breadmapbackend.global.converter.NoticeDayTypeConverter;
-import com.depromeet.breadmapbackend.global.converter.ReviewSortTypeConverter;
+import com.depromeet.breadmapbackend.global.converter.param.AdminBakeryImageTypeConverter;
+import com.depromeet.breadmapbackend.global.converter.param.AdminBakeryFilterConverter;
+import com.depromeet.breadmapbackend.global.converter.param.BakerySortTypeConverter;
+import com.depromeet.breadmapbackend.global.converter.param.NoticeDayTypeConverter;
+import com.depromeet.breadmapbackend.global.converter.param.ReviewSortTypeConverter;
 import com.depromeet.breadmapbackend.global.security.CurrentUserArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -33,6 +35,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new BakerySortTypeConverter());
         registry.addConverter(new ReviewSortTypeConverter());
         registry.addConverter(new NoticeDayTypeConverter());
+        registry.addConverter(new AdminBakeryFilterConverter());
+        registry.addConverter(new AdminBakeryImageTypeConverter());
     }
 
     @Override

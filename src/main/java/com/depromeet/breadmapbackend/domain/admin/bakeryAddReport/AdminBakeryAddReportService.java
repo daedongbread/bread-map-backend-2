@@ -7,7 +7,7 @@ import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import org.springframework.data.domain.Pageable;
 
 public interface AdminBakeryAddReportService {
-    PageResponseDto<SimpleBakeryAddReportDto> getBakeryAddReportList(Pageable pageable);
+    PageResponseDto<SimpleBakeryAddReportDto> getBakeryAddReportList(int page);
     BakeryAddReportDto getBakeryAddReport(Long reportId);
     void updateBakeryAddReportStatus(Long reportId, BakeryReportStatusUpdateRequest request);
 }

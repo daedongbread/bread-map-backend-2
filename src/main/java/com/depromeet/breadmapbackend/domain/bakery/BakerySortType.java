@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 @Getter
 @RequiredArgsConstructor
 public enum BakerySortType {
-    DISTANCE("DISTANCE"), // 거리 순
-    POPULAR("POPULAR") // 인기 순
+    DISTANCE("distance"), // 거리 순
+    POPULAR("popular") // 인기 순
     ;
 
     private final String code;
@@ -18,7 +18,7 @@ public enum BakerySortType {
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static BakerySortType findByCode(String code) {
         return Stream.of(BakerySortType.values())
-                .filter(c -> c.code.equalsIgnoreCase(code)) // 대소문자로 받음
+                .filter(c -> c.code.equals(code)) // 소문자로 받음
                 .findFirst()
                 .orElse(null);
     }

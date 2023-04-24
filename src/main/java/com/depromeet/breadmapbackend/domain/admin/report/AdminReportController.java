@@ -19,9 +19,8 @@ public class AdminReportController {
 
     @GetMapping("/review-reports")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminReviewReportDto>> getReviewReportList(
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return new ApiResponse<>(adminReportService.getReviewReportList(PageableSortConverter.convertSort(pageable)));
+    public ApiResponse<PageResponseDto<AdminReviewReportDto>> getReviewReportList(@RequestParam int page) {
+        return new ApiResponse<>(adminReportService.getReviewReportList(page));
     }
 
     @PatchMapping("/review-reports/{reportId}")

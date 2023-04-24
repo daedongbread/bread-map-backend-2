@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import com.depromeet.breadmapbackend.domain.admin.bakery.AdminBakeryFilter;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
