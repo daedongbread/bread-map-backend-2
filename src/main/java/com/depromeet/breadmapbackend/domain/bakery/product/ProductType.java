@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.bakery.product;
 
-import com.depromeet.breadmapbackend.domain.admin.bakery.AdminBakeryFilter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

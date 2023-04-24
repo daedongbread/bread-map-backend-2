@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.ProductAddImageRegisterRequest;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
@@ -424,7 +425,7 @@ class AdminBakeryControllerTest extends ControllerTest {
     @Test
     void getAdminImages() throws Exception {
         mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/images/{imageType}?page=0",
-                        bakery.getId(), AdminBakeryImageType.BAKERY_REPORT_IMAGE)
+                        bakery.getId(), AdminBakeryImageType.BAKERY_REPORT_IMAGE.getCode())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/admin/image/all",
@@ -434,9 +435,9 @@ class AdminBakeryControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
                                 parameterWithName("imageType").description("이미지 종류 " +
-                                        "(bakery_report_image (대표이미지), " +
-                                        "product_add_report_image (메뉴제보이미지), " +
-                                        "review_image (리뷰이미지))")),
+                                        "(bakery-report-image (대표이미지), " +
+                                        "product-add-report-image (메뉴제보이미지), " +
+                                        "review-image (리뷰이미지))")),
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호")),
                         responseFields(
@@ -457,7 +458,7 @@ class AdminBakeryControllerTest extends ControllerTest {
     @Test
     void deleteAdminImage() throws Exception {
         mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}/images/{imageType}/{imageId}",
-                        bakery.getId(), AdminBakeryImageType.BAKERY_REPORT_IMAGE, bakeryReportImage.getId())
+                        bakery.getId(), AdminBakeryImageType.BAKERY_REPORT_IMAGE.getCode(), bakeryReportImage.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/admin/image/delete",
@@ -467,9 +468,9 @@ class AdminBakeryControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호"),
                                 parameterWithName("imageType").description("이미지 종류 " +
-                                        "(bakery_report_image (대표이미지), " +
-                                        "product_add_report_image (메뉴제보이미지), " +
-                                        "review_image (리뷰이미지))"),
+                                        "(bakery-report-image (대표이미지), " +
+                                        "product-add-report-image (메뉴제보이미지), " +
+                                        "review-image (리뷰이미지))"),
                                 parameterWithName("imageId").description("이미지 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());

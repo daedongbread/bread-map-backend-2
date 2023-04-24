@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.oAuthInfo.oAuthId = :oAuthId")
     Optional<User> findByOAuthId(@Param("oAuthId") String oAuthId);
-    @Query(value = "select * from user", countQuery = "select count(*) from user", nativeQuery = true)
+    @Query(value = "select u from User u", countQuery = "select count(u) from User u")
     Page<User> findPageAll(Pageable pageable);
 //    Optional<User> findByNickName(String nickName);
     @Query("SELECT u FROM User u WHERE u.userInfo.nickName = :nickName")

@@ -5,6 +5,6 @@ import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import org.springframework.data.domain.Pageable;
 
 public interface AdminUserService {
-    PageResponseDto<AdminUserDto> getUserList(Pageable pageable);
+    PageResponseDto<AdminUserDto> getUserList(int page);
     void changeUserBlock(Long userId);
 }

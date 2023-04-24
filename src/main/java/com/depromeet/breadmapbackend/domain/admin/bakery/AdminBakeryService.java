@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 
 import java.util.List;

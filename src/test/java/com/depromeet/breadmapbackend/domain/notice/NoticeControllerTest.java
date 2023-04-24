@@ -89,7 +89,7 @@ class NoticeControllerTest extends ControllerTest {
 
     @Test
     void getNoticeList() throws Exception {
-        mockMvc.perform(get("/v1/notices/{type}?page=0", NoticeDayType.TODAY)
+        mockMvc.perform(get("/v1/notices/{type}?page=0", NoticeDayType.TODAY.getCode())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/notice",

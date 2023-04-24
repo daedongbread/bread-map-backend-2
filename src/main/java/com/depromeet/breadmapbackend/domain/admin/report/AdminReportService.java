@@ -5,6 +5,6 @@ import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import org.springframework.data.domain.Pageable;
 
 public interface AdminReportService {
-    PageResponseDto<AdminReviewReportDto> getReviewReportList(Pageable pageable);
+    PageResponseDto<AdminReviewReportDto> getReviewReportList(int page);
     void updateReviewStatus(Long reportId);
 }
