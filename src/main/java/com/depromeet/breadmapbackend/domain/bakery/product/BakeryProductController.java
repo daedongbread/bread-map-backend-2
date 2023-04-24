@@ -12,11 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.IOException;
 import java.util.List;
 
+@Validated(ValidationSequence.class)
 @RestController
 @RequestMapping("/v1/bakeries")
 @RequiredArgsConstructor
@@ -41,7 +40,6 @@ public class BakeryProductController {
     public ApiResponse<List<SimpleProductDto>> searchSimpleProductList(
             @PathVariable Long bakeryId,
             @RequestParam
-            @NotBlank(message = "검색어는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
             @Size(min=1, max=20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
             String name) {
         return new ApiResponse<>(bakeryProductService.searchSimpleProductList(bakeryId, name));

@@ -1,9 +1,6 @@
 package com.depromeet.breadmapbackend.domain.flag;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
-import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
