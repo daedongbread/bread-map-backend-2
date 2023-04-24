@@ -88,6 +88,7 @@ public class FlagServiceImpl implements FlagService {
                                 .sorted(Comparator.comparing(FlagBakery::getCreatedAt).reversed())
                                 .map(flagBakery -> FlagBakeryDto.FlagBakeryInfo.builder()
                                         .bakery(flagBakery.getBakery())
+                                        .flagNum(flagBakeryRepository.countFlagNum(flagBakery.getBakery()))
                                         .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
                                                 .stream()
                                                 .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
@@ -114,13 +115,11 @@ public class FlagServiceImpl implements FlagService {
 
         if(flagBakeryRepository.findByBakeryAndUser(bakery, user).isPresent()) {
             FlagBakery flagBakery = flagBakeryRepository.findByBakeryAndUser(bakery, user).get();
-            if(flagBakery.getFlag().getName().equals("가봤어요")) bakery.minusFlagNum();
             flagBakery.getFlag().removeFlagBakery(flagBakery);
             flagBakeryRepository.delete(flagBakery); // TODO : 수정 가능할듯
         }
 
         FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
-        if(flag.getName().equals("가봤어요")) bakery.addFlagNum();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -130,7 +129,6 @@ public class FlagServiceImpl implements FlagService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         FlagBakery flagBakery = flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
-        if(flag.getName().equals("가봤어요")) bakery.minusFlagNum();
         flag.removeFlagBakery(flagBakery);
         flagBakeryRepository.delete(flagBakery);
     }

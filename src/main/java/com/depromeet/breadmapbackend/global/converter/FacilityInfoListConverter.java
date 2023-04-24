@@ -1,9 +1,9 @@
 package com.depromeet.breadmapbackend.global.converter;
 
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +19,6 @@ public class FacilityInfoListConverter implements AttributeConverter<List<Facili
 
     @Override
     public List<FacilityInfo> convertToEntityAttribute(String dbData) {
-        return (dbData == null || dbData.isBlank()) ? Collections.emptyList() : Arrays.stream(dbData.split(SPLIT_CHAR)).map(FacilityInfo::valueOf).collect(Collectors.toList());
+        return (!StringUtils.hasText(dbData)) ? Collections.emptyList() : Arrays.stream(dbData.split(SPLIT_CHAR)).map(FacilityInfo::valueOf).collect(Collectors.toList());
     }
 }

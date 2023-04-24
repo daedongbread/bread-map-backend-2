@@ -27,11 +27,11 @@ public class FlagBakeryDto {
         private List<MapSimpleReviewDto> simpleReviewList;
 
         @Builder
-        public FlagBakeryInfo(Bakery bakery, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList) {
+        public FlagBakeryInfo(Bakery bakery, Integer flagNum, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList) {
             this.id = bakery.getId();
             this.image = bakery.getImage();
             this.name = bakery.getName();
-            this.flagNum = bakery.getFlagNum();
+            this.flagNum = flagNum;
             this.rating = rating;
             this.reviewNum = reviewNum;
             this.simpleReviewList = simpleReviewList;

@@ -49,6 +49,7 @@ public class BakeryServiceImpl implements BakeryService {
             return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
                     .map(bakery -> BakeryCardDto.builder()
                             .bakery(bakery)
+                            .flagNum(flagBakeryRepository.countFlagNum(bakery))
                             .rating(Math.floor(bakery.getReviewList()
                                     .stream()
                                     .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
@@ -114,6 +115,7 @@ public class BakeryServiceImpl implements BakeryService {
 
         BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)
+                .flagNum(flagBakeryRepository.countFlagNum(bakery))
                 .rating(Math.floor(bakery.getReviewList()
                         .stream()
                         .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())

@@ -41,6 +41,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -134,10 +135,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public void addBakery(BakeryAddRequest request) {
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
-                .image((request.getImage() == null || request.getImage().isBlank()) ?
+                .image((StringUtils.hasText(request.getImage())) ? request.getImage() :
                         customAWSS3Properties.getCloudFront() + "/" +
-                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png" :
-                        request.getImage())
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png")
                 .address(request.getAddress()).latitude(request.getLatitude()).longitude(request.getLongitude())
                 .hours(request.getHours())
                 .websiteURL(request.getWebsiteURL()).instagramURL(request.getInstagramURL()).facebookURL(request.getFacebookURL()).blogURL(request.getBlogURL())
@@ -169,10 +169,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(),
-                (request.getImage() == null || request.getImage().isBlank()) ?
+                (StringUtils.hasText(request.getImage())) ? request.getImage() :
                         customAWSS3Properties.getCloudFront() + "/" +
-                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png" :
-                        request.getImage(),
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png",
                 request.getFacilityInfoList(), request.getStatus());
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO

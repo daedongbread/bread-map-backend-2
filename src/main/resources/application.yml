@@ -30,9 +30,11 @@ spring:
       product-review: productReview
       user-review: userReview
   jpa:
+#    show-sql: true
     open-in-view: false
     properties:
       hibernate:
+#        format_sql: true
         create_empty_composites:
           enabled: true
   security:
@@ -82,6 +84,14 @@ spring:
             token-uri: https://appleid.apple.com/auth/token
             jwk-set-uri: https://appleid.apple.com/auth/keys
             user-name-attribute: sub
+
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql: trace
 
 oauth:
   google: google-id

@@ -7,14 +7,15 @@ import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
-    @Query("SELECT fb.bakery FROM FlagBakery fb where fb.flag = ?1")
-    List<Bakery> findBakeryByFlag(Flag flag);
+    @Query("SELECT count(*) FROM FlagBakery fb INNER JOIN Flag f ON f = fb.flag WHERE fb.bakery = :bakery AND f.name = '가봤어요'")
+    Integer countFlagNum(@Param("bakery") Bakery bakery);
     List<FlagBakery> findByFlag(Flag flag);
     Optional<FlagBakery> findByBakeryAndFlagAndUser(Bakery bakery, Flag flag, User user);
     Optional<FlagBakery> findByBakeryAndUser(Bakery bakery, User user);

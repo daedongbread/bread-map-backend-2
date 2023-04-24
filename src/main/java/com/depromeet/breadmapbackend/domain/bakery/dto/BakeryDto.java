@@ -36,10 +36,10 @@ public class BakeryDto {
         private String phoneNumber;
 
         @Builder
-        public BakeryInfo(Bakery bakery, Double rating, Integer reviewNum) {
+        public BakeryInfo(Bakery bakery, Integer flagNum, Double rating, Integer reviewNum) {
             this.image = bakery.getImage();
             this.name = bakery.getName();
-            this.flagNum = bakery.getFlagNum();
+            this.flagNum = flagNum;
             this.rating = rating;
             this.reviewNum = reviewNum;
             this.address = bakery.getAddress();

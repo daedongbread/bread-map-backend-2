@@ -21,12 +21,22 @@ import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProduc
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.bakeryReportImage;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.bakeryUpdateReport;
 import static com.depromeet.breadmapbackend.domain.review.QReview.review;
+import static com.querydsl.core.types.dsl.MathExpressions.acos;
+import static com.querydsl.core.types.dsl.MathExpressions.cos;
+import static com.querydsl.core.types.dsl.MathExpressions.radians;
 
 @Repository
 @RequiredArgsConstructor
 public class BakeryQueryRepository {
     private final JPAQueryFactory queryFactory;
     private final int BAKERY_SIZE = 20;
+
+//    public List<Bakery> searchBakeryByNameContainsIgnoreCaseOrderByDistance(String word, Double latitude, Double longitude) {
+//        queryFactory.selectFrom(bakery)
+//                .where(bakery.name.containsIgnoreCase(word))
+//                .orderBy(acos(cos(radians(latitude))).multiply())
+//                .limit(10)
+//    }
 
     public Page<Bakery> getAdminBakeryList(List<AdminBakeryFilter> filterBy, String name, int page) {
         Pageable pageable = PageRequest.of(page, 20);
