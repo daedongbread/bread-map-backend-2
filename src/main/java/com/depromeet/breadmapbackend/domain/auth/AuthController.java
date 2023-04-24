@@ -21,12 +21,6 @@ import java.util.List;
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping("/valid")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<Boolean> checkToLoginOrRegister(@RequestBody @Validated(ValidationSequence.class) LoginRequest request) {
-        return new ApiResponse<>(authService.checkToLoginOrRegister(request));
-    }
-
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<JwtToken> login(@RequestBody @Validated(ValidationSequence.class) LoginRequest request) {
