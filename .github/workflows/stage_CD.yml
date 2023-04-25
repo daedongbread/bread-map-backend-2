@@ -54,14 +54,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Setting application.yml
-      uses: microsoft/variable-substitution@v1
-      with:
-        files: ./src/main/resources/application.yml
-      env:
-        sgis.key: ${{ secrets.SGIS_KEY }}
-        sgis.secret: ${{ secrets.SGIS_SECRET }}
-
     - name: Build with Gradle
       run: |
         chmod +x ./gradlew
