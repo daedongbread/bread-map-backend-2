@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -135,7 +136,7 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        if (token.isBlank()) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+        if (!StringUtils.hasText(token)) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
         Claims claims = parseClaims(token);
 
         // 권한 정보가 없음

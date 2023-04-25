@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,8 +41,6 @@ public class Bakery extends BaseEntity {
 
     private String image;
 
-    private Integer flagNum;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BakeryStatus status;
@@ -75,18 +74,9 @@ public class Bakery extends BaseEntity {
         this.bakeryURL = BakeryURL.builder()
                 .websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
         this.image = image;
-        this.flagNum = 0;
         this.user = user;
         this.facilityInfoList = facilityInfoList;
         this.status = status;
-    }
-
-    public void addFlagNum() {
-        this.flagNum += 1;
-    }
-
-    public void minusFlagNum() {
-        this.flagNum -= 1;
     }
 
     public void addFacilityInfo(FacilityInfo info) { this.facilityInfoList.add(info); }

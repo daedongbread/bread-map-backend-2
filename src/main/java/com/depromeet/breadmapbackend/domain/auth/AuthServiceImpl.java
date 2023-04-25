@@ -45,17 +45,10 @@ public class AuthServiceImpl implements AuthService {
     private final RedisTokenUtils redisTokenUtils;
     private final JwtTokenProvider jwtTokenProvider;
     private final OIDCProvider oidcProvider;
-    private final CustomRedisProperties customRedisProperties;
     private final CustomAWSS3Properties customAWSS3Properties;
 
     private String getOAuthId(OAuthType oAuthType, String sub) {
         return oAuthType + "_" + sub;
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public Boolean checkToLoginOrRegister(LoginRequest request) {
-        String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
-        return userRepository.findByOAuthId(getOAuthId(request.getType(), sub)).isPresent();
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)

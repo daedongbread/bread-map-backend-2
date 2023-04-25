@@ -1,0 +1,107 @@
+spring:
+  jwt:
+    secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
+    admin: jwtadminsecretkeyjwtadminsecretkeyjwtadminsecretkey
+  datasource:
+    url: jdbc:h2:mem:bread_map;MODE=MySQL;DB_CLOSE_DELAY=-1
+  redis:
+    host: localhost
+    port: 6379
+    key:
+      delete: delete
+      recent: recent
+      access: access
+      refresh: refresh
+      admin-refresh: adminRefresh
+      bakery-review: bakeryReview
+      product-review: productReview
+      user-review: userReview
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        create_empty_composites:
+          enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_ID}
+            client-secret: ${GOOGLE_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
+            scope:
+              - email
+              - profile
+          kakao:
+            client-id: ${KAKAO_ID}
+            client-secret: ${KAKAO_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+          apple:
+            client-name: Apple
+            client-id: ${APPLE_ID}
+            client-secret: ${APPLE_SECRET}
+            redirect-uri: ${APPLE_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            #            client-authentication-method: client_secret_post
+            scope:
+              - openid
+              - name
+              - email
+              - picture
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+          apple:
+            authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post
+            token-uri: https://appleid.apple.com/auth/token
+            jwk-set-uri: https://appleid.apple.com/auth/keys
+            user-name-attribute: sub
+
+oauth:
+  google: google-id
+  kakao: kakao-id
+  apple: apple-id
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: s3-bucket
+      cloud-front: cloudfront
+      default-bucket:
+        image: S3_DEFAULT_IMAGE
+      default-image:
+        bakery: S3_DEFAULT_BAKERY
+        comment: S3_DEFAULT_COMMENT
+        like: S3_DEFAULT_LIKE
+        report: S3_DEFAULT_REPORT
+        flag: S3_DEFAULT_FLAG
+        user: S3_DEFAULT_USER
+
+firebase:
+  credentials: FIREBASE_CREDENTIALS
+  scope: FIREBASE_SCOPE
+  projectId: FIREBASE_PROJECTID
+  message:
+    path:
+      user: FIREBASE_MESSAGE_PATH_USER
+      review: FIREBASE_MESSAGE_PATH_REVIEW
+
+sgis:
+  key: 19d650af0ba14aa3a02c
+  secret: 3dfe3c41a43140ba8e2d

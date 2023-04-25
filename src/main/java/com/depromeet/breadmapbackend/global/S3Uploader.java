@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properti
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -89,7 +90,7 @@ public class S3Uploader {
 
     // delete file
     public void deleteFileS3(String fileName) {
-        if(fileName != null && !fileName.isBlank()) {
+        if (StringUtils.hasText(fileName)) {
             fileName = fileName.replace(customAwss3Properties.getCloudFront() + "/", "");
             log.info("delete file : " + fileName);
             if (amazonS3Client.doesObjectExist(customAwss3Properties.getBucket(), fileName))

@@ -8,16 +8,11 @@ import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.domain.review.dto.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
-
-@Slf4j
+@Validated(ValidationSequence.class)
 @RestController
 @RequestMapping("/v1/reviews")
 @RequiredArgsConstructor

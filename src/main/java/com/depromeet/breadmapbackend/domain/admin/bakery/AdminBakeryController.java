@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated(ValidationSequence.class)
 @RestController
 @RequestMapping("/v1/admin/bakeries")
 @RequiredArgsConstructor

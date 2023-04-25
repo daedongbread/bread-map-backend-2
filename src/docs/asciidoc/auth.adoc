@@ -10,14 +10,10 @@
 :operation-http-response-title: Example Response
 
 == Auth APIs
-- 로그인 가능 여부 조회 API
 - 로그인 API
 - 회원가입 API
 - 토큰 재발급 API
 - 로그아웃 API
-
-=== 로그인 가능 여부 조회 API [GET]
-operation::v1/auth/valid[snippets='http-request,request-fields,http-response,response-fields']
 
 === 로그인 API [POST]
 operation::v1/auth/login[snippets='http-request,request-fields,http-response,response-fields']

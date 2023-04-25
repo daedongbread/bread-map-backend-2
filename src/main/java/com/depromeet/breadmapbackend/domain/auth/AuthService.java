@@ -7,7 +7,6 @@ import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 
 public interface AuthService {
-    Boolean checkToLoginOrRegister(LoginRequest request);
     JwtToken login(LoginRequest request);
     JwtToken register(RegisterRequest request);
     JwtToken reissue(ReissueRequest reissueRequest);

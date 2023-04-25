@@ -26,13 +26,13 @@ public class BakeryCardDto {
     private FlagColor color;
 
     @Builder
-    public BakeryCardDto(Bakery bakery, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList, Double distance, FlagColor color) {
+    public BakeryCardDto(Bakery bakery, Integer flagNum, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList, Double distance, FlagColor color) {
         this.latitude = bakery.getLatitude();
         this.longitude = bakery.getLongitude();
         this.id = bakery.getId();
         this.image = bakery.getImage();
         this.name = bakery.getName();
-        this.flagNum = bakery.getFlagNum();
+        this.flagNum = flagNum;
         this.rating = rating;
         this.reviewNum = reviewNum;
         this.simpleReviewList = simpleReviewList;

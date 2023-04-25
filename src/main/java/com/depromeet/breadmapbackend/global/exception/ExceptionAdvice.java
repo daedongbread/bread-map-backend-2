@@ -104,7 +104,7 @@ public class ExceptionAdvice {
     protected ErrorResponse argumentNotValidException(HttpServletRequest request, ConstraintViolationException e) {
         for (ConstraintViolation<?> error : e.getConstraintViolations()) {
             log.error("error field : \"{}\", value : \"{}\", message : \"{}\"",
-                    error.getPropertyPath().toString().split(".")[1], error.getInvalidValue(), error.getMessage());
+                    error.getPropertyPath().toString().split("\\.")[1], error.getInvalidValue(), error.getMessage());
         }
         return new ErrorResponse(400, "path variable or query parameter not valid");
     }
