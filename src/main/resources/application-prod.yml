@@ -12,27 +12,8 @@ spring:
 #      max-lifeitme: 300
   jpa:
     hibernate:
-      ddl-auto: update
-      use-new-id-generator-mappings: false
+      ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
-    properties:
-      hibernate:
-        create_empty_composites:
-          enabled: true
-  servlet:
-    multipart:
-      maxFileSize: 10MB
-      maxRequestSize: 100MB
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      add-mappings: false
-  data:
-    redis:
-      repositories:
-        enabled: false
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -53,72 +34,24 @@ spring:
             client-id: ${GOOGLE_ID}
             client-secret: ${GOOGLE_SECRET}
             redirect-uri: ${GOOGLE_REDIRECT_URL}
-            scope:
-              - email
-              - profile
           kakao:
             client-id: ${KAKAO_ID}
             client-secret: ${KAKAO_SECRET}
             redirect-uri: ${KAKAO_REDIRECT_URL}
-            authorization-grant-type: authorization_code
-            client-authentication-method: POST
-            client-name: Kakao
-            scope:
-              - profile_nickname
-              - profile_image
-              - account_email
           apple:
-            client-name: Apple
             client-id: ${APPLE_ID}
             client-secret: ${APPLE_SECRET}
             redirect-uri: ${APPLE_REDIRECT_URI}
-            authorization-grant-type: authorization_code
-            client-authentication-method: POST
-            # client-authentication-method: client_secret_post
-            scope:
-              - openid
-              - name
-              - email
-              - picture
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
-          apple:
-            authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post
-            token-uri: https://appleid.apple.com/auth/token
-            jwk-set-uri: https://appleid.apple.com/auth/keys
-            user-name-attribute: sub
 
 oauth:
   google: ${GOOGLE_ID}
   kakao: ${KAKAO_ID}
   apple: ${APPLE_ID}
 
-management:
-  endpoint:
-    health:
-      enabled: true
-  endpoints:
-    enabled-by-default: false
-    jmx:
-      exposure:
-        exclude: "*"
-    web:
-      exposure:
-        include: health
-      base-path: /actuator # default
-
 cloud:
   aws:
-    credentials:
-      instanceProfile: true
     region:
       static: ${S3_REGION}
-    stack:
-      auto: false
     s3:
       bucket: ${S3_BUCKET}
       cloud-front: ${S3_CLOUDFRONT}
@@ -132,13 +65,8 @@ cloud:
         flag: ${S3_DEFAULT_IMAGE_FLAG}
         user: ${S3_DEFAULT_IMAGE_USER}
 
-#logging:
-#  level:
-#    root: error
-
 firebase:
-  url: ${FIREBASE_URL}
-  path: ${FIREBASE_PATH}
+  credentials: ${FIREBASE_CREDENTIALS}
   scope: ${FIREBASE_SCOPE}
   projectId: ${FIREBASE_PROJECTID}
   message:

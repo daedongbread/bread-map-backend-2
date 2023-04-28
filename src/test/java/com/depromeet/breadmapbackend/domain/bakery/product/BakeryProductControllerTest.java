@@ -84,11 +84,12 @@ public class BakeryProductControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호")
-                        ),
+                                parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("name").optional().description("검색 키워드 (20자 이하)")),
                         responseFields(
                                 fieldWithPath("data.[].id").description("상품 고유번호"),
-                                fieldWithPath("data.[].productType").description("상품 종류"),
+                                fieldWithPath("data.[].productType").description("상품 종류 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("data.[].name").description("상품 이름"),
                                 fieldWithPath("data.[].rating").description("상품 평점"),
                                 fieldWithPath("data.[].reviewNum").description("상품 리뷰 수"),
@@ -122,25 +123,25 @@ public class BakeryProductControllerTest extends ControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    void searchSimpleProductList() throws Exception {
-        mockMvc.perform(get("/v1/bakeries/{bakeryId}/products/search?name=bread", bakery.getId())
-                        .header("Authorization", "Bearer " + token.getAccessToken()))
-                .andDo(print())
-                .andDo(document("v1/bakery/review/product/search",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
-                        requestParameters(parameterWithName("name").description("검색 키워드")),
-                        responseFields(
-                                fieldWithPath("data.[].id").description("상품 고유 번호"),
-                                fieldWithPath("data.[].productType").description("상품 종류"),
-                                fieldWithPath("data.[].name").description("상품 이름"),
-                                fieldWithPath("data.[].price").description("상품 가격"),
-                                fieldWithPath("data.[].image").description("상품 이미지")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    void searchSimpleProductList() throws Exception {
+//        mockMvc.perform(get("/v1/bakeries/{bakeryId}/products/search?name=bread", bakery.getId())
+//                        .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("v1/bakery/review/product/search",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+//                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+//                        requestParameters(parameterWithName("name").description("검색 키워드")),
+//                        responseFields(
+//                                fieldWithPath("data.[].id").description("상품 고유 번호"),
+//                                fieldWithPath("data.[].productType").description("상품 종류 (BREAD, BEVERAGE, ETC)"),
+//                                fieldWithPath("data.[].name").description("상품 이름"),
+//                                fieldWithPath("data.[].price").description("상품 가격"),
+//                                fieldWithPath("data.[].image").description("상품 이미지")
+//                        )
+//                ))
+//                .andExpect(status().isOk());
+//    }
 }

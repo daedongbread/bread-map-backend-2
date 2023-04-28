@@ -49,9 +49,10 @@ class AuthControllerTest extends ControllerTest {
         userRepository.save(user);
 
         token = jwtTokenProvider.createJwtToken(user.getOAuthId(), RoleType.USER.getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getRefresh() + ":" + user.getOAuthId(),
-                        token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
+        redisTokenUtils.setRefreshToken(
+                token.getRefreshToken(),
+                user.getOAuthId() + ":" + token.getAccessToken(),
+                jwtTokenProvider.getRefreshTokenExpiredDate());
 
         noticeToken = NoticeToken.builder().user(user).deviceToken("deviceToken1").build();
         noticeTokenRepository.save(noticeToken);
@@ -61,32 +62,6 @@ class AuthControllerTest extends ControllerTest {
     public void setDown() {
         noticeTokenRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
-    }
-
-    @Test
-    void checkToLoginOrRegister() throws Exception {
-        String object = objectMapper.writeValueAsString(LoginRequest.builder()
-                .type(OAuthType.GOOGLE).idToken("oAuthId1").build());
-
-        given(authService.checkToLoginOrRegister(any())).willReturn(Boolean.TRUE);
-
-        mockMvc.perform(get("/v1/auth/valid")
-                        .content(object)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andDo(document("v1/auth/valid",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("type").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
-                                fieldWithPath("idToken").description("idToken")
-                        ),
-                        responseFields(
-                                fieldWithPath("data").description("로그인 가능 여부 (false면 회원가입 API 호출)")
-                        )
-                ))
-                .andExpect(status().isOk());
     }
 
     @Test

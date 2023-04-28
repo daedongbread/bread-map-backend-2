@@ -79,12 +79,10 @@ public class ReviewDto {
             this.imageList = review.getImageList().stream().map(ReviewImage::getImage).collect(Collectors.toList());
             this.content = review.getContent();
             this.isLike = isLike;
-            this.likeNum = review.getLikes().size();
+            this.likeNum = review.getLikeNum();
             this.commentNum = (int) review.getComments().stream().filter(reviewComment -> reviewComment.getUser() != null).count();
             this.createdAt = review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-            this.averageRating = Math.floor(
-                    review.getRatings().stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue)
-                            .average().orElse(0)*10)/10.0;
+            this.averageRating = review.getAverageRating();
         }
     }
 

@@ -4,11 +4,13 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.dto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/exception")
+@RequestMapping("/v1/exception")
 public class ExceptionController {
     @GetMapping("/entryPoint")
     public ErrorResponse getEntrypointException() {

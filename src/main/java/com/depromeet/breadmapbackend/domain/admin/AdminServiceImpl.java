@@ -19,6 +19,7 @@ import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.domain.admin.dto.*;
 import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
+import com.depromeet.breadmapbackend.global.security.token.RedisTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -43,6 +44,7 @@ public class AdminServiceImpl implements AdminService {
     private final FileConverter fileConverter;
     private final S3Uploader s3Uploader;
     private final PasswordEncoder passwordEncoder;
+    private final RedisTokenUtils redisTokenUtils;
     private final JwtTokenProvider jwtTokenProvider;
     private final StringRedisTemplate redisTemplate;
     private final CustomRedisProperties customRedisProperties;
@@ -66,33 +68,38 @@ public class AdminServiceImpl implements AdminService {
         if (!passwordEncoder.matches(request.getPassword(), admin.getPassword()))
             throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
 
-        JwtToken adminToken = jwtTokenProvider.createJwtToken(admin.getEmail(), "ROLE_ADMIN");
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
-                        adminToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        return adminToken;
+        return createNewToken(admin.getEmail(), admin.getRoleType());
     }
 
     @Transactional(rollbackFor = Exception.class)
     public JwtToken reissue(ReissueRequest request) {
-        if (!jwtTokenProvider.verifyToken(request.getRefreshToken()))
+        if(!jwtTokenProvider.verifyToken(request.getRefreshToken()) ||
+                !redisTokenUtils.isRefreshTokenValid(request.getRefreshToken(), request.getAccessToken()) ||
+                redisTokenUtils.isBlackList(request.getAccessToken()))
             throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 
-        String accessToken = request.getAccessToken();
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken, false);
-        String email = authentication.getName();
+        String email = redisTokenUtils.getOAuthIdFromRefreshToken(request.getRefreshToken());
         Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
 
-        String refreshToken = redisTemplate.opsForValue().get(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId());
-        if (refreshToken == null || !refreshToken.equals(request.getRefreshToken()))
-            throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
-
-        JwtToken reissueToken = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
-                        reissueToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-
+        JwtToken reissueToken = createNewToken(email, admin.getRoleType());
+        makeTokenInvalid(request.getAccessToken(), request.getRefreshToken());
         return reissueToken;
+    }
+
+    private JwtToken createNewToken(String email, RoleType roleType) {
+        JwtToken jwtToken = jwtTokenProvider.createJwtToken(email, roleType.getCode());
+        // key : refreshToken, value : email:accessToken
+        redisTokenUtils.setRefreshToken(
+                jwtToken.getRefreshToken(),
+                email + ":" + jwtToken.getAccessToken(),
+                jwtTokenProvider.getRefreshTokenExpiredDate()
+        );
+        return jwtToken;
+    }
+
+    private void makeTokenInvalid(String accessToken, String refreshToken) {
+        redisTokenUtils.setAccessTokenBlackList(accessToken, jwtTokenProvider.getExpiration(accessToken));
+        redisTokenUtils.deleteRefreshToken(refreshToken);
     }
 
     @Transactional(readOnly = true)

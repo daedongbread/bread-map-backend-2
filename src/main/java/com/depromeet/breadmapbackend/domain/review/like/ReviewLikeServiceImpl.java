@@ -34,8 +34,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
 
         if(reviewLikeRepository.findByUserAndReview(user, review).isPresent()) throw new DaedongException(DaedongStatus.REVIEW_LIKE_DUPLICATE_EXCEPTION);
 
-        ReviewLike reviewLike = ReviewLike.builder().review(review).user(user).build();
-        review.plusLike(reviewLike);
+        reviewLikeRepository.save(ReviewLike.builder().review(review).user(user).build());
         eventPublisher.publishEvent(ReviewLikeEvent.builder()
                 .userId(review.getUser().getId()).fromUserId(user.getId())
                 .reviewId(reviewId).reviewContent(review.getContent()).build());
@@ -47,8 +46,7 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
         Review review = reviewRepository.findById(reviewId)
                 .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
-        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review)
-                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_UNLIKE_DUPLICATE_EXCEPTION));
-        review.minusLike(reviewLike);
+        reviewLikeRepository.delete(reviewLikeRepository.findByUserAndReview(user, review)
+                .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_UNLIKE_DUPLICATE_EXCEPTION)));
     }
 }

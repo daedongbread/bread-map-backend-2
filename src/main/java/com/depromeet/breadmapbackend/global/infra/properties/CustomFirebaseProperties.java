@@ -16,9 +16,7 @@ import javax.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "firebase")
 public class CustomFirebaseProperties {
     @NotBlank(message = "해당값은 필수 값입니다")
-    private final String url;
-    @NotBlank(message = "해당값은 필수 값입니다")
-    private final String path;
+    private final String credentials;
     @NotBlank(message = "해당값은 필수 값입니다")
     private final String scope;
     @NotBlank(message = "해당값은 필수 값입니다")

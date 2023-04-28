@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -30,11 +31,13 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
+    private final RedisTokenUtils redisTokenUtils;
     private final CustomJWTKeyProperties customJWTKeyProperties;
-    private final Long accessTokenExpiredDate = 60 * 60 * 1000L; // 1 hours
+    private final Long accessTokenExpiredDate = 1 * 60 * 60 * 1000L; // 1 hours
     private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 days
 
     private static final String ROLES = "roles";
+    private static final String TYPE = "type";
 
 //    @PostConstruct
 //    protected void init() {
@@ -63,13 +66,13 @@ public class JwtTokenProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenExpiredDate))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiredDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -89,13 +92,13 @@ public class JwtTokenProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + 60 * 1000L))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000L))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenExpiredDate))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredDate))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -108,8 +111,8 @@ public class JwtTokenProvider {
     public boolean verifyToken(String token) {
         try {
             Claims claims = parseClaims(token);
-            return claims.getExpiration().after(new Date());
-        } catch (SecurityException | MalformedJwtException e) {
+            return claims.getExpiration().after(new Date()) && !redisTokenUtils.isBlackList(token);
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다.");
@@ -128,25 +131,13 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token).getBody();
     }
 
-    private Claims parseClaimsIgnoringExpiration(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
-
-    public String getUsername(String token) {
+    public String getSubject(String token) {
         return parseClaims(token).getSubject();
     }
 
-    public Authentication getAuthentication(String token, boolean unexpired) {
-        Claims claims;
-        if (unexpired) claims = parseClaims(token);
-        else claims = parseClaimsIgnoringExpiration(token);
+    public Authentication getAuthentication(String token) {
+        if (!StringUtils.hasText(token)) throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+        Claims claims = parseClaims(token);
 
         // 권한 정보가 없음
         if (claims.get(ROLES) == null) {
@@ -171,7 +162,7 @@ public class JwtTokenProvider {
         // accessToken 남은 유효시간
         Date expiration = parseClaims(accessToken).getExpiration();
         // 현재 시간
-        Long now = new Date().getTime();
+        Long now = new Date(System.currentTimeMillis()).getTime();
         return (expiration.getTime() - now);
     }
 }

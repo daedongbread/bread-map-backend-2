@@ -54,7 +54,7 @@ public class SearchServiceImpl implements SearchService {
         redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + oAuthId, word, Double.parseDouble(time));
         redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, -(10 + 1), -(10 + 1));
 
-        return  bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
+        return bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakeryId(bakery.getId()).bakeryName(bakery.getName())
                         .reviewNum(bakery.getReviewList().size())

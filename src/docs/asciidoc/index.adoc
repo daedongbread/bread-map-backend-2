@@ -19,7 +19,7 @@ endif::[]
 |===
 | 환경 | Domain
 
-| 개발 서버|`http://localhost:8080`
+| 개발 서버|`https://api.stage-daedongbread.com/`
 | 운영 서버|`https://api.daedongbread.com`
 |===
 

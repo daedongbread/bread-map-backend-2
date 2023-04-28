@@ -448,7 +448,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_auth_apis">Auth APIs</a>
 <ul class="sectlevel2">
-<li><a href="#_로그인_가능_여부_조회_api_get">로그인 가능 여부 조회 API [GET]</a></li>
 <li><a href="#_로그인_api_post">로그인 API [POST]</a></li>
 <li><a href="#_회원가입_api_post">회원가입 API [POST]</a></li>
 <li><a href="#_토큰_재발급_api_post">토큰 재발급 API [POST]</a></li>
@@ -465,9 +464,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>로그인 가능 여부 조회 API</p>
-</li>
-<li>
 <p>로그인 API</p>
 </li>
 <li>
@@ -480,112 +476,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>로그아웃 API</p>
 </li>
 </ul>
-</div>
-<div class="sect2">
-<h3 id="_로그인_가능_여부_조회_api_get"><a class="link" href="#_로그인_가능_여부_조회_api_get">로그인 가능 여부 조회 API [GET]</a></h3>
-<div class="sect3">
-<h4 id="_로그인_가능_여부_조회_api_get_http_request"><a class="link" href="#_로그인_가능_여부_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/auth/valid HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Accept: application/json
-Content-Length: 52
-Host: localhost:8080
-
-{
-  "type" : "GOOGLE",
-  "idToken" : "oAuthId1"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_로그인_가능_여부_조회_api_get_request_fields"><a class="link" href="#_로그인_가능_여부_조회_api_get_request_fields">Request fields</a></h4>
-<div class="sect4">
-<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idToken 프로바이더 (GOOGLE, KAKAO, APPLE)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>idToken</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idToken</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_로그인_가능_여부_조회_api_get_http_response"><a class="link" href="#_로그인_가능_여부_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 21
-
-{
-  "data" : true
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_로그인_가능_여부_조회_api_get_response_fields"><a class="link" href="#_로그인_가능_여부_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 가능 여부 (false면 회원가입 API 호출)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_로그인_api_post"><a class="link" href="#_로그인_api_post">로그인 API [POST]</a></h3>
@@ -657,14 +547,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 416
+Content-Length: 414
 
 {
   "data" : {
     "userId" : 33,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcxLCJleHAiOjE2ODE2NDExNzF9.j0IvOUfwxYGUAZ3N-zLahWdcIoPRFvI__2svbWxYrQg",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzF9.s3BjFQGEL8gm1VORfsLzDGRyJyhJzHChzbDxq8-_JCQ",
-    "accessTokenExpiredDate" : 3600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyNjU2MjkxLCJleHAiOjE2ODI2NTYzNTF9.GAJ9_nX7zUhwkp6MSA7XD4Zv7I_cUe9wBQgDxHpL9bY",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODM4NjU4OTF9.mDGqdYIFSOaYPHTahwUp-M37kj-K402FhY4WHRbMQ0U",
+    "accessTokenExpiredDate" : 60000
   }
 }</code></pre>
 </div>
@@ -804,14 +694,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 416
+Content-Length: 414
 
 {
   "data" : {
     "userId" : 32,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcwLCJleHAiOjE2ODE2NDExNzB9.fBwa6OQwrvAm5DVfzeDcKG9QtBYttw5_cltpYdPb98o",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzB9.LvnIqwGdOdCYzAU7EhcFm5IFUd2w7_juvajvOSY289k",
-    "accessTokenExpiredDate" : 3600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyNjU2MjkxLCJleHAiOjE2ODI2NTYzNTF9.GAJ9_nX7zUhwkp6MSA7XD4Zv7I_cUe9wBQgDxHpL9bY",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODM4NjU4OTF9.mDGqdYIFSOaYPHTahwUp-M37kj-K402FhY4WHRbMQ0U",
+    "accessTokenExpiredDate" : 60000
   }
 }</code></pre>
 </div>
@@ -873,8 +763,8 @@ Content-Length: 332
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcxLCJleHAiOjE2ODE2NDExNzF9.j0IvOUfwxYGUAZ3N-zLahWdcIoPRFvI__2svbWxYrQg",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzF9.s3BjFQGEL8gm1VORfsLzDGRyJyhJzHChzbDxq8-_JCQ"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyNjU2MjkxLCJleHAiOjE2ODI2NTYzNTF9.GAJ9_nX7zUhwkp6MSA7XD4Zv7I_cUe9wBQgDxHpL9bY",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODM4NjU4OTF9.mDGqdYIFSOaYPHTahwUp-M37kj-K402FhY4WHRbMQ0U"
 }</code></pre>
 </div>
 </div>
@@ -930,14 +820,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 416
+Content-Length: 414
 
 {
   "data" : {
     "userId" : 34,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcxLCJleHAiOjE2ODE2NDExNzF9.j0IvOUfwxYGUAZ3N-zLahWdcIoPRFvI__2svbWxYrQg",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzF9.s3BjFQGEL8gm1VORfsLzDGRyJyhJzHChzbDxq8-_JCQ",
-    "accessTokenExpiredDate" : 3600000
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyNjU2MjkxLCJleHAiOjE2ODI2NTYzNTF9.GAJ9_nX7zUhwkp6MSA7XD4Zv7I_cUe9wBQgDxHpL9bY",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODM4NjU4OTF9.mDGqdYIFSOaYPHTahwUp-M37kj-K402FhY4WHRbMQ0U",
+    "accessTokenExpiredDate" : 60000
   }
 }</code></pre>
 </div>
@@ -994,14 +884,14 @@ Content-Length: 416
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcwLCJleHAiOjE2ODE2NDExNzB9.fBwa6OQwrvAm5DVfzeDcKG9QtBYttw5_cltpYdPb98o
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyNjU2MjkxLCJleHAiOjE2ODI2NTYzNTF9.GAJ9_nX7zUhwkp6MSA7XD4Zv7I_cUe9wBQgDxHpL9bY
 Accept: application/json
 Content-Length: 367
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgxNjM3NTcwLCJleHAiOjE2ODE2NDExNzB9.fBwa6OQwrvAm5DVfzeDcKG9QtBYttw5_cltpYdPb98o",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODI4NDcxNzB9.LvnIqwGdOdCYzAU7EhcFm5IFUd2w7_juvajvOSY289k",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgyNjU2MjkxLCJleHAiOjE2ODI2NTYzNTF9.GAJ9_nX7zUhwkp6MSA7XD4Zv7I_cUe9wBQgDxHpL9bY",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODM4NjU4OTF9.mDGqdYIFSOaYPHTahwUp-M37kj-K402FhY4WHRbMQ0U",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>
@@ -1097,7 +987,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-04-16 16:09:12 +0900
+Last updated 2023-04-26 04:07:24 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

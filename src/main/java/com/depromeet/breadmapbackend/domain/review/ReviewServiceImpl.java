@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.review.view.ReviewViewRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -9,7 +8,6 @@ import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
@@ -21,10 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -164,8 +159,7 @@ public class ReviewServiceImpl implements ReviewService {
         if (request.getImages() != null && !request.getImages().isEmpty()) {
             if (request.getImages().size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
             for (String image : request.getImages()) {
-                ReviewImage.builder()
-                        .review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image(image).build();
+                ReviewImage.builder().review(review).bakery(bakery).image(image).build();
             }
         }
     }

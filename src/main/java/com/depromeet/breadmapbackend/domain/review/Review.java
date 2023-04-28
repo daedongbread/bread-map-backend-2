@@ -11,11 +11,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -48,11 +50,15 @@ public class Review extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isBlock = Boolean.FALSE;
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isNew = Boolean.TRUE;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = EAGER)
     private List<ReviewProductRating> ratings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReviewLike> likes = new ArrayList<>();
+    @Formula("(SELECT count(*) FROM review_like rl WHERE rl.review_id = id)")
+    private Integer likeNum;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewComment> comments = new ArrayList<>();
@@ -65,13 +71,18 @@ public class Review extends BaseEntity {
         this.bakery.getReviewList().add(this);
     }
 
+    public Double getAverageRating() {
+        return Math.floor(this.ratings.stream()
+                .mapToLong(ReviewProductRating::getRating).average().orElse(0)*10)/ 10.0;
+    }
+
     public void changeBlock() {
         this.isBlock = !this.isBlock;
     }
 
-    public void plusLike(ReviewLike reviewLike){ this.likes.add(reviewLike); }
-
-    public void minusLike(ReviewLike reviewLike){ this.likes.remove(reviewLike); }
-
     public void removeComment(ReviewComment reviewComment){ this.comments.remove(reviewComment); }
+
+    public void unNew() {
+        this.isNew = Boolean.FALSE;
+    }
 }

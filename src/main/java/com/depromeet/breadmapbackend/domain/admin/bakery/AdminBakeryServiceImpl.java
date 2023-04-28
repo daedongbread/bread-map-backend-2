@@ -1,7 +1,10 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryQueryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
@@ -31,24 +34,27 @@ import com.depromeet.breadmapbackend.global.infra.feign.exception.FeignException
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomSGISKeyProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.util.StringUtils;
 
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminBakeryServiceImpl implements AdminBakeryService {
     private final ProductRepository productRepository;
     private final BakeryRepository bakeryRepository;
+    private final BakeryQueryRepository bakeryQueryRepository;
     private final BakeryViewRepository bakeryViewRepository;
     private final BakeryUpdateReportRepository bakeryUpdateReportRepository;
     private final BakeryReportImageRepository bakeryReportImageRepository;
@@ -66,29 +72,50 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     private final CustomAWSS3Properties customAWSS3Properties;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(@RequestParam int page) {
-        PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<Bakery> all = bakeryRepository.findPageAll(pageRequest);
-        return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
+    public AdminBakeryAlarmBar getBakeryAlarmBar() {
+        Integer bakeryReportImageNum = bakeryReportImageRepository.countByIsNewIsTrue();
+        Integer productAddReportNum = productAddReportRepository.countByIsNewIsTrue();
+        Integer bakeryUpdateReportNum = bakeryUpdateReportRepository.countByIsNewIsTrue();
+        Integer newReviewNum = reviewRepository.countByIsNewIsTrue();
+
+        return AdminBakeryAlarmBar.builder()
+                .bakeryReportImageNum(bakeryReportImageNum)
+                .productAddReportNum(productAddReportNum)
+                .bakeryUpdateReportNum(bakeryUpdateReportNum)
+                .newReviewNum(newReviewNum)
+                .build();
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public PageResponseDto<AdminSimpleBakeryDto> getBakeryList(List<AdminBakeryFilter> filterBy, String name, int page) {
+        Page<Bakery> bakeries = bakeryQueryRepository.getAdminBakeryList(filterBy, name, page);
+        List<AdminSimpleBakeryDto> contents = bakeries.getContent().stream()
+                .map(bakery -> AdminSimpleBakeryDto.builder()
+                        .bakery(bakery)
+                        .bakeryReportImageNum(bakeryReportImageRepository.countByBakeryAndIsNewIsTrue(bakery))
+                        .productAddReportNum(productAddReportRepository.countByBakeryAndIsNewIsTrue(bakery))
+                        .bakeryUpdateReportNum(bakeryUpdateReportRepository.countByBakeryAndIsNewIsTrue(bakery))
+                        .newReviewNum(reviewRepository.countByBakeryAndIsNewIsTrue(bakery)).build())
+                .collect(Collectors.toList());
+        return PageResponseDto.of(bakeries, contents);
     }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminBakeryDto getBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        List<AdminProductDto> productList = productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
+        List<AdminProductDto> productList = productRepository.findByBakeryAndIsTrueIsTrue(bakery).stream()
                 .map(AdminProductDto::new).collect(Collectors.toList());
 
         String image = (bakery.getImage().contains(customAWSS3Properties.getDefaultImage().getBakery())) ? null : bakery.getImage();
         return AdminBakeryDto.builder().bakery(bakery).image(image).productList(productList).build();
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page) {
-        PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<Bakery> all = bakeryRepository.findByNameContainsOrderByUpdatedAt(name, pageRequest);
-        return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
-    }
+//    @Transactional(readOnly = true, rollbackFor = Exception.class)
+//    public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page) {
+//        PageRequest pageRequest = PageRequest.of(page, 20);
+//        Page<Bakery> all = bakeryRepository.findByNameContainsOrderByUpdatedAt(name, pageRequest);
+//        return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
+//    }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
@@ -107,10 +134,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public void addBakery(BakeryAddRequest request) {
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
-                .image((request.getImage() == null || request.getImage().isBlank()) ?
+                .image((StringUtils.hasText(request.getImage())) ? request.getImage() :
                         customAWSS3Properties.getCloudFront() + "/" +
-                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png" :
-                        request.getImage())
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png")
                 .address(request.getAddress()).latitude(request.getLatitude()).longitude(request.getLongitude())
                 .hours(request.getHours())
                 .websiteURL(request.getWebsiteURL()).instagramURL(request.getInstagramURL()).facebookURL(request.getFacebookURL()).blogURL(request.getBlogURL())
@@ -142,10 +168,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(),
-                (request.getImage() == null || request.getImage().isBlank()) ?
+                (StringUtils.hasText(request.getImage())) ? request.getImage() :
                         customAWSS3Properties.getCloudFront() + "/" +
-                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png" :
-                        request.getImage(),
+                        customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png",
                 request.getFacilityInfoList(), request.getStatus());
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
@@ -192,9 +217,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public AdminImageBarDto getAdminImageBar(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return AdminImageBarDto.builder()
-                .bakeryReportImageNum((int) bakeryReportImageRepository.countByBakery(bakery))
-                .productAddReportImageNum((int) productAddReportImageRepository.countByBakeryAndIsRegisteredIsTrue(bakery))
-                .reviewImageNum((int) reviewImageRepository.countByBakeryAndIsHideIsFalse(bakery))
+                .bakeryReportImageNum(bakeryReportImageRepository.countByBakery(bakery))
+                .productAddReportImageNum(productAddReportImageRepository.countByBakeryAndIsRegisteredIsTrue(bakery))
+                .reviewImageNum(reviewImageRepository.countByBakeryAndIsHideIsFalse(bakery))
                 .build();
     }
 
@@ -204,15 +229,15 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         PageRequest pageable = PageRequest.of(page, 16, Sort.by("createdAt").descending());
 
         PageResponseDto<AdminImageDto> adminImages;
-        if (type.equals(AdminBakeryImageType.bakeryReportImage)) {
+        if (type.equals(AdminBakeryImageType.BAKERY_REPORT_IMAGE)) {
             Page<BakeryReportImage> bakeryReportImages = bakeryReportImageRepository.findPageByBakery(bakery, pageable);
             adminImages = PageResponseDto.of(bakeryReportImages, AdminImageDto::new);
             bakeryReportImages.forEach(BakeryReportImage::unNew);
-        } else if (type.equals(AdminBakeryImageType.productAddReportImage)) {
+        } else if (type.equals(AdminBakeryImageType.PRODUCT_ADD_REPORT_IMAGE)) {
             Page<ProductAddReportImage> productAddReportImages = productAddReportImageRepository.findPageByBakeryAndIsRegisteredIsTrue(bakery, pageable);
             adminImages = PageResponseDto.of(productAddReportImages, AdminImageDto::new);
             productAddReportImages.forEach(ProductAddReportImage::unNew);
-        } else if (type.equals(AdminBakeryImageType.reviewImage)) {
+        } else if (type.equals(AdminBakeryImageType.REVIEW_IMAGE)) {
             Page<ReviewImage> reviewImages = reviewImageRepository.findPageByBakeryAndIsHideIsFalse(bakery, pageable);
             adminImages = PageResponseDto.of(reviewImages, AdminImageDto::new);
             reviewImages.forEach(ReviewImage::unNew);
@@ -224,7 +249,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     public void deleteAdminImage(Long bakeryId, AdminBakeryImageType type, Long imageId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
-        if (type.equals(AdminBakeryImageType.bakeryReportImage)) {
+        if (type.equals(AdminBakeryImageType.BAKERY_REPORT_IMAGE)) {
             BakeryReportImage bakeryReportImage = bakeryReportImageRepository.findById(imageId)
                     .orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_IMAGE_REPORT_NOT_FOUND));
             String replace = bakeryReportImage.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
@@ -235,7 +260,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 bakeryReportImageRepository.delete(bakeryReportImage);
                 s3Uploader.deleteFileS3(replace);
             }
-        } else if (type.equals(AdminBakeryImageType.productAddReportImage)) {
+        } else if (type.equals(AdminBakeryImageType.PRODUCT_ADD_REPORT_IMAGE)) {
             ProductAddReportImage productAddReportImage = productAddReportImageRepository.findById(imageId)
                     .orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND));
 
@@ -247,7 +272,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 productAddReportImageRepository.delete(productAddReportImage);
                 s3Uploader.deleteFileS3(replace);
             }
-        } else if (type.equals(AdminBakeryImageType.reviewImage)) {
+        } else if (type.equals(AdminBakeryImageType.REVIEW_IMAGE)) {
             ReviewImage reviewImage = reviewImageRepository.findByIdAndBakery(imageId, bakery)
                     .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_IMAGE_NOT_FOUND));
 

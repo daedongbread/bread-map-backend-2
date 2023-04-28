@@ -89,7 +89,7 @@ class NoticeControllerTest extends ControllerTest {
 
     @Test
     void getNoticeList() throws Exception {
-        mockMvc.perform(get("/v1/notices/{type}?page=0", NoticeDayType.TODAY)
+        mockMvc.perform(get("/v1/notices/{type}?page=0", NoticeDayType.TODAY.getCode())
                 .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andDo(document("v1/notice",
@@ -120,7 +120,16 @@ class NoticeControllerTest extends ControllerTest {
                                         "(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
                                 fieldWithPath("data.contents.[].isFollow").description("알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
                                 fieldWithPath("data.contents.[].createdAt").description("알람 생성일"),
-                                fieldWithPath("data.contents.[].noticeType").description("알람 타입")
+                                fieldWithPath("data.contents.[].noticeType").description("알람 타입 (" +
+                                        "FOLLOW(\"팔로우\"), \n" +
+                                        "REVIEW_COMMENT(\"리뷰 댓글\"), \n" +
+                                        "REVIEW_LIKE(\"리뷰 좋아요\"), \n" +
+                                        "RECOMMENT(\"대댓글\"), \n" +
+                                        "REVIEW_COMMENT_LIKE(\"리뷰 댓글 좋아요\"), \n" +
+                                        "ADD_BAKERY(\"제보한 빵집 추가\"), \n" +
+                                        "ADD_PRODUCT(\"제보한 상품 추가\"), \n" +
+                                        "FLAG_BAKERY_CHANGE(\"즐겨찾기 빵집 변동사항\"), \n" +
+                                        "FLAG_BAKERY_ADMIN_NOTICE(\"즐겨찾기 빵집 관리자 새 글\"))")
                         )
                 ))
                 .andExpect(status().isOk());

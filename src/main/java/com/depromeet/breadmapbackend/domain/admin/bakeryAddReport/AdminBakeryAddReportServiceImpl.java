@@ -10,7 +10,9 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,8 @@ public class AdminBakeryAddReportServiceImpl implements AdminBakeryAddReportServ
     private final BakeryAddReportRepository bakeryAddReportRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public PageResponseDto<SimpleBakeryAddReportDto> getBakeryAddReportList(Pageable pageable) {
+    public PageResponseDto<SimpleBakeryAddReportDto> getBakeryAddReportList(int page) {
+        PageRequest pageable = PageRequest.of(page, 20, Sort.by("createdAt").descending());
         Page<BakeryAddReport> all = bakeryAddReportRepository.findPageAll(pageable);
         return PageResponseDto.of(all, SimpleBakeryAddReportDto::new);
     }

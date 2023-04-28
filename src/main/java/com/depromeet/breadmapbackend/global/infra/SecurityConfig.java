@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.global.infra;
 
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
+import com.depromeet.breadmapbackend.global.infra.filter.LoggingFilter;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.global.security.CustomAccessDeniedHandler;
 import com.depromeet.breadmapbackend.global.security.CustomAuthenticationEntryPoint;
@@ -20,8 +21,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,29 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final StringRedisTemplate redisTemplate;
     private final CustomRedisProperties customRedisProperties;
     private final UserRepository userRepository;
+    private final LoggingFilter loggingFilter;
 
-    // 토큰 프로바이더 설정
-//    @Bean
-//    public JwtTokenProvider jwtTokenProvider() {
-//        return new JwtTokenProvider(appProperties);
-//    }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-//    @Bean
-//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-//        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider, refreshTokenRepository);
-//    }
-
-    // 토큰 필터 설정
-//    @Bean
-//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-//        return new JwtAuthenticationFilter(jwtTokenProvider);
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -75,19 +63,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue", "/exception/**").permitAll()
+                .antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue", "/v1/exception/**").permitAll()
                 .antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test").permitAll()
-                .antMatchers("/h2-console/**", "/favicon.ico", "/actuator/health").permitAll()
+                .antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health").permitAll()
                 .antMatchers("/v1/bakeries/**", "/v1/flags/**", "/v1/reviews/**", "/v1/users/**", "/v1/notices/**", "/v1/search/**", "/v1/images/**", "/v1/auth/**").hasAuthority(RoleType.USER.getCode())
                 .antMatchers("/v1/admin/**").hasAuthority(RoleType.ADMIN.getCode())
 //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+//                .anyRequest().denyAll()
 //                .anyRequest().authenticated()
+                // 설정 시
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
+                .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 .oauth2Login()
@@ -116,6 +107,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/docs/**");
+//        web.ignoring().antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue");
+//        web.ignoring().antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test");
+//        web.ignoring().antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health");
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
         web.httpFirewall(defaultHttpFirewall());
     }

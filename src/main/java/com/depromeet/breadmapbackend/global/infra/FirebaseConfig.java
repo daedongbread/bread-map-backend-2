@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,13 +24,13 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initialize() {
-        ClassPathResource resource = new ClassPathResource(customFirebaseProperties.getPath());
+        String firebaseCredentials = customFirebaseProperties.getCredentials();
 
-        try (InputStream serviceAccount = resource.getInputStream()) {
+        try (InputStream serviceAccount = new ByteArrayInputStream(firebaseCredentials.getBytes());) {
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials
                             .fromStream(serviceAccount)
-                            .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform")))
+                            .createScoped(List.of(customFirebaseProperties.getScope())))
                     .setProjectId(customFirebaseProperties.getProjectId())
                     .build();
 

@@ -22,16 +22,16 @@ operation::v1/bakery/find[snippets='http-request,path-parameters,http-response,r
 == Bakery Product APIs
 - 빵집 상품 리스트 조회 API
 - 상품 추가 요청 API
-- 리뷰용 상품 검색 API
+// - 리뷰용 상품 검색 API
 
 === 빵집 상품 리스트 조회 API [GET]
-operation::v1/bakery/product[snippets='http-request,path-parameters,http-response,response-fields']
+operation::v1/bakery/product[snippets='http-request,path-parameters,request-parameters,http-response,response-fields']
 
 === 상품 추가 요청 API [POST]
 operation::v1/bakery/report/product[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
 
-=== 리뷰용 상품 검색 API [GET]
-operation::v1/bakery/review/product/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+// === 리뷰용 상품 검색 API [GET]
+// operation::v1/bakery/review/product/search[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
 
 == Bakery Product APIs
 - 빵집 추가 요청 API

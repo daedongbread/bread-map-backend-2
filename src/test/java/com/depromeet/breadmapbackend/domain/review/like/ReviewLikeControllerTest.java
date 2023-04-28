@@ -14,7 +14,6 @@ import com.depromeet.breadmapbackend.domain.review.like.ReviewLike;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;

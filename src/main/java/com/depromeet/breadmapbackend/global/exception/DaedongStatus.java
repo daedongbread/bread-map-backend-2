@@ -28,6 +28,7 @@ public enum DaedongStatus {
     IMAGE_NUM_UNMATCH_EXCEPTION(BAD_REQUEST, 40081, "image number unmatch with product number"), // 이미지 개수가 상품 개수와 일치하지 않을 때
     IMAGE_NUM_EXCEED_EXCEPTION(BAD_REQUEST, 40082, "image number exceed"), // 이미지 개수가 초과될 때
     ADMIN_KEY_EXCEPTION(BAD_REQUEST, 40090, "invalid admin key"), // 관리자 회원가입에서 키가 틀렸을 때
+    ADMIN_FILTER_EXCEPTION(BAD_REQUEST, 40091, "invalid admin filter request"), // 관리자 관련 필터 조건이 틀렸을 때
     ADMIN_PAGE_EXCEPTION(BAD_REQUEST, 40091, "invalid admin page request"), // 관리자 관련 페이지 조건이 틀렸을 때
     ADMIN_IMAGE_TYPE_EXCEPTION(BAD_REQUEST, 40092, "invalid admin image type"), // 관리자 관련 이미지 조건이 틀렸을 때  TODO
     ADMIN_IMAGE_UNDELETE_EXCEPTION(BAD_REQUEST, 40093, "admin image undelete"), // 관리자 관련 이미지가 사용 중이서 삭제할 수 없을 때
@@ -63,6 +64,7 @@ public enum DaedongStatus {
     PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40494, "product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
 
     // 409 CONFLICT
+    ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때
     NICKNAME_DUPLICATE_EXCEPTION(CONFLICT, 40910, "nickname already exists"), // 유저 닉네임이 이미 존재할 때
     FOLLOW_DUPLICATE_EXCEPTION(CONFLICT, 40911, "already follow user"), // 이미 팔로우가 되어 있을 때
     SELF_FOLLOW_EXCEPTION(BAD_REQUEST, 40912, "self follow or unfollow exception"), // 본인을 팔로우/언팔로우 했을 때

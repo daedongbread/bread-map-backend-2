@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.review.dto;
 
-import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +17,6 @@ public class SimpleReviewDto {
         this.id = review.getId();
         if (review.getImageList().isEmpty()) this.image = null;
         else this.image = review.getImageList().get(0).getImage();
-        this.rating = Math.floor(
-                review.getRatings().stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue)
-                        .average().orElse(0) * 10) / 10.0;
+        this.rating = review.getAverageRating();
     }
 }

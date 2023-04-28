@@ -104,7 +104,7 @@ public class ExceptionAdvice {
     protected ErrorResponse argumentNotValidException(HttpServletRequest request, ConstraintViolationException e) {
         for (ConstraintViolation<?> error : e.getConstraintViolations()) {
             log.error("error field : \"{}\", value : \"{}\", message : \"{}\"",
-                    error.getPropertyPath().toString().split(".")[1], error.getInvalidValue(), error.getMessage());
+                    error.getPropertyPath().toString().split("\\.")[1], error.getInvalidValue(), error.getMessage());
         }
         return new ErrorResponse(400, "path variable or query parameter not valid");
     }
@@ -139,11 +139,21 @@ public class ExceptionAdvice {
         return new ErrorResponse(400, "query parameter is missing");
     }
 
+    /*
+     * Query Parameter encoding Exception
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse illegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
+        log.error("message : \"{}\"", e.getMessage());
+        return new ErrorResponse(400, "invalid character in query parameter");
+    }
+
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ErrorResponse handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException e) {
         log.error("message : \"{}\"", e.getMessage());
-        return new ErrorResponse(406, "not acceptable");
+        return new ErrorResponse(406, "Media type not acceptable");
     }
 
     /*
@@ -154,16 +164,6 @@ public class ExceptionAdvice {
     public ErrorResponse maxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error("message : \"{}\"", e.getMessage());
         return new ErrorResponse(413, "upload limit exception");
-    }
-
-    /*
-     * JWT Signature Exception
-     */
-    @ExceptionHandler(SignatureException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    protected ErrorResponse signatureException(HttpServletRequest request, SignatureException e) {
-        log.error("message : \"{}\"", e.getMessage());
-        return new ErrorResponse(409, "JWT signature error");
     }
 
     /*

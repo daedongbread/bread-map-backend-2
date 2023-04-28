@@ -1,55 +1,36 @@
 spring:
-  jwt:
-    secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
-    admin: jwtadminsecretkeyjwtadminsecretkeyjwtadminsecretkey
-  datasource:
-    url: jdbc:h2:mem:bread_map
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: false # Hibernate id 생성 전략 여부
+    #    show-sql: true
+    open-in-view: false # OSIV
+    properties:
+      hibernate:
+        #        format_sql: true
+        create_empty_composites:
+          enabled: true # @Embbeded 전체 value 들이 null 이어도 null 로 나오지 않게
   servlet:
     multipart:
-      maxFileSize: 10MB
-      maxRequestSize: 100MB
+      maxFileSize: 10MB # 파일 한건당
+      maxRequestSize: 100MB # API 호출당
   mvc:
-    throw-exception-if-no-handler-found: true
+    throw-exception-if-no-handler-found: true # NoHandlerFoundException Exception throw 여부
   web:
     resources:
-      add-mappings: false
+      add-mappings: false # 정적 리소스 조회 여부
   data:
     redis:
       repositories:
-        enabled: false
-  redis:
-    host: localhost
-    port: 6379
-    key:
-      delete: delete
-      recent: recent
-      access: access
-      refresh: refresh
-      admin-refresh: adminRefresh
-      bakery-review: bakeryReview
-      product-review: productReview
-      user-review: userReview
-  jpa:
-    open-in-view: false
-    properties:
-      hibernate:
-        create_empty_composites:
-          enabled: true
+        enabled: false # Spring Data Redis 저장소 기능
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_ID}
-            client-secret: ${GOOGLE_SECRET}
-            redirect-uri: ${GOOGLE_REDIRECT_URL}
             scope:
               - email
               - profile
           kakao:
-            client-id: ${KAKAO_ID}
-            client-secret: ${KAKAO_SECRET}
-            redirect-uri: ${KAKAO_REDIRECT_URI}
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao
@@ -59,9 +40,6 @@ spring:
               - account_email
           apple:
             client-name: Apple
-            client-id: ${APPLE_ID}
-            client-secret: ${APPLE_SECRET}
-            redirect-uri: ${APPLE_REDIRECT_URI}
             authorization-grant-type: authorization_code
             client-authentication-method: POST
 #            client-authentication-method: client_secret_post
@@ -70,7 +48,6 @@ spring:
               - name
               - email
               - picture
-
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
@@ -83,60 +60,37 @@ spring:
             jwk-set-uri: https://appleid.apple.com/auth/keys
             user-name-attribute: sub
 
-oauth:
-  google: google-id
-  kakao: kakao-id
-  apple: apple-id
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql: trace
 
 server:
   servlet:
     encoding:
-      charset: UTF-8
-      force: true
+      charset: UTF-8 # 어플리케이션에서 사용할 문자 인코딩
+      force: true # 어플리케이션에서 지정한 인코딩을 요청과 응답에 강제 적용 여부
 
 management:
   endpoint:
     health:
-      enabled: true
+      enabled: true # health endpoint enable
   endpoints:
-    enabled-by-default: false
+    enabled-by-default: false # 모든(shutdown 제외) endpoint enable 여부
     jmx:
       exposure:
-        exclude: "*"
+        exclude: "*" # JMX 형태 endpoint 제외 대상
     web:
       exposure:
-        include: health
-      base-path: /actuator # default
+        include: health # 노출할 상태 정보
+      base-path: /v1/actuator # endpoint 경로 (default)
 
 cloud:
   aws:
-    region:
-      static: ap-northeast-2
+    credentials:
+      instanceProfile: true # AWS 인스턴스 프로필 사용 여부
     stack:
-      auto: false
-    s3:
-      bucket: s3-bucket
-      cloud-front: cloudfront
-      default-bucket:
-        image: S3_DEFAULT_IMAGE
-      default-image:
-        bakery: S3_DEFAULT_BAKERY
-        comment: S3_DEFAULT_COMMENT
-        like: S3_DEFAULT_LIKE
-        report: S3_DEFAULT_REPORT
-        flag: S3_DEFAULT_FLAG
-        user: S3_DEFAULT_USER
-
-firebase:
-  url: FIREBASE_URL
-  path: FIREBASE_PATH
-  scope: FIREBASE_SCOPE
-  projectId: FIREBASE_PROJECTID
-  message:
-    path:
-      user: FIREBASE_MESSAGE_PATH_USER
-      review: FIREBASE_MESSAGE_PATH_REVIEW
-
-sgis:
-  key: SGIS_KEY
-  secret: SGIS_SECRET
+      auto: false # AWS CloudFormation 사용 여부

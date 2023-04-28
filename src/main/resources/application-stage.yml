@@ -1,0 +1,79 @@
+spring:
+  jwt:
+    secret: ${JWT_KEY}
+    admin: ${JWT_ADMIN_KEY}
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+#      idle-timeout: 300
+#      max-lifeitme: 300
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    key:
+      delete: ${REDIS_KEY_DELETE}
+      recent: ${REDIS_KEY_RECENT}
+      access: ${REDIS_KEY_ACCESS}
+      refresh: ${REDIS_KEY_REFRESH}
+      admin-refresh: ${REDIS_KEY_ADMIN_REFRESH}
+      bakery-review: ${REDIS_KEY_BAKERY_REVIEW}
+      product-review: ${REDIS_KEY_PRODUCT_REVIEW}
+      user-review: ${REDIS_KEY_USER_REVIEW}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_ID}
+            client-secret: ${GOOGLE_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
+          kakao:
+            client-id: ${KAKAO_ID}
+            client-secret: ${KAKAO_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URL}
+          apple:
+            client-id: ${APPLE_ID}
+            client-secret: ${APPLE_SECRET}
+            redirect-uri: ${APPLE_REDIRECT_URI}
+
+oauth:
+  google: ${GOOGLE_ID}
+  kakao: ${KAKAO_ID}
+  apple: ${APPLE_ID}
+
+cloud:
+  aws:
+    region:
+      static: ${S3_REGION}
+    s3:
+      bucket: ${S3_BUCKET}
+      cloud-front: ${S3_CLOUDFRONT}
+      default-bucket:
+        image: ${S3_DEFAULT_BUCKET_IMAGE}
+      default-image:
+        bakery: ${S3_DEFAULT_IMAGE_BAKERY}
+        comment: ${S3_DEFAULT_IMAGE_COMMENT}
+        like: ${S3_DEFAULT_IMAGE_LIKE}
+        report: ${S3_DEFAULT_IMAGE_REPORT}
+        flag: ${S3_DEFAULT_IMAGE_FLAG}
+        user: ${S3_DEFAULT_IMAGE_USER}
+
+firebase:
+  credentials: ${FIREBASE_CREDENTIALS}
+  scope: ${FIREBASE_SCOPE}
+  projectId: ${FIREBASE_PROJECTID}
+  message:
+    path:
+      user: ${FIREBASE_MESSAGE_PATH_USER}
+      review: ${FIREBASE_MESSAGE_PATH_REVIEW}
+
+sgis:
+  key: ${SGIS_KEY}
+  secret: ${SGIS_SECRET}

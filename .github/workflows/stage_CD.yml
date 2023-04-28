@@ -1,18 +1,18 @@
-name: Backend_CD
+name: STAGE_CD
 
 on:
   push:
     branches:
-      - main
+      - develop
   workflow_dispatch:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: bread-map
-  ECS_TASK_DEFINITION: api-server-tmp-task
-  CONTAINER_NAME: api-server-tmp
-  ECS_SERVICE: tmp-api-server-service
-  ECS_CLUSTER: tmp-cluster
+  ECR_REPOSITORY: stage-bread-map
+  ECS_TASK_DEFINITION: stage-api-server-task-definition
+  CONTAINER_NAME: stage-api-server-container
+  ECS_SERVICE: stage-api-server-service
+  ECS_CLUSTER: stage-cluster
   
 permissions:
   id-token: write
@@ -26,24 +26,33 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Setting application.yml
-      uses: microsoft/variable-substitution@v1
-      with:
-        files: ./src/main/resources/application.yml
-      env:
-        sgis.key: ${{ secrets.SGIS_KEY }}
-        sgis.secret: ${{ secrets.SGIS_SECRET }}
-
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws-access-key-id: ${{ secrets.TMP_AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.TMP_AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.TMP_STAGE_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.TMP_STAGE_AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Set up JDK 15
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: 15
+        cache: gradle
+
+    - name: Cache gradle modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
     - name: Build with Gradle
       run: |

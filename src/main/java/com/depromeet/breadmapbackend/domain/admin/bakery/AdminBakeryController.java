@@ -1,24 +1,40 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.*;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
+import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
+import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Validated(ValidationSequence.class)
 @RestController
 @RequestMapping("/v1/admin/bakeries")
 @RequiredArgsConstructor
 public class AdminBakeryController {
     private final AdminBakeryService adminBakeryService;
 
+    @GetMapping("/alarm-bar")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AdminBakeryAlarmBar> getBakeryAlarmBar() {
+        return new ApiResponse<>(adminBakeryService.getBakeryAlarmBar());
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(@RequestParam int page) {
-        return new ApiResponse<>(adminBakeryService.getBakeryList(page));
+    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> getBakeryList(
+            @RequestParam(required = false)
+            List<@EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) AdminBakeryFilter> filterBy,
+            @RequestParam(required = false) String name, @RequestParam int page) {
+        return new ApiResponse<>(adminBakeryService.getBakeryList(filterBy, name, page));
     }
 
     @GetMapping("/{bakeryId}")
@@ -27,12 +43,12 @@ public class AdminBakeryController {
         return new ApiResponse<>(adminBakeryService.getBakery(bakeryId));
     }
 
-    @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
-            @RequestParam String name, @RequestParam int page) {
-        return new ApiResponse<>(adminBakeryService.searchBakeryList(name, page));
-    }
+//    @GetMapping("/search")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ApiResponse<PageResponseDto<AdminSimpleBakeryDto>> searchBakeryList(
+//            @RequestParam String name, @RequestParam int page) {
+//        return new ApiResponse<>(adminBakeryService.searchBakeryList(name, page));
+//    }
 
     @GetMapping("/location")
     @ResponseStatus(HttpStatus.OK)
@@ -75,13 +91,18 @@ public class AdminBakeryController {
     @GetMapping("/{bakeryId}/images/{imageType}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<AdminImageDto>> getAdminImages(
-            @PathVariable Long bakeryId, @PathVariable AdminBakeryImageType imageType, @RequestParam int page) {
+            @PathVariable Long bakeryId,
+            @PathVariable @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) AdminBakeryImageType imageType,
+            @RequestParam int page) {
         return new ApiResponse<>(adminBakeryService.getAdminImages(bakeryId, imageType, page));
     }
 
     @DeleteMapping("/{bakeryId}/images/{imageType}/{imageId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAdminImage(@PathVariable Long bakeryId, @PathVariable AdminBakeryImageType imageType, @PathVariable Long imageId) {
+    public void deleteAdminImage(
+            @PathVariable Long bakeryId,
+            @PathVariable @EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) AdminBakeryImageType imageType,
+            @PathVariable Long imageId) {
         adminBakeryService.deleteAdminImage(bakeryId, imageType, imageId);
     }
 

@@ -14,7 +14,6 @@ import com.depromeet.breadmapbackend.domain.review.report.ReviewReportReason;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
-import com.depromeet.breadmapbackend.global.ImageType;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
@@ -51,9 +50,6 @@ class AdminReportControllerTest extends ControllerTest {
         Admin admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
         adminRepository.save(admin);
         token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + admin.getId(),
-                        token.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
 
         User user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
                 .userInfo(UserInfo.builder().nickName("nickname1").build()).build();
@@ -69,7 +65,7 @@ class AdminReportControllerTest extends ControllerTest {
 
         Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
-        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).imageType(ImageType.REVIEW_IMAGE).image("reviewImage.jpg").build();
+        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).image("reviewImage.jpg").build();
         reviewImageRepository.save(image);
         ReviewProductRating rating = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);

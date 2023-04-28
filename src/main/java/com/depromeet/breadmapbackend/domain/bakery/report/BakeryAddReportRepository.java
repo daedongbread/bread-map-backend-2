@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface BakeryAddReportRepository extends JpaRepository<BakeryAddReport, Long> {
-    @Query(value = "select * from bakery_add_report", countQuery = "select count(*) from bakery_add_report", nativeQuery = true)
+    @Query(value = "select b from BakeryAddReport b", countQuery = "select count(b) from BakeryAddReport b")
     Page<BakeryAddReport> findPageAll(Pageable pageable);
     Long countByStatus(BakeryAddReportStatus status);
 }

@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properti
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class S3Uploader {
     }
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {
-        log.info("upload file : " + multipartFile.getOriginalFilename());
+        log.info("originName : \"{}\", filePath : \"{}\"", multipartFile.getOriginalFilename(), fileName);
         newUpload(multipartFile, fileName);
         return customAwss3Properties.getCloudFront() + "/" + fileName;
     }
@@ -56,10 +57,10 @@ public class S3Uploader {
         metadata.setContentType(multipartFile.getContentType());
         metadata.setContentLength(multipartFile.getSize());
         amazonS3Client.putObject(
-                new PutObjectRequest(customAwss3Properties.getBucket(), fileName, multipartFile.getInputStream(), metadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                new PutObjectRequest(customAwss3Properties.getBucket(), fileName, multipartFile.getInputStream(), metadata));
         log.info("File putS3 success");
-        return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
+        return get(fileName);
+//        return amazonS3Client.getUrl(customAwss3Properties.getBucket(), fileName).toString();
     }
 
     public void copy(String oldSource, String newSource) {
@@ -89,7 +90,7 @@ public class S3Uploader {
 
     // delete file
     public void deleteFileS3(String fileName) {
-        if(fileName != null && !fileName.isBlank()) {
+        if (StringUtils.hasText(fileName)) {
             fileName = fileName.replace(customAwss3Properties.getCloudFront() + "/", "");
             log.info("delete file : " + fileName);
             if (amazonS3Client.doesObjectExist(customAwss3Properties.getBucket(), fileName))

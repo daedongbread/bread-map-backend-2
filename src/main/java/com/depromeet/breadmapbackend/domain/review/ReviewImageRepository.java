@@ -10,8 +10,7 @@ import java.util.Optional;
 
 public interface ReviewImageRepository extends JpaRepository<ReviewImage, Long> {
     boolean existsByBakeryAndIsNewIsTrue(Bakery bakery);
-    long countByBakeryAndIsHideIsFalse(Bakery bakery);
-//    @Query(value = "select * from review_image", nativeQuery = true)
+    Integer countByBakeryAndIsHideIsFalse(Bakery bakery);
     Page<ReviewImage> findPageByBakeryAndIsHideIsFalse(Bakery bakery, Pageable pageable);
     Optional<ReviewImage> findByIdAndBakery(Long id, Bakery bakery);
     void deleteByBakery(Bakery bakery);
