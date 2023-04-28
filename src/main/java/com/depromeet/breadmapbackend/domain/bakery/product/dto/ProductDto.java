@@ -18,12 +18,12 @@ public class ProductDto {
     private String image;
 
     @Builder
-    public ProductDto(Product product, Double rating, Integer reviewNum) {
+    public ProductDto(Product product) {
         this.id = product.getId();
         this.productType = product.getProductType();
         this.name = product.getName();
-        this.rating = rating;
-        this.reviewNum = reviewNum;
+        this.rating = product.getAverageRating();
+        this.reviewNum = product.getReviewProductRatingList().size();
         this.price = product.getPrice();
         this.image = product.getImage();
     }

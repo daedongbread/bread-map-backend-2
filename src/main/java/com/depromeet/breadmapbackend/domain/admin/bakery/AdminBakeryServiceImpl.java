@@ -103,8 +103,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public AdminBakeryDto getBakery(Long bakeryId) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        List<AdminProductDto> productList = productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
+        List<AdminProductDto> productList = productRepository.findByBakeryAndIsTrueIsTrue(bakery).stream()
                 .map(AdminProductDto::new).collect(Collectors.toList());
 
         String image = (bakery.getImage().contains(customAWSS3Properties.getDefaultImage().getBakery())) ? null : bakery.getImage();

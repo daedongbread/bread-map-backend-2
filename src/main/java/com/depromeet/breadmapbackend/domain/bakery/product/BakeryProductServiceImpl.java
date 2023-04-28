@@ -16,6 +16,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -27,18 +28,17 @@ import java.util.stream.Collectors;
 public class BakeryProductServiceImpl implements BakeryProductService {
     private final BakeryRepository bakeryRepository;
     private final ProductRepository productRepository;
-    private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final UserRepository userRepository;
     private final ProductAddReportRepository productAddReportRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<ProductDto> getProductList(Long bakeryId) {
+    public List<ProductDto> getProductList(Long bakeryId, String name) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        return productRepository.findByBakery(bakery).stream()
-                .filter(Product::isTrue)
-                .map(product -> new ProductDto(product,
-                        Math.floor(reviewProductRatingRepository.findProductAvgRating(product.getId()).orElse(0D)*10)/10.0, //TODO
-                        reviewProductRatingRepository.countByProductId(product.getId())))
+        List<Product> products = (!StringUtils.hasText(name)) ?
+                productRepository.findByBakeryAndIsTrueIsTrue(bakery) :
+                productRepository.findByBakeryAndNameStartsWithAndIsTrueIsTrue(bakery, name);
+        return products.stream()
+                .map(ProductDto::new)
                 .sorted(Comparator.comparing((ProductDto productDto) -> productDto.getProductType().getPriority())
                         .thenComparing(ProductDto::getRating, Comparator.reverseOrder())
                         .thenComparing(ProductDto::getName))
@@ -65,8 +65,7 @@ public class BakeryProductServiceImpl implements BakeryProductService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        return productRepository.findByBakeryAndNameStartsWith(bakery, name).stream()
-                .filter(Product::isTrue)
+        return productRepository.findByBakeryAndNameStartsWithAndIsTrueIsTrue(bakery, name).stream()
                 .map(SimpleProductDto::new)
                 .sorted(Comparator.comparing((SimpleProductDto simpleProductDto) -> simpleProductDto.getProductType().getPriority())
                         .thenComparing(SimpleProductDto::getName)).collect(Collectors.toList());

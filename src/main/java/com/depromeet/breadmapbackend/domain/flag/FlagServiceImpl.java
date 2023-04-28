@@ -92,9 +92,8 @@ public class FlagServiceImpl implements FlagService {
                                         .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
                                                 .stream()
                                                 .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                                                .map(br -> {
-                                                    return Arrays.stream(br.getRatings().stream().map(ReviewProductRating::getRating).mapToLong(Long::longValue).toArray()).average().orElse(0)*10/10.0;
-                                                }).collect(Collectors.toList()).stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
+                                                .map(Review::getAverageRating).collect(Collectors.toList())
+                                                .stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
                                         .reviewNum((int) flagBakery.getBakery().getReviewList().stream()
                                                 .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
                                         .simpleReviewList(flagBakery.getBakery().getReviewList().stream()
