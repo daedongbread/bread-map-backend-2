@@ -16,17 +16,16 @@ public class BakeryCardDto {
     private Long id;
     private String image;
     private String name;
-    private Integer flagNum;
+    private int flagNum;
     private Double rating;
-    private Integer reviewNum;
+    private int reviewNum;
     private List<MapSimpleReviewDto> simpleReviewList;
     private Double distance;
-    private Integer popularNum;
-
+    private int popularNum;
     private FlagColor color;
 
     @Builder
-    public BakeryCardDto(Bakery bakery, Integer flagNum, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList, Double distance, FlagColor color) {
+    public BakeryCardDto(Bakery bakery, int flagNum, Double rating, Integer reviewNum, List<MapSimpleReviewDto> simpleReviewList, Double distance, FlagColor color) {
         this.latitude = bakery.getLatitude();
         this.longitude = bakery.getLongitude();
         this.id = bakery.getId();
