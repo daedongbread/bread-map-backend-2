@@ -36,7 +36,7 @@ public class Product extends BaseEntity {
 
     private String image;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ReviewProductRating> reviewProductRatingList = new ArrayList<>();
 
     @Column(nullable = false)
@@ -60,5 +60,10 @@ public class Product extends BaseEntity {
         this.name = name;
         this.price = price;
         this.image = image;
+    }
+
+    public Double getAverageRating() {
+        return Math.floor(this.reviewProductRatingList.stream()
+                .mapToLong(ReviewProductRating::getRating).average().orElse(0)*10)/ 10.0;
     }
 }
