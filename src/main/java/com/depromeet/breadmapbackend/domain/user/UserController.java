@@ -5,9 +5,6 @@ import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import com.depromeet.breadmapbackend.domain.user.dto.*;
-import com.depromeet.breadmapbackend.global.security.domain.RoleType;
-import com.depromeet.breadmapbackend.global.security.token.JwtToken;
-import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -50,10 +46,5 @@ public class UserController {
     public void alarmChange(
             @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
         userService.alarmChange(oAuthId, request);
-    }
-
-    @GetMapping("/test")
-    public ApiResponse<JwtToken> test(@RequestParam String oAuthId) {
-        return new ApiResponse<>(jwtTokenProvider.createJwtToken(oAuthId, RoleType.USER.getCode()));
     }
 }
