@@ -9,10 +9,10 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: bread-map
-  ECS_TASK_DEFINITION: api-server-tmp-task
-  CONTAINER_NAME: api-server-tmp
-  ECS_SERVICE: tmp-api-server-service
-  ECS_CLUSTER: tmp-cluster
+  ECS_TASK_DEFINITION: prod-api-server-task-definition
+  CONTAINER_NAME: prod-api-server-container
+  ECS_SERVICE: prod-api-server-service
+  ECS_CLUSTER: prod-cluster-t3a-micro
   
 permissions:
   id-token: write

@@ -8,11 +8,11 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: bread-map
-  ECS_TASK_DEFINITION: prod-api-server-task-definition
-  CONTAINER_NAME: prod-api-server-container
-  ECS_SERVICE: prod-api-server-service
-  ECS_CLUSTER: prod-cluster-t3a-micro
+  ECR_REPOSITORY: stage-bread-map
+  ECS_TASK_DEFINITION: stage-api-server-task-definition
+  CONTAINER_NAME: stage-api-server-container
+  ECS_SERVICE: stage-api-server-service
+  ECS_CLUSTER: stage-cluster
   
 permissions:
   id-token: write
