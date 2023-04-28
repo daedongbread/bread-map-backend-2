@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
     @Query("SELECT count(*) FROM FlagBakery fb INNER JOIN Flag f ON f = fb.flag WHERE fb.bakery = :bakery AND f.name = '가봤어요'")
-    Integer countFlagNum(@Param("bakery") Bakery bakery);
+    int countFlagNum(@Param("bakery") Bakery bakery);
     List<FlagBakery> findByFlag(Flag flag);
     Optional<FlagBakery> findByBakeryAndFlagAndUser(Bakery bakery, Flag flag, User user);
     Optional<FlagBakery> findByBakeryAndUser(Bakery bakery, User user);

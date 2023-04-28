@@ -12,7 +12,7 @@ env:
   ECS_TASK_DEFINITION: prod-api-server-task-definition
   CONTAINER_NAME: prod-api-server-container
   ECS_SERVICE: prod-api-server-service
-  ECS_CLUSTER: prod-cluster-t3a-micro
+  ECS_CLUSTER: prod-cluster-t3-micro
   
 permissions:
   id-token: write
