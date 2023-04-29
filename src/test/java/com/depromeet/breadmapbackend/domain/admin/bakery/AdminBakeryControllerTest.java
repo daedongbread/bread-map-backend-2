@@ -282,7 +282,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                         requestFields(
                                 fieldWithPath("name").description("빵집 이름"),
                                 fieldWithPath("image").optional().description("빵집 이미지"),
-                                fieldWithPath("address").description("빵집 도로명 주소"),
+                                fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
                                 fieldWithPath("latitude").description("빵집 위도"),
                                 fieldWithPath("longitude").description("빵집 경도"),
                                 fieldWithPath("hours").optional().description("빵집 영업시간"),
