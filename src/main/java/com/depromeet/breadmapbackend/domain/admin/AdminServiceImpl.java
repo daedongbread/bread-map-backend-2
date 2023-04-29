@@ -82,7 +82,7 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
 
         JwtToken reissueToken = createNewToken(email, admin.getRoleType());
-        makeTokenInvalid(request.getAccessToken(), request.getRefreshToken());
+        makeRefreshTokenInvalid(request.getRefreshToken()); // TODO : accessToken이 유효기간 남아 있으면?
         return reissueToken;
     }
 
@@ -97,8 +97,7 @@ public class AdminServiceImpl implements AdminService {
         return jwtToken;
     }
 
-    private void makeTokenInvalid(String accessToken, String refreshToken) {
-        redisTokenUtils.setAccessTokenBlackList(accessToken, jwtTokenProvider.getExpiration(accessToken));
+    private void makeRefreshTokenInvalid(String refreshToken) {
         redisTokenUtils.deleteRefreshToken(refreshToken);
     }
 
