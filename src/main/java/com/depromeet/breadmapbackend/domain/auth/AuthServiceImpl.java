@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         JwtToken reissueToken = createNewToken(oAuthId, user.getRoleType());
-        makeRefreshTokenInvalid(request.getRefreshToken());
+        makeRefreshTokenInvalid(request.getRefreshToken()); // TODO : accessToken이 유효기간 남아 있으면?
         return reissueToken;
     }
 
