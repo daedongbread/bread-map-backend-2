@@ -113,11 +113,11 @@ public class AdminBakeryController {
         return new ApiResponse<>(adminBakeryService.getProductAddReports(bakeryId, page));
     }
 
-    @PatchMapping("/{bakeryId}/product-add-reports/{reportId}")
+    @PatchMapping("/{bakeryId}/product-add-reports/{reportId}/images")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void registerProductAddImage(
             @PathVariable Long bakeryId, @PathVariable Long reportId,
-            @RequestBody @Validated(ValidationSequence.class) ProductAddImageRegisterRequest request) {
+            @RequestBody @Validated(ValidationSequence.class) AdminImageRegisterRequest request) {
         adminBakeryService.registerProductAddImage(bakeryId, reportId, request);
     }
 
@@ -146,9 +146,35 @@ public class AdminBakeryController {
         adminBakeryService.deleteBakeryUpdateReport(bakeryId, reportId);
     }
 
-    @DeleteMapping("/{bakeryId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBakery(@PathVariable Long bakeryId) {
-        adminBakeryService.deleteBakery(bakeryId);
+    @GetMapping("/{bakeryId}/new-reviews")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<PageResponseDto<NewReviewDto>> getNewReviews(@PathVariable Long bakeryId, @RequestParam int page) {
+        return new ApiResponse<>(adminBakeryService.getNewReviews(bakeryId, page));
     }
+
+    @PatchMapping("/{bakeryId}/new-reviews/{reviewId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void hideNewReview(@PathVariable Long bakeryId, @PathVariable Long reviewId) {
+        adminBakeryService.hideNewReview(bakeryId, reviewId);
+    }
+
+    @PatchMapping("/{bakeryId}/new-reviews/{reviewId}/images")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void registerNewReviewImage(
+            @PathVariable Long bakeryId, @PathVariable Long reviewId,
+            @RequestBody @Validated(ValidationSequence.class) AdminImageRegisterRequest request) {
+        adminBakeryService.registerNewReviewImage(bakeryId, reviewId, request);
+    }
+
+    @DeleteMapping("/{bakeryId}/new-reviews/{reviewId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReview(@PathVariable Long bakeryId, @PathVariable Long reviewId) {
+        adminBakeryService.deleteReview(bakeryId, reviewId);
+    }
+
+//    @DeleteMapping("/{bakeryId}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void deleteBakery(@PathVariable Long bakeryId) {
+//        adminBakeryService.deleteBakery(bakeryId);
+//    }
 }

@@ -93,8 +93,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReviewDetailDto getReview(String oAuthId, Long reviewId) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Review review = reviewRepository.findById(reviewId)
-                .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         reviewViewRepository.findByReview(review)
                 .orElseGet(() -> {
                     ReviewView reviewView = ReviewView.builder().review(review).build();

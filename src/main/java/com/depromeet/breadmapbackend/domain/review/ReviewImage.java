@@ -37,7 +37,7 @@ public class ReviewImage extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isHide = Boolean.FALSE;
+    private Boolean isRegistered = Boolean.FALSE;
 
     @Builder
     public ReviewImage(Review review, Bakery bakery, String image) {
@@ -51,7 +51,6 @@ public class ReviewImage extends BaseEntity {
         this.isNew = false;
     }
 
-    public void hide() {
-        this.isHide = true;
-    }
+    public void register() { this.isRegistered = true; }
+    public void unregister() { this.isRegistered = false; }
 }

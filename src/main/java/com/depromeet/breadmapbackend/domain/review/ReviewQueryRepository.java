@@ -55,6 +55,7 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
+                        review.isDelete.isFalse(),
                         review.isBlock.isFalse(),
                         review.createdAt.before(firstTime))
                 .groupBy(review.id, reviewProductRating.review.id)
@@ -70,6 +71,7 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
+                        review.isDelete.isFalse(),
                         review.isBlock.isFalse(),
                         review.createdAt.before(firstTime))
                 .fetchOne();
@@ -98,6 +100,7 @@ public class ReviewQueryRepository {
                         ),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
+                        review.isDelete.isFalse(),
                         review.isBlock.isFalse(),
                         review.createdAt.before(firstTime))
                 .groupBy(review.id, reviewProductRating.review.id)
@@ -115,6 +118,7 @@ public class ReviewQueryRepository {
                         ),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
+                        review.isDelete.isFalse(),
                         review.isBlock.isFalse(),
                         review.createdAt.before(firstTime))
                 .fetchOne();
@@ -141,6 +145,7 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.user.eq(user),
+                        review.isDelete.isFalse(),
                         review.isBlock.isFalse(),
                         review.createdAt.before(firstTime))
                 .orderBy(review.createdAt.desc())
@@ -155,6 +160,7 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.user.eq(user),
+                        review.isDelete.isFalse(),
                         review.isBlock.isFalse(),
                         review.createdAt.before(firstTime))
                 .fetchOne();
