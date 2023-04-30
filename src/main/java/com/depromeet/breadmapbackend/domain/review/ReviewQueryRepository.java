@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import static com.depromeet.breadmapbackend.domain.review.QReview.review;
@@ -40,7 +41,7 @@ public class ReviewQueryRepository {
 
         if (page == 0) { // TODO 근데 그럼 하나의 빵집에 대해서만 보장 가능
             redisTemplate.opsForValue()
-                    .set(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId(), String.valueOf(LocalDateTime.now()));
+                    .set(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId(), String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         }
         String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId());
         LocalDateTime firstTime;
@@ -82,7 +83,7 @@ public class ReviewQueryRepository {
 
         if (page == 0) {
             redisTemplate.opsForValue()
-                    .set(customRedisProperties.getKey().getProductReview() + ":" + me.getId(), String.valueOf(LocalDateTime.now()));
+                    .set(customRedisProperties.getKey().getProductReview() + ":" + me.getId(), String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         }
         String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getProductReview() + ":" + me.getId());
         LocalDateTime firstTime;
@@ -127,7 +128,7 @@ public class ReviewQueryRepository {
 
         if (page == 0) {
             redisTemplate.opsForValue()
-                    .set(customRedisProperties.getKey().getUserReview() + ":" + me.getId(), String.valueOf(LocalDateTime.now()));
+                    .set(customRedisProperties.getKey().getUserReview() + ":" + me.getId(), String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         }
         String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getUserReview() + ":" + me.getId());
         LocalDateTime firstTime;
