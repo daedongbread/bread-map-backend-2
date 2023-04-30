@@ -7,14 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductAddImageRegisterRequest {
+public class AdminImageRegisterRequest {
     @NotEmpty(message = "이미지 리스트는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private List<Long> imageIdList;
 }

@@ -54,6 +54,14 @@ public class Review extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isNew = Boolean.TRUE;
 
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isHide = Boolean.FALSE; // 관리자 신규 리뷰 숨김
+
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isDelete = Boolean.FALSE;
+
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = EAGER)
     private List<ReviewProductRating> ratings = new ArrayList<>();
 
@@ -85,4 +93,8 @@ public class Review extends BaseEntity {
     public void unNew() {
         this.isNew = Boolean.FALSE;
     }
+
+    public void hide() { this.isHide = Boolean.TRUE; }
+
+    public void delete() { this.isDelete = Boolean.TRUE; }
 }

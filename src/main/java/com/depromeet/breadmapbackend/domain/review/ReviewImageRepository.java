@@ -10,9 +10,10 @@ import java.util.Optional;
 
 public interface ReviewImageRepository extends JpaRepository<ReviewImage, Long> {
     boolean existsByBakeryAndIsNewIsTrue(Bakery bakery);
-    Integer countByBakeryAndIsHideIsFalse(Bakery bakery);
-    Page<ReviewImage> findPageByBakeryAndIsHideIsFalse(Bakery bakery, Pageable pageable);
+    Integer countByBakeryAndIsRegisteredIsTrue(Bakery bakery);
+    Page<ReviewImage> findPageByBakeryAndIsRegisteredIsTrue(Bakery bakery, Pageable pageable);
     Optional<ReviewImage> findByIdAndBakery(Long id, Bakery bakery);
+    Optional<ReviewImage> findByIdAndReview(Long id, Review review);
     void deleteByBakery(Bakery bakery);
     void deleteByReview(Review review);
 }

@@ -16,10 +16,7 @@ import com.depromeet.breadmapbackend.domain.bakery.report.*;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository;
-import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
-import com.depromeet.breadmapbackend.domain.review.ReviewImage;
-import com.depromeet.breadmapbackend.domain.review.ReviewImageRepository;
+import com.depromeet.breadmapbackend.domain.review.*;
 import com.depromeet.breadmapbackend.domain.review.report.ReviewReportRepository;
 import com.depromeet.breadmapbackend.domain.review.view.ReviewViewRepository;
 import com.depromeet.breadmapbackend.global.S3Uploader;
@@ -60,10 +57,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     private final BakeryReportImageRepository bakeryReportImageRepository;
     private final ProductAddReportRepository productAddReportRepository;
     private final ProductAddReportImageRepository productAddReportImageRepository;
-    private final ReviewReportRepository reviewReportRepository;
     private final ReviewRepository reviewRepository;
-    private final ReviewViewRepository reviewViewRepository;
-    private final FlagBakeryRepository flagBakeryRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final S3Uploader s3Uploader;
@@ -219,7 +213,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         return AdminImageBarDto.builder()
                 .bakeryReportImageNum(bakeryReportImageRepository.countByBakery(bakery))
                 .productAddReportImageNum(productAddReportImageRepository.countByBakeryAndIsRegisteredIsTrue(bakery))
-                .reviewImageNum(reviewImageRepository.countByBakeryAndIsHideIsFalse(bakery))
+                .reviewImageNum(reviewImageRepository.countByBakeryAndIsRegisteredIsTrue(bakery))
                 .build();
     }
 
@@ -238,7 +232,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
             adminImages = PageResponseDto.of(productAddReportImages, AdminImageDto::new);
             productAddReportImages.forEach(ProductAddReportImage::unNew);
         } else if (type.equals(AdminBakeryImageType.REVIEW_IMAGE)) {
-            Page<ReviewImage> reviewImages = reviewImageRepository.findPageByBakeryAndIsHideIsFalse(bakery, pageable);
+            Page<ReviewImage> reviewImages = reviewImageRepository.findPageByBakeryAndIsRegisteredIsTrue(bakery, pageable);
             adminImages = PageResponseDto.of(reviewImages, AdminImageDto::new);
             reviewImages.forEach(ReviewImage::unNew);
         } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
@@ -280,7 +274,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
             String image = replace.split("/")[replace.split("/").length - 1];
 
             if (isUsedImage(bakery, image)) throw new DaedongException(DaedongStatus.ADMIN_IMAGE_UNDELETE_EXCEPTION);
-            else reviewImage.hide();
+            else reviewImage.unregister();
         } else throw new DaedongException(DaedongStatus.ADMIN_IMAGE_TYPE_EXCEPTION);
     }
 
@@ -311,7 +305,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void registerProductAddImage(Long bakeryId, Long reportId, ProductAddImageRegisterRequest request) {
+    public void registerProductAddImage(Long bakeryId, Long reportId, AdminImageRegisterRequest request) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         ProductAddReport productAddReport = productAddReportRepository.findByIdAndBakery(reportId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_NOT_FOUND));
 
@@ -364,19 +358,58 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteBakery(Long bakeryId) { // TODO : casacade
+    public PageResponseDto<NewReviewDto> getNewReviews(Long bakeryId, int page) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        flagBakeryRepository.deleteByBakery(bakery);
-        bakeryUpdateReportRepository.deleteByBakery(bakery);
-        bakeryReportImageRepository.deleteByBakery(bakery);
-        productAddReportRepository.deleteByBakery(bakery);
-        reviewImageRepository.deleteByBakery(bakery);
-        reviewProductRatingRepository.deleteByBakeryId(bakeryId);
-        reviewRepository.findByBakery(bakery).forEach(review -> {
-            reviewReportRepository.deleteByReview(review);
-            reviewViewRepository.deleteByReview(review);
-        });
-        bakeryViewRepository.deleteByBakery(bakery);
-        bakeryRepository.deleteById(bakeryId);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+
+        Page<Review> contents = reviewRepository.findPageByBakeryAndIsHideIsFalseAndIsDeleteIsFalse(bakery, pageable);// TODO N+1
+        PageResponseDto<NewReviewDto> newReviews = PageResponseDto.of(contents, NewReviewDto::new);
+        contents.forEach(Review::unNew);
+        return newReviews;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void hideNewReview(Long bakeryId, Long reviewId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndBakery(reviewId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        review.hide();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void registerNewReviewImage(Long bakeryId, Long reviewId, AdminImageRegisterRequest request) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndBakery(reviewId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+
+        request.getImageIdList().forEach(
+                id -> {
+                    ReviewImage reviewImage = reviewImageRepository.findByIdAndReview(id, review)
+                            .orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_IMAGE_NOT_FOUND));
+                    reviewImage.register();
+                }
+        );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteReview(Long bakeryId, Long reviewId) {
+        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndBakery(reviewId, bakery).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        review.delete();
+    }
+
+//    @Transactional(rollbackFor = Exception.class)
+//    public void deleteBakery(Long bakeryId) { // TODO : casacade
+//        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+//        flagBakeryRepository.deleteByBakery(bakery);
+//        bakeryUpdateReportRepository.deleteByBakery(bakery);
+//        bakeryReportImageRepository.deleteByBakery(bakery);
+//        productAddReportRepository.deleteByBakery(bakery);
+//        reviewImageRepository.deleteByBakery(bakery);
+//        reviewProductRatingRepository.deleteByBakeryId(bakeryId);
+//        reviewRepository.findByBakery(bakery).forEach(review -> {
+//            reviewReportRepository.deleteByReview(review);
+//            reviewViewRepository.deleteByReview(review);
+//        });
+//        bakeryViewRepository.deleteByBakery(bakery);
+//        bakeryRepository.deleteById(bakeryId);
+//    }
 }
