@@ -204,6 +204,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                         reviewImageRepository.existsByBakeryAndIsNewIsTrue(bakery))
                 .productAddReportIsNew(productAddReportRepository.existsByBakeryAndIsNewIsTrue(bakery))
                 .bakeryUpdateReportIsNew(bakeryUpdateReportRepository.existsByBakeryAndIsNewIsTrue(bakery))
+                .newReviewIsNew(reviewRepository.existsByBakeryAndIsNewIsTrue(bakery))
                 .build();
     }
 

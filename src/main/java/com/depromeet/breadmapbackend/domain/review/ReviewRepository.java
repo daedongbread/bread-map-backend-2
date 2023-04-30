@@ -25,5 +25,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByIdAndUser(Long id, User user);
     Integer countByUser(User user);
     Integer countByBakeryAndIsNewIsTrue(Bakery bakery);
+    boolean existsByBakeryAndIsNewIsTrue(Bakery bakery);
     Integer countByIsNewIsTrue();
 }

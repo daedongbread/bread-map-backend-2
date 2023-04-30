@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review.dto;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import lombok.*;

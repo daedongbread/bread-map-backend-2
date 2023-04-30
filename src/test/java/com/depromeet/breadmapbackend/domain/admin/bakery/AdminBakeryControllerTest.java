@@ -398,7 +398,8 @@ class AdminBakeryControllerTest extends ControllerTest {
                         responseFields(
                                 fieldWithPath("data.adminImageIsNew").description("대표/메뉴 이미지 신규 여부"),
                                 fieldWithPath("data.productAddReportIsNew").description("메뉴제보 신규 여부"),
-                                fieldWithPath("data.bakeryUpdateReportIsNew").description("정보수정 신규 여부")
+                                fieldWithPath("data.bakeryUpdateReportIsNew").description("정보수정 신규 여부"),
+                                fieldWithPath("data.newReviewIsNew").description("신규 리뷰 여부")
                         )
                 ))
                 .andExpect(status().isOk());
