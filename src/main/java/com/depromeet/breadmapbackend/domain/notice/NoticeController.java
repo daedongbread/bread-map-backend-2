@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated(ValidationSequence.class)
 @RestController
-@RequestMapping("/v1/notices")
+//@RequestMapping("/v1/notices")
+@RequestMapping
 @RequiredArgsConstructor
 public class NoticeController {
     private final NoticeService noticeService;
@@ -26,7 +27,8 @@ public class NoticeController {
 //        noticeService.addNoticeToken(oAuthId, request);
 //    }
 
-    @GetMapping("/{type}")
+//    @GetMapping("/{type}")
+    @GetMapping(value = {"/v1/notices/{type}", "/notices/{type}"})
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<NoticeDto>> getNoticeList(
             @CurrentUser String oAuthId,
