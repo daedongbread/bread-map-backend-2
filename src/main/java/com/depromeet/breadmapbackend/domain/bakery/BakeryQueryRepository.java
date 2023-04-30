@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
+import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.productAddReport;
 import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReportImage.productAddReportImage;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.bakeryReportImage;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.bakeryUpdateReport;
@@ -57,11 +58,11 @@ public class BakeryQueryRepository {
                                     .having(bakeryReportImage.count().gt(0L))));
                 } else if (filter.equals(AdminBakeryFilter.PRODUCT_ADD_REPORT)) {
                     conditions.or(bakery.id.in(
-                            JPAExpressions.select(productAddReportImage.bakery.id)
-                                    .from(productAddReportImage)
-                                    .where(productAddReportImage.isNew.isTrue())
-                                    .groupBy(productAddReportImage.bakery.id)
-                                    .having(productAddReportImage.count().gt(0L))));
+                            JPAExpressions.select(productAddReport.bakery.id)
+                                    .from(productAddReport)
+                                    .where(productAddReport.isNew.isTrue())
+                                    .groupBy(productAddReport.bakery.id)
+                                    .having(productAddReport.count().gt(0L))));
                 } else if (filter.equals(AdminBakeryFilter.BAKERY_UPDATE_REPORT)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(bakeryUpdateReport.bakery.id)
