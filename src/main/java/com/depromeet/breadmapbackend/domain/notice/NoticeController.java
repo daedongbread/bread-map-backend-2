@@ -28,7 +28,7 @@ public class NoticeController {
 //    }
 
 //    @GetMapping("/{type}")
-    @GetMapping(value = {"/v1/notices/{type}", "/notices/{type}"})
+    @GetMapping(value = {"/v1/notices/{type}", "/notice/{type}"})
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<PageResponseDto<NoticeDto>> getNoticeList(
             @CurrentUser String oAuthId,
