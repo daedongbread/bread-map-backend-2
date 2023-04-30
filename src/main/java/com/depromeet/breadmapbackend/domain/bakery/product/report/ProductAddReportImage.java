@@ -28,7 +28,7 @@ public class ProductAddReportImage extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isNew = Boolean.TRUE;
+    private Boolean isNew = Boolean.FALSE;
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
@@ -46,6 +46,9 @@ public class ProductAddReportImage extends BaseEntity {
         this.isNew = false;
     }
 
-    public void register() { this.isRegistered = true; }
+    public void register() {
+        this.isRegistered = true;
+        this.isNew = true;
+    }
 }
 

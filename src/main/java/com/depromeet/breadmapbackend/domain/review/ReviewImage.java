@@ -33,7 +33,7 @@ public class ReviewImage extends BaseEntity {
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
-    private Boolean isNew = Boolean.TRUE;
+    private Boolean isNew = Boolean.FALSE;
 
     @Column(nullable = false)
     @Convert(converter = BooleanToYNConverter.class)
@@ -51,6 +51,12 @@ public class ReviewImage extends BaseEntity {
         this.isNew = false;
     }
 
-    public void register() { this.isRegistered = true; }
-    public void unregister() { this.isRegistered = false; }
+    public void register() {
+        this.isRegistered = true;
+        this.isNew = true;
+    }
+    public void unregister() {
+        this.isRegistered = false;
+        this.isNew = false;
+    }
 }
