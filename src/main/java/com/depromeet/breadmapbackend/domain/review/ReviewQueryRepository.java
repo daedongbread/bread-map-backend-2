@@ -17,7 +17,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static com.depromeet.breadmapbackend.domain.review.QReview.review;
@@ -39,14 +38,14 @@ public class ReviewQueryRepository {
         // 해당 유저가 page=0을 호출했을때 레디스에 지금 시간 저장, 이후 page들에서 사용
         Pageable pageable = PageRequest.of(page, BAKERY_REVIEW_SIZE);
 
-        if (page == 0) { // TODO 근데 그럼 하나의 빵집에 대해서만 보장 가능
-            redisTemplate.opsForValue()
-                    .set(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId(), String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-        }
-        String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId());
-        LocalDateTime firstTime;
-        if (firstTimeString == null) throw new DaedongException(DaedongStatus.REVIEW_PAGE_EXCEPTION);
-        else firstTime = LocalDateTime.parse(firstTimeString);
+//        if (page == 0) { // TODO 근데 그럼 하나의 빵집에 대해서만 보장 가능
+//            redisTemplate.opsForValue()
+//                    .set(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId(), String.valueOf(LocalDateTime.now()));
+//        }
+//        String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getBakeryReview() + ":" + me.getId());
+//        LocalDateTime firstTime;
+//        if (firstTimeString == null) throw new DaedongException(DaedongStatus.REVIEW_PAGE_EXCEPTION);
+//        else firstTime = LocalDateTime.parse(firstTimeString);
 
         List<Review> content = queryFactory.selectFrom(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
@@ -56,8 +55,8 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
-                        review.isBlock.isFalse(),
-                        review.createdAt.before(firstTime))
+                        review.isBlock.isFalse())
+                        //review.createdAt.before(firstTime))
                 .groupBy(review.id, reviewProductRating.review.id)
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset((long) page * BAKERY_REVIEW_SIZE)
@@ -71,8 +70,8 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.bakery.eq(bakery),
-                        review.isBlock.isFalse(),
-                        review.createdAt.before(firstTime))
+                        review.isBlock.isFalse())
+                        //review.createdAt.before(firstTime))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
@@ -81,14 +80,14 @@ public class ReviewQueryRepository {
     public Page<Review> findProductReview(User me, Bakery bakery, Product product, ReviewSortType sortBy, int page) {
         Pageable pageable = PageRequest.of(page, PRODUCT_REVIEW_SIZE);
 
-        if (page == 0) {
-            redisTemplate.opsForValue()
-                    .set(customRedisProperties.getKey().getProductReview() + ":" + me.getId(), String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-        }
-        String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getProductReview() + ":" + me.getId());
-        LocalDateTime firstTime;
-        if (firstTimeString == null) throw new DaedongException(DaedongStatus.REVIEW_PAGE_EXCEPTION);
-        else firstTime = LocalDateTime.parse(firstTimeString);
+//        if (page == 0) {
+//            redisTemplate.opsForValue()
+//                    .set(customRedisProperties.getKey().getProductReview() + ":" + me.getId(), String.valueOf(LocalDateTime.now()));
+//        }
+//        String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getProductReview() + ":" + me.getId());
+//        LocalDateTime firstTime;
+//        if (firstTimeString == null) throw new DaedongException(DaedongStatus.REVIEW_PAGE_EXCEPTION);
+//        else firstTime = LocalDateTime.parse(firstTimeString);
 
         List<Review> content = queryFactory.selectFrom(review)
                 .leftJoin(review.ratings, reviewProductRating)//.fetchJoin() // TODO
@@ -99,8 +98,8 @@ public class ReviewQueryRepository {
                         ),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
-                        review.isBlock.isFalse(),
-                        review.createdAt.before(firstTime))
+                        review.isBlock.isFalse())
+                        //review.createdAt.before(firstTime))
                 .groupBy(review.id, reviewProductRating.review.id)
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset((long) page * PRODUCT_REVIEW_SIZE)
@@ -116,8 +115,8 @@ public class ReviewQueryRepository {
                         ),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
-                        review.isBlock.isFalse(),
-                        review.createdAt.before(firstTime))
+                        review.isBlock.isFalse())
+                        //review.createdAt.before(firstTime))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
@@ -126,14 +125,14 @@ public class ReviewQueryRepository {
     public Page<Review> findUserReview(User me, User user, int page) {
         Pageable pageable = PageRequest.of(page, USER_REVIEW_SIZE);
 
-        if (page == 0) {
-            redisTemplate.opsForValue()
-                    .set(customRedisProperties.getKey().getUserReview() + ":" + me.getId(), String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-        }
-        String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getUserReview() + ":" + me.getId());
-        LocalDateTime firstTime;
-        if (firstTimeString == null) throw new DaedongException(DaedongStatus.REVIEW_PAGE_EXCEPTION);
-        else firstTime = LocalDateTime.parse(firstTimeString);
+//        if (page == 0) {
+//            redisTemplate.opsForValue()
+//                    .set(customRedisProperties.getKey().getUserReview() + ":" + me.getId(), String.valueOf(LocalDateTime.now()));
+//        }
+//        String firstTimeString = redisTemplate.opsForValue().get(customRedisProperties.getKey().getUserReview() + ":" + me.getId());
+//        LocalDateTime firstTime;
+//        if (firstTimeString == null) throw new DaedongException(DaedongStatus.REVIEW_PAGE_EXCEPTION);
+//        else firstTime = LocalDateTime.parse(firstTimeString);
 
         List<Review> content = queryFactory.selectFrom(review)
                 .where(review.user.notIn(
@@ -142,8 +141,8 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.user.eq(user),
-                        review.isBlock.isFalse(),
-                        review.createdAt.before(firstTime))
+                        review.isBlock.isFalse())
+                        //review.createdAt.before(firstTime))
                 .orderBy(review.createdAt.desc())
                 .offset((long) page * USER_REVIEW_SIZE)
                 .limit(USER_REVIEW_SIZE)
@@ -156,8 +155,8 @@ public class ReviewQueryRepository {
                                         .where(blockUser.fromUser.eq(me))
                         ),
                         review.user.eq(user),
-                        review.isBlock.isFalse(),
-                        review.createdAt.before(firstTime))
+                        review.isBlock.isFalse())
+                        //review.createdAt.before(firstTime))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
