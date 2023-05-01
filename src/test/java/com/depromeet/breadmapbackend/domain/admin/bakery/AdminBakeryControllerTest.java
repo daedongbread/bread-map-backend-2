@@ -282,7 +282,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(
-                                fieldWithPath("name").description("빵집 이름"),
+                                fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
                                 fieldWithPath("image").optional().description("빵집 이미지"),
                                 fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
                                 fieldWithPath("latitude").description("빵집 위도"),
@@ -337,9 +337,9 @@ class AdminBakeryControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         requestFields(
-                                fieldWithPath("name").description("빵집 이름"),
-                                fieldWithPath("image").description("빵집 이미지"),
-                                fieldWithPath("address").description("빵집 도로명 주소"),
+                                fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
+                                fieldWithPath("image").optional().description("빵집 이미지"),
+                                fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
                                 fieldWithPath("latitude").description("빵집 위도"),
                                 fieldWithPath("longitude").description("빵집 경도"),
                                 fieldWithPath("hours").optional().description("빵집 영업시간"),
