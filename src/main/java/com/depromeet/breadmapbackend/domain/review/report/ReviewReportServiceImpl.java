@@ -21,7 +21,7 @@ public class ReviewReportServiceImpl implements ReviewReportService {
     @Transactional(rollbackFor = Exception.class)
     public void reviewReport(String oAuthId, Long reviewId, ReviewReportRequest request) {
         User reporter = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         if (request.getReason().equals(ReviewReportReason.ETC) && request.getContent().length() < 10)
             throw new DaedongException(DaedongStatus.REVIEW_REPORT_CONTENT_EXCEPTION);

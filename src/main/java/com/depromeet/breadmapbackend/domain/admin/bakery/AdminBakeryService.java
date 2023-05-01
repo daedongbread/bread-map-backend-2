@@ -21,10 +21,14 @@ public interface AdminBakeryService {
     PageResponseDto<AdminImageDto> getAdminImages(Long bakeryId, AdminBakeryImageType imageType, int page);
     void deleteAdminImage(Long bakeryId, AdminBakeryImageType type, Long imageId);
     PageResponseDto<ProductAddReportDto> getProductAddReports(Long bakeryId, int page);
-    void registerProductAddImage(Long bakeryId, Long reportId, ProductAddImageRegisterRequest request);
+    void registerProductAddImage(Long bakeryId, Long reportId, AdminImageRegisterRequest request);
     void deleteProductAddReport(Long bakeryId, Long reportId);
     PageResponseDto<BakeryUpdateReportDto> getBakeryUpdateReports(Long bakeryId, int page);
     void changeBakeryUpdateReport(Long bakeryId, Long reportId);
     void deleteBakeryUpdateReport(Long bakeryId, Long reportId);
-    void deleteBakery(Long bakeryId);
+    PageResponseDto<NewReviewDto> getNewReviews(Long bakeryId, int page);
+    void hideNewReview(Long bakeryId, Long reviewId);
+    void registerNewReviewImage(Long bakeryId, Long reviewId, AdminImageRegisterRequest request);
+    void deleteReview(Long bakeryId, Long reviewId);
+//    void deleteBakery(Long bakeryId);
 }

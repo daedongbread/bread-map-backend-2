@@ -49,6 +49,7 @@ public class ReviewRequest {
         private ProductType productType;
         @NotBlank(message = "상품 이름은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private String productName;
+        private String price;
         @NotNull(message = "점수는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
         private Long rating;
     }

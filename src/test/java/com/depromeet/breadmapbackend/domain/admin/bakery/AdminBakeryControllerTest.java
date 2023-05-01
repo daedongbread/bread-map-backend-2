@@ -3,7 +3,7 @@ package com.depromeet.breadmapbackend.domain.admin.bakery;
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
-import com.depromeet.breadmapbackend.domain.admin.bakery.dto.ProductAddImageRegisterRequest;
+import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminImageRegisterRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
@@ -58,6 +58,8 @@ class AdminBakeryControllerTest extends ControllerTest {
     private ProductAddReportImage productAddReportImage1;
     private ProductAddReportImage productAddReportImage2;
     private BakeryReportImage bakeryReportImage;
+    private Review review;
+    private ReviewImage reviewImage;
     private JwtToken token;
 
     @BeforeEach
@@ -102,11 +104,11 @@ class AdminBakeryControllerTest extends ControllerTest {
                 .productAddReport(productAddReport).image(customAWSS3Properties.getCloudFront() + "/productImage2.jpg").build();
         productAddReportImageRepository.save(productAddReportImage2);
 
-        Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
+        review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
         reviewViewRepository.save(ReviewView.builder().review(review).build());
-        ReviewImage image = ReviewImage.builder().review(review).bakery(bakery).image("reviewImage.jpg").build();
-        reviewImageRepository.save(image);
+        reviewImage = ReviewImage.builder().review(review).bakery(bakery).image("reviewImage.jpg").build();
+        reviewImageRepository.save(reviewImage);
         ReviewProductRating rating = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
         reviewProductRatingRepository.save(rating);
 
@@ -396,7 +398,8 @@ class AdminBakeryControllerTest extends ControllerTest {
                         responseFields(
                                 fieldWithPath("data.adminImageIsNew").description("대표/메뉴 이미지 신규 여부"),
                                 fieldWithPath("data.productAddReportIsNew").description("메뉴제보 신규 여부"),
-                                fieldWithPath("data.bakeryUpdateReportIsNew").description("정보수정 신규 여부")
+                                fieldWithPath("data.bakeryUpdateReportIsNew").description("정보수정 신규 여부"),
+                                fieldWithPath("data.newReviewIsNew").description("신규 리뷰 여부")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -512,10 +515,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 
     @Test
     void registerProductAddImage() throws Exception {
-        String object = objectMapper.writeValueAsString(ProductAddImageRegisterRequest.builder()
+        String object = objectMapper.writeValueAsString(AdminImageRegisterRequest.builder()
                 .imageIdList(List.of(productAddReportImage1.getId(), productAddReportImage2.getId())).build());
 
-        mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}/product-add-reports/{reportId}", bakery.getId(), productAddReport.getId())
+        mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}/product-add-reports/{reportId}/images", bakery.getId(), productAddReport.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken())
                         .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -614,17 +617,108 @@ class AdminBakeryControllerTest extends ControllerTest {
     }
 
     @Test
-    void deleteBakery() throws Exception {
-        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}", bakery.getId())
+    void getNewReviews() throws Exception {
+        mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/new-reviews?page=0", bakery.getId())
                         .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andDo(print())
-                .andDo(document("v1/admin/bakery/delete",
+                .andDo(document("v1/admin/newReview",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(parameterWithName("bakeryId").description("빵집 고유 번호")),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
+                                fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
+                                fieldWithPath("data.size").description("페이지 크기"),
+                                fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                                fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                                fieldWithPath("data.contents").description("신규 리뷰 리스트"),
+                                fieldWithPath("data.contents.[].reviewId").description("신규 리뷰 고유 번호"),
+                                fieldWithPath("data.contents.[].createdAt").description("신규 리뷰 생성 날짜"),
+                                fieldWithPath("data.contents.[].nickName").description("신규 리뷰 유저 닉네임"),
+                                fieldWithPath("data.contents.[].productRatingList").description("신규 리뷰 상품 점수 리스트"),
+                                fieldWithPath("data.contents.[].productRatingList.[].productName").description("신규 리뷰 상품 이름"),
+                                fieldWithPath("data.contents.[].productRatingList.[].rating").description("신규 리뷰 상품 점수"),
+                                fieldWithPath("data.contents.[].content").description("신규 리뷰 내용"),
+                                fieldWithPath("data.contents.[].imageList").description("신규 리뷰 이미지 리스트"),
+                                fieldWithPath("data.contents.[].imageList.[].imageId").description("신규 리뷰 이미지 고유 번호"),
+                                fieldWithPath("data.contents.[].imageList.[].image").description("신규 리뷰 제보 이미지"),
+                                fieldWithPath("data.contents.[].imageList.[].isRegistered").description("신규 리뷰 이미지 저장 여부")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void hideNewReview() throws Exception {
+        mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}/new-reviews/{reviewId}", bakery.getId(), review.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/newReview/hide",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                         pathParameters(
-                                parameterWithName("bakeryId").description("빵집 고유 번호"))
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reviewId").description("리뷰 고유 번호"))
                 ))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void registerNewReviewImage() throws Exception {
+        String object = objectMapper.writeValueAsString(AdminImageRegisterRequest.builder()
+                .imageIdList(List.of(reviewImage.getId())).build());
+
+        mockMvc.perform(patch("/v1/admin/bakeries/{bakeryId}/new-reviews/{reviewId}/images", bakery.getId(), review.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken())
+                        .content(object).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andDo(document("v1/admin/newReview/register",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reviewId").description("신규 리뷰 고유 번호")),
+                        requestFields(
+                                fieldWithPath("imageIdList").description("저장할 이미지 고유 번호 리스트")
+                        ))
+                )
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteReview() throws Exception {
+        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}/new-reviews/{reviewId}", bakery.getId(), review.getId())
+                        .header("Authorization", "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andDo(document("v1/admin/newReview/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+                        pathParameters(
+                                parameterWithName("bakeryId").description("빵집 고유 번호"),
+                                parameterWithName("reviewId").description("리뷰 고유 번호"))
+                ))
+                .andExpect(status().isNoContent());
+    }
+
+//    @Test
+//    void deleteBakery() throws Exception {
+//        mockMvc.perform(delete("/v1/admin/bakeries/{bakeryId}", bakery.getId())
+//                        .header("Authorization", "Bearer " + token.getAccessToken()))
+//                .andDo(print())
+//                .andDo(document("v1/admin/bakery/delete",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+//                        pathParameters(
+//                                parameterWithName("bakeryId").description("빵집 고유 번호"))
+//                ))
+//                .andExpect(status().isNoContent());
+//    }
 }

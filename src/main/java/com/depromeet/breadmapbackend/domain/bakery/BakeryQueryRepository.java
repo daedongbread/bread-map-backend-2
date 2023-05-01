@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
+import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.productAddReport;
 import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReportImage.productAddReportImage;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.bakeryReportImage;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.bakeryUpdateReport;
@@ -52,24 +53,28 @@ public class BakeryQueryRepository {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(bakeryReportImage.bakery.id)
                                     .from(bakeryReportImage)
+                                    .where(bakeryReportImage.isNew.isTrue())
                                     .groupBy(bakeryReportImage.bakery.id)
                                     .having(bakeryReportImage.count().gt(0L))));
                 } else if (filter.equals(AdminBakeryFilter.PRODUCT_ADD_REPORT)) {
                     conditions.or(bakery.id.in(
-                            JPAExpressions.select(productAddReportImage.bakery.id)
-                                    .from(productAddReportImage)
-                                    .groupBy(productAddReportImage.bakery.id)
-                                    .having(productAddReportImage.count().gt(0L))));
+                            JPAExpressions.select(productAddReport.bakery.id)
+                                    .from(productAddReport)
+                                    .where(productAddReport.isNew.isTrue())
+                                    .groupBy(productAddReport.bakery.id)
+                                    .having(productAddReport.count().gt(0L))));
                 } else if (filter.equals(AdminBakeryFilter.BAKERY_UPDATE_REPORT)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(bakeryUpdateReport.bakery.id)
                                     .from(bakeryUpdateReport)
+                                    .where(bakeryUpdateReport.isNew.isTrue())
                                     .groupBy(bakeryUpdateReport.bakery.id)
                                     .having(bakeryUpdateReport.count().gt(0L))));
                 } else if (filter.equals(AdminBakeryFilter.NEW_REVIEW)) {
                     conditions.or(bakery.id.in(
                             JPAExpressions.select(review.bakery.id)
                                     .from(review)
+                                    .where(review.isNew.isTrue())
                                     .groupBy(review.bakery.id)
                                     .having(review.count().gt(0L))));
                 } else throw new DaedongException(DaedongStatus.ADMIN_FILTER_EXCEPTION);

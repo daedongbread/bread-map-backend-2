@@ -29,7 +29,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ReviewCommentDto> getReviewCommentList(Long reviewId) { // TODO : slice
-        if(reviewRepository.findById(reviewId).filter(r -> !r.getIsBlock()).isEmpty())
+        if(reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).isEmpty())
             throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
 
         return reviewCommentRepository.findByReviewIdAndParentIsNull(reviewId)
@@ -39,8 +39,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     @Transactional(rollbackFor = Exception.class)
     public void addReviewComment(String oAuthId, Long reviewId, ReviewCommentRequest request) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Review review = reviewRepository.findById(reviewId)
-                .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
         if(request.getParentCommentId().equals(0L)) { // 댓글
             ReviewComment.builder().review(review).user(user).content(request.getContent()).build();
@@ -60,8 +59,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     @Transactional(rollbackFor = Exception.class)
     public void removeReviewComment(String oAuthId, Long reviewId, Long commentId) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Review review = reviewRepository.findById(reviewId)
-                .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         ReviewComment reviewComment = reviewCommentRepository.findById(commentId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
         if (!reviewComment.getUser().equals(user) && !reviewComment.getReview().getUser().equals(user))
             throw new DaedongException(DaedongStatus.REVIEW_COMMENT_UNDELETE_EXCEPTION);
@@ -103,8 +101,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     @Transactional(rollbackFor = Exception.class)
     public void reviewCommentLike(String oAuthId, Long reviewId, Long commentId) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(reviewRepository.findById(reviewId)
-                .filter(r -> !r.getIsBlock()).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
+        if(reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
         ReviewComment reviewComment = reviewCommentRepository.findById(commentId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
         if(reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment).isPresent())
@@ -119,8 +116,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     @Transactional(rollbackFor = Exception.class)
     public void reviewCommentUnlike(String oAuthId, Long reviewId, Long commentId) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        if(reviewRepository.findById(reviewId)
-                .filter(r -> !r.getIsBlock()).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
+        if(reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).isEmpty()) throw new DaedongException(DaedongStatus.REVIEW_NOT_FOUND);
         ReviewComment reviewComment = reviewCommentRepository.findById(commentId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
 
         ReviewCommentLike reviewCommentLike = reviewCommentLikeRepository.findByUserAndReviewComment(user, reviewComment)

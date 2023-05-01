@@ -13,4 +13,5 @@ public class AdminBakeryIsNewDto {
     private Boolean adminImageIsNew;
     private Boolean productAddReportIsNew;
     private Boolean bakeryUpdateReportIsNew;
+    private Boolean newReviewIsNew;
 }

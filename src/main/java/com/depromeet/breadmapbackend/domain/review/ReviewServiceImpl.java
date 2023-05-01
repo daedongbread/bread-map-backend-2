@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
+import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportRepository;
 import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.review.view.ReviewViewRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -37,6 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewProductRatingRepository reviewProductRatingRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final FollowRepository followRepository;
+    private final ProductAddReportRepository productAddReportRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<ReviewDto> getBakeryReviewList(String oAuthId, Long bakeryId, ReviewSortType sortBy, int page) {
@@ -93,8 +96,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReviewDetailDto getReview(String oAuthId, Long reviewId) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Review review = reviewRepository.findById(reviewId)
-                .filter(r -> !r.getIsBlock()).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId).orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
         reviewViewRepository.findByReview(review)
                 .orElseGet(() -> {
                     ReviewView reviewView = ReviewView.builder().review(review).build();
@@ -149,10 +151,12 @@ public class ReviewServiceImpl implements ReviewService {
                     throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
-                        .price("0").bakery(bakery).isTrue(false).build();
+                        .price(noExistProductRatingRequest.getPrice()).bakery(bakery).isTrue(false).build();
                 productRepository.save(product);
                 ReviewProductRating.builder().user(user)
                         .bakery(bakery).product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
+                productAddReportRepository.save(ProductAddReport.builder().bakery(bakery).user(user)
+                        .name(noExistProductRatingRequest.getProductName()).price(noExistProductRatingRequest.getPrice()).build());
             });
         }
 

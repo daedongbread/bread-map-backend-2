@@ -107,6 +107,7 @@ class ReviewControllerTest extends ControllerTest {
 
     @AfterEach
     public void setDown() {
+        productAddReportRepository.deleteAllInBatch();
         reviewProductRatingRepository.deleteAllInBatch();
         reviewImageRepository.deleteAllInBatch();
         reviewViewRepository.deleteAllInBatch();
@@ -337,9 +338,9 @@ class ReviewControllerTest extends ControllerTest {
                 ))
                 .noExistProductRatingRequestList(Arrays.asList(
                         ReviewRequest.NoExistProductRatingRequest.builder()
-                                .productType(ProductType.BREAD).productName("fakeBread1").rating(5L).build(),
+                                .productType(ProductType.BREAD).productName("fakeBread1").price("3000").rating(5L).build(),
                         ReviewRequest.NoExistProductRatingRequest.builder()
-                                .productType(ProductType.BREAD).productName("fakeBread2").rating(4L).build()
+                                .productType(ProductType.BREAD).productName("fakeBread2").price("4000").rating(4L).build()
                 )).content("review add test")
                 .images(List.of("image1", "image2")).build());
 
@@ -359,6 +360,7 @@ class ReviewControllerTest extends ControllerTest {
                                 fieldWithPath("noExistProductRatingRequestList").description("빵집에 없는 상품 점수 리스트"),
                                 fieldWithPath("noExistProductRatingRequestList.[].productType").description("상품 타입 (BREAD, BEVERAGE, ETC)"),
                                 fieldWithPath("noExistProductRatingRequestList.[].productName").description("빵집에 없는 상품 이름"),
+                                fieldWithPath("noExistProductRatingRequestList.[].price").description("빵집에 없는 상품 가격"),
                                 fieldWithPath("noExistProductRatingRequestList.[].rating").description("빵집에 없는 상품 점수"),
                                 fieldWithPath("content").description("리뷰 내용"),
                                 fieldWithPath("images").description("리뷰 이미지들")
