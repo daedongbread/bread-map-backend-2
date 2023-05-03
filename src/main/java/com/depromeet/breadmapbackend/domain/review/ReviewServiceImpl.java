@@ -151,12 +151,15 @@ public class ReviewServiceImpl implements ReviewService {
                     throw new DaedongException(DaedongStatus.PRODUCT_DUPLICATE_EXCEPTION);
                 Product product = Product.builder().productType(noExistProductRatingRequest.getProductType())
                         .name(noExistProductRatingRequest.getProductName())
-                        .price(noExistProductRatingRequest.getPrice()).bakery(bakery).isTrue(false).build();
+                        .price((noExistProductRatingRequest.getPrice() == null) ? "0" : noExistProductRatingRequest.getPrice())
+                        .bakery(bakery).isTrue(false).build();
                 productRepository.save(product);
                 ReviewProductRating.builder().user(user)
                         .bakery(bakery).product(product).review(review).rating(noExistProductRatingRequest.getRating()).build();
                 productAddReportRepository.save(ProductAddReport.builder().bakery(bakery).user(user)
-                        .name(noExistProductRatingRequest.getProductName()).price(noExistProductRatingRequest.getPrice()).build());
+                        .name(noExistProductRatingRequest.getProductName())
+                        .price((noExistProductRatingRequest.getPrice() == null) ? "0" : noExistProductRatingRequest.getPrice())
+                        .build());
             });
         }
 
