@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         return oAuthType + "_" + sub;
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public JwtToken login(LoginRequest request) {
         Claims body = oidcProvider.verifyToken(request.getType(), request.getIdToken());
         OIDCUserInfo oidcUserInfo = OIDCUserInfoFactory.getOIDCUserInfo(request.getType(), body);
