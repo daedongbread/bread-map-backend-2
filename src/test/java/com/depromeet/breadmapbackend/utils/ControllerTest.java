@@ -3,10 +3,7 @@ package com.depromeet.breadmapbackend.utils;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.auth.AuthService;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReportRepository;
-import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImageRepository;
-import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportImageRepository;
-import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportRepository;
+import com.depromeet.breadmapbackend.domain.bakery.report.*;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
@@ -131,6 +128,8 @@ public abstract class ControllerTest {
 
     @Autowired
     protected BakeryAddReportRepository bakeryAddReportRepository;
+    @Autowired
+    protected BakeryAddReportImageRepository bakeryAddReportImageRepository;
 
     @Autowired
     protected BakeryReportImageRepository bakeryReportImageRepository;

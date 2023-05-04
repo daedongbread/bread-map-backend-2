@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,12 +35,15 @@ public class BakeryAddReport extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "bakeryAddReport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BakeryAddReportImage> images = new ArrayList<>();
+
     @Builder
     public BakeryAddReport(String name, String location, String content, User user) {
         this.name = name;
         this.location = location;
         this.content = content;
-        this.status = BakeryAddReportStatus.BEFORE_REFLECT;
+        this.status = BakeryAddReportStatus.BEFORE_REFLECT; // TODO
         this.user = user;
     }
 

@@ -31,6 +31,13 @@ public class BakeryReportServiceImpl implements BakeryReportService {
                 .name(request.getName()).location(request.getLocation()).content(request.getContent())
                 .user(user).build();
         bakeryAddReportRepository.save(bakeryAddReport);
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            if (request.getImages().size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
+            for (String image : request.getImages()) {
+                BakeryAddReportImage.builder().report(bakeryAddReport).image(image).build();
+            }
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
