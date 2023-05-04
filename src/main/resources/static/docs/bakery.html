@@ -489,7 +489,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries?sortBy=distance&amp;filterBy=false&amp;latitude=37.560992&amp;longitude=127.044174&amp;latitudeDelta=0.01&amp;longitudeDelta=0.02 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2ODMxOTY3OTAsImV4cCI6MTY4MzIwMDM5MH0.x-6czvlR0OABwWojoUl01sZaS1QG6MkM799GGCUAyP4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2ODMxOTc4MjIsImV4cCI6MTY4MzIwMTQyMn0.rErRqUGtzmiaw99uoMTRlMBlaMttwiPhqlfBSmjg1u4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -690,7 +690,7 @@ Content-Length: 754
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/32 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2ODMxOTY3OTAsImV4cCI6MTY4MzIwMDM5MH0.x-6czvlR0OABwWojoUl01sZaS1QG6MkM799GGCUAyP4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2ODMxOTc4MjIsImV4cCI6MTY4MzIwMTQyMn0.rErRqUGtzmiaw99uoMTRlMBlaMttwiPhqlfBSmjg1u4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -922,7 +922,7 @@ BOOKING("예약"))</p></td>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/bakeries/34/products HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk2NzkwLCJleHAiOjE2ODMyMDAzOTB9.TWWcLGi-iPuLO5x0yluQrH9qkrp8tQsyhEB-aTd2vhc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk3ODIyLCJleHAiOjE2ODMyMDE0MjJ9.RgUB9W15ip314PJgTYtbD71AxkC0dIm4n8yOQWjuzvY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1084,7 +1084,7 @@ Content-Length: 347
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/35/product-add-reports HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk2NzkxLCJleHAiOjE2ODMyMDAzOTF9.kO5HQ_GgQANDdF3YlXDkYs_j9zm-Q2UPuGi0l6txfxQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk3ODIyLCJleHAiOjE2ODMyMDE0MjJ9.RgUB9W15ip314PJgTYtbD71AxkC0dIm4n8yOQWjuzvY
 Content-Length: 86
 Host: localhost:8080
 
@@ -1236,16 +1236,16 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/bakery-add-reports HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk2NzkxLCJleHAiOjE2ODMyMDAzOTF9.kO5HQ_GgQANDdF3YlXDkYs_j9zm-Q2UPuGi0l6txfxQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk3ODIyLCJleHAiOjE2ODMyMDE0MjJ9.RgUB9W15ip314PJgTYtbD71AxkC0dIm4n8yOQWjuzvY
 Accept: application/json
-Content-Length: 108
+Content-Length: 126
 Host: localhost:8080
 
 {
   "name" : "newBakery",
   "location" : "newLocation",
   "content" : "newContent",
-  "images" : null
+  "images" : [ "image1", "image2" ]
 }</code></pre>
 </div>
 </div>
@@ -1314,7 +1314,7 @@ Host: localhost:8080
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>images</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">제보 빵집 이미지들</p></td>
 </tr>
@@ -1348,7 +1348,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/36/bakery-update-reports HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk2NzkxLCJleHAiOjE2ODMyMDAzOTF9.kO5HQ_GgQANDdF3YlXDkYs_j9zm-Q2UPuGi0l6txfxQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk3ODIyLCJleHAiOjE2ODMyMDE0MjJ9.RgUB9W15ip314PJgTYtbD71AxkC0dIm4n8yOQWjuzvY
 Accept: application/json
 Content-Length: 70
 Host: localhost:8080
@@ -1476,7 +1476,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/bakeries/38/bakery-report-images HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk2NzkxLCJleHAiOjE2ODMyMDAzOTF9.kO5HQ_GgQANDdF3YlXDkYs_j9zm-Q2UPuGi0l6txfxQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMTk3ODIyLCJleHAiOjE2ODMyMDE0MjJ9.RgUB9W15ip314PJgTYtbD71AxkC0dIm4n8yOQWjuzvY
 Accept: application/json
 Content-Length: 41
 Host: localhost:8080

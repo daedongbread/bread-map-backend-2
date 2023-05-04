@@ -75,7 +75,7 @@ class BakeryReportControllerTest extends ControllerTest {
     @Test
     void bakeryAddReport() throws Exception {
         String object = objectMapper.writeValueAsString(BakeryAddReportRequest.builder()
-                .name("newBakery").location("newLocation").content("newContent").build());
+                .name("newBakery").location("newLocation").content("newContent").images(List.of("image1", "image2")).build());
 
         mockMvc.perform(post("/v1/bakeries/bakery-add-reports")
                         .header("Authorization", "Bearer " + token.getAccessToken())
