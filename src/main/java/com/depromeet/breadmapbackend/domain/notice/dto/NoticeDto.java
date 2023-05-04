@@ -23,12 +23,12 @@ public class NoticeDto {
     private NoticeType noticeType;
 
     @Builder
-    public NoticeDto(String image, Boolean isFollow, Notice notice) {
+    public NoticeDto(String image, Boolean isFollow, Notice notice, String title) {
         this.noticeId = notice.getId();
         this.image = image;
         this.fromUserId = notice.getFromUser().getId();
         this.fromUserNickName = notice.getFromUser().getUserInfo().getNickName();
-        this.title = notice.getTitle();
+        this.title = title;
         this.contentId = notice.getContentId();
         this.content = notice.getContent();
         this.isFollow = isFollow;

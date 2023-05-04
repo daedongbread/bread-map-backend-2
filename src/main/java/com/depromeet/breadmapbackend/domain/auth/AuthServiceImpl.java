@@ -129,7 +129,10 @@ public class AuthServiceImpl implements AuthService {
 
         String oAuthId = redisTokenUtils.getOAuthIdFromRefreshToken(request.getRefreshToken());
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
+        if (user.getOAuthInfo().getOAuthType().equals(OAuthType.KAKAO) && user.getUserInfo().getEmail() == null) {
+            makeRefreshTokenInvalid(request.getRefreshToken());
+            throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
+        }
         JwtToken reissueToken = createNewToken(oAuthId, user.getRoleType());
         makeRefreshTokenInvalid(request.getRefreshToken()); // TODO : accessToken이 유효기간 남아 있으면?
         return reissueToken;

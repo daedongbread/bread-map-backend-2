@@ -129,8 +129,9 @@ public class BakeryServiceImpl implements BakeryService {
                 .build();
         BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
                 .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, me).orElse(null)).build();
+        BakeryDto.PioneerInfo pioneerInfo = BakeryDto.PioneerInfo.builder().pioneer(bakery.getPioneer()).build();
 
         return BakeryDto.builder()
-                .bakeryInfo(bakeryInfo).flagInfo(flagInfo).facilityInfoList(bakery.getFacilityInfoList()).build();
+                .bakeryInfo(bakeryInfo).flagInfo(flagInfo).facilityInfoList(bakery.getFacilityInfoList()).pioneerInfo(pioneerInfo).build();
     }
 }

@@ -27,11 +27,11 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "fromUser_id")
     private User fromUser;
 
-    /*
-     알림 주 내용
-     */
-    @Column(nullable = false)
-    private String title;
+//    /*
+//     알림 주 내용
+//     */
+//    @Column(nullable = false)
+//    private String title;
 
     /*
      내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 유저 아이디
@@ -49,10 +49,9 @@ public class Notice extends BaseEntity {
     private NoticeType type;
 
     @Builder
-    public Notice(User user, User fromUser, String title, Long contentId, String content, NoticeType type) {
+    public Notice(User user, User fromUser, Long contentId, String content, NoticeType type) {
         this.user = user;
         this.fromUser = fromUser;
-        this.title = title;
         this.contentId = contentId;
         this.content = content;
         this.type = type;

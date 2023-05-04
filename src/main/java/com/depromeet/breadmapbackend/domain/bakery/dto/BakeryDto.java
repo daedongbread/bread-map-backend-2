@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery.dto;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BakeryDto {
     private BakeryInfo bakeryInfo;
+    private PioneerInfo pioneerInfo;
     private FlagInfo flagInfo;
     private List<FacilityInfo> facilityInfoList;
 
@@ -62,6 +64,19 @@ public class BakeryDto {
         public FlagInfo(FlagBakery flagBakery) {
             this.flagId = flagBakery != null ? flagBakery.getFlag().getId() : null;
             this.isFlaged = flagBakery != null;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class PioneerInfo {
+        private Long pioneerId;
+        private String pioneerNickName;
+
+        @Builder
+        public PioneerInfo(User pioneer) {
+            this.pioneerId = pioneer == null ? null : pioneer.getId();
+            this.pioneerNickName = pioneer == null ? null : pioneer.getNickName();
         }
     }
 }
