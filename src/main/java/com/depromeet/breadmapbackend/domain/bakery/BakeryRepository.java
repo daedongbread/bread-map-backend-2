@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BakeryRepository extends JpaRepository<Bakery, Long>{
-    List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetween(Double leftLatitude, Double rightLatitude, Double downLongitude, Double upLongitude);
+    Optional<Bakery> findByIdAndStatus(Long id, BakeryStatus status);
+
+    List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetweenAndStatus(Double leftLatitude, Double rightLatitude, Double downLongitude, Double upLongitude, BakeryStatus status);
 
     @Query(value = "select * from bakery b ORDER BY b.modified_At DESC", countQuery = "select count(*) from bakery", nativeQuery = true)
     Page<Bakery> findPageAll(Pageable pageable);
