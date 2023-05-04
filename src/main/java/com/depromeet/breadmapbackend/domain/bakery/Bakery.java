@@ -55,16 +55,20 @@ public class Bakery extends BaseEntity {
     private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "pioneer_id")
+    private User pioneer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
     @Builder
     public Bakery(
             String name, Double latitude, Double longitude,
             String address, String hours, String phoneNumber,
             String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
-            User user, List<FacilityInfo> facilityInfoList, BakeryStatus status
-    ) {
+            List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
+            ) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -74,21 +78,15 @@ public class Bakery extends BaseEntity {
         this.bakeryURL = BakeryURL.builder()
                 .websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
         this.image = image;
-        this.user = user;
         this.facilityInfoList = facilityInfoList;
         this.status = status;
+        this.pioneer = pioneer;
     }
-
-    public void addFacilityInfo(FacilityInfo info) { this.facilityInfoList.add(info); }
-
-    public void removeFacilityInfo(FacilityInfo info) { this.facilityInfoList.remove(info); }
-
-    public void updateImage(String image) { this.image = image; }
 
     public void update(
             String name, String address, Double latitude, Double longitude, String hours,
             String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
-            List<FacilityInfo> facilityInfoList, BakeryStatus status
+            List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
     ) {
         this.name = name;
         this.address = address;
@@ -100,6 +98,11 @@ public class Bakery extends BaseEntity {
         this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
         this.facilityInfoList = facilityInfoList;
         this.status = status;
+        this.pioneer = pioneer;
+    }
+
+    public void updatePioneer(User pioneer) {
+        this.pioneer = pioneer;
     }
 
     public boolean isPosting() {

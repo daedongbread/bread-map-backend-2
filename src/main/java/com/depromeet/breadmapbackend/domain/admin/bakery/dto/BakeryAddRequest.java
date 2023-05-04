@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.admin.bakery.dto;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
+import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import lombok.AllArgsConstructor;
@@ -41,10 +42,12 @@ public class BakeryAddRequest {
     private String blogURL;
     private String phoneNumber;
     private List<@EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) FacilityInfo> facilityInfoList;
+    // private Long ownerId;
 
     @Valid
     private List<ProductAddRequest> productList;
     private BakeryStatus status;
+    private Long pioneerId;
 
     @Getter
     @Builder

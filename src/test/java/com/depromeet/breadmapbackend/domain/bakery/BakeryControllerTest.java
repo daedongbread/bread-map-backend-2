@@ -159,6 +159,7 @@ class BakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.bakeryInfo.facebookURL").description("빵집 페이스북"),
                                 fieldWithPath("data.bakeryInfo.blogURL").description("빵집 블로그"),
                                 fieldWithPath("data.bakeryInfo.phoneNumber").description("빵집 전화번호"),
+                                fieldWithPath("data.flagInfo").description("빵집 깃발 정보"),
                                 fieldWithPath("data.flagInfo.flagId").description("유저 빵집 깃발 고유 번호 (깃발 미선택 시 null)"),
                                 fieldWithPath("data.flagInfo.isFlaged").description("유저 빵집 깃발 저장 유무 (깃발 미선택 시 false)"),
                                 fieldWithPath("data.facilityInfoList")
@@ -167,7 +168,10 @@ class BakeryControllerTest extends ControllerTest {
                                                 "DELIVERY(\"배달\"),\n" +
                                                 "PET(\"반려동물\"),\n" +
                                                 "SHIPPING(\"택배\"),\n" +
-                                                "BOOKING(\"예약\"))")
+                                                "BOOKING(\"예약\"))"),
+                                fieldWithPath("data.pioneerInfo").description("빵집 개척자 정보"),
+                                fieldWithPath("data.pioneerInfo.pioneerId").description("빵집 개척자 고유 번호"),
+                                fieldWithPath("data.pioneerInfo.pioneerNickName").description("빵집 개척자 닉네임")
                         )
                 ))
                 .andExpect(status().isOk());

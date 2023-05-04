@@ -1,10 +1,8 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddEvent;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
-import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenDeleteEvent;
-import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.review.comment.RecommentEvent;
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewCommentEvent;
 import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLikeEvent;
@@ -15,7 +13,6 @@ import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
-import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +32,6 @@ public class NoticeServiceImpl implements NoticeService{
     private final NoticeRepository noticeRepository;
     private final NoticeQueryRepository noticeQueryRepository;
     private final UserRepository userRepository;
-    private final NoticeTokenRepository noticeTokenRepository;
     private final FollowRepository followRepository;
 
     private final FcmService fcmService;
@@ -66,14 +62,12 @@ public class NoticeServiceImpl implements NoticeService{
     public void addFollowNotice(FollowEvent event) throws FirebaseMessagingException { // 팔로우 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        // TODO : User 정보로 NoticeToken들 가져오기
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title(fromUser.getUserInfo().getNickName() + "님이 회원님을 팔로우하기 시작했어요")
                 .contentId(fromUser.getId())
                 .type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice);
-        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, noticeTitle(notice), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
@@ -83,12 +77,11 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 리뷰에 " + fromUser.getUserInfo().getNickName() + "님이 댓글을 달았어요!")
                 // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_COMMENT).build();
         noticeRepository.save(notice);
-        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, noticeTitle(notice), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
@@ -98,12 +91,11 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 리뷰를 " + fromUser.getUserInfo().getNickName() + "님이 좋아해요!")
                 // contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
                 .contentId(event.getReviewId()).content(event.getReviewContent())
                 .type(NoticeType.REVIEW_LIKE).build();
         noticeRepository.save(notice);
-        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, noticeTitle(notice), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
@@ -113,12 +105,11 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 댓글에 " + fromUser.getUserInfo().getNickName() + "님이 대댓글을 달았어요!")
                 // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.RECOMMENT).build();
         noticeRepository.save(notice);
-        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, noticeTitle(notice), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
     @Async("notice")
@@ -128,32 +119,32 @@ public class NoticeServiceImpl implements NoticeService{
         User fromUser = userRepository.findById(event.getFromUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
                 .user(user).fromUser(fromUser)
-                .title("내 댓글을 " + fromUser.getUserInfo().getNickName() + "님이 좋아해요!")
                 // contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
                 .contentId(event.getCommentId()).content(event.getCommentContent())
                 .type(NoticeType.REVIEW_COMMENT_LIKE).build();
         noticeRepository.save(notice);
-        fcmService.sendMessageTo(user, notice.getTitle(), notice.getContent(), notice.getContentId(), notice.getType());
+        fcmService.sendMessageTo(user, noticeTitle(notice), notice.getContent(), notice.getContentId(), notice.getType());
     }
 
-//    @Async("notice")
-//    @TransactionalEventListener
-//    public void addReportBakeryAddNotice(ReportBakeryAdd event) { // 제보한 빵집 추가 알람
-//        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-//        Notice notice = Notice.builder()
-//                .user(user).title("내가 제보한 빵집이 추가되었어요!")
-//                // contentId : 추가된 빵집 아이디, content : 추가된 빵집 이름
-//                .contentId(event.getBakeryId()).content(event.getBakeryName())
-//                .type(NoticeType.addBakery).build();
-//        noticeRepository.save(notice);
-//    }
-//
+    @Async("notice")
+    @TransactionalEventListener
+    public void addReportBakeryAddNotice(BakeryAddEvent event) throws FirebaseMessagingException { // 제보한 빵집 추가 알람
+        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        Notice notice = Notice.builder()
+                .user(user)
+                // contentId : 추가된 빵집 아이디, content : 추가된 빵집 이름
+                .contentId(event.getBakeryId()).content(event.getBakeryName())
+                .type(NoticeType.ADD_BAKERY).build();
+        noticeRepository.save(notice);
+        fcmService.sendMessageTo(user, noticeTitle(notice), notice.getContent(), notice.getContentId(), notice.getType());
+    }
+
 //    @Async("notice")
 //    @TransactionalEventListener
 //    public void addReportBreadAddNotice(ReportBreadAddEvent event) { // 제보한 빵 추가 알람
 //        User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 //        Notice notice = Notice.builder()
-//                .user(user).title("내가 제보한 빵이 추가되었어요!")
+//                .user(user)
 //                // contentId : 추가된 빵 아이디, content : 추가된 빵집 이름 - 추가된 빵 이름
 //                .contentId(event.getBreadId()).content(event.getBakeryName() + " - " + event.getBreadName())
 //                .type(NoticeType.addBakery).build();
@@ -181,7 +172,7 @@ public class NoticeServiceImpl implements NoticeService{
                 content.getContent().stream().map(notice -> NoticeDto.builder()
                         .image(noticeImage(notice))
                         .isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
-                        .notice(notice).build())
+                        .notice(notice).title(noticeTitle(notice)).build())
                         .collect(Collectors.toList()));
     }
 
@@ -199,6 +190,29 @@ public class NoticeServiceImpl implements NoticeService{
         else if(notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE) || notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
             return customAwss3Properties.getCloudFront() + "/" +
                     customAwss3Properties.getDefaultImage().getFlag() + ".png";
+        else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
+    }
+
+    private String noticeTitle(Notice notice) {
+        String fromUserNickName = notice.getUser().getNickName();
+        if (notice.getType().equals(NoticeType.FOLLOW))
+            return fromUserNickName + "님이 회원님을 팔로우하기 시작했어요";
+        else if (notice.getType().equals(NoticeType.REVIEW_COMMENT))
+            return fromUserNickName + "님이 댓글을 달았어요!";
+        else if (notice.getType().equals(NoticeType.RECOMMENT))
+            return "내 댓글에 " + fromUserNickName + "님이 대댓글을 달았어요!";
+        else if (notice.getType().equals(NoticeType.REVIEW_LIKE))
+            return "내 리뷰를 " + fromUserNickName + "님이 좋아해요!";
+        else if (notice.getType().equals(NoticeType.REVIEW_COMMENT_LIKE))
+            return "내 댓글을 " + fromUserNickName + "님이 좋아해요!";
+        else if (notice.getType().equals(NoticeType.ADD_BAKERY))
+            return "내가 제보한 빵집이 추가되었어요!";
+        else if (notice.getType().equals(NoticeType.ADD_PRODUCT))
+            return "내가 제보한 빵이 추가되었어요!";
+        else if (notice.getType().equals(NoticeType.FLAG_BAKERY_CHANGE))
+            return "";
+        else if (notice.getType().equals(NoticeType.FLAG_BAKERY_ADMIN_NOTICE))
+            return "관리자 글이 업데이트 됐어요!";
         else throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
     }
 }
