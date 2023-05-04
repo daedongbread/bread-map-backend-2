@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Builder
@@ -22,4 +23,5 @@ public class BakeryAddReportRequest {
     private String location;
     @Size(max=500, message = "500자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
     private String content;
+    private List<String> images;
 }

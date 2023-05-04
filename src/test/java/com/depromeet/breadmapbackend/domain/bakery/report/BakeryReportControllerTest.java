@@ -65,6 +65,7 @@ class BakeryReportControllerTest extends ControllerTest {
     public void setDown() {
         bakeryUpdateReportImageRepository.deleteAllInBatch();
         bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryAddReportImageRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
@@ -87,7 +88,8 @@ class BakeryReportControllerTest extends ControllerTest {
                         requestFields(
                                 fieldWithPath("name").description("제보 빵집 이름"),
                                 fieldWithPath("location").description("제보 빵집 위치"),
-                                fieldWithPath("content").optional().description("추천 이유")
+                                fieldWithPath("content").optional().description("추천 이유"),
+                                fieldWithPath("images").optional().description("제보 빵집 이미지들")
                         )
                 ))
                 .andExpect(status().isCreated());
