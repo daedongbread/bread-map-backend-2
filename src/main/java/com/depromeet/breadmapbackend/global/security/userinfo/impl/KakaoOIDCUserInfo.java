@@ -19,31 +19,30 @@ public class KakaoOIDCUserInfo extends OIDCUserInfo {
         return body.get("sub").toString();
     }
 
-    @Override
-    public String getNickName() {
-        Map<String, Object> properties = (Map<String, Object>) body.get("properties");
-
-        if (properties == null) {
-            return null;
-        }
-
-        return (String) properties.get("nickname");
-    }
+//    @Override
+//    public String getNickName() {
+//        Map<String, Object> properties = (Map<String, Object>) body.get("properties");
+//
+//        if (properties == null) {
+//            return null;
+//        }
+//
+//        return (String) properties.get("nickname");
+//    }
 
     @Override
     public String getEmail() {
-        return (String) body.get("account_email");
+        return (String) body.get("email");
     }
 
-    @Override
-    public String getImage() {
-        Map<String, Object> properties = (Map<String, Object>) body.get("properties");
-
-        if (properties == null) {
-            return null;
-        }
-
-        return (String) properties.get("thumbnail_image");
-    }
-
+//    @Override
+//    public String getImage() {
+//        Map<String, Object> properties = (Map<String, Object>) body.get("properties");
+//
+//        if (properties == null) {
+//            return null;
+//        }
+//
+//        return (String) properties.get("thumbnail_image");
+//    }
 }

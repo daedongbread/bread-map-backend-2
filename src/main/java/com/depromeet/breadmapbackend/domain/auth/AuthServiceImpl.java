@@ -53,9 +53,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public JwtToken login(LoginRequest request) {
-        String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
+        Claims body = oidcProvider.verifyToken(request.getType(), request.getIdToken());
+        OIDCUserInfo oidcUserInfo = OIDCUserInfoFactory.getOIDCUserInfo(request.getType(), body);
+        String sub = body.getSubject();
+//        String sub = oidcProvider.verifyToken(request.getType(), request.getIdToken()).getSubject();
         String oAuthId = getOAuthId(request.getType(), sub);
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if (user.getUserInfo().getEmail() == null) user.getUserInfo().updateEmail(oidcUserInfo.getEmail());
         if(user.getIsBlock()) throw new DaedongException(DaedongStatus.BLOCK_USER);
 
         return createNewToken(oAuthId, RoleType.USER);
