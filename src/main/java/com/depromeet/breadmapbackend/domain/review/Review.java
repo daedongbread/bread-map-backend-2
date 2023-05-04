@@ -97,4 +97,12 @@ public class Review extends BaseEntity {
     public void hide() { this.isHide = Boolean.TRUE; }
 
     public void delete() { this.isDelete = Boolean.TRUE; }
+
+    public boolean isValid() {
+        return !(this.isBlock || this.isDelete);
+    }
+
+    public boolean isUser(User user) {
+        return this.user.equals(user);
+    }
 }

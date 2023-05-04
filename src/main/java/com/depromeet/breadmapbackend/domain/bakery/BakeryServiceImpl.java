@@ -44,9 +44,14 @@ public class BakeryServiceImpl implements BakeryService {
         else if(sortBy.equals(BakerySortType.POPULAR)) comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
         else throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        List<Bakery> bakeries = bakeryRepository
+                .findTop20ByLatitudeBetweenAndLongitudeBetweenAndStatus(
+                        latitude - latitudeDelta / 2, latitude + latitudeDelta / 2,
+                        longitude - longitudeDelta / 2, longitude + longitudeDelta / 2,
+                        BakeryStatus.POSTING);
 
         if (!filterBy) {
-            return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
+            return bakeries.stream()
                     .map(bakery -> BakeryCardDto.builder()
                             .bakery(bakery)
                             .flagNum(flagBakeryRepository.countFlagNum(bakery))
@@ -72,7 +77,7 @@ public class BakeryServiceImpl implements BakeryService {
                     .collect(Collectors.toList());
         }
         else {
-            return bakeryRepository.findTop20ByLatitudeBetweenAndLongitudeBetween(latitude-latitudeDelta/2, latitude+latitudeDelta/2, longitude-longitudeDelta/2, longitude+longitudeDelta/2).stream()
+            return bakeries.stream()
                     .map(bakery -> BakeryCardDto.builder()
                             .bakery(bakery)
                             .flagNum(flagBakeryRepository.countFlagNum(bakery))
@@ -103,7 +108,7 @@ public class BakeryServiceImpl implements BakeryService {
     @Transactional(rollbackFor = Exception.class)
     public BakeryDto getBakery(String oAuthId, Long bakeryId) {
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         bakeryViewRepository.findByBakery(bakery)
                 .orElseGet(() -> {
                     BakeryView bakeryView = BakeryView.builder().bakery(bakery).build();

@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
@@ -54,6 +55,7 @@ public class ReviewQueryRepository {
                                         .from(blockUser)
                                         .where(blockUser.fromUser.eq(me))
                         ),
+                        review.bakery.status.eq(BakeryStatus.POSTING),
                         review.bakery.eq(bakery),
                         review.isDelete.isFalse(),
                         review.isBlock.isFalse())
@@ -70,6 +72,7 @@ public class ReviewQueryRepository {
                                         .from(blockUser)
                                         .where(blockUser.fromUser.eq(me))
                         ),
+                        review.bakery.status.eq(BakeryStatus.POSTING),
                         review.bakery.eq(bakery),
                         review.isDelete.isFalse(),
                         review.isBlock.isFalse())
@@ -98,6 +101,7 @@ public class ReviewQueryRepository {
                                         .from(blockUser)
                                         .where(blockUser.fromUser.eq(me))
                         ),
+                        review.bakery.status.eq(BakeryStatus.POSTING),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
                         review.isDelete.isFalse(),
@@ -116,6 +120,7 @@ public class ReviewQueryRepository {
                                         .from(blockUser)
                                         .where(blockUser.fromUser.eq(me))
                         ),
+                        review.bakery.status.eq(BakeryStatus.POSTING),
                         review.bakery.eq(bakery),
                         reviewProductRating.product.eq(product),
                         review.isDelete.isFalse(),
@@ -144,6 +149,7 @@ public class ReviewQueryRepository {
                                         .from(blockUser)
                                         .where(blockUser.fromUser.eq(me))
                         ),
+                        review.bakery.status.eq(BakeryStatus.POSTING),
                         review.user.eq(user),
                         review.isDelete.isFalse(),
                         review.isBlock.isFalse())
@@ -159,6 +165,7 @@ public class ReviewQueryRepository {
                                         .from(blockUser)
                                         .where(blockUser.fromUser.eq(me))
                         ),
+                        review.bakery.status.eq(BakeryStatus.POSTING),
                         review.user.eq(user),
                         review.isDelete.isFalse(),
                         review.isBlock.isFalse())

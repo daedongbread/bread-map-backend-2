@@ -101,4 +101,8 @@ public class Bakery extends BaseEntity {
         this.facilityInfoList = facilityInfoList;
         this.status = status;
     }
+
+    public boolean isPosting() {
+        return this.status.equals(BakeryStatus.POSTING);
+    }
 }

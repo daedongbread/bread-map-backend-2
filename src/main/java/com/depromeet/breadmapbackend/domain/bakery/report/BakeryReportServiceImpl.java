@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery.report;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryAddReportRequest;
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryReportImageRequest;
 import com.depromeet.breadmapbackend.domain.bakery.report.dto.BakeryUpdateReportRequest;
@@ -35,7 +36,7 @@ public class BakeryReportServiceImpl implements BakeryReportService {
     @Transactional(rollbackFor = Exception.class)
     public void bakeryUpdateReport(String oAuthId, Long bakeryId, BakeryUpdateReportRequest request) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         BakeryUpdateReport bakeryUpdateReport = BakeryUpdateReport.builder()
                 .bakery(bakery).user(user).reason(BakeryUpdateReason.ETC).content(request.getContent()).build();
         bakeryUpdateReportRepository.save(bakeryUpdateReport);
@@ -51,7 +52,7 @@ public class BakeryReportServiceImpl implements BakeryReportService {
     @Transactional(rollbackFor = Exception.class)
     public void bakeryReportImage(String oAuthId, Long bakeryId, BakeryReportImageRequest request) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         if (request.getImages() != null && !request.getImages().isEmpty()) {
             if (request.getImages().size() > 10) throw new DaedongException(DaedongStatus.IMAGE_NUM_EXCEED_EXCEPTION);
