@@ -114,6 +114,7 @@ class FlagControllerTest extends ControllerTest {
                                                 "PURPLE(\"보라색\"),\n" +
                                                 "RED(\"빨간색\"),\n" +
                                                 "PINK(\"핑크색\"))"),
+                                fieldWithPath("data.[].flagInfo.icon").description("깃발 아이콘 (가봤어요는 FLAG, 나머지는 HEART)"),
                                 fieldWithPath("data.[].flagInfo.bakeryNum").description("깃발에 속한 빵집 갯수"),
                                 fieldWithPath("data.[].bakeryImageList").description("깃발 빵집 사진 리스트 (최대 3개)")
                         )
@@ -234,6 +235,7 @@ class FlagControllerTest extends ControllerTest {
                                                 "PURPLE(\"보라색\"),\n" +
                                                 "RED(\"빨간색\"),\n" +
                                                 "PINK(\"핑크색\"))"),
+                                fieldWithPath("data.flagInfo.icon").description("깃발 아이콘 (가봤어요는 FLAG, 나머지는 HEART)"),
                                 fieldWithPath("data.flagInfo.bakeryNum").description("깃발에 속한 빵집 갯수"),
                                 fieldWithPath("data.flagBakeryInfoList").description("깃발에 속한 빵집 리스트"),
                                 fieldWithPath("data.flagBakeryInfoList.[].image").description("빵집 이미지"),

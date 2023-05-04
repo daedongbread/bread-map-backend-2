@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery.product;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.dto.ProductDto;
 import com.depromeet.breadmapbackend.domain.bakery.product.dto.ProductReportRequest;
 import com.depromeet.breadmapbackend.domain.bakery.product.dto.SimpleProductDto;
@@ -33,7 +34,7 @@ public class BakeryProductServiceImpl implements BakeryProductService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<ProductDto> getProductList(Long bakeryId, String name) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         List<Product> products = (!StringUtils.hasText(name)) ?
                 productRepository.findByBakeryAndIsTrueIsTrue(bakery) :
                 productRepository.findByBakeryAndNameStartsWithAndIsTrueIsTrue(bakery, name);
@@ -48,7 +49,7 @@ public class BakeryProductServiceImpl implements BakeryProductService {
     @Transactional(rollbackFor = Exception.class)
     public void productAddReport(String oAuthId, Long bakeryId, ProductReportRequest request) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         ProductAddReport productAddReport = ProductAddReport.builder()
                 .bakery(bakery).user(user).name(request.getName()).price(request.getPrice()).build();
@@ -64,7 +65,7 @@ public class BakeryProductServiceImpl implements BakeryProductService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SimpleProductDto> searchSimpleProductList(Long bakeryId, String name) {
-        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+        Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
         return productRepository.findByBakeryAndNameStartsWithAndIsTrueIsTrue(bakery, name).stream()
                 .map(SimpleProductDto::new)
                 .sorted(Comparator.comparing((SimpleProductDto simpleProductDto) -> simpleProductDto.getProductType().getPriority())

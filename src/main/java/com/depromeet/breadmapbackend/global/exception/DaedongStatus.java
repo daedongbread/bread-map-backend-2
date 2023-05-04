@@ -19,8 +19,9 @@ public enum DaedongStatus {
     REVIEW_NEED_PRODUCT_EXCEPTION(BAD_REQUEST, 40050, "review must need product"), // 리뷰 추가 시 메뉴를 선택하지 않으면
     REVIEW_SORT_TYPE_EXCEPTION(BAD_REQUEST, 40050, "invalid review sort type"), // 리뷰 정렬 조건이 틀렸을 때
     REVIEW_PAGE_EXCEPTION(BAD_REQUEST, 40050, "invalid review page request"), // 리뷰 페이지 조건이 틀렸을 때
+    REVIEW_VALID_EXCEPTION(BAD_REQUEST, 40050, "invalid review"), // 리뷰가 유효하지 않을 때 (차단 or 삭제)
     REVIEW_COMMENT_UNDELETE_EXCEPTION(BAD_REQUEST, 40050, "review comment undelete"), // 리뷰 댓글을 지울 수 없을 때
-    REVIEW_REPORT_CONTENT_EXCEPTION(BAD_REQUEST, 40050, "review report content "), // 리뷰 댓글을 지울 수 없을 때
+    REVIEW_REPORT_CONTENT_EXCEPTION(BAD_REQUEST, 40050, "review report content"), // 리뷰 댓글을 지울 수 없을 때
     NOTICE_TYPE_EXCEPTION(BAD_REQUEST, 40060, "invalid notice type"), // 알림 타입이 틀렸을 때
     NOTICE_DAY_TYPE_EXCEPTION(BAD_REQUEST, 40061, "invalid notice day type"), // 알림 날짜 조건이 틀렸을 때
     NOTICE_PAGE_EXCEPTION(BAD_REQUEST, 40062, "invalid notice page request"), // 알림 페이지 조건이 틀렸을 때
@@ -42,6 +43,7 @@ public enum DaedongStatus {
     CUSTOM_ACCESS_DENIED(FORBIDDEN, 40300, "access denied"), // 권한이 없는 리소스를 요청한 경우 발생 시키는 예외
     BLOCK_USER(FORBIDDEN, 40310, "blocked user"), // 차단된 유저일 떄
     REJOIN_RESTRICT(FORBIDDEN, 40311, "rejoin is not possible within 7 days of withdrawal"), // 탈퇴한지 7일이 지나지 않았는데 재가입 시
+    REVIEW_USER_EXCEPTION(FORBIDDEN, 40350, "user is not review user"), // 리뷰 유저가 아닐 때
 
     // 404 NOT FOUND
     USER_NOT_FOUND(NOT_FOUND, 40410, "user not found"), // 유저가 존재하지 않을 때
