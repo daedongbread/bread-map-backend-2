@@ -44,6 +44,7 @@ public class BakeryUpdateRequest {
     @Valid
     private List<ProductUpdateRequest> productList;
     private BakeryStatus status;
+    private Long pioneerId;
 
     @Getter
     @Builder

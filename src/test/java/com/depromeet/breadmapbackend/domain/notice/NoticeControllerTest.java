@@ -46,10 +46,8 @@ class NoticeControllerTest extends ControllerTest {
         Follow follow = Follow.builder().fromUser(fromUser).toUser(user).build();
         followRepository.save(follow);
 
-        Notice notice1 = Notice.builder().user(user).fromUser(fromUser).
-                title("title1").contentId(1L).content("content1").type(NoticeType.REVIEW_COMMENT).build();
-        Notice notice2 = Notice.builder().user(user).fromUser(fromUser).
-                title("title2").type(NoticeType.FOLLOW).build();
+        Notice notice1 = Notice.builder().user(user).fromUser(fromUser).contentId(1L).content("content1").type(NoticeType.REVIEW_COMMENT).build();
+        Notice notice2 = Notice.builder().user(user).fromUser(fromUser).type(NoticeType.FOLLOW).build();
         noticeRepository.save(notice1);
         noticeRepository.save(notice2);
     }

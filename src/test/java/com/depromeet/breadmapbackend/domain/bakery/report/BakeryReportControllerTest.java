@@ -65,6 +65,7 @@ class BakeryReportControllerTest extends ControllerTest {
     public void setDown() {
         bakeryUpdateReportImageRepository.deleteAllInBatch();
         bakeryUpdateReportRepository.deleteAllInBatch();
+        bakeryAddReportImageRepository.deleteAllInBatch();
         bakeryAddReportRepository.deleteAllInBatch();
         bakeryReportImageRepository.deleteAllInBatch();
         bakeryRepository.deleteAllInBatch();
@@ -74,7 +75,7 @@ class BakeryReportControllerTest extends ControllerTest {
     @Test
     void bakeryAddReport() throws Exception {
         String object = objectMapper.writeValueAsString(BakeryAddReportRequest.builder()
-                .name("newBakery").location("newLocation").content("newContent").build());
+                .name("newBakery").location("newLocation").content("newContent").images(List.of("image1", "image2")).build());
 
         mockMvc.perform(post("/v1/bakeries/bakery-add-reports")
                         .header("Authorization", "Bearer " + token.getAccessToken())
@@ -87,7 +88,8 @@ class BakeryReportControllerTest extends ControllerTest {
                         requestFields(
                                 fieldWithPath("name").description("제보 빵집 이름"),
                                 fieldWithPath("location").description("제보 빵집 위치"),
-                                fieldWithPath("content").optional().description("추천 이유")
+                                fieldWithPath("content").optional().description("추천 이유"),
+                                fieldWithPath("images").optional().description("제보 빵집 이미지들")
                         )
                 ))
                 .andExpect(status().isCreated());
