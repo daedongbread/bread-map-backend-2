@@ -12,7 +12,7 @@ public abstract class OIDCUserInfo {
         return body;
     }
     public abstract String getOAuthId();
-    public abstract String getNickName();
+//    public abstract String getNickName();
     public abstract String getEmail();
-    public abstract String getImage();
+//    public abstract String getImage();
 }

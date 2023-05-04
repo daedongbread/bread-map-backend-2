@@ -31,4 +31,8 @@ public class UserInfo {
     public void updateImage(String image) {
         this.image = image;
     }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
 }
