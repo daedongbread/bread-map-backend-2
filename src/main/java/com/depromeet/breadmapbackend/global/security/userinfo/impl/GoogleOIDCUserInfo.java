@@ -17,19 +17,18 @@ public class GoogleOIDCUserInfo extends OIDCUserInfo {
         return (String) body.get("sub");
     }
 
-    @Override
-    public String getNickName() {
-        return (String) body.get("name");
-    }
+//    @Override
+//    public String getNickName() {
+//        return (String) body.get("name");
+//    }
 
     @Override
     public String getEmail() {
         return (String) body.get("email");
     }
 
-    @Override
-    public String getImage() {
-        return (String) body.get("picture");
-    }
-
+//    @Override
+//    public String getImage() {
+//        return (String) body.get("picture");
+//    }
 }
