@@ -168,8 +168,6 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     @Transactional(rollbackFor = Exception.class)
     public void updateBakery(Long bakeryId, BakeryUpdateRequest request) {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-        User beforePioneer = bakery.getPioneer();
-        User pioneer = (request.getPioneerId() == null) ? null : userRepository.findById(request.getPioneerId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         bakery.update(request.getName(),
                 request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
@@ -178,7 +176,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 (StringUtils.hasText(request.getImage())) ? request.getImage() :
                         customAWSS3Properties.getCloudFront() + "/" +
                         customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png",
-                request.getFacilityInfoList(), request.getStatus(), pioneer);
+                request.getFacilityInfoList(), request.getStatus());
 
         if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
             for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
@@ -199,8 +197,24 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
             }
         }
 
-        if (beforePioneer != null && pioneer != null && !beforePioneer.equals(pioneer))
+        updatePioneer(bakery, request.getPioneerId());
+    }
+
+    private void updatePioneer(Bakery bakery, Long pioneerId) {
+        User beforePioneer = bakery.getPioneer();
+        User pioneer = (pioneerId == null) ? null : userRepository.findById(pioneerId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        // 1. 그전에 null 이번에도 null -> 아무것도 안함
+        // 2. 그전에 null 이번에는 있음 -> 업데이트와 알림
+        // 3. 그전에 있음 이번에는 null -> 업데이트
+        // 4. 그전에 있음 이번에도 있는데 다름 -> 업데이트와 알림
+        // 4. 그전에 있음 이번에도 있는데 같음 -> 아무것도 안함
+        if (pioneer == null && beforePioneer != null) {
+            bakery.updatePioneer(pioneer);
+        }
+        else if (pioneer != null && !pioneer.equals(beforePioneer)) {
+            bakery.updatePioneer(pioneer);
             eventPublisher.publishEvent(BakeryAddEvent.builder().userId(pioneer.getId()).bakeryId(bakery.getId()).bakeryName(bakery.getName()).build());
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)

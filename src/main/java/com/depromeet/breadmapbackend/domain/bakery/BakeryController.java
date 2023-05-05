@@ -6,6 +6,9 @@ import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.token.JwtToken;
+import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +22,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BakeryController {
     private final BakeryService bakeryService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @GetMapping("/test")
+    public ApiResponse<JwtToken> test() {
+        return new ApiResponse<>(jwtTokenProvider.createJwtToken("KAKAO_2775032632", RoleType.USER.getCode()));
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
