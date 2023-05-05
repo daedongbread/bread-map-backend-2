@@ -6,7 +6,6 @@ import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class Bakery extends BaseEntity {
     @Convert(converter = FacilityInfoListConverter.class)
     private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pioneer_id")
     private User pioneer;
 
@@ -86,7 +85,7 @@ public class Bakery extends BaseEntity {
     public void update(
             String name, String address, Double latitude, Double longitude, String hours,
             String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
-            List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
+            List<FacilityInfo> facilityInfoList, BakeryStatus status
     ) {
         this.name = name;
         this.address = address;
@@ -98,7 +97,6 @@ public class Bakery extends BaseEntity {
         this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
         this.facilityInfoList = facilityInfoList;
         this.status = status;
-        this.pioneer = pioneer;
     }
 
     public void updatePioneer(User pioneer) {
