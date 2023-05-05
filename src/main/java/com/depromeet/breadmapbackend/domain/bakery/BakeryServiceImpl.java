@@ -50,59 +50,33 @@ public class BakeryServiceImpl implements BakeryService {
                         longitude - longitudeDelta / 2, longitude + longitudeDelta / 2,
                         BakeryStatus.POSTING);
 
-        if (!filterBy) {
-            return bakeries.stream()
-                    .map(bakery -> BakeryCardDto.builder()
+        return bakeries.stream()
+                .map(bakery -> {
+                    List<Review> reviewList = bakery.getReviewList().stream()
+                            .filter(Review::isValid)
+                            .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+                            .collect(Collectors.toList());
+                    FlagColor color = null;
+                    if (!filterBy) color = FlagColor.ORANGE;
+                    else color = flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).isPresent() ?
+                            flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).get().getColor() : FlagColor.GRAY;
+                    return BakeryCardDto.builder()
                             .bakery(bakery)
                             .flagNum(flagBakeryRepository.countFlagNum(bakery))
-                            .rating(Math.floor(bakery.getReviewList()
-                                    .stream()
-                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                                    .map(Review::getAverageRating).collect(Collectors.toList())
-                                    .stream().mapToDouble(Double::doubleValue)
-                                    .average().orElse(0)*10)/10.0)
-                            .reviewNum((int) bakery.getReviewList().stream()
-                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
-                            .simpleReviewList(bakery.getReviewList().stream()
-                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+                            .rating(bakeryRating(reviewList))
+                            .reviewNum(reviewList.size())
+                            .simpleReviewList(reviewList.stream()
                                     .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
                                     .limit(3).collect(Collectors.toList()))
                             .distance(floor(acos(cos(toRadians(latitude))
                                     * cos(toRadians(bakery.getLatitude()))
                                     * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
                                     + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
-                            .color(FlagColor.ORANGE)
-                            .build())
-                    .sorted(comparing)
-                    .collect(Collectors.toList());
-        }
-        else {
-            return bakeries.stream()
-                    .map(bakery -> BakeryCardDto.builder()
-                            .bakery(bakery)
-                            .flagNum(flagBakeryRepository.countFlagNum(bakery))
-                            .rating(Math.floor(bakery.getReviewList()
-                                    .stream()
-                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                                    .map(Review::getAverageRating).collect(Collectors.toList())
-                                    .stream().mapToDouble(Double::doubleValue)
-                                    .average().orElse(0)*10)/10.0)
-                            .reviewNum((int) bakery.getReviewList().stream()
-                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
-                            .simpleReviewList(bakery.getReviewList().stream()
-                                    .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                                    .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
-                                    .limit(3).collect(Collectors.toList()))
-                            .distance(floor(acos(cos(toRadians(latitude))
-                                    * cos(toRadians(bakery.getLatitude()))
-                                    * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                                    + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000))
-                            .color(flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).isPresent() ?
-                                    flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).get().getColor():FlagColor.GRAY)
-                            .build())
-                    .sorted(comparing)
-                    .collect(Collectors.toList());
-        }
+                            .color(color)
+                            .build();
+                })
+                .sorted(comparing)
+                .collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -115,17 +89,16 @@ public class BakeryServiceImpl implements BakeryService {
                     return bakeryViewRepository.save(bakeryView);
                 }).viewBakery();
 
+        List<Review> reviewList = bakery.getReviewList().stream()
+                .filter(Review::isValid)
+                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+                .collect(Collectors.toList());
+
         BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)
                 .flagNum(flagBakeryRepository.countFlagNum(bakery))
-                .rating(Math.floor(bakery.getReviewList()
-                        .stream()
-                        .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                        .map(Review::getAverageRating).collect(Collectors.toList())
-                        .stream().mapToDouble(Double::doubleValue)
-                        .average().orElse(0)*10)/10.0)
-                .reviewNum((int) bakery.getReviewList().stream()
-                        .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
+                .rating(bakeryRating(reviewList))
+                .reviewNum(reviewList.size())
                 .build();
         BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
                 .flagBakery(flagBakeryRepository.findByBakeryAndUser(bakery, me).orElse(null)).build();
@@ -133,5 +106,10 @@ public class BakeryServiceImpl implements BakeryService {
 
         return BakeryDto.builder()
                 .bakeryInfo(bakeryInfo).flagInfo(flagInfo).facilityInfoList(bakery.getFacilityInfoList()).pioneerInfo(pioneerInfo).build();
+    }
+
+    private Double bakeryRating(List<Review> reviewList) {
+        return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
+                .stream().mapToDouble(Double::doubleValue).average().orElse(0)*10)/10.0;
     }
 }

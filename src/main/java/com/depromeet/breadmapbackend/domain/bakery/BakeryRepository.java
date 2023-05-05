@@ -14,6 +14,13 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long>{
 
     List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetweenAndStatus(Double leftLatitude, Double rightLatitude, Double downLongitude, Double upLongitude, BakeryStatus status);
 
+//    @Query("select b from Bakery b" +
+//            " join fetch b.reviewList" +
+//            " where b.latitude between :leftLatitude and :rightLatitude" +
+//            " and b.longitude between :downLongitude and :upLongitude" +
+//            " and b.status = :status")
+//    List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetweenAndStatus2(@Param("leftLatitude")Double leftLatitude, @Param("rightLatitude")Double rightLatitude, @Param("downLongitude")Double downLongitude, @Param("upLongitude")Double upLongitude, @Param("status")BakeryStatus status);
+
     @Query(value = "select * from bakery b ORDER BY b.modified_At DESC", countQuery = "select count(*) from bakery", nativeQuery = true)
     Page<Bakery> findPageAll(Pageable pageable);
 
