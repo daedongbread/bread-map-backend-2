@@ -22,12 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BakeryController {
     private final BakeryService bakeryService;
-    private final JwtTokenProvider jwtTokenProvider;
-
-    @GetMapping("/test")
-    public ApiResponse<JwtToken> test() {
-        return new ApiResponse<>(jwtTokenProvider.createJwtToken("KAKAO_2775032632", RoleType.USER.getCode()));
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

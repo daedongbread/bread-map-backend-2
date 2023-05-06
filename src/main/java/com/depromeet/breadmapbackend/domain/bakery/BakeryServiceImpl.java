@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
+import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -33,6 +34,7 @@ public class BakeryServiceImpl implements BakeryService {
     private final UserRepository userRepository;
     private final BlockUserRepository blockUserRepository;
     private final FlagBakeryRepository flagBakeryRepository;
+    private final ReviewService reviewService;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<BakeryCardDto> getBakeryList(
@@ -52,10 +54,11 @@ public class BakeryServiceImpl implements BakeryService {
 
         return bakeries.stream()
                 .map(bakery -> {
-                    List<Review> reviewList = bakery.getReviewList().stream()
-                            .filter(Review::isValid)
-                            .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                            .collect(Collectors.toList());
+                    List<Review> reviewList = reviewService.getReviewList(me, bakery);
+//                    List<Review> reviewList = bakery.getReviewList().stream()
+//                            .filter(Review::isValid)
+//                            .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+//                            .collect(Collectors.toList());
                     FlagColor color = null;
                     if (!filterBy) color = FlagColor.ORANGE;
                     else color = flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).isPresent() ?
@@ -66,7 +69,7 @@ public class BakeryServiceImpl implements BakeryService {
                             .rating(bakeryRating(reviewList))
                             .reviewNum(reviewList.size())
                             .simpleReviewList(reviewList.stream()
-                                    .sorted(Comparator.comparing(Review::getId).reversed()).map(MapSimpleReviewDto::new)
+                                    .sorted(Comparator.comparing(Review::getCreatedAt).reversed()).map(MapSimpleReviewDto::new)
                                     .limit(3).collect(Collectors.toList()))
                             .distance(floor(acos(cos(toRadians(latitude))
                                     * cos(toRadians(bakery.getLatitude()))
@@ -89,10 +92,11 @@ public class BakeryServiceImpl implements BakeryService {
                     return bakeryViewRepository.save(bakeryView);
                 }).viewBakery();
 
-        List<Review> reviewList = bakery.getReviewList().stream()
-                .filter(Review::isValid)
-                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                .collect(Collectors.toList());
+//        List<Review> reviewList = bakery.getReviewList().stream()
+//                .filter(Review::isValid)
+//                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
+//                .collect(Collectors.toList());
+        List<Review> reviewList = reviewService.getReviewList(me, bakery);
 
         BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
                 .bakery(bakery)

@@ -47,9 +47,6 @@ public class Bakery extends BaseEntity {
     @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> productList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviewList = new ArrayList<>();
-
     @Convert(converter = FacilityInfoListConverter.class)
     private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 

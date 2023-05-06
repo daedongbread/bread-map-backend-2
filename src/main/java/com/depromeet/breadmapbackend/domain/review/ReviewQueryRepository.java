@@ -17,9 +17,9 @@ import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
 import static com.depromeet.breadmapbackend.domain.review.QReview.review;
 import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.reviewProductRating;
 import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.blockUser;
@@ -34,6 +34,20 @@ public class ReviewQueryRepository {
     private final int BAKERY_REVIEW_SIZE = 5;
     private final int PRODUCT_REVIEW_SIZE = 5;
     private final int USER_REVIEW_SIZE = 5;
+
+    public List<Review> findReviewList(User me, Bakery bakery) {
+        return queryFactory.selectFrom(review)
+                .join(review.bakery, com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery).fetchJoin() // TODO
+                .where(review.isDelete.isFalse(), // 리뷰 삭제 여부
+                        review.isBlock.isFalse(), // 리뷰 차단 여부
+                        review.bakery.eq(bakery), // 해당 빵집 리뷰
+                        review.user.notIn( // 리뷰 유처 차단 여부
+                                JPAExpressions.select(blockUser.toUser)
+                                        .from(blockUser)
+                                        .where(blockUser.fromUser.eq(me))
+                        ))
+                .fetch();
+    }
 
     public Page<Review> findBakeryReview(User me, Bakery bakery, ReviewSortType sortBy, int page) {
         // 해당 유저가 page=0을 호출했을때 레디스에 지금 시간 저장, 이후 page들에서 사용
@@ -60,7 +74,7 @@ public class ReviewQueryRepository {
                         review.isDelete.isFalse(),
                         review.isBlock.isFalse())
                         //review.createdAt.before(firstTime))
-                .groupBy(review.id, reviewProductRating.review.id)
+                .groupBy(review.id)
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset((long) page * BAKERY_REVIEW_SIZE)
                 .limit(BAKERY_REVIEW_SIZE)
@@ -107,7 +121,7 @@ public class ReviewQueryRepository {
                         review.isDelete.isFalse(),
                         review.isBlock.isFalse())
                         //review.createdAt.before(firstTime))
-                .groupBy(review.id, reviewProductRating.review.id)
+                .groupBy(review.id)//, reviewProductRating.review.id)
                 .orderBy(orderType(sortBy), review.createdAt.desc())
                 .offset((long) page * PRODUCT_REVIEW_SIZE)
                 .limit(PRODUCT_REVIEW_SIZE)

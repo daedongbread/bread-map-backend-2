@@ -13,7 +13,7 @@ public interface AdminBakeryService {
     AdminBakeryDto getBakery(Long bakeryId);
 //    PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page);
     BakeryLocationDto getBakeryLatitudeLongitude(String address);
-    void addBakery(BakeryAddRequest request);
+    BakeryAddDto addBakery(BakeryAddRequest request);
     void updateBakery(Long bakeryId, BakeryUpdateRequest request);
     void deleteProduct(Long bakeryId, Long productId);
     AdminBakeryIsNewDto getAdminBakeryIsNewBar(Long bakeryId);

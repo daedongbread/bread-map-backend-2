@@ -67,8 +67,10 @@ class FlagControllerTest extends ControllerTest {
         Review review = Review.builder().user(user).bakery(bakery).content("content1").build();
         reviewRepository.save(review);
 
-        ReviewProductRating rating = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
-        reviewProductRatingRepository.save(rating);
+        ReviewProductRating rating1 = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
+        reviewProductRatingRepository.save(rating1);
+        ReviewProductRating rating2 = ReviewProductRating.builder().user(user).bakery(bakery).product(product).review(review).rating(4L).build();
+        reviewProductRatingRepository.save(rating2);
     }
 
     @AfterEach

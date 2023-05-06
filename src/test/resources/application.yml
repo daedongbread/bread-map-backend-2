@@ -17,9 +17,11 @@ spring:
       product-review: productReview
       user-review: userReview
   jpa:
+    show-sql: true
     open-in-view: false
     properties:
       hibernate:
+        format_sql: true
         create_empty_composites:
           enabled: true
   security:
