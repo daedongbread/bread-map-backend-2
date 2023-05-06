@@ -3,7 +3,6 @@ package com.depromeet.breadmapbackend.domain.review;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewComment;
-import com.depromeet.breadmapbackend.domain.review.like.ReviewLike;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import lombok.AccessLevel;
@@ -62,7 +61,7 @@ public class Review extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isDelete = Boolean.FALSE;
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = EAGER)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewProductRating> ratings = new ArrayList<>();
 
     @Formula("(SELECT count(*) FROM review_like rl WHERE rl.review_id = id)")
@@ -76,7 +75,6 @@ public class Review extends BaseEntity {
         this.user = user;
         this.bakery = bakery;
         this.content = content;
-        this.bakery.getReviewList().add(this);
     }
 
     public Double getAverageRating() {

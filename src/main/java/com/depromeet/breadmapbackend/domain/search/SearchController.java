@@ -23,11 +23,12 @@ public class SearchController {
     @GetMapping("/auto")
     @ResponseStatus(HttpStatus.OK) //TODO : 레디스로 전환
     public ApiResponse<List<SearchDto>> autoComplete(
+            @CurrentUser String oAuthId,
             @RequestParam
             @Size(min=1, max=20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
             String word,
             @RequestParam Double latitude, @RequestParam Double longitude) {
-        return new ApiResponse<>(searchService.autoComplete(word, latitude, longitude));
+        return new ApiResponse<>(searchService.autoComplete(oAuthId, word, latitude, longitude));
     }
 
     @GetMapping

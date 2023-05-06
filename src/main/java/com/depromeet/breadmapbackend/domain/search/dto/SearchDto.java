@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.search.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,9 @@ public class SearchDto {
     private Double distance;
 
     @Builder
-    public SearchDto(Long bakeryId, String bakeryName, Integer reviewNum, Double distance) {
-        this.bakeryId = bakeryId;
-        this.bakeryName = bakeryName;
+    public SearchDto(Bakery bakery, Integer reviewNum, Double distance) {
+        this.bakeryId = bakery.getId();
+        this.bakeryName = bakery.getName();
         this.reviewNum = reviewNum;
         this.distance = distance;
     }

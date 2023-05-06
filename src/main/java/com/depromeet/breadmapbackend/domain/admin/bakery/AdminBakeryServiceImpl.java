@@ -132,7 +132,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addBakery(BakeryAddRequest request) {
+    public BakeryAddDto addBakery(BakeryAddRequest request) {
         User pioneer = (request.getPioneerId() == null) ? null : userRepository.findById(request.getPioneerId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
@@ -163,6 +163,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         }
         if (pioneer != null)
             eventPublisher.publishEvent(BakeryAddEvent.builder().userId(pioneer.getId()).bakeryId(bakery.getId()).bakeryName(bakery.getName()).build());
+        return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
     }
 
     @Transactional(rollbackFor = Exception.class)

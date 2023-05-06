@@ -308,7 +308,8 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("status").description("빵집 게시 상태 (" +
                                         "POSTING(\"게시중\"), UNPOSTING(\"미게시\"))"),
                                 fieldWithPath("pioneerId").optional().description("빵집 개척자 고유 번호")
-                        )
+                        ),
+                        responseFields(fieldWithPath("data.bakeryId").description("신규 빵집 고유 번호"))
                 ))
                 .andExpect(status().isCreated());
     }
