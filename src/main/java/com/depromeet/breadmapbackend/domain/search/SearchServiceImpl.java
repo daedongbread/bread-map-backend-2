@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -39,7 +40,7 @@ public class SearchServiceImpl implements SearchService {
     public List<SearchDto> autoComplete(String oAuthId, String word, Double latitude, Double longitude) {
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-        return bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakery(bakery)
                         .reviewNum(reviewService.getReviewList(me, bakery).size())
@@ -59,7 +60,7 @@ public class SearchServiceImpl implements SearchService {
         redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + oAuthId, word, Double.parseDouble(time));
         redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, -(10 + 1), -(10 + 1));
 
-        return bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakery(bakery)
                         .reviewNum(reviewService.getReviewList(me, bakery).size())
