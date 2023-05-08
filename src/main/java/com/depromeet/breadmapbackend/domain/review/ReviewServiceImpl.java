@@ -43,6 +43,11 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProductAddReportRepository productAddReportRepository;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public List<Review> getReviewList(User me, Bakery bakery) {
+        return reviewQueryRepository.findReviewList(me, bakery);
+    }
+
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public PageResponseDto<ReviewDto> getBakeryReviewList(String oAuthId, Long bakeryId, ReviewSortType sortBy, int page) {
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Bakery bakery = bakeryRepository.findByIdAndStatus(bakeryId, BakeryStatus.POSTING).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));

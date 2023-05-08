@@ -58,8 +58,8 @@ public class AdminBakeryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBakery(@RequestBody @Validated(ValidationSequence.class) BakeryAddRequest request) {
-        adminBakeryService.addBakery(request);
+    public ApiResponse<BakeryAddDto> addBakery(@RequestBody @Validated(ValidationSequence.class) BakeryAddRequest request) {
+        return new ApiResponse<>(adminBakeryService.addBakery(request));
     }
 
     @PatchMapping("/{bakeryId}")

@@ -1,6 +1,9 @@
 package com.depromeet.breadmapbackend.domain.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.review.ReviewService;
+import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -29,15 +32,18 @@ import static java.lang.Math.toRadians;
 public class SearchServiceImpl implements SearchService {
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
+    private final ReviewService reviewService;
     private final StringRedisTemplate redisTemplate;
     private final CustomRedisProperties customRedisProperties;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SearchDto> autoComplete(String word, Double latitude, Double longitude) {
-        return bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
+    public List<SearchDto> autoComplete(String oAuthId, String word, Double latitude, Double longitude) {
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
-                        .bakeryId(bakery.getId()).bakeryName(bakery.getName())
-                        .reviewNum(bakery.getReviewList().size())
+                        .bakery(bakery)
+                        .reviewNum(reviewService.getReviewList(me, bakery).size())
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
                                 * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
@@ -47,17 +53,17 @@ public class SearchServiceImpl implements SearchService {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> search(String oAuthId, String word, Double latitude, Double longitude) {
-        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
+        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
         ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
         redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + oAuthId, word, Double.parseDouble(time));
         redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, -(10 + 1), -(10 + 1));
 
-        return bakeryRepository.findByNameContainsIgnoreCaseOrderByDistance(word, latitude, longitude, 10).stream()
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word, latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
-                        .bakeryId(bakery.getId()).bakeryName(bakery.getName())
-                        .reviewNum(bakery.getReviewList().size())
+                        .bakery(bakery)
+                        .reviewNum(reviewService.getReviewList(me, bakery).size())
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))

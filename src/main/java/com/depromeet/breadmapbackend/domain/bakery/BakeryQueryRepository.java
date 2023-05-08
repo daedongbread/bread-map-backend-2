@@ -39,7 +39,7 @@ public class BakeryQueryRepository {
                 .fetch();
 
         Long count = queryFactory.select(bakery.count()).from(bakery)
-                .where(adminBakeryCondition(filterBy))
+                .where(adminBakeryCondition(filterBy), searchCondition(name))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, count);

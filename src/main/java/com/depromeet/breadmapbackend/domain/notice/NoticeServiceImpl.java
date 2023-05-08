@@ -194,7 +194,7 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     private String noticeTitle(Notice notice) {
-        String fromUserNickName = notice.getUser().getNickName();
+        String fromUserNickName = notice.getFromUser().getNickName();
         if (notice.getType().equals(NoticeType.FOLLOW))
             return fromUserNickName + "님이 회원님을 팔로우하기 시작했어요";
         else if (notice.getType().equals(NoticeType.REVIEW_COMMENT))

@@ -24,8 +24,8 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     @Query(value = "select * from bakery b ORDER BY b.modified_At DESC", countQuery = "select count(*) from bakery", nativeQuery = true)
     Page<Bakery> findPageAll(Pageable pageable);
 
-    @Query(value = "SELECT * FROM bakery WHERE name LIKE %:name% ORDER BY (acos(cos(radians(:latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(latitude))) * 6371000) LIMIT :limit", nativeQuery = true)
-    List<Bakery> findByNameContainsIgnoreCaseOrderByDistance(@Param("name") String name, @Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("limit") int limit);
+    @Query(value = "SELECT * FROM bakery b WHERE name LIKE %:name% AND status = 'POSTING' ORDER BY (acos(cos(radians(:latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(latitude))) * 6371000) LIMIT :limit", nativeQuery = true)
+    List<Bakery> find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(@Param("name") String name, @Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("limit") int limit);
 
     @Query(value = "select * from bakery b where b.name like %:name% ORDER BY b.modified_At DESC", countQuery = "select count(*) from bakery b where b.name like %:name%", nativeQuery = true)
     Page<Bakery> findByNameContainsOrderByUpdatedAt(@Param("name") String name, Pageable pageable);

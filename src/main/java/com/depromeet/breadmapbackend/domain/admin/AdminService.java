@@ -16,5 +16,4 @@ public interface AdminService {
     JwtToken reissue(ReissueRequest reissueRequest);
     AdminBarDto getAdminBar();
     AdminImageDto uploadImage(MultipartFile image) throws IOException;
-    JwtToken testToken(String o, RoleType roleType);
 }

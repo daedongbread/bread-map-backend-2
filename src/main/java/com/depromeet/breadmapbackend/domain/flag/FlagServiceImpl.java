@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.flag;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -33,6 +34,7 @@ public class FlagServiceImpl implements FlagService {
     private final UserRepository userRepository;
     private final BlockUserRepository blockUserRepository;
     private final BakeryRepository bakeryRepository;
+    private final ReviewService reviewService;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<FlagDto> getFlags(Long userId) {
@@ -41,6 +43,7 @@ public class FlagServiceImpl implements FlagService {
                 .map(flag -> FlagDto.builder()
                         .flag(flag)
                         .bakeryImageList(flag.getFlagBakeryList().stream()
+                                .filter(flagBakery -> flagBakery.getBakery().isPosting())
                                 .sorted(Comparator.comparing(FlagBakery::getCreatedAt)).limit(3)
                                 .map(flagBakery -> flagBakery.getBakery().getImage())
                                 .collect(Collectors.toList())).build())
@@ -83,24 +86,24 @@ public class FlagServiceImpl implements FlagService {
     public FlagBakeryDto getBakeryByFlag(String oAuthId, Long flagId) { // TODO page?
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Flag flag = flagRepository.findById(flagId).orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
+
         return FlagBakeryDto.builder().flag(flag)
                 .flagBakeryInfoList(
-                        flagBakeryRepository.findByFlag(flag).stream()
-                                .sorted(Comparator.comparing(FlagBakery::getCreatedAt).reversed())
-                                .map(flagBakery -> FlagBakeryDto.FlagBakeryInfo.builder()
-                                        .bakery(flagBakery.getBakery())
-                                        .flagNum(flagBakeryRepository.countFlagNum(flagBakery.getBakery()))
-                                        .rating(Math.floor(Arrays.stream(flagBakery.getBakery().getReviewList()
-                                                .stream()
-                                                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                                                .map(Review::getAverageRating).collect(Collectors.toList())
-                                                .stream().mapToLong(Double::longValue).toArray()).average().orElse(0)*10/10.0))
-                                        .reviewNum((int) flagBakery.getBakery().getReviewList().stream()
-                                                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty()).count())
-                                        .simpleReviewList(flagBakery.getBakery().getReviewList().stream()
-                                                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
-                                                .sorted(Comparator.comparing(Review::getCreatedAt).reversed()).map(MapSimpleReviewDto::new)
-                                                .limit(3).collect(Collectors.toList())).build())
+                        flagBakeryRepository.findByFlagAndStatusIsPostingOrderByCreatedAtDesc(flag).stream()
+                                .map(flagBakery -> {
+                                    Bakery bakery = flagBakery.getBakery();
+                                    List<Review> reviewList = reviewService.getReviewList(me, bakery);
+
+                                    return FlagBakeryDto.FlagBakeryInfo.builder()
+                                            .bakery(bakery)
+                                            .flagNum(flagBakeryRepository.countFlagNum(bakery))
+                                            .rating(Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
+                                                    .stream().mapToDouble(Double::doubleValue).average().orElse(0)*10)/10.0)
+                                            .reviewNum(reviewList.size())
+                                            .simpleReviewList(reviewList.stream()
+                                                    .sorted(Comparator.comparing(Review::getCreatedAt).reversed()).map(MapSimpleReviewDto::new)
+                                                    .limit(3).collect(Collectors.toList())).build();
+                                })
                         .collect(Collectors.toList())).build();
     }
 

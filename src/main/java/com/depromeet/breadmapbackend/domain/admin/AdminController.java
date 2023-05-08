@@ -55,10 +55,4 @@ public class AdminController {
     public ApiResponse<AdminImageDto> uploadImage(@RequestPart MultipartFile image) throws IOException {
         return new ApiResponse<>(adminService.uploadImage(image));
     }
-
-    @PostMapping("/test")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<JwtToken> testToken() {
-        return new ApiResponse<>(adminService.testToken("Deadong01", RoleType.ADMIN));
-    }
 }

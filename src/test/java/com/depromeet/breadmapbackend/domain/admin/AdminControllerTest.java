@@ -181,22 +181,4 @@ class AdminControllerTest extends ControllerTest {
                 ))
                 .andExpect(status().isCreated());
     }
-
-    @Test
-    void testToken() throws Exception {
-        ResultActions result = mockMvc.perform(post("/v1/admin/test"));
-
-        result.andDo(print())
-                .andDo(document("v1/admin/test",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("data.userId").description("유저 고유 번호"),
-                                fieldWithPath("data.accessToken").description("엑세스 토큰"),
-                                fieldWithPath("data.refreshToken").description("리프레시 토큰"),
-                                fieldWithPath("data.accessTokenExpiredDate").description("엑세스 토큰 만료시간")
-                        )
-                ))
-                .andExpect(status().isCreated());
-    }
 }

@@ -121,12 +121,4 @@ public class AdminServiceImpl implements AdminService {
         imageRepository.save(Image.builder().hashValue(hashValue).build());
         return AdminImageDto.builder().imagePath(s3Uploader.upload(image, imagePath)).build();
     }
-
-    public JwtToken testToken(String o, RoleType roleType) {
-        JwtToken testJwtToken = jwtTokenProvider.createTestJwtToken(o, roleType.getCode());
-        redisTemplate.opsForValue()
-                .set(customRedisProperties.getKey().getAdminRefresh() + ":" + 1,
-                        testJwtToken.getRefreshToken(), jwtTokenProvider.getRefreshTokenExpiredDate(), TimeUnit.MILLISECONDS);
-        return testJwtToken;
-    }
 }
