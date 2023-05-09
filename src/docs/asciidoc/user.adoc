@@ -29,7 +29,7 @@ operation::v1/user/nickname[snippets='http-request,request-headers,request-field
 operation::v1/user/alarm[snippets='http-request,request-headers,http-response,response-fields']
 
 === 알림 상태 변경 API [PATCH]
-operation::v1/user/alarm[snippets='http-request,request-headers,request-fields,http-response']
+operation::v1/user/alarm[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 == User Follow APIs
 - 팔로우 API
