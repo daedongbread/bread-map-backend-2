@@ -36,34 +36,35 @@ public class SearchServiceImpl implements SearchService {
     private final StringRedisTemplate redisTemplate;
     private final CustomRedisProperties customRedisProperties;
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SearchDto> autoComplete(String oAuthId, String word, Double latitude, Double longitude) {
-        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
-        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word, latitude, longitude, 10).stream()
-                .map(bakery -> SearchDto.builder()
-                        .bakery(bakery)
-                        .reviewNum(reviewService.getReviewList(me, bakery).size())
-                        .distance(floor(acos(cos(toRadians(latitude))
-                                * cos(toRadians(bakery.getLatitude()))
-                                * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
-                                + sin(toRadians(latitude)) * sin(toRadians(bakery.getLatitude()))) * 6371000)).build())
-                .collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true, rollbackFor = Exception.class)
+//    public List<SearchDto> autoComplete(String oAuthId, String word, Double latitude, Double longitude) {
+//        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+//
+//        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word.strip(), word.replaceAll(" ", ""), latitude, longitude, 10).stream()
+//                .map(bakery -> SearchDto.builder()
+//                        .bakery(bakery)
+//                        .reviewNum(reviewService.getReviewList(me, bakery).size())
+//                        .distance(floor(acos(cos(toRadians(latitude))
+//                                * cos(toRadians(bakery.getLatitude()))
+//                                * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
+//                                + sin(toRadians(latitude)) * sin(toRadians(bakery.getLatitude()))) * 6371000)).build())
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SearchDto> search(String oAuthId, String word, Double latitude, Double longitude) {
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-        ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
-        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
-        redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + oAuthId, word, Double.parseDouble(time));
-        redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, -(10 + 1), -(10 + 1));
+//        ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
+//        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
+//        redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + oAuthId, word, Double.parseDouble(time));
+//        redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, -(10 + 1), -(10 + 1));
 
-        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word, latitude, longitude, 10).stream()
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word.strip(), word.replaceAll(" ", ""), latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakery(bakery)
                         .reviewNum(reviewService.getReviewList(me, bakery).size())
+                        // TODO 점수?
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
@@ -71,22 +72,22 @@ public class SearchServiceImpl implements SearchService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<String> recentKeywords(String oAuthId) {
-        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-        return new ArrayList<>(Objects.requireNonNull(
-                redisTemplate.opsForZSet().reverseRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, 0, -1)));
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRecentKeyword(String oAuthId, String keyword) {
-        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-        redisTemplate.opsForZSet().remove(customRedisProperties.getKey().getRecent() + ":" + oAuthId, keyword);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRecentKeywordAll(String oAuthId) {
-        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-        redisTemplate.delete(customRedisProperties.getKey().getRecent() + ":" + oAuthId);
-    }
+//    @Transactional(readOnly = true, rollbackFor = Exception.class)
+//    public List<String> recentKeywords(String oAuthId) {
+//        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
+//        return new ArrayList<>(Objects.requireNonNull(
+//                redisTemplate.opsForZSet().reverseRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, 0, -1)));
+//    }
+//
+//    @Transactional(rollbackFor = Exception.class)
+//    public void deleteRecentKeyword(String oAuthId, String keyword) {
+//        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
+//        redisTemplate.opsForZSet().remove(customRedisProperties.getKey().getRecent() + ":" + oAuthId, keyword);
+//    }
+//
+//    @Transactional(rollbackFor = Exception.class)
+//    public void deleteRecentKeywordAll(String oAuthId) {
+//        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
+//        redisTemplate.delete(customRedisProperties.getKey().getRecent() + ":" + oAuthId);
+//    }
 }

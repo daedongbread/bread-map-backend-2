@@ -149,7 +149,8 @@ class UserControllerTest extends ControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
                         requestFields(
-                                fieldWithPath("deviceToken").description("유저의 디바이스 토큰"))
+                                fieldWithPath("deviceToken").description("유저의 디바이스 토큰")),
+                        responseFields(fieldWithPath("data.alarmOn").description("유저 알람 상태"))
                 ))
                 .andExpect(status().isNoContent());
     }

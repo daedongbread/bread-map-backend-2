@@ -43,8 +43,8 @@ public class UserController {
 
     @PatchMapping("/alarm")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void alarmChange(
+    public ApiResponse<AlarmDto> alarmChange(
             @CurrentUser String oAuthId, @RequestBody @Validated(ValidationSequence.class) NoticeTokenRequest request) {
-        userService.alarmChange(oAuthId, request);
+        return new ApiResponse<>(userService.alarmChange(oAuthId, request));
     }
 }

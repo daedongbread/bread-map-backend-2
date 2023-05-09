@@ -84,19 +84,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void alarmChange(String oAuthId, NoticeTokenRequest request) {
+        public AlarmDto alarmChange(String oAuthId, NoticeTokenRequest request) {
         User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         if(!user.getIsAlarmOn()) { // 알림 off이면
             if (noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isEmpty()) {
                 noticeTokenRepository.save(NoticeToken.builder().user(user).deviceToken(request.getDeviceToken()).build());
             }
-            user.alarmOn();
+            return new AlarmDto(user.alarmOn());
         }
         else { // 알림 on이면
             if(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
                 noticeTokenRepository.delete(noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
             }
-            user.alarmOff();
+            return new AlarmDto(user.alarmOff());
         }
     }
 }
