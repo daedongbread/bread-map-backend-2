@@ -58,11 +58,13 @@ public class User extends BaseEntity {
         this.isBlock = !this.isBlock;
     }
 
-    public void alarmOn() {
+    public boolean alarmOn() {
         this.isAlarmOn = true;
+        return true;
     }
 
-    public void alarmOff() {
+    public boolean alarmOff() {
         this.isAlarmOn = false;
+        return false;
     }
 }
