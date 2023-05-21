@@ -10,5 +10,5 @@ public interface UserService {
     void updateNickName(String oAuthId, UpdateNickNameRequest request);
 //    void deleteUser(String username);
     AlarmDto getAlarmStatus(String oAuthId);
-    void alarmChange(String oAuthId, NoticeTokenRequest request);
+    AlarmDto alarmChange(String oAuthId, NoticeTokenRequest request);
 }

@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.admin.bakery.dto;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class AdminBakeryDto {
     private String name;
+    private Long pioneerId;
+    private String pioneerNickName;
     private String image;
 
     private String address;
@@ -31,8 +34,10 @@ public class AdminBakeryDto {
     private List<AdminProductDto> productList;
 
     @Builder
-    public AdminBakeryDto(Bakery bakery, String image, List<AdminProductDto> productList) {
+    public AdminBakeryDto(Bakery bakery, User pioneer, String image, List<AdminProductDto> productList) {
         this.name = bakery.getName();
+        this.pioneerId = (pioneer != null) ? pioneer.getId() : null;
+        this.pioneerNickName = (pioneer != null) ? pioneer.getNickName() : null;
         this.image = image;
         this.address = bakery.getAddress();
         this.latitude = bakery.getLatitude();

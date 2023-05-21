@@ -498,8 +498,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_프로필_조회_api_get_http_request"><a class="link" href="#_프로필_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/94 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUyLCJleHAiOjE2ODMzNzE0NTJ9.HVKe_D5KMu15NzYtcgBuIjSemh-h5GePp4KluDHQ0kg
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/90 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU3LCJleHAiOjE2ODM2MjQ1NTd9.RJX0Lu1FFH9RwrBATerukO-mksB1zgXliIOeg5Bf8jM
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -547,7 +547,7 @@ Content-Length: 172
 
 {
   "data" : {
-    "userId" : 94,
+    "userId" : 90,
     "userImage" : null,
     "nickName" : "nickname1",
     "followingNum" : 0,
@@ -620,7 +620,7 @@ Content-Length: 172
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/users/nickname HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUyLCJleHAiOjE2ODMzNzE0NTJ9.HVKe_D5KMu15NzYtcgBuIjSemh-h5GePp4KluDHQ0kg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU3LCJleHAiOjE2ODM2MjQ1NTd9.RJX0Lu1FFH9RwrBATerukO-mksB1zgXliIOeg5Bf8jM
 Content-Length: 53
 Host: localhost:8080
 
@@ -717,7 +717,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/users/alarm HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUyLCJleHAiOjE2ODMzNzE0NTJ9.HVKe_D5KMu15NzYtcgBuIjSemh-h5GePp4KluDHQ0kg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU3LCJleHAiOjE2ODM2MjQ1NTd9.RJX0Lu1FFH9RwrBATerukO-mksB1zgXliIOeg5Bf8jM
 Accept: application/json
 Content-Length: 38
 Host: localhost:8080
@@ -760,12 +760,20 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: DENY</code></pre>
+X-Frame-Options: DENY
+Content-Length: 45
+
+{
+  "data" : {
+    "alarmOn" : true
+  }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -805,7 +813,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/users/alarm HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUyLCJleHAiOjE2ODMzNzE0NTJ9.HVKe_D5KMu15NzYtcgBuIjSemh-h5GePp4KluDHQ0kg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU3LCJleHAiOjE2ODM2MjQ1NTd9.RJX0Lu1FFH9RwrBATerukO-mksB1zgXliIOeg5Bf8jM
 Accept: application/json
 Content-Length: 38
 Host: localhost:8080
@@ -878,13 +886,48 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: DENY</code></pre>
+X-Frame-Options: DENY
+Content-Length: 45
+
+{
+  "data" : {
+    "alarmOn" : true
+  }
+}</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_알림_상태_변경_api_patch_response_fields"><a class="link" href="#_알림_상태_변경_api_patch_response_fields">Response fields</a></h4>
+<div class="sect4">
+<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.alarmOn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 알람 상태</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -918,12 +961,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/users/follow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUxLCJleHAiOjE2ODMzNzE0NTF9.-C1iIjWN4HKZOj9lxjoKxgNM7L6Xuzfd4OpG5igdsRs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU2LCJleHAiOjE2ODM2MjQ1NTZ9.s8Y1QkYGWMMeh15u6PIQJg4DC9mEECH0YNwIiOdYriU
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 86
+  "userId" : 82
 }</code></pre>
 </div>
 </div>
@@ -1009,12 +1052,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/users/follow HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUxLCJleHAiOjE2ODMzNzE0NTF9.aQ6Wpg1stsZ5oElwOOFi_H4LGaW5q1Ck-zuIDxTy2lg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU3LCJleHAiOjE2ODM2MjQ1NTd9.RJX0Lu1FFH9RwrBATerukO-mksB1zgXliIOeg5Bf8jM
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 89
+  "userId" : 85
 }</code></pre>
 </div>
 </div>
@@ -1097,8 +1140,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_팔로워_리스트_조회_get_http_request"><a class="link" href="#_팔로워_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/84/follower HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUxLCJleHAiOjE2ODMzNzE0NTF9.-C1iIjWN4HKZOj9lxjoKxgNM7L6Xuzfd4OpG5igdsRs
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/80/follower HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU2LCJleHAiOjE2ODM2MjQ1NTZ9.s8Y1QkYGWMMeh15u6PIQJg4DC9mEECH0YNwIiOdYriU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1146,7 +1189,7 @@ Content-Length: 193
 
 {
   "data" : [ {
-    "userId" : 85,
+    "userId" : 81,
     "userImage" : null,
     "nickName" : "nickname2",
     "reviewNum" : 0,
@@ -1165,8 +1208,8 @@ Content-Length: 193
 <h4 id="_팔로잉_리스트_조회_get_http_request"><a class="link" href="#_팔로잉_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/90/following HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUxLCJleHAiOjE2ODMzNzE0NTF9.-C1iIjWN4HKZOj9lxjoKxgNM7L6Xuzfd4OpG5igdsRs
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/86/following HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMiIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU3LCJleHAiOjE2ODM2MjQ1NTd9.hEQ7wLCTTdcyo7cFCgjbmIMr1VLngLOM5GV_NwgC9-0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1214,7 +1257,7 @@ Content-Length: 193
 
 {
   "data" : [ {
-    "userId" : 91,
+    "userId" : 87,
     "userImage" : null,
     "nickName" : "nickname2",
     "reviewNum" : 0,
@@ -1252,7 +1295,7 @@ Content-Length: 193
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/users/block HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUwLCJleHAiOjE2ODMzNzE0NTB9.PvR5_3Bcr-tN4Dna9SIVms08OwacL_4BY4YXIVtuAeU
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU2LCJleHAiOjE2ODM2MjQ1NTZ9.EJy_QoE6uHlzEXFviUB_KpiL4DbRF4cHXF5rgsWL2d4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1300,7 +1343,7 @@ Content-Length: 148
 
 {
   "data" : [ {
-    "userId" : 83,
+    "userId" : 79,
     "userImage" : null,
     "nickName" : "nickname3",
     "reviewNum" : 0,
@@ -1320,12 +1363,12 @@ Content-Length: 148
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/users/block HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUwLCJleHAiOjE2ODMzNzE0NTB9.PvR5_3Bcr-tN4Dna9SIVms08OwacL_4BY4YXIVtuAeU
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU2LCJleHAiOjE2ODM2MjQ1NTZ9.EJy_QoE6uHlzEXFviUB_KpiL4DbRF4cHXF5rgsWL2d4
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 79
+  "userId" : 75
 }</code></pre>
 </div>
 </div>
@@ -1411,12 +1454,12 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/users/block HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzMzY3ODUwLCJleHAiOjE2ODMzNzE0NTB9.PvR5_3Bcr-tN4Dna9SIVms08OwacL_4BY4YXIVtuAeU
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjgzNjIwOTU2LCJleHAiOjE2ODM2MjQ1NTZ9.EJy_QoE6uHlzEXFviUB_KpiL4DbRF4cHXF5rgsWL2d4
 Content-Length: 21
 Host: localhost:8080
 
 {
-  "userId" : 77
+  "userId" : 73
 }</code></pre>
 </div>
 </div>
@@ -1499,7 +1542,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-04-16 16:09:12 +0900
+Last updated 2023-05-09 17:27:58 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

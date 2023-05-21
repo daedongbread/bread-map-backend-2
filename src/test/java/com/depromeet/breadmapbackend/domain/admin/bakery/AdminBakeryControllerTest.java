@@ -211,6 +211,8 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 parameterWithName("bakeryId").description("빵집 고유 번호")),
                         responseFields(
                                 fieldWithPath("data.name").description("빵집 이름"),
+                                fieldWithPath("data.pioneerId").description("빵집 개척자 고유 번호"),
+                                fieldWithPath("data.pioneerNickName").description("빵집 개척자 닉네임"),
                                 fieldWithPath("data.image").description("빵집 이미지"),
                                 fieldWithPath("data.address").description("빵집 도로명 주소"),
                                 fieldWithPath("data.latitude").description("빵집 위도"),
