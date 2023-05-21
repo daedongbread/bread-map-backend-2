@@ -108,7 +108,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 .map(AdminProductDto::new).collect(Collectors.toList());
 
         String image = (bakery.getImage().contains(customAWSS3Properties.getDefaultImage().getBakery())) ? null : bakery.getImage();
-        return AdminBakeryDto.builder().bakery(bakery).image(image).productList(productList).build();
+        return AdminBakeryDto.builder().bakery(bakery).pioneer(bakery.getPioneer()).image(image).productList(productList).build();
     }
 
 //    @Transactional(readOnly = true, rollbackFor = Exception.class)
