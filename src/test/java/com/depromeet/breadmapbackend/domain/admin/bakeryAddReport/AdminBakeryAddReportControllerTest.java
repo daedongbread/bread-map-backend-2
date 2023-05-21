@@ -75,6 +75,7 @@ class AdminBakeryAddReportControllerTest extends ControllerTest {
                                 fieldWithPath("data.totalPages").description("전체 페이지 수"),
                                 fieldWithPath("data.contents").description("빵집 제보 리스트"),
                                 fieldWithPath("data.contents.[].reportId").description("빵집 제보 고유 번호"),
+                                fieldWithPath("data.contents.[].userId").description("빵집 제보 유저 고유 번호"),
                                 fieldWithPath("data.contents.[].nickName").description("빵집 제보 유저 닉네임"),
                                 fieldWithPath("data.contents.[].bakeryName").description("빵집 이름"),
                                 fieldWithPath("data.contents.[].location").description("빵집 위치"),
@@ -102,6 +103,7 @@ class AdminBakeryAddReportControllerTest extends ControllerTest {
                         pathParameters(
                                 parameterWithName("reportId").description("빵집 고유 번호")),
                         responseFields(
+                                fieldWithPath("data.userId").description("빵집 제보 유저 고유 번호"),
                                 fieldWithPath("data.nickName").description("빵집 제보 유저 닉네임"),
                                 fieldWithPath("data.bakeryName").description("빵집 이름"),
                                 fieldWithPath("data.location").description("빵집 위치"),
