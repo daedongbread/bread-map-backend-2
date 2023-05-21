@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class BakeryAddReportDto {
+    private Long userId;
     private String nickName;
     private String bakeryName;
     private String location;
@@ -17,6 +18,7 @@ public class BakeryAddReportDto {
 
     @Builder
     public BakeryAddReportDto(BakeryAddReport bakeryAddReport) {
+        this.userId = bakeryAddReport.getUser().getId();
         this.nickName = bakeryAddReport.getUser().getUserInfo().getNickName();
         this.bakeryName = bakeryAddReport.getName();
         this.location = bakeryAddReport.getLocation();

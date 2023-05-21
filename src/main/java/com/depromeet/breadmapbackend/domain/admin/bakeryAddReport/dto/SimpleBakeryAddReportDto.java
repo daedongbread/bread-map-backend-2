@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class SimpleBakeryAddReportDto {
     private Long reportId;
+    private Long userId;
     private String nickName;
     private String bakeryName;
     private String location;
@@ -23,6 +24,7 @@ public class SimpleBakeryAddReportDto {
     @Builder
     public SimpleBakeryAddReportDto(BakeryAddReport bakeryAddReport) {
         this.reportId = bakeryAddReport.getId();
+        this.userId = bakeryAddReport.getUser().getId();
         this.nickName = bakeryAddReport.getUser().getUserInfo().getNickName();
         this.bakeryName = bakeryAddReport.getName();
         this.location = bakeryAddReport.getLocation();
