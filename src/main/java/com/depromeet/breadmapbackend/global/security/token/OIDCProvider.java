@@ -43,7 +43,6 @@ public class OIDCProvider {
         if (iss.equals("https://accounts.google.com") && oAuthType.equals(OAuthType.GOOGLE)) {
             clientId = customOAuthProperties.getGoogle();
             oidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
-            log.info("SIZE : " + oidcPublicKeysDto.getKeys().size());
         } else if (iss.equals("https://kauth.kakao.com") && oAuthType.equals(OAuthType.KAKAO)) {
             clientId = customOAuthProperties.getKakao();
             oidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
@@ -51,7 +50,7 @@ public class OIDCProvider {
             clientId = customOAuthProperties.getApple();
             oidcPublicKeysDto = appleOAuthClient.getOIDCPublicKeys();
         } else throw new DaedongException(DaedongStatus.OIDC_ISSUER_WRONG); // TODO
-        OIDCPublicKeysDto.OIDCPublicKeyDto oidcPublicKey = getOIDCPublicKey(oidcPublicKeysDto, kid);
+        OIDCPublicKeysDto.OIDCPublicKeyDto oidcPublicKey = getOIDCPublicKey(oidcPublicKeysDto, oAuthType, kid);
 
         try {
             return Jwts.parserBuilder()
@@ -66,12 +65,32 @@ public class OIDCProvider {
         }
     }
 
-    private OIDCPublicKeysDto.OIDCPublicKeyDto getOIDCPublicKey(OIDCPublicKeysDto oidcPublicKeysDto, String kid) {
+    private OIDCPublicKeysDto.OIDCPublicKeyDto getOIDCPublicKey(OIDCPublicKeysDto oidcPublicKeysDto, OAuthType type, String kid) {
         return oidcPublicKeysDto.getKeys().stream()
-                .peek(System.out::println)
                 .filter(o -> o.getKid().equals(kid))
                 .findFirst()
-                .orElseThrow(); // TODO
+                .orElseGet(() -> {
+                    if (type.equals(OAuthType.GOOGLE)) {
+                        googleOAuthClient.clearCache();
+                        OIDCPublicKeysDto updatedOidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
+                        return getKeyWithKid(updatedOidcPublicKeysDto, kid);
+                    } else if (type.equals(OAuthType.KAKAO)) {
+                        kakaoOAuthClient.clearCache();
+                        OIDCPublicKeysDto updatedOidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
+                        return getKeyWithKid(updatedOidcPublicKeysDto, kid);
+                    } else if (type.equals(OAuthType.APPLE)) {
+                        appleOAuthClient.clearCache();
+                        OIDCPublicKeysDto updatedOidcPublicKeysDto = appleOAuthClient.getOIDCPublicKeys();
+                        return getKeyWithKid(updatedOidcPublicKeysDto, kid);
+                    } else throw new DaedongException(DaedongStatus.OIDC_ISSUER_WRONG);
+                });
+    }
+
+    private OIDCPublicKeysDto.OIDCPublicKeyDto getKeyWithKid(OIDCPublicKeysDto oidcPublicKeysDto, String kid) {
+        return oidcPublicKeysDto.getKeys().stream()
+                .filter(o -> o.getKid().equals(kid))
+                .findFirst()
+                .orElseThrow(() -> new DaedongException(DaedongStatus.OIDC_PUBLIC_KEY_EXCEPTION));
     }
 
     private Key getRSAPublicKey(String modulus, String exponent) throws NoSuchAlgorithmException, InvalidKeySpecException {
