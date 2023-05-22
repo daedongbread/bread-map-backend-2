@@ -71,6 +71,7 @@ public enum DaedongStatus {
     FOLLOW_DUPLICATE_EXCEPTION(CONFLICT, 40911, "already follow user"), // 이미 팔로우가 되어 있을 때
     SELF_FOLLOW_EXCEPTION(BAD_REQUEST, 40912, "self follow or unfollow exception"), // 본인을 팔로우/언팔로우 했을 때
     BLOCK_DUPLICATE_EXCEPTION(CONFLICT, 40913, "already block user"), // 이미 차단한 유저일 때
+    BAKERY_DUPLICATE_EXCEPTION(CONFLICT, 40920, "bakery duplicate"), // 이미 존재하는 빵집일 때
     PRODUCT_DUPLICATE_EXCEPTION(CONFLICT, 40930, "product duplicate"), // 이미 존재하는 상품일 때
     FLAG_DUPLICATE_EXCEPTION(CONFLICT, 40940, "flag duplicate"), // 이미 존재하는 리스트일 때
     FLAG_BAKERY_DUPLICATE_EXCEPTION(CONFLICT, 40941, "bakery already in this flag"), // 이미 해당 리스트에 등록된 빵집일 때

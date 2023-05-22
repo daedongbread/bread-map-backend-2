@@ -37,8 +37,6 @@ public class OIDCProvider {
         String[] tokenParts = idToken.split("\\.");
         String kid = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[0])), "$.kid");
         String iss = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[1])), "$.iss");
-        log.info("kid : " + kid);
-        log.info("iss : " + iss);
 //        String kid = new JSONObject(new String(Base64.getUrlDecoder().decode(tokenParts[0]))).getString("kid");
 //        String iss = new JSONObject(new String(Base64.getUrlDecoder().decode(tokenParts[1]))).getString("iss");
 

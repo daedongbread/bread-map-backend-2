@@ -135,6 +135,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     @Transactional(rollbackFor = Exception.class)
     public BakeryAddDto addBakery(BakeryAddRequest request) {
         User pioneer = (request.getPioneerId() == null) ? null : userRepository.findById(request.getPioneerId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if (bakeryRepository.existsByNameAndAddress(request.getName(), request.getAddress())) throw new DaedongException(DaedongStatus.BAKERY_DUPLICATE_EXCEPTION); // TODO
+
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
                 .image((StringUtils.hasText(request.getImage())) ? request.getImage() :
