@@ -79,11 +79,11 @@ public enum DaedongStatus {
     REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION(CONFLICT, 40952, "already lik review comment"), // 이미 좋아요를 누른 댓글일 때
     REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION(CONFLICT, 40953, "already unlike review comment"), // 이미 좋아요를 취소한 댓글일 때
 //    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
-    ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate") // 관리자 이메일 중복일 때
-    ;
+    ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate"), // 관리자 이메일 중복일 때
 
     // 500
-
+    OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key") // OIDC public key가 문제일 때
+    ;
     private final HttpStatus status;
     private final Integer code;
     private final String description;
