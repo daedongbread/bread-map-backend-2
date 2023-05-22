@@ -43,6 +43,7 @@ public class OIDCProvider {
         if (iss.equals("https://accounts.google.com") && oAuthType.equals(OAuthType.GOOGLE)) {
             clientId = customOAuthProperties.getGoogle();
             oidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
+            log.info("SIZE : " + oidcPublicKeysDto.getKeys().size());
         } else if (iss.equals("https://kauth.kakao.com") && oAuthType.equals(OAuthType.KAKAO)) {
             clientId = customOAuthProperties.getKakao();
             oidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
@@ -67,6 +68,7 @@ public class OIDCProvider {
 
     private OIDCPublicKeysDto.OIDCPublicKeyDto getOIDCPublicKey(OIDCPublicKeysDto oidcPublicKeysDto, String kid) {
         return oidcPublicKeysDto.getKeys().stream()
+                .peek(System.out::println)
                 .filter(o -> o.getKid().equals(kid))
                 .findFirst()
                 .orElseThrow(); // TODO

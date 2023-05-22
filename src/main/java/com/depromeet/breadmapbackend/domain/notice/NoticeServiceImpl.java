@@ -131,7 +131,7 @@ public class NoticeServiceImpl implements NoticeService{
     public void addReportBakeryAddNotice(BakeryAddEvent event) throws FirebaseMessagingException { // 제보한 빵집 추가 알람
         User user = userRepository.findById(event.getUserId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         Notice notice = Notice.builder()
-                .user(user)
+                .user(user).fromUser(user)
                 // contentId : 추가된 빵집 아이디, content : 추가된 빵집 이름
                 .contentId(event.getBakeryId()).content(event.getBakeryName())
                 .type(NoticeType.ADD_BAKERY).build();
