@@ -12,7 +12,4 @@ public interface GoogleOAuthClient {
     @Cacheable(cacheNames = "GoogleOICD", cacheManager = "oidcCacheManager")
     @GetMapping("/oauth2/v3/certs")
     OIDCPublicKeysDto getOIDCPublicKeys();
-
-    @CacheEvict(cacheNames = "GoogleOICD", allEntries = true)
-    void clearCache();
 }

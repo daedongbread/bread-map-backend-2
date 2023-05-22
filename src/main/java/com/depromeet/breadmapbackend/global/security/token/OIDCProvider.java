@@ -12,6 +12,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -71,20 +72,29 @@ public class OIDCProvider {
                 .findFirst()
                 .orElseGet(() -> {
                     if (type.equals(OAuthType.GOOGLE)) {
-                        googleOAuthClient.clearCache();
+                        clearGoogleCache();
                         OIDCPublicKeysDto updatedOidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
                         return getKeyWithKid(updatedOidcPublicKeysDto, kid);
                     } else if (type.equals(OAuthType.KAKAO)) {
-                        kakaoOAuthClient.clearCache();
+                        clearKakaoCache();
                         OIDCPublicKeysDto updatedOidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
                         return getKeyWithKid(updatedOidcPublicKeysDto, kid);
                     } else if (type.equals(OAuthType.APPLE)) {
-                        appleOAuthClient.clearCache();
+                        clearAppleCache();
                         OIDCPublicKeysDto updatedOidcPublicKeysDto = appleOAuthClient.getOIDCPublicKeys();
                         return getKeyWithKid(updatedOidcPublicKeysDto, kid);
                     } else throw new DaedongException(DaedongStatus.OIDC_ISSUER_WRONG);
                 });
     }
+
+    @CacheEvict(cacheNames = "GoogleOICD", allEntries = true)
+    public void clearGoogleCache() {};
+
+    @CacheEvict(cacheNames = "KakaoOICD", allEntries = true)
+    public void clearKakaoCache() {};
+
+    @CacheEvict(cacheNames = "AppleOICD", allEntries = true)
+    public void clearAppleCache() {};
 
     private OIDCPublicKeysDto.OIDCPublicKeyDto getKeyWithKid(OIDCPublicKeysDto oidcPublicKeysDto, String kid) {
         return oidcPublicKeysDto.getKeys().stream()

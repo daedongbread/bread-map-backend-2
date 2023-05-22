@@ -12,7 +12,4 @@ public interface KakaoOAuthClient {
     @Cacheable(cacheNames = "KakaoOICD", cacheManager = "oidcCacheManager")
     @GetMapping("/.well-known/jwks.json")
     OIDCPublicKeysDto getOIDCPublicKeys();
-
-    @CacheEvict(cacheNames = "KakaoOICD", allEntries = true)
-    void clearCache();
 }

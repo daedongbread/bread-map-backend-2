@@ -12,7 +12,4 @@ public interface AppleOAuthClient {
     @Cacheable(cacheNames = "AppleOICD", cacheManager = "oidcCacheManager")
     @GetMapping("/auth/keys")
     OIDCPublicKeysDto getOIDCPublicKeys();
-
-    @CacheEvict(cacheNames = "AppleOICD", allEntries = true)
-    void clearCache();
 }
