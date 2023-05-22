@@ -13,6 +13,7 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -36,6 +37,8 @@ public class OIDCProvider {
         String[] tokenParts = idToken.split("\\.");
         String kid = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[0])), "$.kid");
         String iss = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[1])), "$.iss");
+        log.info("kid : " + kid);
+        log.info("iss : " + iss);
 //        String kid = new JSONObject(new String(Base64.getUrlDecoder().decode(tokenParts[0]))).getString("kid");
 //        String iss = new JSONObject(new String(Base64.getUrlDecoder().decode(tokenParts[1]))).getString("iss");
 
@@ -43,15 +46,15 @@ public class OIDCProvider {
         OIDCPublicKeysDto oidcPublicKeysDto;
         if (iss.equals("https://accounts.google.com") && oAuthType.equals(OAuthType.GOOGLE)) {
             clientId = customOAuthProperties.getGoogle();
-            oidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
+            oidcPublicKeysDto = getGoogleOIDCPublicKeys();
         } else if (iss.equals("https://kauth.kakao.com") && oAuthType.equals(OAuthType.KAKAO)) {
             clientId = customOAuthProperties.getKakao();
-            oidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
+            oidcPublicKeysDto = getKakaoOIDCPublicKeys();
         } else if (iss.equals("https://appleid.apple.com") && oAuthType.equals(OAuthType.APPLE)) {
             clientId = customOAuthProperties.getApple();
-            oidcPublicKeysDto = appleOAuthClient.getOIDCPublicKeys();
+            oidcPublicKeysDto = getAppleOIDCPublicKeys();
         } else throw new DaedongException(DaedongStatus.OIDC_ISSUER_WRONG); // TODO
-        OIDCPublicKeysDto.OIDCPublicKeyDto oidcPublicKey = getOIDCPublicKey(oidcPublicKeysDto, oAuthType, kid);
+        OIDCPublicKeysDto.OIDCPublicKeyDto oidcPublicKey = getOIDCPublicKey(oidcPublicKeysDto, kid);
 
         try {
             return Jwts.parserBuilder()
@@ -66,37 +69,22 @@ public class OIDCProvider {
         }
     }
 
-    private OIDCPublicKeysDto.OIDCPublicKeyDto getOIDCPublicKey(OIDCPublicKeysDto oidcPublicKeysDto, OAuthType type, String kid) {
-        return oidcPublicKeysDto.getKeys().stream()
-                .filter(o -> o.getKid().equals(kid))
-                .findFirst()
-                .orElseGet(() -> {
-                    if (type.equals(OAuthType.GOOGLE)) {
-                        clearGoogleCache();
-                        OIDCPublicKeysDto updatedOidcPublicKeysDto = googleOAuthClient.getOIDCPublicKeys();
-                        return getKeyWithKid(updatedOidcPublicKeysDto, kid);
-                    } else if (type.equals(OAuthType.KAKAO)) {
-                        clearKakaoCache();
-                        OIDCPublicKeysDto updatedOidcPublicKeysDto = kakaoOAuthClient.getOIDCPublicKeys();
-                        return getKeyWithKid(updatedOidcPublicKeysDto, kid);
-                    } else if (type.equals(OAuthType.APPLE)) {
-                        clearAppleCache();
-                        OIDCPublicKeysDto updatedOidcPublicKeysDto = appleOAuthClient.getOIDCPublicKeys();
-                        return getKeyWithKid(updatedOidcPublicKeysDto, kid);
-                    } else throw new DaedongException(DaedongStatus.OIDC_ISSUER_WRONG);
-                });
+    @Cacheable(cacheNames = "GoogleOICD", cacheManager = "oidcCacheManager")
+    public OIDCPublicKeysDto getGoogleOIDCPublicKeys() {
+        return googleOAuthClient.getOIDCPublicKeys();
     }
 
-    @CacheEvict(cacheNames = "GoogleOICD", allEntries = true)
-    public void clearGoogleCache() {};
+    @Cacheable(cacheNames = "KakaoOICD", cacheManager = "oidcCacheManager")
+    public OIDCPublicKeysDto getKakaoOIDCPublicKeys() {
+        return kakaoOAuthClient.getOIDCPublicKeys();
+    }
 
-    @CacheEvict(cacheNames = "KakaoOICD", allEntries = true)
-    public void clearKakaoCache() {};
+    @Cacheable(cacheNames = "AppleOICD", cacheManager = "oidcCacheManager")
+    public OIDCPublicKeysDto getAppleOIDCPublicKeys() {
+        return appleOAuthClient.getOIDCPublicKeys();
+    }
 
-    @CacheEvict(cacheNames = "AppleOICD", allEntries = true)
-    public void clearAppleCache() {};
-
-    private OIDCPublicKeysDto.OIDCPublicKeyDto getKeyWithKid(OIDCPublicKeysDto oidcPublicKeysDto, String kid) {
+    private OIDCPublicKeysDto.OIDCPublicKeyDto getOIDCPublicKey(OIDCPublicKeysDto oidcPublicKeysDto, String kid) {
         return oidcPublicKeysDto.getKeys().stream()
                 .filter(o -> o.getKid().equals(kid))
                 .findFirst()
