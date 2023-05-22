@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface BakeryRepository extends JpaRepository<Bakery, Long>{
     Optional<Bakery> findByIdAndStatus(Long id, BakeryStatus status);
-
+    boolean existsByNameAndAddress(String name, String address);
     List<Bakery> findTop20ByLatitudeBetweenAndLongitudeBetweenAndStatus(Double leftLatitude, Double rightLatitude, Double downLongitude, Double upLongitude, BakeryStatus status);
 
 //    @Query("select b from Bakery b" +

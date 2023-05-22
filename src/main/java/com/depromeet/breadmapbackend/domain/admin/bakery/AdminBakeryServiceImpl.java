@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageT
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryQueryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
@@ -134,6 +135,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
     @Transactional(rollbackFor = Exception.class)
     public BakeryAddDto addBakery(BakeryAddRequest request) {
         User pioneer = (request.getPioneerId() == null) ? null : userRepository.findById(request.getPioneerId()).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        if (bakeryRepository.existsByNameAndAddress(request.getName(), request.getAddress())) throw new DaedongException(DaedongStatus.BAKERY_DUPLICATE_EXCEPTION); // TODO
+
         Bakery bakery = Bakery.builder()
                 .name(request.getName())
                 .image((StringUtils.hasText(request.getImage())) ? request.getImage() :
@@ -161,7 +164,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 productRepository.save(product);
             }
         }
-        if (pioneer != null)
+        if (pioneer != null && bakery.getStatus().equals(BakeryStatus.POSTING))
             eventPublisher.publishEvent(BakeryAddEvent.builder().userId(pioneer.getId()).bakeryId(bakery.getId()).bakeryName(bakery.getName()).build());
         return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
     }
@@ -198,7 +201,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
             }
         }
 
-        updatePioneer(bakery, request.getPioneerId());
+        if (bakery.getStatus().equals(BakeryStatus.POSTING)) updatePioneer(bakery, request.getPioneerId());
     }
 
     private void updatePioneer(Bakery bakery, Long pioneerId) {
