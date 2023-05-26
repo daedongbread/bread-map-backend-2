@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -63,13 +64,18 @@ public class SearchServiceImpl implements SearchService {
         return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word.strip(), word.replaceAll(" ", ""), latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakery(bakery)
+                        .rating(bakeryRating(reviewService.getReviewList(me, bakery)))
                         .reviewNum(reviewService.getReviewList(me, bakery).size())
-                        // TODO 점수?
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
                                 * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
                                 + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
                 .collect(Collectors.toList());
+    }
+
+    private Double bakeryRating(List<Review> reviewList) { // TODO
+        return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
+                .stream().mapToDouble(Double::doubleValue).average().orElse(0)*10)/10.0;
     }
 
 //    @Transactional(readOnly = true, rollbackFor = Exception.class)

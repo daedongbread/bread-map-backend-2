@@ -215,6 +215,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("data.pioneerNickName").description("빵집 개척자 닉네임"),
                                 fieldWithPath("data.image").description("빵집 이미지"),
                                 fieldWithPath("data.address").description("빵집 도로명 주소"),
+                                fieldWithPath("data.detailedAddress").optional().description("빵집 도로명 상세 주소"),
                                 fieldWithPath("data.latitude").description("빵집 위도"),
                                 fieldWithPath("data.longitude").description("빵집 경도"),
                                 fieldWithPath("data.hours").description("빵집 영업 시간"),
@@ -267,7 +268,7 @@ class AdminBakeryControllerTest extends ControllerTest {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         String object = objectMapper.writeValueAsString(BakeryAddRequest.builder()
                 .name("newBakery").image("tempImage.jpg")
-                .address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .address("address").detailedAddress("detailedAddress").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryAddRequest.ProductAddRequest.builder()
@@ -287,6 +288,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
                                 fieldWithPath("image").optional().description("빵집 이미지"),
                                 fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
+                                fieldWithPath("detailedAddress").optional().description("빵집 도로명 상세 주소"),
                                 fieldWithPath("latitude").description("빵집 위도"),
                                 fieldWithPath("longitude").description("빵집 경도"),
                                 fieldWithPath("hours").optional().description("빵집 영업시간"),
@@ -320,7 +322,8 @@ class AdminBakeryControllerTest extends ControllerTest {
     void updateBakery() throws Exception {
         List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
         String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
-                .name("newBakery").image("tempImage.jpg").address("address").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
+                .name("newBakery").image("tempImage.jpg")
+                .address("address").detailedAddress("detailedAddress").latitude(35.124124).longitude(127.312452).hours("09:00~20:00")
                 .instagramURL("insta").facebookURL("facebook").blogURL("blog").websiteURL("website").phoneNumber("010-1234-5678")
                 .facilityInfoList(facilityInfo).status(BakeryStatus.POSTING).productList(Arrays.asList(
                         BakeryUpdateRequest.ProductUpdateRequest.builder()
@@ -344,6 +347,7 @@ class AdminBakeryControllerTest extends ControllerTest {
                                 fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
                                 fieldWithPath("image").optional().description("빵집 이미지"),
                                 fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
+                                fieldWithPath("detailedAddress").optional().description("빵집 도로명 상세 주소"),
                                 fieldWithPath("latitude").description("빵집 위도"),
                                 fieldWithPath("longitude").description("빵집 경도"),
                                 fieldWithPath("hours").optional().description("빵집 영업시간"),

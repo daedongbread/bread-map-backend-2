@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class Bakery extends BaseEntity {
 
     @Column(nullable = false)
     private String address;
+
+    private String detailedAddress;
 
     private String hours;
 
@@ -61,7 +64,7 @@ public class Bakery extends BaseEntity {
     @Builder
     public Bakery(
             String name, Double latitude, Double longitude,
-            String address, String hours, String phoneNumber,
+            String address, String detailedAddress, String hours, String phoneNumber,
             String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
             List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
             ) {
@@ -69,6 +72,7 @@ public class Bakery extends BaseEntity {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.detailedAddress = detailedAddress;
         this.hours = hours;
         this.phoneNumber = phoneNumber;
         this.bakeryURL = BakeryURL.builder()
@@ -80,12 +84,13 @@ public class Bakery extends BaseEntity {
     }
 
     public void update(
-            String name, String address, Double latitude, Double longitude, String hours,
+            String name, String address, String detailedAddress, Double latitude, Double longitude, String hours,
             String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
             List<FacilityInfo> facilityInfoList, BakeryStatus status
     ) {
         this.name = name;
         this.address = address;
+        this.detailedAddress = detailedAddress;
         this.latitude = latitude;
         this.longitude = longitude;
         this.hours = hours;
@@ -103,4 +108,6 @@ public class Bakery extends BaseEntity {
     public boolean isPosting() {
         return this.status.equals(BakeryStatus.POSTING);
     }
+
+    public String getFullAddress() { return this.address + " " + (StringUtils.hasText(this.detailedAddress) ? this.detailedAddress : ""); }
 }
