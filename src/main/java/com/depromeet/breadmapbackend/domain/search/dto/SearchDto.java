@@ -10,13 +10,17 @@ import lombok.NoArgsConstructor;
 public class SearchDto {
     private Long bakeryId;
     private String bakeryName;
+    private String address;
+    private Double rating;
     private Integer reviewNum;
     private Double distance;
 
     @Builder
-    public SearchDto(Bakery bakery, Integer reviewNum, Double distance) {
+    public SearchDto(Bakery bakery, Double rating, Integer reviewNum, Double distance) {
         this.bakeryId = bakery.getId();
         this.bakeryName = bakery.getName();
+        this.address = bakery.getFullAddress();
+        this.rating = rating;
         this.reviewNum = reviewNum;
         this.distance = distance;
     }

@@ -31,6 +31,7 @@ public class BakeryAddRequest {
     @NotBlank(message = "주소는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     @Size(min=3, max=100, message = "3자 이상, 100자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
     private String address;
+    private String detailedAddress;
     @NotNull(message = "위도는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
     private Double latitude;
     @NotNull(message = "경도는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)

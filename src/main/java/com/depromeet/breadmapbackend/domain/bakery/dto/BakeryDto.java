@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class BakeryDto {
             this.flagNum = flagNum;
             this.rating = rating;
             this.reviewNum = reviewNum;
-            this.address = bakery.getAddress();
+            this.address = bakery.getFullAddress();
             this.hours = bakery.getHours();
             this.websiteURL = bakery.getBakeryURL().getWebsiteURL();
             this.instagramURL = bakery.getBakeryURL().getInstagramURL();

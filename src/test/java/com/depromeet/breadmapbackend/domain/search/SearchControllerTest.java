@@ -102,6 +102,8 @@ class SearchControllerTest extends ControllerTest {
                         responseFields(
                                 fieldWithPath("data.[].bakeryId").description("빵집 고유 번호"),
                                 fieldWithPath("data.[].bakeryName").description("빵집 이름"),
+                                fieldWithPath("data.[].address").description("빵집 주소"),
+                                fieldWithPath("data.[].rating").description("빵집 점수"),
                                 fieldWithPath("data.[].reviewNum").description("빵집 리뷰 갯수"),
                                 fieldWithPath("data.[].distance").description("빵집까지 거리")
                         )

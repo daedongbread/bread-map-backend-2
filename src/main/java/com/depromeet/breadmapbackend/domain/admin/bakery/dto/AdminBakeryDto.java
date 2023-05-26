@@ -19,6 +19,7 @@ public class AdminBakeryDto {
     private String image;
 
     private String address;
+    private String detailedAddress;
     private Double longitude;
     private Double latitude;
 
@@ -40,6 +41,7 @@ public class AdminBakeryDto {
         this.pioneerNickName = (pioneer != null) ? pioneer.getNickName() : null;
         this.image = image;
         this.address = bakery.getAddress();
+        this.detailedAddress = bakery.getDetailedAddress();
         this.latitude = bakery.getLatitude();
         this.longitude = bakery.getLongitude();
         this.hours = bakery.getHours();
