@@ -142,7 +142,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
                 .image((StringUtils.hasText(request.getImage())) ? request.getImage() :
                         customAWSS3Properties.getCloudFront() + "/" +
                         customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png")
-                .address(request.getAddress()).latitude(request.getLatitude()).longitude(request.getLongitude())
+                .address(request.getAddress()).detailedAddress(request.getDetailedAddress())
+                .latitude(request.getLatitude()).longitude(request.getLongitude())
                 .hours(request.getHours())
                 .websiteURL(request.getWebsiteURL()).instagramURL(request.getInstagramURL()).facebookURL(request.getFacebookURL()).blogURL(request.getBlogURL())
                 .phoneNumber(request.getPhoneNumber())
@@ -174,7 +175,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
         Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
         bakery.update(request.getName(),
-                request.getAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
+                request.getAddress(), request.getDetailedAddress(), request.getLatitude(), request.getLongitude(), request.getHours(),
                 request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
                 request.getPhoneNumber(),
                 (StringUtils.hasText(request.getImage())) ? request.getImage() :

@@ -19,7 +19,7 @@ public class SearchDto {
     public SearchDto(Bakery bakery, Double rating, Integer reviewNum, Double distance) {
         this.bakeryId = bakery.getId();
         this.bakeryName = bakery.getName();
-        this.address = bakery.getAddress();
+        this.address = bakery.getFullAddress();
         this.rating = rating;
         this.reviewNum = reviewNum;
         this.distance = distance;
