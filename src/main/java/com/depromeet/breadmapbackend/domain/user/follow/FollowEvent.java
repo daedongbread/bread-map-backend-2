@@ -1,13 +1,18 @@
 package com.depromeet.breadmapbackend.domain.user.follow;
 
-import lombok.AllArgsConstructor;
+import com.depromeet.breadmapbackend.global.event.NoticableEvent;
+
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-@AllArgsConstructor
-public class FollowEvent {
-    private Long userId;
-    private Long fromUserId;
+public class FollowEvent extends NoticableEvent {
+
+	private final Long fromUserId;
+
+	@Builder
+	public FollowEvent(final Long userId, final Long fromUserId) {
+		super(userId);
+		this.fromUserId = fromUserId;
+	}
 }

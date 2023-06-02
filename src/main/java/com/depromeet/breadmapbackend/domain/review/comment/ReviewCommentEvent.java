@@ -1,15 +1,27 @@
 package com.depromeet.breadmapbackend.domain.review.comment;
 
-import lombok.AllArgsConstructor;
+import com.depromeet.breadmapbackend.global.event.NoticableEvent;
+
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-@AllArgsConstructor
-public class ReviewCommentEvent {
-    private Long userId;
-    private Long fromUserId;
-    private Long reviewId;
-    private String reviewContent;
+public class ReviewCommentEvent extends NoticableEvent {
+	private final Long fromUserId;
+	private final Long reviewId;
+	private final String reviewContent;
+
+	@Builder
+	public ReviewCommentEvent(
+		final Long userId,
+		final Long fromUserId,
+		final Long reviewId,
+		final String reviewContent
+	) {
+		super(userId);
+		this.fromUserId = fromUserId;
+		this.reviewId = reviewId;
+		this.reviewContent = reviewContent;
+	}
+
 }
