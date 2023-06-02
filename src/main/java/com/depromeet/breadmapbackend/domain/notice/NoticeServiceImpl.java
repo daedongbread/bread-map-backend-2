@@ -177,12 +177,12 @@ public class NoticeServiceImpl implements NoticeService {
 			content,
 			content.getContent()
 				.stream()
-				.map(notice -> generateNoticeDto(user, notice))
+				.map(notice -> generateNoticeDtoFromFactory(user, notice))
 				.collect(Collectors.toList())
 		);
 	}
 
-	private NoticeDto generateNoticeDto(final User user, final Notice notice) {
+	private NoticeDto generateNoticeDtoFromFactory(final User user, final Notice notice) {
 		return noticeGenerateFactory.generateNotice(
 			notice,
 			followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent()
