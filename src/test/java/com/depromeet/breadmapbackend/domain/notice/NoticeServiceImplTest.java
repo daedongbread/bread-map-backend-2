@@ -46,6 +46,10 @@ class NoticeServiceImplTest {
 
 		final PageResponseDto<NoticeDto> result = sut.getNoticeList(oAuthId, type, null, page);
 
+		assertResults(result);
+	}
+
+	private void assertResults(final PageResponseDto<NoticeDto> result) {
 		assertThat(result.getContents().stream().map(NoticeDto::getTitle))
 			.containsExactly(
 				"관리자 글이 업데이트 됐어요!",

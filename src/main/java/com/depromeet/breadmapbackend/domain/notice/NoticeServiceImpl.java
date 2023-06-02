@@ -8,15 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddEvent;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
-import com.depromeet.breadmapbackend.domain.review.comment.RecommentEvent;
-import com.depromeet.breadmapbackend.domain.review.comment.ReviewCommentEvent;
-import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLikeEvent;
-import com.depromeet.breadmapbackend.domain.review.like.ReviewLikeEvent;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.domain.user.follow.FollowEvent;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -39,132 +33,31 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Async("notice")
 	@TransactionalEventListener
-	public void addFollowNotice(FollowEvent event) throws FirebaseMessagingException { // 팔로우 알람
-		User user = userRepository.findById(event.getUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		User fromUser = userRepository.findById(event.getFromUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		Notice notice = Notice.builder()
-			.user(user).fromUser(fromUser)
-			.contentId(fromUser.getId())
-			.type(NoticeType.FOLLOW).build();
-		noticeRepository.save(notice);
-		fcmService.sendMessageTo(
-			user,
-			noticeGenerateFactory.getTitle(notice),
-			notice.getContent(),
-			notice.getContentId(),
-			notice.getType()
-		);
-	}
+	public void addNotice(final NoticableEvent noticableEvent) {
 
-	@Async("notice")
-	@TransactionalEventListener
-	public void addReviewCommentNotice(ReviewCommentEvent event) throws FirebaseMessagingException { // 내 리뷰 댓글 알람
-		User user = userRepository.findById(event.getUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		User fromUser = userRepository.findById(event.getFromUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 		Notice notice = Notice.builder()
-			.user(user).fromUser(fromUser)
-			// contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
-			.contentId(event.getReviewId()).content(event.getReviewContent())
-			.type(NoticeType.REVIEW_COMMENT).build();
+			.userId(noticableEvent.getUserId())
+			.fromUserId(noticableEvent.getFromUserId())
+			.contentId(noticableEvent.getContentId())
+			.content(noticableEvent.getContent())
+			.type(noticableEvent.getNoticeType())
+			.build();
 		noticeRepository.save(notice);
-		fcmService.sendMessageTo(
-			user,
-			noticeGenerateFactory.getTitle(notice),
-			notice.getContent(),
-			notice.getContentId(),
-			notice.getType()
-		);
-	}
 
-	@Async("notice")
-	@TransactionalEventListener
-	public void addReviewLikeNotice(ReviewLikeEvent event) throws FirebaseMessagingException { // 내 리뷰 좋아요 알람
-		User user = userRepository.findById(event.getUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		User fromUser = userRepository.findById(event.getFromUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		Notice notice = Notice.builder()
-			.user(user).fromUser(fromUser)
-			// contentId : 내가 쓴 리뷰 아이디, content : 내가 쓴 리뷰의 내용(디자인엔 제목으로 나와있음)
-			.contentId(event.getReviewId()).content(event.getReviewContent())
-			.type(NoticeType.REVIEW_LIKE).build();
-		noticeRepository.save(notice);
-		fcmService.sendMessageTo(
-			user,
-			noticeGenerateFactory.getTitle(notice),
-			notice.getContent(),
-			notice.getContentId(),
-			notice.getType()
-		);
-	}
-
-	@Async("notice")
-	@TransactionalEventListener
-	public void addRecommentNotice(RecommentEvent event) throws FirebaseMessagingException { // 내 대댓글 알람
-		User user = userRepository.findById(event.getUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		User fromUser = userRepository.findById(event.getFromUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		Notice notice = Notice.builder()
-			.user(user).fromUser(fromUser)
-			// contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
-			.contentId(event.getCommentId()).content(event.getCommentContent())
-			.type(NoticeType.RECOMMENT).build();
-		noticeRepository.save(notice);
-		fcmService.sendMessageTo(
-			user,
-			noticeGenerateFactory.getTitle(notice),
-			notice.getContent(),
-			notice.getContentId(),
-			notice.getType()
-		);
-	}
-
-	@Async("notice")
-	@TransactionalEventListener
-	public void addReviewCommentLikeNotice(ReviewCommentLikeEvent event) throws
-		FirebaseMessagingException { // 내 댓글 좋아요 알람
-		User user = userRepository.findById(event.getUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		User fromUser = userRepository.findById(event.getFromUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		Notice notice = Notice.builder()
-			.user(user).fromUser(fromUser)
-			// contentId : 내가 쓴 댓글 아이디, content : 내가 쓴 댓글 내용
-			.contentId(event.getCommentId()).content(event.getCommentContent())
-			.type(NoticeType.REVIEW_COMMENT_LIKE).build();
-		noticeRepository.save(notice);
-		fcmService.sendMessageTo(
-			user,
-			noticeGenerateFactory.getTitle(notice),
-			notice.getContent(),
-			notice.getContentId(),
-			notice.getType()
-		);
-	}
-
-	@Async("notice")
-	@TransactionalEventListener
-	public void addReportBakeryAddNotice(BakeryAddEvent event) throws FirebaseMessagingException { // 제보한 빵집 추가 알람
-		User user = userRepository.findById(event.getUserId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		Notice notice = Notice.builder()
-			.user(user).fromUser(user)
-			// contentId : 추가된 빵집 아이디, content : 추가된 빵집 이름
-			.contentId(event.getBakeryId()).content(event.getBakeryName())
-			.type(NoticeType.ADD_BAKERY).build();
-		noticeRepository.save(notice);
-		fcmService.sendMessageTo(
-			user,
-			noticeGenerateFactory.getTitle(notice),
-			notice.getContent(),
-			notice.getContentId(),
-			notice.getType()
-		);
+		if (noticableEvent.getIsAlarmOn()) {
+			try {
+				fcmService.sendMessageTo(
+					notice.getUserId(),
+					noticeGenerateFactory.getTitle(notice),
+					notice.getContent(),
+					notice.getContentId(),
+					notice.getType()
+				);
+			} catch (FirebaseMessagingException e) {
+				// TODO : 예외 처리 FirebaseMessagingException
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
