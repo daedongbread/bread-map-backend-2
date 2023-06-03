@@ -35,24 +35,11 @@ public class NoticeServiceImpl implements NoticeService {
 	@TransactionalEventListener
 	public void addNotice(final NoticableEvent noticableEvent) {
 
-		Notice notice = Notice.builder()
-			.userId(noticableEvent.getUserId())
-			.fromUserId(noticableEvent.getFromUserId())
-			.contentId(noticableEvent.getContentId())
-			.content(noticableEvent.getContent())
-			.type(noticableEvent.getNoticeType())
-			.build();
-		noticeRepository.save(notice);
+		final Notice savedNotice = noticeRepository.save(noticableEvent.toNotice());
 
 		if (noticableEvent.getIsAlarmOn()) {
 			try {
-				fcmService.sendMessageTo(
-					notice.getUserId(),
-					noticeGenerateFactory.getTitle(notice),
-					notice.getContent(),
-					notice.getContentId(),
-					notice.getType()
-				);
+				fcmService.sendMessageTo(noticeGenerateFactory.generateNoticeDtoForFcm(savedNotice));
 			} catch (FirebaseMessagingException e) {
 				// TODO : 예외 처리 FirebaseMessagingException
 				throw new RuntimeException(e);
@@ -76,7 +63,7 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	private NoticeDto generateNoticeDtoFromFactory(final User user, final Notice notice) {
-		return noticeGenerateFactory.generateNotice(
+		return noticeGenerateFactory.generateNoticeDtoForApi(
 			notice,
 			followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent()
 		);

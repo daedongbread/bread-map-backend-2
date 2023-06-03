@@ -30,4 +30,14 @@ public class NoticableEvent {
 		this.content = content;
 		this.noticeType = noticeType;
 	}
+
+	public Notice toNotice() {
+		return Notice.builder()
+			.userId(this.userId)
+			.fromUserId(this.fromUserId)
+			.contentId(this.contentId)
+			.content(this.content)
+			.type(this.noticeType)
+			.build();
+	}
 }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -40,16 +41,17 @@ public class FcmService {
 	private final NoticeTokenRepository noticeTokenRepository;
 	private final CustomFirebaseProperties customFirebaseProperties;
 
-	public void sendMessageTo(Long userId, String title, String content, Long contentId, NoticeType type) throws
+	public void sendMessageTo(NoticeFcmDto dto) throws
 		FirebaseMessagingException {
-		List<String> tokens = noticeTokenRepository.findByUser(userId)
+
+		List<String> tokens = noticeTokenRepository.findByUser(dto.getUserId())
 			.stream().map(NoticeToken::getDeviceToken).collect(Collectors.toList());
 		if (tokens.isEmpty())
 			return;
 
 		MulticastMessage message = MulticastMessage.builder()
-			.setNotification(new Notification(title, content))
-			.putData("path", makePath(contentId, type))
+			.setNotification(new Notification(dto.getTitle(), dto.getContent()))
+			.putData("path", makePath(dto.getContentId(), dto.getType()))
 			.addAllTokens(tokens)
 			.build();
 		try {

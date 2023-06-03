@@ -5,6 +5,7 @@ import static com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto.*;
 import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
@@ -19,13 +20,12 @@ public class DefaultNoticeGenerateFactory implements NoticeGenerateFactory {
 	}
 
 	@Override
-	public NoticeDto generateNotice(
+	public NoticeDto generateNoticeDtoForApi(
 		final Notice notice,
 		final boolean isFollow
 	) {
 		try {
-			final NoticeBaseInfo noticeBaseInfo = notice.getType()
-				.getNoticeBaseInfo(notice, customAwss3Properties.getDefaultImage());
+			final NoticeBaseInfo noticeBaseInfo = getNoticeBaseInfo(notice);
 			return builder()
 				.image(notice.getType() == NoticeType.FOLLOW ?
 					noticeBaseInfo.getImage() :
@@ -41,13 +41,22 @@ public class DefaultNoticeGenerateFactory implements NoticeGenerateFactory {
 	}
 
 	@Override
-	public String getTitle(final Notice notice) {
+	public NoticeFcmDto generateNoticeDtoForFcm(final Notice notice) {
 		try {
-			return notice.getType()
-				.getNoticeBaseInfo(notice, customAwss3Properties.getDefaultImage())
-				.getTitle();
+			return NoticeFcmDto.builder()
+				.userId(notice.getUserId())
+				.title(getNoticeBaseInfo(notice).getTitle())
+				.content(notice.getContent())
+				.contentId(notice.getContentId())
+				.type(notice.getType())
+				.build();
 		} catch (IllegalArgumentException e) {
 			throw new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION);
 		}
+	}
+
+	private NoticeBaseInfo getNoticeBaseInfo(final Notice notice) {
+		return notice.getType()
+			.getNoticeBaseInfo(notice, customAwss3Properties.getDefaultImage());
 	}
 }
