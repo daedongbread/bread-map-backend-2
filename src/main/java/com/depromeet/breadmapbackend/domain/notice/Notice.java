@@ -30,17 +30,17 @@ public class Notice extends BaseEntity {
 	private Long id;
 
 	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "user_id", updatable = false)
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
 	private User user;
 
-	@Column(name = "user_id", insertable = false, updatable = false)
+	@Column(name = "user_id")
 	private Long userId;
 
 	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "fromUser_id", updatable = false)
+	@JoinColumn(name = "fromUser_id", insertable = false, updatable = false)
 	private User fromUser;
 
-	@Column(name = "fromUser_id", insertable = false, updatable = false)
+	@Column(name = "fromUser_id")
 	private Long fromUserId;
 	//    /*
 	//     알림 주 내용
@@ -71,4 +71,5 @@ public class Notice extends BaseEntity {
 		this.content = content;
 		this.type = type;
 	}
+
 }
