@@ -5,19 +5,18 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
-import com.depromeet.breadmapbackend.global.security.userinfo.OICDUserInfo;
+import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfo;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class OIDCVerifyProcessorImpl implements OIDCVerifyProcessor {
 
 	private final List<OIDCVerifierTemplate> oidcVerifierList;
 
-	public OIDCVerifyProcessorImpl(final List<OIDCVerifierTemplate> oidcVerifierList) {
-		this.oidcVerifierList = oidcVerifierList;
-	}
-
 	@Override
-	public OICDUserInfo verifyIdToken(final OAuthType oAuthType, final String idToken) {
+	public OIDCUserInfo verifyIdToken(final OAuthType oAuthType, final String idToken) {
 		OIDCVerifierTemplate tokenVerifier = routingVerifierCaller(oAuthType);
 		return tokenVerifier.verifyIdToken(idToken);
 	}

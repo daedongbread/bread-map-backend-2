@@ -1,9 +1,9 @@
 package com.depromeet.breadmapbackend.global.security.token;
 
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
-import com.depromeet.breadmapbackend.global.security.userinfo.OICDUserInfo;
+import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfo;
 
 public interface OIDCVerifyProcessor {
 
-	OICDUserInfo verifyIdToken(final OAuthType oAuthType, final String idToken);
+	OIDCUserInfo verifyIdToken(final OAuthType oAuthType, final String idToken);
 }

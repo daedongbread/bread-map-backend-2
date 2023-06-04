@@ -24,86 +24,82 @@ import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
-/*
- * Created by ParkSuHo by 2022/03/18.
- */
-
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final LoggingFilter loggingFilter;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final LoggingFilter loggingFilter;
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-            .cors().configurationSource(corsConfigurationSource())
-            .and()
-            .httpBasic().disable()
-            .formLogin().disable()
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            .antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue",
-                "/v1/exception/**").permitAll()
-            .antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test").permitAll()
-            .antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health").permitAll()
-            .antMatchers("/v1/bakeries/**", "/v1/flags/**", "/v1/reviews/**", "/v1/users/**", "/v1/notices/**",
-                "/v1/search/**", "/v1/images/**", "/v1/auth/**").hasAuthority(RoleType.USER.getCode())
-            .antMatchers("/v1/admin/**").hasAuthority(RoleType.ADMIN.getCode())
-            //                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
-            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            //                .anyRequest().denyAll()
-            //                .anyRequest().authenticated()
-            // 설정 시
-            .and()
-            .exceptionHandling()
-            .authenticationEntryPoint(customAuthenticationEntryPoint)
-            .accessDeniedHandler(customAccessDeniedHandler)
-            .and()
-            .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+			.cors().configurationSource(corsConfigurationSource())
+			.and()
+			.httpBasic().disable()
+			.formLogin().disable()
+			.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.authorizeRequests()
+			.antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue",
+				"/v1/exception/**").permitAll()
+			.antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test").permitAll()
+			.antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health").permitAll()
+			.antMatchers("/v1/bakeries/**", "/v1/flags/**", "/v1/reviews/**", "/v1/users/**", "/v1/notices/**",
+				"/v1/search/**", "/v1/images/**", "/v1/auth/**").hasAuthority(RoleType.USER.getCode())
+			.antMatchers("/v1/admin/**").hasAuthority(RoleType.ADMIN.getCode())
+			//                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
+			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+			//                .anyRequest().denyAll()
+			//                .anyRequest().authenticated()
+			// 설정 시
+			.and()
+			.exceptionHandling()
+			.authenticationEntryPoint(customAuthenticationEntryPoint)
+			.accessDeniedHandler(customAccessDeniedHandler)
+			.and()
+			.addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
-    }
+	}
 
-    // Cors 설정
-    @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        //        configuration.addAllowedOrigin("http://localhost:3000");
-        //        configuration.addAllowedOrigin("http://bread-map.s3-website.ap-northeast-2.amazonaws.com/");
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+	// Cors 설정
+	@Bean
+	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		//        configuration.addAllowedOrigin("http://localhost:3000");
+		//        configuration.addAllowedOrigin("http://bread-map.s3-website.ap-northeast-2.amazonaws.com/");
+		configuration.addAllowedOriginPattern("*");
+		configuration.addAllowedMethod("*");
+		configuration.addAllowedHeader("*");
+		configuration.setAllowCredentials(true);
+		configuration.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
-        corsConfigSource.registerCorsConfiguration("/**", configuration);
-        return corsConfigSource;
-    }
+		UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
+		corsConfigSource.registerCorsConfiguration("/**", configuration);
+		return corsConfigSource;
+	}
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/docs/**");
-        //        web.ignoring().antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue");
-        //        web.ignoring().antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test");
-        //        web.ignoring().antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health");
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-        web.httpFirewall(defaultHttpFirewall());
-    }
+	@Override
+	public void configure(WebSecurity web) {
+		web.ignoring().antMatchers("/docs/**");
+		//        web.ignoring().antMatchers("/v1/auth/valid", "/v1/auth/login", "/v1/auth/register", "/v1/auth/reissue");
+		//        web.ignoring().antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test");
+		//        web.ignoring().antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health");
+		web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+		web.httpFirewall(defaultHttpFirewall());
+	}
 
-    @Bean
-    public HttpFirewall defaultHttpFirewall() { //더블 슬래시 허용
-        return new DefaultHttpFirewall();
-    }
+	@Bean
+	public HttpFirewall defaultHttpFirewall() { //더블 슬래시 허용
+		return new DefaultHttpFirewall();
+	}
 }

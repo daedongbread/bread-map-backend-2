@@ -10,17 +10,16 @@ import com.depromeet.breadmapbackend.global.infra.feign.oauth.dto.OIDCPublicKeys
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.token.OIDCVerifierTemplate;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class KakaoOIDCVerifier extends OIDCVerifierTemplate {
 
 	private static final String ISSUER = "https://kauth.kakao.com";
 	private static final OAuthType SUPPORT_TYPE = OAuthType.KAKAO;
 	private final KakaoOAuthClient kakaoOAuthClient;
-
-	public KakaoOIDCVerifier(final KakaoOAuthClient kakaoOAuthClient) {
-		this.kakaoOAuthClient = kakaoOAuthClient;
-	}
-
+ 
 	@Override
 	protected boolean support(final OAuthType oAuthType) {
 		return SUPPORT_TYPE == oAuthType;
@@ -40,7 +39,7 @@ public class KakaoOIDCVerifier extends OIDCVerifierTemplate {
 		return SUPPORT_TYPE;
 	}
 
-	@Cacheable(cacheNames = "KakaoOICD", cacheManager = "oidcCacheManager")
+	@Cacheable(cacheNames = "AppleOIDC", cacheManager = "oidcCacheManager")
 	public OIDCPublicKeysDto getKakaoOIDCPublicKeys() {
 		return kakaoOAuthClient.getOIDCPublicKeys();
 	}

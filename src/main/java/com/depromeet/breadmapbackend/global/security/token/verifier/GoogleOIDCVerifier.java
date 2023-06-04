@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.global.infra.feign.oauth.client.AppleOAuthClient;
+import com.depromeet.breadmapbackend.global.infra.feign.oauth.client.GoogleOAuthClient;
 import com.depromeet.breadmapbackend.global.infra.feign.oauth.dto.OIDCPublicKeysDto;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.token.OIDCVerifierTemplate;
@@ -14,11 +14,11 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class AppleOIDCVerifier extends OIDCVerifierTemplate {
+public class GoogleOIDCVerifier extends OIDCVerifierTemplate {
 
-	private static final String ISSUER = "https://appleid.apple.com";
-	private static final OAuthType SUPPORT_TYPE = OAuthType.APPLE;
-	private final AppleOAuthClient appleOAuthClient;
+	private static final String ISSUER = "https://accounts.google.com";
+	private static final OAuthType SUPPORT_TYPE = OAuthType.GOOGLE;
+	private final GoogleOAuthClient googleOAuthClient;
 
 	@Override
 	protected boolean support(final OAuthType oAuthType) {
@@ -40,7 +40,7 @@ public class AppleOIDCVerifier extends OIDCVerifierTemplate {
 
 	@Cacheable(cacheNames = "AppleOIDC", cacheManager = "oidcCacheManager")
 	public OIDCPublicKeysDto getAppleOIDCPublicKeys() {
-		return appleOAuthClient.getOIDCPublicKeys();
+		return googleOAuthClient.getOIDCPublicKeys();
 	}
 
 }

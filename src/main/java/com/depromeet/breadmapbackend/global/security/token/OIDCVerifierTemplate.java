@@ -12,7 +12,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.infra.feign.oauth.dto.OIDCPublicKeysDto;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
-import com.depromeet.breadmapbackend.global.security.userinfo.OICDUserInfo;
+import com.depromeet.breadmapbackend.global.security.userinfo.OIDCUserInfo;
 import com.jayway.jsonpath.JsonPath;
 
 import io.jsonwebtoken.Claims;
@@ -24,7 +24,7 @@ public abstract class OIDCVerifierTemplate {
 
 	protected abstract boolean support(final OAuthType oAuthType);
 
-	protected final OICDUserInfo verifyIdToken(final String idToken) {
+	protected final OIDCUserInfo verifyIdToken(final String idToken) {
 		String[] tokenParts = idToken.split("\\.");
 		String kid = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[0])), "$.kid");
 		String iss = JsonPath.read(new String(Base64.getUrlDecoder().decode(tokenParts[1])), "$.iss");
@@ -39,7 +39,7 @@ public abstract class OIDCVerifierTemplate {
 				.parseClaimsJws(idToken)
 				.getBody();
 
-			return new OICDUserInfo(
+			return new OIDCUserInfo(
 				getOAuthType(),
 				body.getSubject(),
 				body.get("email", String.class)
