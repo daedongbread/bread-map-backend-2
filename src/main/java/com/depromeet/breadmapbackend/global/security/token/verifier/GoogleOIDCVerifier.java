@@ -38,7 +38,7 @@ public class GoogleOIDCVerifier extends OIDCVerifierTemplate {
 		return SUPPORT_TYPE;
 	}
 
-	@Cacheable(cacheNames = "AppleOIDC", cacheManager = "oidcCacheManager")
+	@Cacheable(cacheNames = "GoogleOIDC", cacheManager = "oidcCacheManager")
 	public OIDCPublicKeysDto getAppleOIDCPublicKeys() {
 		return googleOAuthClient.getOIDCPublicKeys();
 	}

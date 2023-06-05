@@ -19,7 +19,7 @@ public class KakaoOIDCVerifier extends OIDCVerifierTemplate {
 	private static final String ISSUER = "https://kauth.kakao.com";
 	private static final OAuthType SUPPORT_TYPE = OAuthType.KAKAO;
 	private final KakaoOAuthClient kakaoOAuthClient;
- 
+
 	@Override
 	protected boolean support(final OAuthType oAuthType) {
 		return SUPPORT_TYPE == oAuthType;
@@ -39,7 +39,7 @@ public class KakaoOIDCVerifier extends OIDCVerifierTemplate {
 		return SUPPORT_TYPE;
 	}
 
-	@Cacheable(cacheNames = "AppleOIDC", cacheManager = "oidcCacheManager")
+	@Cacheable(cacheNames = "KakaoOIDC", cacheManager = "oidcCacheManager")
 	public OIDCPublicKeysDto getKakaoOIDCPublicKeys() {
 		return kakaoOAuthClient.getOIDCPublicKeys();
 	}

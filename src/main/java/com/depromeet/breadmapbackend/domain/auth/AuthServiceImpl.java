@@ -47,31 +47,31 @@ public class AuthServiceImpl implements AuthService {
 
 	@Transactional(rollbackFor = Exception.class)
 	public JwtToken login(LoginRequest request) {
-		final OIDCUserInfo OIDCUserInfo =
+		final OIDCUserInfo oidcUserInfo =
 			oidcVerifyProcessor.verifyIdToken(request.getType(), request.getIdToken());
 
-		User user = userRepository.findByOAuthId(OIDCUserInfo.getOAuthId())
+		User user = userRepository.findByOAuthId(oidcUserInfo.getOAuthId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
 		if (user.getUserInfo().getEmail() == null)
-			user.getUserInfo().updateEmail(OIDCUserInfo.getEmail());
+			user.getUserInfo().updateEmail(oidcUserInfo.getEmail());
 		if (user.getIsBlock())
 			throw new DaedongException(DaedongStatus.BLOCK_USER);
 
-		return createNewToken(OIDCUserInfo.getOAuthId(), RoleType.USER);
+		return createNewToken(oidcUserInfo.getOAuthId(), RoleType.USER);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	public JwtToken register(RegisterRequest request) {
-		final OIDCUserInfo OIDCUserInfo =
+		final OIDCUserInfo oidcUserInfo =
 			oidcVerifyProcessor.verifyIdToken(request.getType(), request.getIdToken());
 
-		if (!redisTokenUtils.isRejoinPossible(OIDCUserInfo.getOAuthId()))
+		if (!redisTokenUtils.isRejoinPossible(oidcUserInfo.getOAuthId()))
 			throw new DaedongException(DaedongStatus.REJOIN_RESTRICT);
 
-		if (userRepository.findByOAuthId(OIDCUserInfo.getOAuthId()).isEmpty()) {
-			createUser(OIDCUserInfo, request.getIsMarketingInfoReceptionAgreed());
-			return createNewToken(OIDCUserInfo.getOAuthId(), RoleType.USER);
+		if (userRepository.findByOAuthId(oidcUserInfo.getOAuthId()).isEmpty()) {
+			createUser(oidcUserInfo, request.getIsMarketingInfoReceptionAgreed());
+			return createNewToken(oidcUserInfo.getOAuthId(), RoleType.USER);
 		} else
 			throw new DaedongException(DaedongStatus.ALREADY_REGISTER_USER);
 	}
@@ -94,14 +94,14 @@ public class AuthServiceImpl implements AuthService {
 		return nickName;
 	}
 
-	private void createUser(OIDCUserInfo OIDCUserInfo, Boolean isMarketingInfoReceptionAgreed) {
+	private void createUser(OIDCUserInfo oidcUserInfo, Boolean isMarketingInfoReceptionAgreed) {
 		User user = User.builder()
 			.oAuthInfo(OAuthInfo.builder()
-				.oAuthType(OIDCUserInfo.getOAuthType())
-				.oAuthId(OIDCUserInfo.getOAuthId()).build())
+				.oAuthType(oidcUserInfo.getOAuthType())
+				.oAuthId(oidcUserInfo.getOAuthId()).build())
 			.userInfo(UserInfo.builder()
 				.nickName(createNickName())
-				.email(OIDCUserInfo.getEmail())
+				.email(oidcUserInfo.getEmail())
 				.image(customAWSS3Properties.getCloudFront() + "/" +
 					customAWSS3Properties.getDefaultImage().getUser() + ".png").build())
 			.isMarketingInfoReceptionAgreed(isMarketingInfoReceptionAgreed)
