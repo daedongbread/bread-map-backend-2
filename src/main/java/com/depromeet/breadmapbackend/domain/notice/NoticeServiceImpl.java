@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
+import static com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto.*;
+
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
@@ -28,8 +31,8 @@ public class NoticeServiceImpl implements NoticeService {
 	private final NoticeQueryRepository noticeQueryRepository;
 	private final UserRepository userRepository;
 	private final FollowRepository followRepository;
-	private final NoticeGenerateFactory noticeGenerateFactory;
 	private final FcmService fcmService;
+	private final NoticeContentProcessor noticeContentProcessor;
 
 	@Async("notice")
 	@TransactionalEventListener
@@ -40,7 +43,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 		if (noticableEvent.getIsAlarmOn()) {
 			try {
-				fcmService.sendMessageTo(noticeGenerateFactory.generateNoticeDtoForFcm(savedNotice));
+				fcmService.sendMessageTo(generateNoticeDtoForFcm(savedNotice));
 			} catch (FirebaseMessagingException e) {
 				// TODO : 예외 처리 FirebaseMessagingException
 				throw new RuntimeException(e);
@@ -58,16 +61,28 @@ public class NoticeServiceImpl implements NoticeService {
 			content,
 			content.getContent()
 				.stream()
-				.map(notice -> generateNoticeDtoFromFactory(user, notice))
+				.map(notice -> generateNoticeDtoFrom(user, notice))
 				.collect(Collectors.toList())
 		);
 	}
 
-	private NoticeDto generateNoticeDtoFromFactory(final User user, final Notice notice) {
-		return noticeGenerateFactory.generateNoticeDtoForApi(
-			notice,
-			followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent()
-		);
+	private NoticeDto generateNoticeDtoFrom(final User user, final Notice notice) {
+		return builder()
+			.image(noticeContentProcessor.getImage(notice))
+			.title(noticeContentProcessor.getTitle(notice))
+			.isFollow(followRepository.findByFromUserAndToUser(notice.getFromUser(), user).isPresent())
+			.notice(notice)
+			.build();
+	}
+
+	private NoticeFcmDto generateNoticeDtoForFcm(final Notice notice) {
+		return NoticeFcmDto.builder()
+			.userId(notice.getUserId())
+			.title(noticeContentProcessor.getTitle(notice))
+			.content(notice.getContent())
+			.contentId(notice.getContentId())
+			.type(notice.getType())
+			.build();
 	}
 
 }

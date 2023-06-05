@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,13 +35,5 @@ public class NoticeDto {
 		this.isFollow = isFollow;
 		this.createdAt = notice.getCreatedAt();
 		this.noticeType = notice.getType();
-	}
-
-	@Getter
-	@AllArgsConstructor
-	public static class NoticeBaseInfo {
-		private final String image;
-		private final String title;
-
 	}
 }
