@@ -39,11 +39,11 @@ public abstract class OIDCVerifierTemplate {
 				.parseClaimsJws(idToken)
 				.getBody();
 
-			return new OIDCUserInfo(
-				getOAuthType(),
-				body.getSubject(),
-				body.get("email", String.class)
-			);
+			return OIDCUserInfo.builder()
+				.oAuthType(getOAuthType())
+				.subject(body.getSubject())
+				.email(body.get("email", String.class))
+				.build();
 		} catch (ExpiredJwtException e) {
 			throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | JwtException e) {
