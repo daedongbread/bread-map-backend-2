@@ -47,7 +47,7 @@ import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReport;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportRepository;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
-import com.depromeet.breadmapbackend.domain.notice.NoticableEvent;
+import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
@@ -204,7 +204,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		}
 		if (pioneer != null && bakery.getStatus().equals(BakeryStatus.POSTING))
 			eventPublisher.publishEvent(
-				NoticableEvent.builder()
+				NoticeEvent.builder()
 					.isAlarmOn(pioneer.getIsAlarmOn())
 					.userId(pioneer.getId())
 					.fromUserId(pioneer.getId())
@@ -269,7 +269,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		} else if (pioneer != null && !pioneer.equals(beforePioneer)) {
 			bakery.updatePioneer(pioneer);
 			eventPublisher.publishEvent(
-				NoticableEvent.builder()
+				NoticeEvent.builder()
 					.isAlarmOn(pioneer.getIsAlarmOn())
 					.userId(pioneer.getId())
 					.fromUserId(pioneer.getId())

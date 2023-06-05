@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class NoticableEvent {
+public class NoticeEvent {
 
 	private final Boolean isAlarmOn;
 	private final Long userId;
@@ -14,7 +14,7 @@ public class NoticableEvent {
 	private final NoticeType noticeType;
 
 	@Builder
-	public NoticableEvent(
+	public NoticeEvent(
 		final Boolean isAlarmOn,
 		final Long userId,
 		final Long fromUserId,

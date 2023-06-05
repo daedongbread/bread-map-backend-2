@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticableEvent;
+import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
@@ -55,7 +55,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 				.build();
 
 			eventPublisher.publishEvent(
-				NoticableEvent.builder()
+				NoticeEvent.builder()
 					.isAlarmOn(user.getIsAlarmOn())
 					.userId(review.getUser().getId())
 					.fromUserId(user.getId())
@@ -76,7 +76,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 				.build();
 
 			eventPublisher.publishEvent(
-				NoticableEvent.builder()
+				NoticeEvent.builder()
 					.isAlarmOn(user.getIsAlarmOn())
 					.userId(parentComment.getUser().getId())
 					.fromUserId(user.getId())
@@ -146,7 +146,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
 
 		eventPublisher.publishEvent(
-			NoticableEvent.builder()
+			NoticeEvent.builder()
 				.isAlarmOn(user.getIsAlarmOn())
 				.userId(reviewComment.getUser().getId())
 				.fromUserId(user.getId())

@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticableEvent;
+import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -40,7 +40,7 @@ public class UserFollowServiceImpl implements UserFollowService {
 		Follow follow = Follow.builder().fromUser(fromUser).toUser(toUser).build();
 		followRepository.save(follow);
 		eventPublisher.publishEvent(
-			NoticableEvent.builder()
+			NoticeEvent.builder()
 				.isAlarmOn(toUser.getIsAlarmOn())
 				.userId(toUser.getId())
 				.fromUserId(fromUser.getId())

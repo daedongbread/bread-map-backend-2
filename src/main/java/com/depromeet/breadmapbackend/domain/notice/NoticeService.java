@@ -6,7 +6,7 @@ import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 public interface NoticeService {
 	//    void addNoticeToken(String oAuthId, NoticeTokenRequest request);
 	//    void deleteNoticeToken(NoticeTokenDeleteEvent event);
-	void addNotice(final NoticableEvent noticableEvent);
+	void addNotice(final NoticeEvent noticeEvent);
 
 	PageResponseDto<NoticeDto> getNoticeList(String oAuthId, NoticeDayType type, Long lastId, int page);
 }

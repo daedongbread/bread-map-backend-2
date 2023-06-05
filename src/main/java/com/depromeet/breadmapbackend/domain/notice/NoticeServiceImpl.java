@@ -37,11 +37,11 @@ public class NoticeServiceImpl implements NoticeService {
 	@Async("notice")
 	@TransactionalEventListener
 	@Transactional()
-	public void addNotice(final NoticableEvent noticableEvent) {
+	public void addNotice(final NoticeEvent noticeEvent) {
 
-		final Notice savedNotice = noticeRepository.save(noticableEvent.toNotice());
+		final Notice savedNotice = noticeRepository.save(noticeEvent.toNotice());
 
-		if (noticableEvent.getIsAlarmOn()) {
+		if (noticeEvent.getIsAlarmOn()) {
 			try {
 				fcmService.sendMessageTo(generateNoticeDtoForFcm(savedNotice));
 			} catch (FirebaseMessagingException e) {

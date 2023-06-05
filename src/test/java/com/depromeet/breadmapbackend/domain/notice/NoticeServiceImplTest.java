@@ -34,7 +34,7 @@ class NoticeServiceImplTest extends NoticeServiceTest {
 	@Test
 	@Sql("classpath:notice-test-data.sql")
 	void 알림_저장_성공_테스트() throws Exception {
-		final NoticableEvent event = NoticableEvent.builder()
+		final NoticeEvent event = NoticeEvent.builder()
 			.isAlarmOn(false)
 			.userId(112L)
 			.fromUserId(111L)
