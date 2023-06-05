@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
+import com.depromeet.breadmapbackend.domain.user.User;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,8 +9,8 @@ import lombok.Getter;
 public class NoticeEvent {
 
 	private final Boolean isAlarmOn;
-	private final Long userId;
-	private final Long fromUserId;
+	private final User user;
+	private final User fromUser;
 	private final Long contentId;
 	private final String content;
 	private final NoticeType noticeType;
@@ -16,16 +18,16 @@ public class NoticeEvent {
 	@Builder
 	public NoticeEvent(
 		final Boolean isAlarmOn,
-		final Long userId,
-		final Long fromUserId,
+		final User user,
+		final User fromUser,
 		final Long contentId,
 		final String content,
 		final NoticeType noticeType
 	) {
 
 		this.isAlarmOn = isAlarmOn;
-		this.userId = userId;
-		this.fromUserId = fromUserId;
+		this.user = user;
+		this.fromUser = fromUser;
 		this.contentId = contentId;
 		this.content = content;
 		this.noticeType = noticeType;
@@ -33,8 +35,8 @@ public class NoticeEvent {
 
 	public Notice toNotice() {
 		return Notice.builder()
-			.userId(this.userId)
-			.fromUserId(this.fromUserId)
+			.user(this.user)
+			.fromUser(this.fromUser)
 			.contentId(this.contentId)
 			.content(this.content)
 			.type(this.noticeType)

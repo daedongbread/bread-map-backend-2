@@ -57,8 +57,8 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 			eventPublisher.publishEvent(
 				NoticeEvent.builder()
 					.isAlarmOn(user.getIsAlarmOn())
-					.userId(review.getUser().getId())
-					.fromUserId(user.getId())
+					.user(review.getUser())
+					.fromUser(user)
 					.contentId(review.getId())
 					.content(review.getContent())
 					.noticeType(NoticeType.REVIEW_COMMENT)
@@ -78,8 +78,8 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 			eventPublisher.publishEvent(
 				NoticeEvent.builder()
 					.isAlarmOn(user.getIsAlarmOn())
-					.userId(parentComment.getUser().getId())
-					.fromUserId(user.getId())
+					.user(parentComment.getUser())
+					.fromUser(user)
 					.contentId(parentComment.getId())
 					.content(parentComment.getContent())
 					.noticeType(NoticeType.RECOMMENT)
@@ -148,8 +148,8 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		eventPublisher.publishEvent(
 			NoticeEvent.builder()
 				.isAlarmOn(user.getIsAlarmOn())
-				.userId(reviewComment.getUser().getId())
-				.fromUserId(user.getId())
+				.user(reviewComment.getUser())
+				.fromUser(user)
 				.contentId(reviewComment.getId())
 				.content(reviewComment.getContent())
 				.noticeType(NoticeType.REVIEW_COMMENT_LIKE)

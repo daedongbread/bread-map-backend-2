@@ -38,7 +38,6 @@ public class NoticeServiceImpl implements NoticeService {
 	@TransactionalEventListener
 	@Transactional()
 	public void addNotice(final NoticeEvent noticeEvent) {
-
 		final Notice savedNotice = noticeRepository.save(noticeEvent.toNotice());
 
 		if (noticeEvent.getIsAlarmOn()) {
@@ -77,7 +76,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 	private NoticeFcmDto generateNoticeDtoForFcm(final Notice notice) {
 		return NoticeFcmDto.builder()
-			.userId(notice.getUserId())
+			.userId(notice.getUser().getId())
 			.title(noticeContentProcessor.getTitle(notice))
 			.content(notice.getContent())
 			.contentId(notice.getContentId())

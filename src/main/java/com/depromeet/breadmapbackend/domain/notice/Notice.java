@@ -30,18 +30,13 @@ public class Notice extends BaseEntity {
 	private Long id;
 
 	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name = "user_id")
-	private Long userId;
-
 	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "fromUser_id", insertable = false, updatable = false)
+	@JoinColumn(name = "fromUser_id")
 	private User fromUser;
 
-	@Column(name = "fromUser_id")
-	private Long fromUserId;
 	//    /*
 	//     알림 주 내용
 	//     */
@@ -64,9 +59,9 @@ public class Notice extends BaseEntity {
 	private NoticeType type;
 
 	@Builder
-	public Notice(Long userId, Long fromUserId, Long contentId, String content, NoticeType type) {
-		this.userId = userId;
-		this.fromUserId = fromUserId;
+	public Notice(User user, User fromUser, Long contentId, String content, NoticeType type) {
+		this.user = user;
+		this.fromUser = fromUser;
 		this.contentId = contentId;
 		this.content = content;
 		this.type = type;

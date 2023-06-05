@@ -42,8 +42,8 @@ public class UserFollowServiceImpl implements UserFollowService {
 		eventPublisher.publishEvent(
 			NoticeEvent.builder()
 				.isAlarmOn(toUser.getIsAlarmOn())
-				.userId(toUser.getId())
-				.fromUserId(fromUser.getId())
+				.user(toUser)
+				.fromUser(fromUser)
 				.contentId(fromUser.getId())
 				.noticeType(NoticeType.FOLLOW)
 				.build()

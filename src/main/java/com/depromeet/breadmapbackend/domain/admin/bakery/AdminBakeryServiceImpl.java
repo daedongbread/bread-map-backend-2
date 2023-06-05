@@ -206,8 +206,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			eventPublisher.publishEvent(
 				NoticeEvent.builder()
 					.isAlarmOn(pioneer.getIsAlarmOn())
-					.userId(pioneer.getId())
-					.fromUserId(pioneer.getId())
+					.user(pioneer)
+					.fromUser(pioneer)
 					.contentId(bakery.getId())
 					.content(bakery.getName())
 					.noticeType(NoticeType.ADD_BAKERY)
@@ -271,8 +271,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			eventPublisher.publishEvent(
 				NoticeEvent.builder()
 					.isAlarmOn(pioneer.getIsAlarmOn())
-					.userId(pioneer.getId())
-					.fromUserId(pioneer.getId())
+					.user(pioneer)
+					.fromUser(pioneer)
 					.contentId(bakery.getId())
 					.content(bakery.getName())
 					.noticeType(NoticeType.ADD_BAKERY)

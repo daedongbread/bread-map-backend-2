@@ -38,8 +38,8 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
 		eventPublisher.publishEvent(
 			NoticeEvent.builder()
 				.isAlarmOn(user.getIsAlarmOn())
-				.userId(review.getUser().getId())
-				.fromUserId(user.getId())
+				.user(review.getUser())
+				.fromUser(user)
 				.contentId(review.getId())
 				.content(review.getContent())
 				.noticeType(NoticeType.REVIEW_LIKE)

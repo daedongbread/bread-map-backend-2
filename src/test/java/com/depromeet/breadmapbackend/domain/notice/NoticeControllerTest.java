@@ -46,15 +46,15 @@ class NoticeControllerTest extends ControllerTest {
 		followRepository.save(follow);
 
 		Notice notice1 = Notice.builder()
-			.userId(savedUser.getId())
-			.fromUserId(savedFromUser.getId())
+			.user(savedUser)
+			.fromUser(savedFromUser)
 			.contentId(1L)
 			.content("content1")
 			.type(NoticeType.REVIEW_COMMENT)
 			.build();
 		Notice notice2 = Notice.builder()
-			.userId(savedUser.getId())
-			.fromUserId(savedFromUser.getId())
+			.user(savedUser)
+			.fromUser(savedFromUser)
 			.type(NoticeType.FOLLOW)
 			.build();
 		noticeRepository.save(notice1);
