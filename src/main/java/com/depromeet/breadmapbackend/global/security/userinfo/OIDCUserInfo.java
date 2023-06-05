@@ -1,18 +1,21 @@
 package com.depromeet.breadmapbackend.global.security.userinfo;
 
-import io.jsonwebtoken.Claims;
+import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 
-public abstract class OIDCUserInfo {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-    protected Claims body;
-    public OIDCUserInfo(Claims body) {
-        this.body = body;
-    }
-    public Claims getBody() {
-        return body;
-    }
-    public abstract String getOAuthId();
-//    public abstract String getNickName();
-    public abstract String getEmail();
-//    public abstract String getImage();
+@Getter
+@AllArgsConstructor
+@Builder
+public class OIDCUserInfo {
+
+	private final OAuthType oAuthType;
+	private final String subject;
+	private final String email;
+
+	public String getOAuthId() {
+		return this.oAuthType + "_" + this.subject;
+	}
 }
