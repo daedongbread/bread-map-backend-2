@@ -4,65 +4,20 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
-import com.depromeet.breadmapbackend.domain.notice.content.AddBakeryNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.AddProductNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.FlagBakeryAdminNoticeNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.FlagBakeryChangeNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.FollowNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.RecommentContent;
-import com.depromeet.breadmapbackend.domain.notice.content.ReviewCommentLikeNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.ReviewCommentNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.ReviewLikeNoticeContent;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
-import com.depromeet.breadmapbackend.global.infra.AsyncConfig;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomFirebaseProperties;
-import com.depromeet.breadmapbackend.utils.TestConfig;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@DataJpaTest
-@Import({
-	NoticeServiceImpl.class,
-	NoticeQueryRepository.class,
-	FcmService.class,
-	NoticeContentProcessorImpl.class,
-	TestConfig.class,
-	AsyncConfig.class,
-	AddBakeryNoticeContent.class,
-	AddProductNoticeContent.class,
-	FlagBakeryAdminNoticeNoticeContent.class,
-	FlagBakeryChangeNoticeContent.class,
-	FollowNoticeContent.class,
-	RecommentContent.class,
-	ReviewCommentLikeNoticeContent.class,
-	ReviewCommentNoticeContent.class,
-	ReviewLikeNoticeContent.class
-})
-@EnableConfigurationProperties({
-	CustomFirebaseProperties.class,
-	CustomAWSS3Properties.class
-})
-class NoticeServiceImplTest {
+class NoticeServiceImplTest extends NoticeServiceTest {
 
 	@Autowired
 	private NoticeServiceImpl sut;
 	@Autowired
 	private CustomAWSS3Properties customAWSS3Properties;
-	@PersistenceContext
-	EntityManager em;
 
 	@Test
 	@Sql("classpath:notice-test-data.sql")
