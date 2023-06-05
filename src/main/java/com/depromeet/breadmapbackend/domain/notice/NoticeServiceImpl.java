@@ -33,6 +33,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Async("notice")
 	@TransactionalEventListener
+	@Transactional()
 	public void addNotice(final NoticableEvent noticableEvent) {
 
 		final Notice savedNotice = noticeRepository.save(noticableEvent.toNotice());

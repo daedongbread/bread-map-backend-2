@@ -10,20 +10,16 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class DefaultNoticeGenerateFactory implements NoticeGenerateFactory {
 
 	private final CustomAWSS3Properties customAwss3Properties;
 
-	public DefaultNoticeGenerateFactory(final CustomAWSS3Properties customAwss3Properties) {
-		this.customAwss3Properties = customAwss3Properties;
-	}
-
 	@Override
-	public NoticeDto generateNoticeDtoForApi(
-		final Notice notice,
-		final boolean isFollow
-	) {
+	public NoticeDto generateNoticeDtoForApi(final Notice notice, final boolean isFollow) {
 		try {
 			final NoticeBaseInfo noticeBaseInfo = getNoticeBaseInfo(notice);
 			return builder()

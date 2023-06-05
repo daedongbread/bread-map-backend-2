@@ -82,7 +82,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 					.fromUserId(user.getId())
 					.contentId(parentComment.getId())
 					.content(parentComment.getContent())
-					.noticeType(NoticeType.REVIEW_COMMENT)
+					.noticeType(NoticeType.RECOMMENT)
 					.build()
 			);
 		}

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,13 +39,10 @@ public class NoticeDto {
 	}
 
 	@Getter
+	@AllArgsConstructor
 	public static class NoticeBaseInfo {
 		private final String image;
 		private final String title;
 
-		public NoticeBaseInfo(final String image, final String title) {
-			this.image = image;
-			this.title = title;
-		}
 	}
 }

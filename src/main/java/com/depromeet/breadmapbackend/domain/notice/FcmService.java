@@ -27,22 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-/*
-https://koharinn.tistory.com/588
-https://velog.io/@co323co/SpringBoot-Push-Server#%EC%97%AC%EB%9F%AC%EB%AA%85-%EA%B8%B0%EA%B8%B0%EA%B7%B8%EB%A3%B9
-https://velog.io/@2yeseul/Spring-Boot%EC%97%90-FCM-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
-https://backtony.github.io/spring/2021-08-20-spring-fcm-1/#step-1---firebase-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0
-https://kerobero.tistory.com/38
-==
-https://team-platform.tistory.com/23
-
- */
 public class FcmService {
 	private final NoticeTokenRepository noticeTokenRepository;
 	private final CustomFirebaseProperties customFirebaseProperties;
 
-	public void sendMessageTo(NoticeFcmDto dto) throws
-		FirebaseMessagingException {
+	public void sendMessageTo(NoticeFcmDto dto) throws FirebaseMessagingException {
 
 		List<String> tokens = noticeTokenRepository.findByUser(dto.getUserId())
 			.stream().map(NoticeToken::getDeviceToken).collect(Collectors.toList());
