@@ -22,8 +22,8 @@ public class UserCacheRepository {
 		userRedisTemplate.opsForValue().setIfAbsent(key, user, USER_CACHE_TTL);
 	}
 
-	public Optional<User> getUser(String userName) {
-		String key = getKey(userName);
+	public Optional<User> getUser(String oAuthId) {
+		String key = getKey(oAuthId);
 		User user = userRedisTemplate.opsForValue().get(key);
 		return Optional.ofNullable(user);
 	}
