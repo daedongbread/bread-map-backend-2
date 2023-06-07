@@ -38,8 +38,10 @@ public class UserCacheRepository {
 	public Optional<User> getUser(final String oAuthId) {
 
 		try {
-			final Optional<String> userInString = Optional.ofNullable(redisTemplate.opsForValue().get(getKey(oAuthId)));
-			return userInString.isPresent() ? Optional.of(objectMapper.readValue(userInString.get(), User.class)) :
+			final Optional<String> userInString =
+				Optional.ofNullable(redisTemplate.opsForValue().get(getKey(oAuthId)));
+			return userInString.isPresent() ?
+				Optional.of(objectMapper.readValue(userInString.get(), User.class)) :
 				Optional.empty();
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
