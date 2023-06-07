@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			final User savedUser = userRepository.findByOAuthId(oAuthId)
 				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-			userCacheRepository.setUser(savedUser);
+			userCacheRepository.setIfAbsent(savedUser);
 			return savedUser;
 		}
 	}
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 		if (request.getImage() != null)
 			me.getUserInfo().updateImage(request.getImage());
 	}
- 
+
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public AlarmDto getAlarmStatus(String oAuthId) {
 		User user = userRepository.findByOAuthId(oAuthId)

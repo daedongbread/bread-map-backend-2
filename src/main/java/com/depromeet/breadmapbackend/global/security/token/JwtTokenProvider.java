@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -19,6 +20,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomJWTKeyProperties;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -94,34 +96,6 @@ public class JwtTokenProvider {
 			.accessTokenExpiredDate(accessTokenExpiredDate).build();
 	}
 
-	public JwtToken createTestJwtToken(String oAuthId, String role) {
-		Long id = adminRepository.findByEmail(oAuthId)
-			.orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND))
-			.getId();
-
-		Claims claims = Jwts.claims().setSubject(oAuthId);
-		claims.put(ROLES, role);
-
-		Date now = new Date();
-		String accessToken = Jwts.builder()
-			.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-			.setClaims(claims)
-			.setIssuedAt(now)
-			.setExpiration(new Date(System.currentTimeMillis() + 60 * 1000L))
-			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
-			.compact();
-
-		String refreshToken = Jwts.builder()
-			.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-			.setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiredDate))
-			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
-			.compact();
-
-		return JwtToken.builder().userId(id)
-			.accessToken(accessToken).refreshToken(refreshToken)
-			.accessTokenExpiredDate(accessTokenExpiredDate).build();
-	}
-
 	// 만료된 토큰이거나 다른 에러가 발생한다면 false
 	public boolean verifyToken(String token) {
 		try {
@@ -146,10 +120,6 @@ public class JwtTokenProvider {
 			.parseClaimsJws(token).getBody();
 	}
 
-	public String getSubject(String token) {
-		return parseClaims(token).getSubject();
-	}
-
 	public Authentication getAuthentication(String token) {
 		if (!StringUtils.hasText(token))
 			throw new DaedongException(DaedongStatus.TOKEN_INVALID_EXCEPTION);
@@ -160,10 +130,9 @@ public class JwtTokenProvider {
 			throw new DaedongException(DaedongStatus.CUSTOM_AUTHENTICATION_ENTRYPOINT);
 		}
 
-		final User user = userService.loadUserByOAuthId(claims.getSubject());
-
-		return new UsernamePasswordAuthenticationToken(user, token,
-			List.of(new SimpleGrantedAuthority(user.getRoleType().getCode())));
+		final CurrentUserInfo currentUserInfo = getCurrentUserInfoFrom(claims);
+		return new UsernamePasswordAuthenticationToken(currentUserInfo, token,
+			List.of(new SimpleGrantedAuthority(currentUserInfo.getRoleType().getCode())));
 	}
 
 	public Long getRefreshTokenExpiredDate() {
@@ -176,5 +145,21 @@ public class JwtTokenProvider {
 		// 현재 시간
 		Long now = new Date(System.currentTimeMillis()).getTime();
 		return (expiration.getTime() - now);
+	}
+
+	private CurrentUserInfo getCurrentUserInfoFrom(Claims claims) {
+		final String role = claims.get(ROLES).toString();
+		if (role.equals(RoleType.ADMIN.getCode())) {
+			final Admin admin = adminRepository.findByEmail(claims.getSubject())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
+			return CurrentUserInfo.of(admin);
+
+		} else if (role.equals(RoleType.USER.getCode())) {
+			final User user = userService.loadUserByOAuthId(claims.getSubject());
+			return CurrentUserInfo.of(user);
+
+		} else {
+			throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
+		}
 	}
 }

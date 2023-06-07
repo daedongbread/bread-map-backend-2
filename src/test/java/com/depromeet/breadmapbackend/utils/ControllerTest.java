@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.utils;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -182,8 +182,8 @@ public abstract class ControllerTest {
 	@Autowired
 	protected CustomAWSS3Properties customAWSS3Properties;
 
-	@AfterEach
-	void afterEach() {
+	@BeforeEach
+	void beforeEach() {
 		redisTemplate.getConnectionFactory().getConnection().flushAll();
 	}
 
