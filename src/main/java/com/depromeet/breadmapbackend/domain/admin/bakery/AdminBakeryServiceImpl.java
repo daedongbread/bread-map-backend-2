@@ -150,16 +150,34 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
 		SgisTokenDto token = sgisClient.getToken(customSGISKeyProperties.getKey(), customSGISKeyProperties.getSecret());
-		SgisGeocodeDto geocode = sgisClient.getGeocode(token.getResult().getAccessToken(), address);
-		if (geocode.getResult() == null)
-			throw new FeignException();
-		SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
-			5179, 4326, geocode.getResult().getResultdata().get(0).getX(),
-			geocode.getResult().getResultdata().get(0).getY());
+		SgisGeocodeDto geocode = getGeocode(token.getResult().getAccessToken(), address);
+		SgisTranscoordDto transcoord = getTranscoord(
+				token.getResult().getAccessToken(),
+				geocode.getResult().getResultdata().get(0).getX(),
+				geocode.getResult().getResultdata().get(0).getY()
+		);
 
 		Double latitude = transcoord.getResult().getPosY();
 		Double longitude = transcoord.getResult().getPosX();
 		return BakeryLocationDto.builder().latitude(latitude).longitude(longitude).build();
+	}
+
+	private SgisGeocodeDto getGeocode(String accessToken, String address) {
+		SgisGeocodeDto geocode = sgisClient.getGeocode(accessToken, address);
+		if (geocode.getResult() == null)
+			throw new FeignException();
+		return geocode;
+	}
+
+	private SgisTranscoordDto getTranscoord(String accessToken, String posX, String posY) {
+		for (final Integer dst : List.of(customSGISKeyProperties.getDst1(), customSGISKeyProperties.getDst2())) {
+			SgisTranscoordDto transcoord =
+					sgisClient.getTranscoord(accessToken, customSGISKeyProperties.getSrc(), dst, posX, posY);
+
+			if (transcoord.getResult() != null)
+				return transcoord;
+		}
+		throw new FeignException();
 	}
 
 	@Transactional(rollbackFor = Exception.class)
