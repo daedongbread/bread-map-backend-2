@@ -26,22 +26,6 @@ spring:
       bakery-review: ${REDIS_KEY_BAKERY_REVIEW}
       product-review: ${REDIS_KEY_PRODUCT_REVIEW}
       user-review: ${REDIS_KEY_USER_REVIEW}
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_ID}
-            client-secret: ${GOOGLE_SECRET}
-            redirect-uri: ${GOOGLE_REDIRECT_URL}
-          kakao:
-            client-id: ${KAKAO_ID}
-            client-secret: ${KAKAO_SECRET}
-            redirect-uri: ${KAKAO_REDIRECT_URL}
-          apple:
-            client-id: ${APPLE_ID}
-            client-secret: ${APPLE_SECRET}
-            redirect-uri: ${APPLE_REDIRECT_URI}
 
 oauth:
   google: ${GOOGLE_ID}
@@ -75,5 +59,7 @@ firebase:
       review: ${FIREBASE_MESSAGE_PATH_REVIEW}
 
 sgis:
+  src: ${SGIS_SRC}
+  dst: ${SGIS_DST}
   key: ${SGIS_KEY}
   secret: ${SGIS_SECRET}

@@ -154,8 +154,10 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		if (geocode.getResult() == null)
 			throw new FeignException();
 		SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
-			5179, 4326, geocode.getResult().getResultdata().get(0).getX(),
+			customSGISKeyProperties.getSrc(), customSGISKeyProperties.getDst(), geocode.getResult().getResultdata().get(0).getX(),
 			geocode.getResult().getResultdata().get(0).getY());
+		if (transcoord.getResult() == null)
+			throw new FeignException();
 
 		Double latitude = transcoord.getResult().getPosY();
 		Double longitude = transcoord.getResult().getPosX();
