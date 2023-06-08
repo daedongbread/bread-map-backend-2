@@ -170,28 +170,14 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	}
 
 	private SgisTranscoordDto getTranscoord(String accessToken, String posX, String posY) {
-		SgisTranscoordDto transcoord = sgisClient.getTranscoord(
-				accessToken,
-				customSGISKeyProperties.getSrc(),
-				customSGISKeyProperties.getDst1(),
-				posX,
-				posY
-		);
+		for (final Integer dst : List.of(customSGISKeyProperties.getDst1(), customSGISKeyProperties.getDst2())) {
+			SgisTranscoordDto transcoord =
+					sgisClient.getTranscoord(accessToken, customSGISKeyProperties.getSrc(), dst, posX, posY);
 
-		if (transcoord.getResult() == null) {
-			transcoord = sgisClient.getTranscoord(
-					accessToken,
-					customSGISKeyProperties.getSrc(),
-					customSGISKeyProperties.getDst2(),
-					posX,
-					posY
-			);
+			if (transcoord.getResult() != null)
+				return transcoord;
 		}
-		else return transcoord;
-
-		if (transcoord.getResult() == null)
-			throw new FeignException();
-		return transcoord;
+		throw new FeignException();
 	}
 
 	@Transactional(rollbackFor = Exception.class)
