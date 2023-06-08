@@ -37,7 +37,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ErrorResponse defaultException(HttpServletRequest request, Exception e) {
-        log.info(String.valueOf(e));
+        log.error(String.valueOf(e));
         e.printStackTrace();
         return new ErrorResponse(500, "unknown error");
     }
