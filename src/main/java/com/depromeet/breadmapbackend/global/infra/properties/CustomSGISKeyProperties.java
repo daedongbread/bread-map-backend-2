@@ -18,7 +18,9 @@ public class CustomSGISKeyProperties {
     @NotNull(message = "해당값은 필수 값입니다")
     private final Integer src;
     @NotNull(message = "해당값은 필수 값입니다")
-    private final Integer dst;
+    private final Integer dst1;
+    @NotNull(message = "해당값은 필수 값입니다")
+    private final Integer dst2;
     @NotBlank(message = "해당값은 필수 값입니다")
     private final String key;
     @NotBlank(message = "해당값은 필수 값입니다")

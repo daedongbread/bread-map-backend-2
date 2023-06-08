@@ -60,6 +60,7 @@ firebase:
 
 sgis:
   src: ${SGIS_SRC}
-  dst: ${SGIS_DST}
+  dst1: ${SGIS_DST1}
+  dst2: ${SGIS_DST2}
   key: ${SGIS_KEY}
   secret: ${SGIS_SECRET}

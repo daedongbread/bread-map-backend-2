@@ -150,18 +150,48 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
 		SgisTokenDto token = sgisClient.getToken(customSGISKeyProperties.getKey(), customSGISKeyProperties.getSecret());
-		SgisGeocodeDto geocode = sgisClient.getGeocode(token.getResult().getAccessToken(), address);
-		if (geocode.getResult() == null)
-			throw new FeignException();
-		SgisTranscoordDto transcoord = sgisClient.getTranscoord(token.getResult().getAccessToken(),
-			customSGISKeyProperties.getSrc(), customSGISKeyProperties.getDst(), geocode.getResult().getResultdata().get(0).getX(),
-			geocode.getResult().getResultdata().get(0).getY());
-		if (transcoord.getResult() == null)
-			throw new FeignException();
+		SgisGeocodeDto geocode = getGeocode(token.getResult().getAccessToken(), address);
+		SgisTranscoordDto transcoord = getTranscoord(
+				token.getResult().getAccessToken(),
+				geocode.getResult().getResultdata().get(0).getX(),
+				geocode.getResult().getResultdata().get(0).getY()
+		);
 
 		Double latitude = transcoord.getResult().getPosY();
 		Double longitude = transcoord.getResult().getPosX();
 		return BakeryLocationDto.builder().latitude(latitude).longitude(longitude).build();
+	}
+
+	private SgisGeocodeDto getGeocode(String accessToken, String address) {
+		SgisGeocodeDto geocode = sgisClient.getGeocode(accessToken, address);
+		if (geocode.getResult() == null)
+			throw new FeignException();
+		return geocode;
+	}
+
+	private SgisTranscoordDto getTranscoord(String accessToken, String posX, String posY) {
+		SgisTranscoordDto transcoord = sgisClient.getTranscoord(
+				accessToken,
+				customSGISKeyProperties.getSrc(),
+				customSGISKeyProperties.getDst1(),
+				posX,
+				posY
+		);
+
+		if (transcoord.getResult() == null) {
+			transcoord = sgisClient.getTranscoord(
+					accessToken,
+					customSGISKeyProperties.getSrc(),
+					customSGISKeyProperties.getDst2(),
+					posX,
+					posY
+			);
+		}
+		else return transcoord;
+
+		if (transcoord.getResult() == null)
+			throw new FeignException();
+		return transcoord;
 	}
 
 	@Transactional(rollbackFor = Exception.class)

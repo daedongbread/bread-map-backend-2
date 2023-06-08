@@ -106,6 +106,7 @@ firebase:
 
 sgis:
   src: 5179
-  dst: 4166
+  dst1: 4326
+  dst2: 4166
   key: 19d650af0ba14aa3a02c
   secret: 3dfe3c41a43140ba8e2d
