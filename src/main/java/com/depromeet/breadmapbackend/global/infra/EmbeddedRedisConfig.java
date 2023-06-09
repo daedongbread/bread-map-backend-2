@@ -1,13 +1,12 @@
 package com.depromeet.breadmapbackend.global.infra;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
 
@@ -16,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import redis.embedded.RedisServer;
 
 @Slf4j
-@Profile({"default", "local" }) // TODO
+@Profile({"default", "local"}) // TODO
 @Configuration
 @RequiredArgsConstructor
 public class EmbeddedRedisConfig {
@@ -25,9 +24,12 @@ public class EmbeddedRedisConfig {
 	private RedisServer redisServer;
 
 	@PostConstruct
-	public void redisServer() {
-		log.info("Connect to Embedded-Redis");
-		redisServer = new RedisServer(customRedisProperties.getPort());
+	public void redisServer() throws IOException {
+		log.info("Connect to Embedded-Redis1");
+		redisServer = RedisServer.builder()
+			.port(customRedisProperties.getPort())
+			.setting("maxmemory 128M")
+			.build();
 		redisServer.start();
 	}
 
@@ -36,14 +38,5 @@ public class EmbeddedRedisConfig {
 		if (redisServer != null && redisServer.isActive()) {
 			redisServer.stop();
 		}
-	}
-
-	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		log.info("Connect to Redis");
-		return new LettuceConnectionFactory(
-			customRedisProperties.getHost(),
-			customRedisProperties.getPort()
-		);  // Lettuce 사용
 	}
 }
