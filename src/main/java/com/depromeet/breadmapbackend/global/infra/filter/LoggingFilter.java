@@ -40,7 +40,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 
-		log.info("Request Ended --> [TRX_ID] : {} , [REQUEST_TIME] : {} ms", MDC.get(TRX_ID.name()),
+		log.info("Request Ended ==> [TRX_ID] : {} , [REQUEST_TIME] : {} ms", MDC.get(TRX_ID.name()),
 			MDC.get(TRX_TIME.name()) != null ?
 				(System.currentTimeMillis() - Long.parseLong(MDC.get(TRX_TIME.name()))) :
 				0
@@ -53,8 +53,9 @@ public class LoggingFilter extends OncePerRequestFilter {
 		// [Method] : endpoint
 		log.info("Request Started ==> [TRX_ID] : {}  , [ {} ] : {}",
 			MDC.get(TRX_ID.name()),
-			request.getRequestURI(),
-			request.getMethod()
+			request.getMethod(),
+			request.getRequestURI()
+
 		);
 		// query :
 		if (request.getQueryString() != null)
