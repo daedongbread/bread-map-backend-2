@@ -13,7 +13,6 @@ import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
-import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.domain.user.UserService;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -153,11 +152,8 @@ public class JwtTokenProvider {
 			final Admin admin = adminRepository.findByEmail(claims.getSubject())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND));
 			return CurrentUserInfo.of(admin);
-
 		} else if (role.equals(RoleType.USER.getCode())) {
-			final User user = userService.loadUserByOAuthId(claims.getSubject());
-			return CurrentUserInfo.of(user);
-
+			return userService.loadUserInfoByOAuthId(claims.getSubject());
 		} else {
 			throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
 		}

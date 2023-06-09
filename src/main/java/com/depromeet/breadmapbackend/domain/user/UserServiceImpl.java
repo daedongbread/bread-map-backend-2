@@ -14,6 +14,7 @@ import com.depromeet.breadmapbackend.domain.user.dto.UpdateNickNameRequest;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,15 +28,17 @@ public class UserServiceImpl implements UserService {
 	private final UserCacheRepository userCacheRepository;
 
 	@Override
-	public User loadUserByOAuthId(final String oAuthId) {
-		final Optional<User> cachedUser = userCacheRepository.getUser(oAuthId);
+	public CurrentUserInfo loadUserInfoByOAuthId(final String oAuthId) {
+		final Optional<CurrentUserInfo> cachedUser = userCacheRepository.getUser(oAuthId);
 		if (cachedUser.isPresent()) {
 			return cachedUser.get();
 		} else {
-			final User savedUser = userRepository.findByOAuthId(oAuthId)
-				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-			userCacheRepository.setIfAbsent(savedUser);
-			return savedUser;
+			final CurrentUserInfo userInfo =
+				CurrentUserInfo.of(userRepository.findByOAuthId(oAuthId)
+					.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
+				);
+			userCacheRepository.setIfAbsent(userInfo);
+			return userInfo;
 		}
 	}
 

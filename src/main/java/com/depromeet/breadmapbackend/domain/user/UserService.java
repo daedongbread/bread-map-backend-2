@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.user.dto.AlarmDto;
 import com.depromeet.breadmapbackend.domain.user.dto.NoticeTokenRequest;
 import com.depromeet.breadmapbackend.domain.user.dto.ProfileDto;
 import com.depromeet.breadmapbackend.domain.user.dto.UpdateNickNameRequest;
+import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 public interface UserService {
 	ProfileDto profile(String oAuthId, Long userId);
@@ -15,5 +16,5 @@ public interface UserService {
 
 	AlarmDto alarmChange(String oAuthId, NoticeTokenRequest request);
 
-	User loadUserByOAuthId(String oAuthId);
+	CurrentUserInfo loadUserInfoByOAuthId(String oAuthId);
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,12 +22,12 @@ public class UserCacheRepository {
 	private final ObjectMapper objectMapper;
 	private final static Duration USER_CACHE_TTL = Duration.ofDays(2);
 
-	public Boolean setIfAbsent(final User user) {
+	public Boolean setIfAbsent(final CurrentUserInfo userInfo) {
 		try {
 			return Boolean.TRUE.equals(
 				redisTemplate.opsForValue().setIfAbsent(
-					getKey(user.getOAuthId()),
-					objectMapper.writeValueAsString(user),
+					getKey(userInfo.getDelimiterValue()),
+					objectMapper.writeValueAsString(userInfo),
 					USER_CACHE_TTL
 				)
 			);
@@ -35,13 +36,13 @@ public class UserCacheRepository {
 		}
 	}
 
-	public Optional<User> getUser(final String oAuthId) {
+	public Optional<CurrentUserInfo> getUser(final String oAuthId) {
 
 		try {
 			final Optional<String> userInString =
 				Optional.ofNullable(redisTemplate.opsForValue().get(getKey(oAuthId)));
 			return userInString.isPresent() ?
-				Optional.of(objectMapper.readValue(userInString.get(), User.class)) :
+				Optional.of(objectMapper.readValue(userInString.get(), CurrentUserInfo.class)) :
 				Optional.empty();
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
