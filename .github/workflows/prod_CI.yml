@@ -3,6 +3,10 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/pull_request_template.md'
+      - 'README.md'
 
 jobs:
   backend:
