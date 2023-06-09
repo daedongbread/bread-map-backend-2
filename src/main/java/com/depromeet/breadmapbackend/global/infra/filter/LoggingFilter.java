@@ -40,7 +40,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 
-		log.info("Request Ended ==> [TRX_ID] : {} , [REQUEST_TIME] : {} ms", MDC.get(TRX_ID.name()),
+		log.info("Request Ended ==>  [REQUEST_TIME] : {} ms",
 			MDC.get(TRX_TIME.name()) != null ?
 				(System.currentTimeMillis() - Long.parseLong(MDC.get(TRX_TIME.name()))) :
 				0
@@ -51,8 +51,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 
 	private HttpServletRequest requestLog(HttpServletRequest request) throws IOException {
 		// [Method] : endpoint
-		log.info("Request Started ==> [TRX_ID] : {}  , [ {} ] : {}",
-			MDC.get(TRX_ID.name()),
+		log.info("Request Started ==> [ {} ] : {}",
 			request.getMethod(),
 			request.getRequestURI()
 
