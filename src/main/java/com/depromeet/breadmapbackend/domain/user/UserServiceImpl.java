@@ -29,17 +29,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public CurrentUserInfo loadUserInfoByOAuthId(final String oAuthId) {
-		final Optional<CurrentUserInfo> cachedUser = userCacheRepository.getUser(oAuthId);
-		if (cachedUser.isPresent()) {
-			return cachedUser.get();
-		} else {
+		return userCacheRepository.getUser(oAuthId).orElseGet(() -> {
 			final CurrentUserInfo userInfo =
 				CurrentUserInfo.of(userRepository.findByOAuthId(oAuthId)
-					.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
-				);
+					.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND)));
 			userCacheRepository.setIfAbsent(userInfo);
 			return userInfo;
-		}
+		});
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
