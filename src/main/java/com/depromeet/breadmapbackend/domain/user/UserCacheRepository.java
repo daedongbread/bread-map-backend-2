@@ -36,11 +36,11 @@ public class UserCacheRepository {
 		}
 	}
 
-	public Optional<CurrentUserInfo> getUser(final String oAuthId) {
+	public Optional<CurrentUserInfo> getUser(final String delimiterValue) {
 
 		try {
 			final Optional<String> userInString =
-				Optional.ofNullable(redisTemplate.opsForValue().get(getKey(oAuthId)));
+				Optional.ofNullable(redisTemplate.opsForValue().get(getKey(delimiterValue)));
 			return userInString.isPresent() ?
 				Optional.of(objectMapper.readValue(userInString.get(), CurrentUserInfo.class)) :
 				Optional.empty();
@@ -49,8 +49,8 @@ public class UserCacheRepository {
 		}
 	}
 
-	private String getKey(String oAuthId) {
-		return "USER:" + oAuthId;
+	private String getKey(String delimiterValue) {
+		return "USERINFO:" + delimiterValue;
 	}
 }
 
