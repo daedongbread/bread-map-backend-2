@@ -472,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/search?word=bakery1&amp;latitude=37.560992&amp;longitude=127.044174 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzEzLCJleHAiOjE2ODUwOTUzMTN9.cTuFrbTcu7wS9vNXKdOB82DSS-W4T0Mk42gnP77UQfs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzY4MzQwLCJleHAiOjE2ODYzNzE5NDB9.QGAk0LuH_d2yec8vIlFhQ0VeVgZ5NcHbiKtTt_gUMro
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -545,7 +545,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 176
+Content-Length: 333
 
 {
   "data" : [ {
@@ -554,6 +554,13 @@ Content-Length: 176
     "address" : "address ",
     "rating" : 0.0,
     "reviewNum" : 1,
+    "distance" : 153.0
+  }, {
+    "bakeryId" : 58,
+    "bakeryName" : "bakery1",
+    "address" : "address ",
+    "rating" : 0.0,
+    "reviewNum" : 0,
     "distance" : 153.0
   } ]
 }</code></pre>
