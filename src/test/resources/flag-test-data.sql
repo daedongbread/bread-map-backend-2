@@ -5,9 +5,18 @@ TRUNCATE TABLE USER;
 ALTER TABLE USER
     ALTER COLUMN ID RESTART WITH 1;
 
-TRUNCATE TABLE F;
-ALTER TABLE NOTICE
+TRUNCATE TABLE FLAG;
+ALTER TABLE FLAG
     ALTER COLUMN ID RESTART WITH 1;
+
+TRUNCATE TABLE FLAG_BAKERY;
+ALTER TABLE FLAG_BAKERY
+    ALTER COLUMN ID RESTART WITH 1;
+
+TRUNCATE TABLE bakery;
+ALTER TABLE bakery
+    ALTER COLUMN ID RESTART WITH 1;
+
 
 
 insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
@@ -29,7 +38,7 @@ insert into FLAG_BAKERY (id, created_at, modified_at, bakery_id, flag_id, user_i
 ;
 
 insert into bakery (id, created_at, modified_at, address, latitude, longitude, name, status  )values
-(111,  '2023-01-01', '2023-01-01', '수원', 37.5596080725671, 127.044235133983,'POSTING'),
-(112,  '2023-01-02', '2023-01-01', '서울', 37.5596080725632, 127.044235133932,'POSTING'),
-(113,  '2023-01-03', '2023-01-01', '제주도', 37.5596080725679, 127.044235133911, 'POSTING')
+(111,  '2023-01-01', '2023-01-01', '수원', 37.5596080725671, 127.044235133983,'수원빵집','POSTING'),
+(112,  '2023-01-02', '2023-01-01', '서울', 37.5596080725632, 127.044235133932,'서울 빵집','POSTING'),
+(113,  '2023-01-03', '2023-01-01', '제주도', 37.5596080725679, 127.044235133911,'제주도 빵집', 'POSTING')
 ;
