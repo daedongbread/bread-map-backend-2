@@ -3,10 +3,17 @@ package com.depromeet.breadmapbackend.domain.flag;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
+
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 class FlagServiceImplTest extends FlagServiceTest {
 
@@ -29,6 +36,22 @@ class FlagServiceImplTest extends FlagServiceTest {
 		assertThat(getFlagBakeryList(oAuthId, flagId, bakeryId)).isEmpty();
 	}
 
+	@ParameterizedTest
+	@MethodSource("CreateRemoveBakeryToFlagTestSource")
+	@Sql("classpath:flag-test-data.sql")
+	void User_Flag삭제_실패_테스트(
+		final String oAuthId,
+		final Long flagId,
+		final Long bakeryId,
+		final DaedongStatus daedongStatus
+	) throws Exception {
+
+		final Throwable thrown = catchThrowable(() -> sut.removeBakeryToFlag(oAuthId, flagId, bakeryId));
+		assertThat(thrown).isInstanceOf(DaedongException.class);
+		assertThat(((DaedongException)thrown).getDaedongStatus()).isEqualTo(daedongStatus);
+
+	}
+
 	private List<FlagBakery> getFlagBakeryList(final String oAuthId, final Long flagId, final Long bakeryId) {
 		return em.createQuery(
 				"select f "
@@ -42,4 +65,26 @@ class FlagServiceImplTest extends FlagServiceTest {
 			.getResultList();
 	}
 
+	private static Stream<Arguments> CreateRemoveBakeryToFlagTestSource() {
+		// given
+		final String oAuthId = "APPLE_111";
+		final String wrongOAuthId = "WRONG_OAUTH_ID";
+
+		final Long flagId = 111L;
+		final Long wrongFlagId = 999L;
+		final Long otherUserFlagId = 113L;
+
+		final Long bakeryId = 111L;
+		final Long wrongBakeryId = 999L;
+		final Long differentBakeryId = 113L;
+
+		return Stream.of(
+			Arguments.of(wrongOAuthId, flagId, bakeryId, DaedongStatus.USER_NOT_FOUND),
+			Arguments.of(oAuthId, wrongFlagId, bakeryId, DaedongStatus.FLAG_NOT_FOUND),
+			Arguments.of(oAuthId, otherUserFlagId, bakeryId, DaedongStatus.FLAG_NOT_FOUND),
+			Arguments.of(oAuthId, flagId, wrongBakeryId, DaedongStatus.BAKERY_NOT_FOUND),
+			Arguments.of(oAuthId, flagId, differentBakeryId, DaedongStatus.BAKERY_NOT_FOUND)
+
+		);
+	}
 }
