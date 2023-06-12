@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
 import com.depromeet.breadmapbackend.domain.notice.content.AddBakeryNoticeContent;
@@ -13,8 +12,6 @@ import com.depromeet.breadmapbackend.domain.notice.content.ReviewCommentLikeNoti
 import com.depromeet.breadmapbackend.domain.notice.content.ReviewCommentNoticeContent;
 import com.depromeet.breadmapbackend.domain.notice.content.ReviewLikeNoticeContent;
 import com.depromeet.breadmapbackend.global.infra.AsyncConfig;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomFirebaseProperties;
 import com.depromeet.breadmapbackend.utils.ServiceTest;
 import com.depromeet.breadmapbackend.utils.TestConfig;
 
@@ -34,10 +31,6 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	ReviewCommentLikeNoticeContent.class,
 	ReviewCommentNoticeContent.class,
 	ReviewLikeNoticeContent.class
-})
-@EnableConfigurationProperties({
-	CustomFirebaseProperties.class,
-	CustomAWSS3Properties.class
 })
 public abstract class NoticeServiceTest extends ServiceTest {
 }
