@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.depromeet.breadmapbackend.domain.flag.dto.FlagDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -49,6 +50,29 @@ class FlagServiceImplTest extends FlagServiceTest {
 		final Throwable thrown = catchThrowable(() -> sut.removeBakeryToFlag(oAuthId, flagId, bakeryId));
 		assertThat(thrown).isInstanceOf(DaedongException.class);
 		assertThat(((DaedongException)thrown).getDaedongStatus()).isEqualTo(daedongStatus);
+	}
+
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void flag_조회_성공_테스트() throws Exception {
+		//given
+		final Long userId = 111L;
+
+		//when
+		final List<FlagDto> flags = sut.getFlags(userId);
+
+		//then
+		assertThat(flags).hasSize(2);
+
+		final FlagDto firstFlag = flags.get(0);
+		final FlagDto secondFlag = flags.get(1);
+
+		assertThat(firstFlag.getFlagInfo().getId()).isEqualTo(111L);
+		assertThat(firstFlag.getFlagInfo().getColor()).isEqualTo(FlagColor.YELLOW);
+		assertThat(firstFlag.getBakeryImageList()).isEqualTo(List.of("image111"));
+		assertThat(secondFlag.getFlagInfo().getId()).isEqualTo(112L);
+		assertThat(secondFlag.getFlagInfo().getColor()).isEqualTo(FlagColor.CYAN);
+		assertThat(secondFlag.getBakeryImageList()).isEqualTo(List.of("image", "image2"));
 
 	}
 
