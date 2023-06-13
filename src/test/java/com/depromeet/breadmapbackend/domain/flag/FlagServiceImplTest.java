@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.persistence.NoResultException;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -133,6 +135,26 @@ class FlagServiceImplTest extends FlagServiceTest {
 
 		assertThat(updated.getName()).isEqualTo(flagName);
 		assertThat(updated.getColor()).isEqualTo(flagColor);
+	}
+
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void falg_제거_성공_테스트() throws Exception {
+		//given
+		final String oAuthId = "APPLE_111";
+		final Long flagId = 112L;
+
+		//when
+		sut.removeFlag(oAuthId, flagId);
+
+		//then
+		assertThatThrownBy(() -> em.createQuery("select f "
+				+ "from Flag f "
+				+ "where f.id =: id", Flag.class)
+			.setParameter("id", flagId)
+			.getSingleResult())
+			.isInstanceOf(NoResultException.class);
+
 	}
 
 	private List<FlagBakery> getFlagBakeryList(final String oAuthId, final Long flagId, final Long bakeryId) {
