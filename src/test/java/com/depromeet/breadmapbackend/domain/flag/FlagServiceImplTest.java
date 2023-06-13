@@ -107,6 +107,34 @@ class FlagServiceImplTest extends FlagServiceTest {
 
 	}
 
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void flag_수정_성공_테스트() throws Exception {
+		//given
+		final String oAuthId = "APPLE_111";
+		final Long flagId = 112L;
+		final String flagName = "갈까??";
+		final FlagColor flagColor = FlagColor.SKY;
+
+		final FlagRequest request =
+			FlagRequest.builder()
+				.name(flagName)
+				.color(flagColor)
+				.build();
+		//when
+		sut.updateFlag(oAuthId, flagId, request);
+
+		//then
+		final Flag updated = em.createQuery("select f "
+				+ "from Flag f "
+				+ "where f.id =: id", Flag.class)
+			.setParameter("id", flagId)
+			.getSingleResult();
+
+		assertThat(updated.getName()).isEqualTo(flagName);
+		assertThat(updated.getColor()).isEqualTo(flagColor);
+	}
+
 	private List<FlagBakery> getFlagBakeryList(final String oAuthId, final Long flagId, final Long bakeryId) {
 		return em.createQuery(
 				"select f "
