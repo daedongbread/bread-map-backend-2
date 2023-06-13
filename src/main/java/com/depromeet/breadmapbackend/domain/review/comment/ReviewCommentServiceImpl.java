@@ -47,45 +47,10 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		Review review = reviewRepository.findByIdAndIsBlockIsFalseAndIsDeleteIsFalse(reviewId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 
-		if (request.getParentCommentId().equals(0L)) { // 댓글
-			ReviewComment.builder()
-				.review(review)
-				.user(user)
-				.content(request.getContent())
-				.build();
+		final ReviewComment parent = getParent(request);
+		saveNewComment(request, user, review, parent);
+		publishNotice(user, review, parent);
 
-			eventPublisher.publishEvent(
-				NoticeEvent.builder()
-					.isAlarmOn(user.getIsAlarmOn())
-					.user(review.getUser())
-					.fromUser(user)
-					.contentId(review.getId())
-					.content(review.getContent())
-					.noticeType(NoticeType.REVIEW_COMMENT)
-					.build()
-			);
-
-		} else { // 대댓글
-			ReviewComment parentComment = reviewCommentRepository.findById(request.getParentCommentId())
-				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
-			ReviewComment.builder()
-				.review(review)
-				.user(user)
-				.content(request.getContent())
-				.parent(parentComment)
-				.build();
-
-			eventPublisher.publishEvent(
-				NoticeEvent.builder()
-					.isAlarmOn(user.getIsAlarmOn())
-					.user(parentComment.getUser())
-					.fromUser(user)
-					.contentId(parentComment.getId())
-					.content(parentComment.getContent())
-					.noticeType(NoticeType.RECOMMENT)
-					.build()
-			);
-		}
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -172,4 +137,45 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		reviewComment.minusLike(reviewCommentLike);
 		reviewCommentLikeRepository.delete(reviewCommentLike);
 	}
+
+	private ReviewComment getParent(final ReviewCommentRequest request) {
+		return request.getParentCommentId().equals(0L) ?
+			null :
+			reviewCommentRepository.findById(request.getParentCommentId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_COMMENT_NOT_FOUND));
+	}
+
+	private void saveNewComment(
+		final ReviewCommentRequest request,
+		final User user,
+		final Review review,
+		final ReviewComment parent
+	) {
+		reviewCommentRepository.save(ReviewComment.builder()
+			.review(review)
+			.user(user)
+			.content(request.getContent())
+			.parent(parent)
+			.build());
+
+	}
+
+	private void publishNotice(final User user, final Review review, final ReviewComment parent) {
+		final boolean isReply = parent != null;
+		final NoticeType noticeType = isReply ? NoticeType.RECOMMENT : NoticeType.REVIEW_COMMENT;
+		final User noticeReceiver = isReply ? parent.getUser() : review.getUser();
+		final Long targetedNoticeId = isReply ? parent.getId() : review.getId();
+		final String targetedNoticeContent = isReply ? parent.getContent() : review.getContent();
+
+		eventPublisher.publishEvent(NoticeEvent.builder()
+			.isAlarmOn(user.getIsAlarmOn())
+			.user(noticeReceiver)
+			.fromUser(user)
+			.contentId(targetedNoticeId)
+			.content(targetedNoticeContent)
+			.noticeType(noticeType)
+			.build());
+
+	}
+
 }
