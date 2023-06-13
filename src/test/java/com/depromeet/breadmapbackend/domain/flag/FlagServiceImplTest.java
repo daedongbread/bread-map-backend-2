@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.flag;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.NoResultException;
@@ -14,8 +15,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.depromeet.breadmapbackend.domain.flag.dto.FlagBakeryDto;
 import com.depromeet.breadmapbackend.domain.flag.dto.FlagDto;
 import com.depromeet.breadmapbackend.domain.flag.dto.FlagRequest;
+import com.depromeet.breadmapbackend.domain.review.dto.MapSimpleReviewDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -154,6 +157,33 @@ class FlagServiceImplTest extends FlagServiceTest {
 			.setParameter("id", flagId)
 			.getSingleResult())
 			.isInstanceOf(NoResultException.class);
+	}
+
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void flag에_등록된_bakery_조회_성공_테스트() throws Exception {
+		//given
+		final String oAuthId = "APPLE_111";
+		final Long flagId = 112L;
+
+		//when
+		final FlagBakeryDto result = sut.getBakeryByFlag(oAuthId, flagId);
+
+		//then
+		assertThat(result.getFlagInfo().getBakeryNum()).isEqualTo(2);
+		assertThat(result.getFlagInfo().getName()).isEqualTo("flag1");
+		assertThat(result.getFlagInfo().getColor()).isEqualTo(FlagColor.CYAN);
+
+		assertThat(result.getFlagBakeryInfoList()).hasSize(2);
+		final FlagBakeryDto.FlagBakeryInfo firstBakery = result.getFlagBakeryInfoList().get(0);
+		assertThat(firstBakery.getId()).isEqualTo(113L);
+		assertThat(firstBakery.getReviewNum()).isEqualTo(3L);
+		assertThat(firstBakery.getSimpleReviewList()).hasSize(3);
+		assertThat(firstBakery.getSimpleReviewList()
+			.stream()
+			.map(MapSimpleReviewDto::getContent)
+			.collect(Collectors.toList())
+		).isEqualTo(List.of("제주도", "서울", "수원"));
 
 	}
 
