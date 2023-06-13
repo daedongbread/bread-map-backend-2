@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.flag.dto.FlagDto;
+import com.depromeet.breadmapbackend.domain.flag.dto.FlagRequest;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -73,6 +74,36 @@ class FlagServiceImplTest extends FlagServiceTest {
 		assertThat(secondFlag.getFlagInfo().getId()).isEqualTo(112L);
 		assertThat(secondFlag.getFlagInfo().getColor()).isEqualTo(FlagColor.CYAN);
 		assertThat(secondFlag.getBakeryImageList()).isEqualTo(List.of("image", "image2"));
+
+	}
+
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void flag_추가_성공_테스트() throws Exception {
+		//given
+		final String oAuthId = "APPLE_111";
+		final String flagName = "가즈아아아아";
+		final FlagColor flagColor = FlagColor.RED;
+
+		final FlagRequest request =
+			FlagRequest.builder()
+				.name(flagName)
+				.color(flagColor)
+				.build();
+		//when
+		sut.addFlag(oAuthId, request);
+
+		//then
+		final Flag savedFlag = em.createQuery("select f "
+				+ "from Flag f "
+				+ "where f.user.oAuthInfo.oAuthId = :oAuthId "
+				+ "and f.name = :name "
+				+ "and f.color = :color ", Flag.class)
+			.setParameter("oAuthId", oAuthId)
+			.setParameter("name", flagName)
+			.setParameter("color", flagColor)
+			.getSingleResult();
+		assertThat(savedFlag.getId()).isNotNull();
 
 	}
 
