@@ -184,7 +184,30 @@ class FlagServiceImplTest extends FlagServiceTest {
 			.map(MapSimpleReviewDto::getContent)
 			.collect(Collectors.toList())
 		).isEqualTo(List.of("제주도", "서울", "수원"));
+	}
 
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void bakery_flag에_추가_성공_테스트() throws Exception {
+		//given
+		final String oAuthId = "APPLE_111";
+		final Long flagId = 111L;
+		final Long bakeryId = 113L;
+
+		//when
+		sut.addBakeryToFlag(oAuthId, flagId, bakeryId);
+		//then
+		final FlagBakery singleResult = em.createQuery("select fb "
+				+ "from FlagBakery fb "
+				+ "where fb.flag.id = :flagId "
+				+ "and fb.user.oAuthInfo.oAuthId = :oAuthId "
+				+ "and fb.bakery.id = :bakeryId ", FlagBakery.class)
+			.setParameter("flagId", flagId)
+			.setParameter("oAuthId", oAuthId)
+			.setParameter("bakeryId", bakeryId)
+			.getSingleResult();
+
+		assertThat(singleResult.getId()).isNotNull();
 	}
 
 	private List<FlagBakery> getFlagBakeryList(final String oAuthId, final Long flagId, final Long bakeryId) {

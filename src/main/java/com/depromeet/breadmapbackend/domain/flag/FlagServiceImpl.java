@@ -141,8 +141,9 @@ public class FlagServiceImpl implements FlagService {
 			flagBakery.getFlag().removeFlagBakery(flagBakery);
 			flagBakeryRepository.delete(flagBakery); // TODO : 수정 가능할듯
 		}
+		
+		flagBakeryRepository.save(FlagBakery.builder().flag(flag).bakery(bakery).user(user).build());
 
-		FlagBakery.builder().flag(flag).bakery(bakery).user(user).build();
 	}
 
 	@Transactional(rollbackFor = Exception.class)
