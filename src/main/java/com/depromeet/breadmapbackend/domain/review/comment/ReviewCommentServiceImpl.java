@@ -50,7 +50,6 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		final ReviewComment parent = getParent(request);
 		saveNewComment(request, user, review, parent);
 		publishNotice(user, review, parent);
-
 	}
 
 	@Transactional(rollbackFor = Exception.class)
