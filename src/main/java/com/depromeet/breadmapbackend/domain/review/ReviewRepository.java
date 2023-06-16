@@ -42,7 +42,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	@Query(
 		"select r "
 			+ "from Review r "
-			+ "left join fetch r.ratings rpr "
 			+ "where r.bakery in :bakeryList "
 	)
 	List<Review> findByBakeryIn(@Param("bakeryList") List<Bakery> bakeryList);

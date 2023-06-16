@@ -69,7 +69,8 @@ public class FlagServiceImpl implements FlagService {
 	public void updateFlag(Long userId, Long flagId, FlagRequest request) {
 		Flag flag = flagRepository.findByUserIdAndId(userId, flagId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
-		if (flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요"))
+
+		if (!flag.isEditable())
 			throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
 		if (request.getColor().equals(FlagColor.GRAY))
 			throw new DaedongException(DaedongStatus.FLAG_COLOR_EXCEPTION);
@@ -81,7 +82,8 @@ public class FlagServiceImpl implements FlagService {
 	public void removeFlag(Long userId, Long flagId) {
 		Flag flag = flagRepository.findByUserIdAndId(userId, flagId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
-		if (flag.getName().equals("가고싶어요") || flag.getName().equals("가봤어요"))
+
+		if (!flag.isEditable())
 			throw new DaedongException(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
 
 		flagRepository.delete(flag);
@@ -92,8 +94,10 @@ public class FlagServiceImpl implements FlagService {
 
 		final Flag flag = flagRepository.findByIdAndUserId(flagId, userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
+
 		final List<Bakery> bakeryList = flagBakeryRepository.findByFlagAndUserIdOrderByCreatedAtDesc(flag, userId)
 			.stream().map(FlagBakery::getBakery).toList();
+
 		final List<FlagBakeryRepository.BakeryCountInFlag> bakeryCountInFlag =
 			flagBakeryRepository.countFlagNum(bakeryList);
 
@@ -105,27 +109,19 @@ public class FlagServiceImpl implements FlagService {
 					.filter(review -> review.getBakery().equals(bakery))
 					.toList();
 
-				final double rating = filteredReview.stream().map(Review::getAverageRating)
-					.mapToDouble(Double::doubleValue).average().orElse(0) * 10 / 10.0;
-				final List<MapSimpleReviewDto> simpleReviewDtoList = filteredReview.stream()
-					.sorted(Comparator.comparing(Review::getCreatedAt).reversed())
-					.map(MapSimpleReviewDto::new)
-					.limit(3)
-					.toList();
-
 				return FlagBakeryDto.FlagBakeryInfo.builder()
 					.bakery(bakery)
-					.flagNum(bakeryCountInFlag.stream()
-						.filter(flagCount -> flagCount.getBakeryId().equals(bakery.getId()))
-						.findFirst()
-						.map(bc -> bc.getCount().intValue())
-						.orElse(0))
-					.rating(rating)
+					.flagNum(getFlagCount(bakeryCountInFlag, bakery))
+					.rating(getAverageRating(filteredReview))
 					.reviewNum(filteredReview.size())
-					.simpleReviewList(simpleReviewDtoList)
+					.simpleReviewList(getSimpleReviewListFromReview(filteredReview))
 					.build();
 			}).toList();
-		return FlagBakeryDto.builder().flagBakeryInfoList(flagBakeryInfoList).flag(flag).build();
+
+		return FlagBakeryDto.builder()
+			.flagBakeryInfoList(flagBakeryInfoList)
+			.flag(flag)
+			.build();
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -139,11 +135,13 @@ public class FlagServiceImpl implements FlagService {
 		Flag flag = flagRepository.findById(flagId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
 
-		if (flagBakeryRepository.findByBakeryAndFlagAndUser(bakery, flag, user).isPresent())
-			throw new DaedongException(DaedongStatus.FLAG_BAKERY_DUPLICATE_EXCEPTION);
-
 		flagBakeryRepository.findByBakeryAndUser(bakery, user)
-			.ifPresent(flagBakeryRepository::delete);
+			.ifPresent(flagBakery -> {
+				if (flagBakery.getFlag().getId().equals(flagId))
+					throw new DaedongException(DaedongStatus.FLAG_BAKERY_DUPLICATE_EXCEPTION);
+				else
+					flagBakeryRepository.delete(flagBakery);
+			});
 
 		flagBakeryRepository.save(
 			FlagBakery.builder()
@@ -163,4 +161,29 @@ public class FlagServiceImpl implements FlagService {
 		);
 	}
 
+	private List<MapSimpleReviewDto> getSimpleReviewListFromReview(final List<Review> filteredReview) {
+		return filteredReview.stream()
+			.sorted(Comparator.comparing(Review::getCreatedAt).reversed())
+			.map(MapSimpleReviewDto::new)
+			.limit(3)
+			.toList();
+	}
+
+	private Integer getFlagCount(final List<FlagBakeryRepository.BakeryCountInFlag> bakeryCountInFlag,
+		final Bakery bakery) {
+		return bakeryCountInFlag.stream()
+			.filter(flagCount -> flagCount.getBakeryId().equals(bakery.getId()))
+			.findFirst()
+			.map(bc -> bc.getCount().intValue())
+			.orElse(0);
+	}
+
+	private double getAverageRating(final List<Review> filteredReview) {
+		return filteredReview.stream()
+			.map(Review::getAverageRating)
+			.mapToDouble(Double::doubleValue)
+			.average()
+			.orElse(0)
+			* 10 / 10.0;
+	}
 }

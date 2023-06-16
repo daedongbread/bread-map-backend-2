@@ -142,6 +142,28 @@ class FlagServiceImplTest extends FlagServiceTest {
 
 	@Test
 	@Sql("classpath:flag-test-data.sql")
+	void flag_수정_실패_테스트_FLAG_UNEDIT_EXCEPTION() throws Exception {
+		//given
+		final Long userId = 111L;
+		final Long flagId = 100L;
+		final String flagName = "갈까??";
+		final FlagColor flagColor = FlagColor.SKY;
+
+		final FlagRequest request =
+			FlagRequest.builder()
+				.name(flagName)
+				.color(flagColor)
+				.build();
+		//when
+		//then
+		final Throwable thrown = catchThrowable(() -> sut.updateFlag(userId, flagId, request));
+		assertThat(thrown).isInstanceOf(DaedongException.class);
+		assertThat(((DaedongException)thrown).getDaedongStatus())
+			.isEqualTo(DaedongStatus.FLAG_UNEDIT_EXCEPTION);
+	}
+
+	@Test
+	@Sql("classpath:flag-test-data.sql")
 	void falg_제거_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -177,6 +199,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 		assertThat(result.getFlagBakeryInfoList()).hasSize(2);
 		final FlagBakeryDto.FlagBakeryInfo firstBakery = result.getFlagBakeryInfoList().get(0);
 		assertThat(firstBakery.getId()).isEqualTo(113L);
+		assertThat(firstBakery.getRating()).isEqualTo(2.6666666666666665d);
 		assertThat(firstBakery.getReviewNum()).isEqualTo(3L);
 		assertThat(firstBakery.getSimpleReviewList()).hasSize(3);
 		assertThat(firstBakery.getSimpleReviewList()
@@ -208,6 +231,24 @@ class FlagServiceImplTest extends FlagServiceTest {
 			.getSingleResult();
 
 		assertThat(singleResult.getId()).isNotNull();
+	}
+
+	@Test
+	@Sql("classpath:flag-test-data.sql")
+	void bakery_flag에_추가_실패_테스트_FLAG_BAKERY_DUPLICATE_EXCEPTION() throws Exception {
+		//given
+		final Long userId = 111L;
+		final Long flagId = 111L;
+		final Long bakeryId = 111L;
+
+		//when
+
+		//then
+		final Throwable thrown = catchThrowable(() -> sut.addBakeryToFlag(userId, flagId, bakeryId));
+		assertThat(thrown).isInstanceOf(DaedongException.class);
+		assertThat(((DaedongException)thrown).getDaedongStatus())
+			.isEqualTo(DaedongStatus.FLAG_BAKERY_DUPLICATE_EXCEPTION);
+
 	}
 
 	private List<FlagBakery> getFlagBakeryList(final Long userId, final Long flagId, final Long bakeryId) {
