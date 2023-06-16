@@ -68,10 +68,10 @@ class FlagServiceImplTest extends FlagServiceTest {
 		final List<FlagDto> flags = sut.getFlags(userId);
 
 		//then
-		assertThat(flags).hasSize(2);
+		assertThat(flags).hasSize(3);
 
-		final FlagDto firstFlag = flags.get(0);
-		final FlagDto secondFlag = flags.get(1);
+		final FlagDto firstFlag = flags.get(1);
+		final FlagDto secondFlag = flags.get(2);
 
 		assertThat(firstFlag.getFlagInfo().getId()).isEqualTo(111L);
 		assertThat(firstFlag.getFlagInfo().getColor()).isEqualTo(FlagColor.YELLOW);
