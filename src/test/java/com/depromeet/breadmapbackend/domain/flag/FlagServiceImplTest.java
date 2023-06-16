@@ -31,29 +31,29 @@ class FlagServiceImplTest extends FlagServiceTest {
 	@Sql("classpath:flag-test-data.sql")
 	void User_Flag삭제_성공_테스트() throws Exception {
 		// given
-		final String oAuthId = "APPLE_111";
+		final Long userId = 111L;
 		final Long flagId = 111L;
 		final Long bakeryId = 111L;
-		assertThat(getFlagBakeryList(oAuthId, flagId, bakeryId)).hasSize(1);
+		assertThat(getFlagBakeryList(userId, flagId, bakeryId)).hasSize(1);
 
 		// when
-		sut.removeBakeryToFlag(oAuthId, flagId, bakeryId);
+		sut.removeBakeryToFlag(userId, flagId, bakeryId);
 
 		// then
-		assertThat(getFlagBakeryList(oAuthId, flagId, bakeryId)).isEmpty();
+		assertThat(getFlagBakeryList(userId, flagId, bakeryId)).isEmpty();
 	}
 
 	@ParameterizedTest
 	@MethodSource("CreateRemoveBakeryToFlagTestSource")
 	@Sql("classpath:flag-test-data.sql")
 	void User_Flag삭제_실패_테스트(
-		final String oAuthId,
+		final Long userId,
 		final Long flagId,
 		final Long bakeryId,
 		final DaedongStatus daedongStatus
 	) throws Exception {
 
-		final Throwable thrown = catchThrowable(() -> sut.removeBakeryToFlag(oAuthId, flagId, bakeryId));
+		final Throwable thrown = catchThrowable(() -> sut.removeBakeryToFlag(userId, flagId, bakeryId));
 		assertThat(thrown).isInstanceOf(DaedongException.class);
 		assertThat(((DaedongException)thrown).getDaedongStatus()).isEqualTo(daedongStatus);
 	}
@@ -86,7 +86,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	@Sql("classpath:flag-test-data.sql")
 	void flag_추가_성공_테스트() throws Exception {
 		//given
-		final String oAuthId = "APPLE_111";
+		final Long userId = 111L;
 		final String flagName = "가즈아아아아";
 		final FlagColor flagColor = FlagColor.RED;
 
@@ -96,15 +96,15 @@ class FlagServiceImplTest extends FlagServiceTest {
 				.color(flagColor)
 				.build();
 		//when
-		sut.addFlag(oAuthId, request);
+		sut.addFlag(userId, request);
 
 		//then
 		final Flag savedFlag = em.createQuery("select f "
 				+ "from Flag f "
-				+ "where f.user.oAuthInfo.oAuthId = :oAuthId "
+				+ "where f.user.id = :userId "
 				+ "and f.name = :name "
 				+ "and f.color = :color ", Flag.class)
-			.setParameter("oAuthId", oAuthId)
+			.setParameter("userId", userId)
 			.setParameter("name", flagName)
 			.setParameter("color", flagColor)
 			.getSingleResult();
@@ -116,7 +116,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	@Sql("classpath:flag-test-data.sql")
 	void flag_수정_성공_테스트() throws Exception {
 		//given
-		final String oAuthId = "APPLE_111";
+		final Long userId = 111L;
 		final Long flagId = 112L;
 		final String flagName = "갈까??";
 		final FlagColor flagColor = FlagColor.SKY;
@@ -127,7 +127,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 				.color(flagColor)
 				.build();
 		//when
-		sut.updateFlag(oAuthId, flagId, request);
+		sut.updateFlag(userId, flagId, request);
 
 		//then
 		final Flag updated = em.createQuery("select f "
@@ -144,11 +144,11 @@ class FlagServiceImplTest extends FlagServiceTest {
 	@Sql("classpath:flag-test-data.sql")
 	void falg_제거_성공_테스트() throws Exception {
 		//given
-		final String oAuthId = "APPLE_111";
+		final Long userId = 111L;
 		final Long flagId = 112L;
 
 		//when
-		sut.removeFlag(oAuthId, flagId);
+		sut.removeFlag(userId, flagId);
 
 		//then
 		assertThatThrownBy(() -> em.createQuery("select f "
@@ -163,11 +163,11 @@ class FlagServiceImplTest extends FlagServiceTest {
 	@Sql("classpath:flag-test-data.sql")
 	void flag에_등록된_bakery_조회_성공_테스트() throws Exception {
 		//given
-		final String oAuthId = "APPLE_111";
+		final Long userId = 111L;
 		final Long flagId = 112L;
 
 		//when
-		final FlagBakeryDto result = sut.getBakeryByFlag(oAuthId, flagId);
+		final FlagBakeryDto result = sut.getBakeryByFlag(userId, flagId);
 
 		//then
 		assertThat(result.getFlagInfo().getBakeryNum()).isEqualTo(2);
@@ -190,43 +190,43 @@ class FlagServiceImplTest extends FlagServiceTest {
 	@Sql("classpath:flag-test-data.sql")
 	void bakery_flag에_추가_성공_테스트() throws Exception {
 		//given
-		final String oAuthId = "APPLE_111";
+		final Long userId = 111L;
 		final Long flagId = 111L;
 		final Long bakeryId = 113L;
 
 		//when
-		sut.addBakeryToFlag(oAuthId, flagId, bakeryId);
+		sut.addBakeryToFlag(userId, flagId, bakeryId);
 		//then
 		final FlagBakery singleResult = em.createQuery("select fb "
 				+ "from FlagBakery fb "
 				+ "where fb.flag.id = :flagId "
-				+ "and fb.user.oAuthInfo.oAuthId = :oAuthId "
+				+ "and fb.user.id = :userId "
 				+ "and fb.bakery.id = :bakeryId ", FlagBakery.class)
 			.setParameter("flagId", flagId)
-			.setParameter("oAuthId", oAuthId)
+			.setParameter("userId", userId)
 			.setParameter("bakeryId", bakeryId)
 			.getSingleResult();
 
 		assertThat(singleResult.getId()).isNotNull();
 	}
 
-	private List<FlagBakery> getFlagBakeryList(final String oAuthId, final Long flagId, final Long bakeryId) {
+	private List<FlagBakery> getFlagBakeryList(final Long userId, final Long flagId, final Long bakeryId) {
 		return em.createQuery(
 				"select f "
 					+ "from FlagBakery f "
 					+ "where f.flag.id = :flagId "
 					+ "and f.bakery.id = :bakeryId "
-					+ "and f.user.oAuthInfo.oAuthId = :oAuthId ", FlagBakery.class)
+					+ "and f.user.id = :userId ", FlagBakery.class)
 			.setParameter("flagId", flagId)
 			.setParameter("bakeryId", bakeryId)
-			.setParameter("oAuthId", oAuthId)
+			.setParameter("userId", userId)
 			.getResultList();
 	}
 
 	private static Stream<Arguments> CreateRemoveBakeryToFlagTestSource() {
 		// given
-		final String oAuthId = "APPLE_111";
-		final String wrongOAuthId = "WRONG_OAUTH_ID";
+		final Long userId = 111L;
+		final Long wrongUserId = 999999L;
 
 		final Long flagId = 111L;
 		final Long wrongFlagId = 999L;
@@ -237,11 +237,11 @@ class FlagServiceImplTest extends FlagServiceTest {
 		final Long differentBakeryId = 113L;
 
 		return Stream.of(
-			Arguments.of(wrongOAuthId, flagId, bakeryId, DaedongStatus.USER_NOT_FOUND),
-			Arguments.of(oAuthId, wrongFlagId, bakeryId, DaedongStatus.FLAG_NOT_FOUND),
-			Arguments.of(oAuthId, otherUserFlagId, bakeryId, DaedongStatus.FLAG_NOT_FOUND),
-			Arguments.of(oAuthId, flagId, wrongBakeryId, DaedongStatus.BAKERY_NOT_FOUND),
-			Arguments.of(oAuthId, flagId, differentBakeryId, DaedongStatus.BAKERY_NOT_FOUND)
+			Arguments.of(wrongUserId, flagId, bakeryId, DaedongStatus.BAKERY_NOT_FOUND),
+			Arguments.of(userId, wrongFlagId, bakeryId, DaedongStatus.BAKERY_NOT_FOUND),
+			Arguments.of(userId, otherUserFlagId, bakeryId, DaedongStatus.BAKERY_NOT_FOUND),
+			Arguments.of(userId, flagId, wrongBakeryId, DaedongStatus.BAKERY_NOT_FOUND),
+			Arguments.of(userId, flagId, differentBakeryId, DaedongStatus.BAKERY_NOT_FOUND)
 
 		);
 	}
