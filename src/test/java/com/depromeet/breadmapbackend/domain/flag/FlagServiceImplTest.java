@@ -189,7 +189,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 		final Long flagId = 112L;
 
 		//when
-		final FlagBakeryDto result = sut.getBakeryByFlag(userId, flagId);
+		final FlagBakeryDto result = sut.getBakeriesByFlag(userId, flagId);
 
 		//then
 		assertThat(result.getFlagInfo().getBakeryNum()).isEqualTo(2);

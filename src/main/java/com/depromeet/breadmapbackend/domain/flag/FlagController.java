@@ -68,11 +68,11 @@ public class FlagController {
 
 	@GetMapping("/{flagId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<FlagBakeryDto> getBakeryByFlag(
+	public ApiResponse<FlagBakeryDto> getBakeriesByFlag(
 		@PathVariable Long flagId,
 		@AuthenticationPrincipal CurrentUserInfo currentUserInfo
 	) {
-		return new ApiResponse<>(flagService.getBakeryByFlag(currentUserInfo.getId(), flagId));
+		return new ApiResponse<>(flagService.getBakeriesByFlag(currentUserInfo.getId(), flagId));
 	}
 
 	@PostMapping("/{flagId}/bakeries/{bakeryId}")

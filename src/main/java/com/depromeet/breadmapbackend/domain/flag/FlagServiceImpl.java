@@ -90,7 +90,7 @@ public class FlagServiceImpl implements FlagService {
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public FlagBakeryDto getBakeryByFlag(Long userId, Long flagId) { // TODO page?
+	public FlagBakeryDto getBakeriesByFlag(Long userId, Long flagId) { // TODO page?
 
 		final Flag flag = flagRepository.findByIdAndUserId(flagId, userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.FLAG_NOT_FOUND));
@@ -169,8 +169,10 @@ public class FlagServiceImpl implements FlagService {
 			.toList();
 	}
 
-	private Integer getFlagCount(final List<FlagBakeryRepository.BakeryCountInFlag> bakeryCountInFlag,
-		final Bakery bakery) {
+	private Integer getFlagCount(
+		final List<FlagBakeryRepository.BakeryCountInFlag> bakeryCountInFlag,
+		final Bakery bakery
+	) {
 		return bakeryCountInFlag.stream()
 			.filter(flagCount -> flagCount.getBakeryId().equals(bakery.getId()))
 			.findFirst()

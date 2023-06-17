@@ -15,7 +15,7 @@ public interface FlagService {
 
 	void removeFlag(Long userId, Long flagId);
 
-	FlagBakeryDto getBakeryByFlag(Long userId, Long flagId);
+	FlagBakeryDto getBakeriesByFlag(Long userId, Long flagId);
 
 	void addBakeryToFlag(Long userId, Long flagId, Long bakeryId);
 
