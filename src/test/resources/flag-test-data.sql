@@ -32,6 +32,7 @@ insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing
 
 
 insert into FLAG (id, created_at, modified_at, color, name, user_id )values
+(100,  '2023-01-01', '2023-01-01', 'YELLOW', '가고싶어요', 111),
 (111,  '2023-01-01', '2023-01-01', 'YELLOW', '가즈아', 111),
 (112,  '2023-01-02', '2023-01-01', 'CYAN', 'flag1', 111),
 (113,  '2023-01-03', '2023-01-01', 'PINK', 'flag2', 112)
@@ -56,6 +57,25 @@ insert into review (id, created_at, modified_at, content, is_block, is_delete, i
 (113,  '2023-01-03', '2023-01-01', '제주도', 'N', 'N', 'N', 'N', 113, 112)
 ;
 
+insert into review_product_rating (id, created_at, modified_at, rating, bakery_id, product_id, review_id, user_id   )values
+(112,  '2023-01-01', '2023-01-01', 4, 113, 113, 111,112),
+(113,  '2023-01-03', '2023-01-01', 4, 113, 114 , 112, 112),
+(114,  '2023-01-03', '2023-01-01', 4, 113, 114 , 111, 112),
+(115,  '2023-01-03', '2023-01-01', 4, 113, 114 , 111, 112);
+
+
+
 insert into review_comment (id, created_at, modified_at, content, is_delete, parent_id, review_id, user_id   )values
 (111,  '2023-01-01', '2023-01-01', '좋아요 좋아요 ', 'N', NULL, 111,112),
-(113,  '2023-01-03', '2023-01-01', '으웩 으웩', 'N',111 , 111, 112)
+(113,  '2023-01-03', '2023-01-01', '으웩 으웩', 'N',111 , 111, 112);
+
+
+insert into product (id, created_at, modified_at, image, is_true, name, price, product_type,  bakery_id )values
+(111,  '2023-01-01', '2023-01-01', '빵이미지 1', 'Y', '빵빵빵', '1000','BREAD', 111),
+(113,  '2023-01-03', '2023-01-01', '빵 이미지 2', 'Y', '무슨빵?' , '2000', 'BREAD',113),
+(114,  '2023-01-03', '2023-01-01', '빵 이미지 3', 'Y', '소금빵?' , '3000','BREAD', 113);
+
+
+
+
+
