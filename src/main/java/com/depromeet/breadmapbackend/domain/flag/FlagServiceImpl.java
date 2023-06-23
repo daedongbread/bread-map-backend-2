@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.flag;
 
+import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,8 +100,8 @@ public class FlagServiceImpl implements FlagService {
 		final List<Bakery> bakeryList = flagBakeryRepository.findByFlagAndUserIdOrderByCreatedAtDesc(flag, userId)
 			.stream().map(FlagBakery::getBakery).toList();
 
-		final List<FlagBakeryRepository.BakeryCountInFlag> bakeryCountInFlag =
-			flagBakeryRepository.countFlagNum(bakeryList);
+		final List<BakeryCountInFlag> bakeryCountInFlag =
+			flagRepository.countFlagNum(bakeryList);
 
 		final List<Review> reviews = reviewRepository.findByBakeryIn(bakeryList);
 
@@ -170,7 +172,7 @@ public class FlagServiceImpl implements FlagService {
 	}
 
 	private Integer getFlagCount(
-		final List<FlagBakeryRepository.BakeryCountInFlag> bakeryCountInFlag,
+		final List<BakeryCountInFlag> bakeryCountInFlag,
 		final Bakery bakery
 	) {
 		return bakeryCountInFlag.stream()

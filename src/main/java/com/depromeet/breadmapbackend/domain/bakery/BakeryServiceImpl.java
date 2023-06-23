@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import static com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository.*;
+import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -16,6 +16,7 @@ import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
+import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -34,6 +35,7 @@ public class BakeryServiceImpl implements BakeryService {
 	private final BakeryQueryRepository bakeryQueryRepository;
 	private final BakeryViewRepository bakeryViewRepository;
 	private final UserRepository userRepository;
+	private final FlagRepository flagRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ReviewService reviewService;
 
@@ -51,8 +53,11 @@ public class BakeryServiceImpl implements BakeryService {
 			bakeryQueryRepository.findTop20BakeriesByCoordinateRange(
 				CoordinateRange.of(latitude, latitudeDelta, longitude, longitudeDelta)
 			);
+		if (bakeries.size() == 0) {
+			return List.of(new BakeryCardDto());
+		}
 		final List<Review> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
-		final List<BakeryCountInFlag> bakeryCountInFlags = flagBakeryRepository.countFlagNum(bakeries);
+		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
 
 		return bakeries
 			.stream()
