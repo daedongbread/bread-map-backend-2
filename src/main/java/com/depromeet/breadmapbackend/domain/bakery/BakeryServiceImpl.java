@@ -53,23 +53,9 @@ public class BakeryServiceImpl implements BakeryService {
 			bakeryQueryRepository.findTop20BakeriesByCoordinateRange(
 				CoordinateRange.of(latitude, latitudeDelta, longitude, longitudeDelta)
 			);
-		if (bakeries.size() == 0) {
-			return List.of(new BakeryCardDto());
-		}
-		final List<Review> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
-		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
-
-		return bakeries
-			.stream()
-			.map(bakery -> BakeryCardDto.builder()
-				.bakery(bakery)
-				.flagNum(getFlagNum(bakeryCountInFlags, bakery))
-				.reviewList(getReviewListForBakery(reviewListForAllBakeries, bakery))
-				.distance(bakery.getDistanceFromUser(latitude, longitude))
-				.color(getFlagColor(filterBy, userId, bakery))
-				.build())
-			.sorted(getBakeryComparator(sortBy))
-			.toList();
+		return bakeries.size() == 0 ?
+			List.of(new BakeryCardDto()) :
+			getBakeryCardDtos(userId, sortBy, filterBy, latitude, longitude, bakeries);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -106,6 +92,30 @@ public class BakeryServiceImpl implements BakeryService {
 			.facilityInfoList(bakery.getFacilityInfoList())
 			.pioneerInfo(pioneerInfo)
 			.build();
+	}
+
+	private List<BakeryCardDto> getBakeryCardDtos(
+		final Long userId,
+		final BakerySortType sortBy,
+		final boolean filterBy,
+		final Double latitude,
+		final Double longitude,
+		final List<Bakery> bakeries
+	) {
+		final List<Review> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
+		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
+
+		return bakeries
+			.stream()
+			.map(bakery -> BakeryCardDto.builder()
+				.bakery(bakery)
+				.flagNum(getFlagNum(bakeryCountInFlags, bakery))
+				.reviewList(getReviewListForBakery(reviewListForAllBakeries, bakery))
+				.distance(bakery.getDistanceFromUser(latitude, longitude))
+				.color(getFlagColor(filterBy, userId, bakery))
+				.build())
+			.sorted(getBakeryComparator(sortBy))
+			.toList();
 	}
 
 	private Comparator<BakeryCardDto> getBakeryComparator(final BakerySortType sortBy) {

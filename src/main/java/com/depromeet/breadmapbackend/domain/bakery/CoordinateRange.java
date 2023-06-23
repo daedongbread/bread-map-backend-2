@@ -8,8 +8,8 @@ public record CoordinateRange(
 
 	public static CoordinateRange of(
 		final Double latitude,
-		final Double longitude,
 		final Double latitudeDelta,
+		final Double longitude,
 		final Double longitudeDelta
 	) {
 		return new CoordinateRange(
