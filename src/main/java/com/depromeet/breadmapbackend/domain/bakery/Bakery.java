@@ -4,6 +4,7 @@ import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import javax.persistence.OneToMany;
 import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.FacilityInfoListConverter;
@@ -140,4 +142,10 @@ public class Bakery extends BaseEntity {
 			* cos(toRadians(getLongitude()) - toRadians(userLongitude))
 			+ sin(toRadians(userLatitude)) * sin(toRadians(getLatitude()))) * earthRadius);
 	}
+
+	public Double bakeryRating(List<Review> reviewList) {
+		return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
+			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
+	}
+
 }

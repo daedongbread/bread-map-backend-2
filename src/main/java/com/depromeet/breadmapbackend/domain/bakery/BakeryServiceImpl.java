@@ -5,7 +5,6 @@ import static com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
-import com.depromeet.breadmapbackend.domain.review.dto.MapSimpleReviewDto;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -58,23 +56,13 @@ public class BakeryServiceImpl implements BakeryService {
 
 		return bakeries
 			.stream()
-			.map(bakery -> {
-				final List<Review> reviewList =
-					reviewListForAllBakeries
-						.stream()
-						.filter(review -> review.getBakery().equals(bakery))
-						.toList();
-
-				return BakeryCardDto.builder()
-					.bakery(bakery)
-					.flagNum(getFlagNum(bakeryCountInFlags, bakery))
-					.rating(bakeryRating(reviewList))
-					.reviewNum(reviewList.size())
-					.simpleReviewList(getSimpleReviewListFrom(reviewList))
-					.distance(bakery.getDistanceFromUser(latitude, longitude))
-					.color(getFlagColor(filterBy, userId, bakery))
-					.build();
-			})
+			.map(bakery -> BakeryCardDto.builder()
+				.bakery(bakery)
+				.flagNum(getFlagNum(bakeryCountInFlags, bakery))
+				.reviewList(getReviewListForBakery(reviewListForAllBakeries, bakery))
+				.distance(bakery.getDistanceFromUser(latitude, longitude))
+				.color(getFlagColor(filterBy, userId, bakery))
+				.build())
 			.sorted(getBakeryComparator(sortBy))
 			.toList();
 	}
@@ -100,7 +88,7 @@ public class BakeryServiceImpl implements BakeryService {
 		BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
 			.bakery(bakery)
 			.flagNum(flagBakeryRepository.countFlagNum(bakery))
-			.rating(bakeryRating(reviewList))
+			.rating(bakery.bakeryRating(reviewList))
 			.reviewNum(reviewList.size())
 			.build();
 		BakeryDto.FlagInfo flagInfo = BakeryDto.FlagInfo.builder()
@@ -113,14 +101,6 @@ public class BakeryServiceImpl implements BakeryService {
 			.facilityInfoList(bakery.getFacilityInfoList())
 			.pioneerInfo(pioneerInfo)
 			.build();
-	}
-
-	private List<MapSimpleReviewDto> getSimpleReviewListFrom(final List<Review> reviewList) {
-		return reviewList.stream()
-			.sorted(Comparator.comparing(Review::getCreatedAt).reversed())
-			.map(MapSimpleReviewDto::new)
-			.limit(3)
-			.collect(Collectors.toList());
 	}
 
 	private Comparator<BakeryCardDto> getBakeryComparator(final BakerySortType sortBy) {
@@ -152,8 +132,11 @@ public class BakeryServiceImpl implements BakeryService {
 			.orElse(0L).intValue();
 	}
 
-	private Double bakeryRating(List<Review> reviewList) {
-		return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
-			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
+	private List<Review> getReviewListForBakery(final List<Review> reviewListForAllBakeries, final Bakery bakery) {
+		return reviewListForAllBakeries
+			.stream()
+			.filter(review -> review.getBakery().equals(bakery))
+			.toList();
 	}
+
 }
