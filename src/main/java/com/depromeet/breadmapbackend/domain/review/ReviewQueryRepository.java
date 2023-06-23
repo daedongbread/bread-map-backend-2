@@ -36,6 +36,22 @@ public class ReviewQueryRepository {
 	private final int PRODUCT_REVIEW_SIZE = 5;
 	private final int USER_REVIEW_SIZE = 5;
 
+	public List<Review> findReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
+		return queryFactory
+			.selectFrom(review)
+			.join(review.bakery, bakery).fetchJoin()
+			.where(review.isDelete.isFalse(),
+				review.isBlock.isFalse(),
+				review.user.id.eq(userId),
+				review.user.notIn( // 리뷰 유처 차단 여부
+					JPAExpressions.select(blockUser.toUser)
+						.from(blockUser)
+						.where(blockUser.fromUser.id.eq(userId))
+				),
+				bakery.in(bakeries))
+			.fetch();
+	}
+
 	public List<Review> findReviewList(User me, Bakery bakery) {
 		return queryFactory.selectFrom(review)
 			.join(review.bakery, com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery).fetchJoin() // TODO

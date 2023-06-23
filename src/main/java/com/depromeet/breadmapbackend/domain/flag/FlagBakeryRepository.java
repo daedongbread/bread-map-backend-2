@@ -22,8 +22,8 @@ public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
 
 	Optional<FlagBakery> findByBakeryAndUser(Bakery bakery, User user);
 
-	@Query("SELECT fb.flag FROM FlagBakery fb where fb.bakery = ?1 and fb.user = ?2")
-	Optional<Flag> findFlagByBakeryAndUser(Bakery bakery, User user);
+	@Query("SELECT fb.flag FROM FlagBakery fb where fb.bakery = ?1 and fb.user.id = ?2")
+	Optional<Flag> findFlagByBakeryAndUser(Bakery bakery, Long userId);
 
 	@Transactional
 	void delete(FlagBakery flagBakery);

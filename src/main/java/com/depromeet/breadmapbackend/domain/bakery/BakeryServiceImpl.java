@@ -1,7 +1,10 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
+import static com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository.*;
+
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
+import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.Review;
@@ -37,7 +41,7 @@ public class BakeryServiceImpl implements BakeryService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<BakeryCardDto> getBakeryList(
-		final String oAuthId,
+		final Long userId,
 		final BakerySortType sortBy,
 		final boolean filterBy,
 		final Double latitude,
@@ -45,36 +49,34 @@ public class BakeryServiceImpl implements BakeryService {
 		final Double latitudeDelta,
 		final Double longitudeDelta
 	) {
-
-		User me = userRepository.findByOAuthId(oAuthId)
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
-		List<Bakery> bakeries = bakeryQueryRepository
-			.findTop20BakeriesByCoordinateRange(
+		final List<Bakery> bakeries =
+			bakeryQueryRepository.findTop20BakeriesByCoordinateRange(
 				CoordinateRange.of(latitude, latitudeDelta, longitude, longitudeDelta)
 			);
+		final List<Review> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
+		final List<BakeryCountInFlag> bakeryCountInFlags = flagBakeryRepository.countFlagNum(bakeries);
 
-		return bakeries.stream()
+		return bakeries
+			.stream()
 			.map(bakery -> {
-				List<Review> reviewList = reviewService.getReviewList(me, bakery);
-				FlagColor color = null;
-				if (!filterBy)
-					color = FlagColor.ORANGE;
-				else
-					color = flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).isPresent() ?
-						flagBakeryRepository.findFlagByBakeryAndUser(bakery, me).get().getColor() : FlagColor.GRAY;
+				final List<Review> reviewList =
+					reviewListForAllBakeries
+						.stream()
+						.filter(review -> review.getBakery().equals(bakery))
+						.toList();
+
 				return BakeryCardDto.builder()
 					.bakery(bakery)
-					.flagNum(flagBakeryRepository.countFlagNum(bakery))
+					.flagNum(getFlagNum(bakeryCountInFlags, bakery))
 					.rating(bakeryRating(reviewList))
 					.reviewNum(reviewList.size())
 					.simpleReviewList(getSimpleReviewListFrom(reviewList))
 					.distance(bakery.getDistanceFromUser(latitude, longitude))
-					.color(color)
+					.color(getFlagColor(filterBy, userId, bakery))
 					.build();
 			})
 			.sorted(getBakeryComparator(sortBy))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -131,6 +133,23 @@ public class BakeryServiceImpl implements BakeryService {
 		else
 			throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
 		return comparing;
+	}
+
+	private FlagColor getFlagColor(final boolean filterBy, final Long userId, final Bakery bakery) {
+		if (!filterBy)
+			return FlagColor.ORANGE;
+		else {
+			final Optional<Flag> flag = flagBakeryRepository.findFlagByBakeryAndUser(bakery, userId);
+			return flag.isPresent() ? flag.get().getColor() : FlagColor.GRAY;
+		}
+	}
+
+	private int getFlagNum(final List<BakeryCountInFlag> bakeryCountInFlags, final Bakery bakery) {
+		return bakeryCountInFlags.stream()
+			.filter(bakeryCountInFlag -> bakeryCountInFlag.getBakeryId().equals(bakery.getId()))
+			.map(BakeryCountInFlag::getCount)
+			.findFirst()
+			.orElse(0L).intValue();
 	}
 
 	private Double bakeryRating(List<Review> reviewList) {
