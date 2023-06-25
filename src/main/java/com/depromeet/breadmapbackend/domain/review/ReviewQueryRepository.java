@@ -4,8 +4,10 @@ import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
 import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
 import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.*;
+import static com.querydsl.core.group.GroupBy.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,7 +38,7 @@ public class ReviewQueryRepository {
 	private final int PRODUCT_REVIEW_SIZE = 5;
 	private final int USER_REVIEW_SIZE = 5;
 
-	public List<Review> findReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
+	public Map<Long, List<Review>> findReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
 		return queryFactory
 			.selectFrom(review)
 			.join(review.bakery, bakery).fetchJoin()
@@ -49,7 +51,8 @@ public class ReviewQueryRepository {
 						.where(blockUser.fromUser.id.eq(userId))
 				),
 				bakery.in(bakeries))
-			.fetch();
+			.transform(groupBy(review.bakery.id).as(list(review)));
+
 	}
 
 	public List<Review> findReviewList(User me, Bakery bakery) {

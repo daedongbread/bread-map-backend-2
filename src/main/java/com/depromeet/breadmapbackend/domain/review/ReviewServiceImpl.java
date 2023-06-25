@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.review;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -54,7 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Review> getReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
+	public Map<Long, List<Review>> getReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
 		return reviewQueryRepository.findReviewListInBakeries(userId, bakeries);
 	}
 

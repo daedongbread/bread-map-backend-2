@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import java.util.List;
+import java.util.Map;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.review.dto.ReviewDetailDto;
@@ -25,5 +26,5 @@ public interface ReviewService {
 
 	void removeReview(String oAuthId, Long reviewId);
 
-	List<Review> getReviewListInBakeries(Long userId, List<Bakery> bakeries);
+	Map<Long, List<Review>> getReviewListInBakeries(Long userId, List<Bakery> bakeries);
 }

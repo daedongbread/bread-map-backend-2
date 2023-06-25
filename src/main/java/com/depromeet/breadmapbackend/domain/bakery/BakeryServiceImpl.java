@@ -4,6 +4,7 @@ import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -102,7 +103,8 @@ public class BakeryServiceImpl implements BakeryService {
 		final Double longitude,
 		final List<Bakery> bakeries
 	) {
-		final List<Review> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
+		final Map<Long, List<Review>> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId,
+			bakeries);
 		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
 
 		return bakeries
@@ -110,7 +112,7 @@ public class BakeryServiceImpl implements BakeryService {
 			.map(bakery -> BakeryCardDto.builder()
 				.bakery(bakery)
 				.flagNum(getFlagNum(bakeryCountInFlags, bakery))
-				.reviewList(getReviewListForBakery(reviewListForAllBakeries, bakery))
+				.reviewList(reviewListForAllBakeries.getOrDefault(bakery.getId(), null))
 				.distance(bakery.getDistanceFromUser(latitude, longitude))
 				.color(getFlagColor(filterBy, userId, bakery))
 				.build())
@@ -146,12 +148,4 @@ public class BakeryServiceImpl implements BakeryService {
 			.findFirst()
 			.orElse(0L).intValue();
 	}
-
-	private List<Review> getReviewListForBakery(final List<Review> reviewListForAllBakeries, final Bakery bakery) {
-		return reviewListForAllBakeries
-			.stream()
-			.filter(review -> review.getBakery().equals(bakery))
-			.toList();
-	}
-
 }
