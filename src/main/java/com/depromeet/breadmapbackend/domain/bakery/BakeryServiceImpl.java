@@ -121,15 +121,11 @@ public class BakeryServiceImpl implements BakeryService {
 	}
 
 	private Comparator<BakeryCardDto> getBakeryComparator(final BakerySortType sortBy) {
-		Comparator<BakeryCardDto> comparing;
-
-		if (sortBy.equals(BakerySortType.DISTANCE))
-			comparing = Comparator.comparing(BakeryCardDto::getDistance);
-		else if (sortBy.equals(BakerySortType.POPULAR))
-			comparing = Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
-		else
-			throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
-		return comparing;
+		return switch (sortBy) {
+			case DISTANCE -> Comparator.comparing(BakeryCardDto::getDistance);
+			case POPULAR -> Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
+			default -> throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
+		};
 	}
 
 	private FlagColor getFlagColor(final boolean filterBy, final Long userId, final Bakery bakery) {

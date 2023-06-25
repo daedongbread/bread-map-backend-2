@@ -27,8 +27,9 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class BakeryQueryRepository {
+	private static final int PAGE_SIZE = 20;
+	private static final int BAKERY_SIZE = PAGE_SIZE;
 	private final JPAQueryFactory queryFactory;
-	private final int BAKERY_SIZE = 20;
 
 	public List<Bakery> findTop20BakeriesByCoordinateRange(final CoordinateRange coordinateRange) {
 		return queryFactory
@@ -41,7 +42,7 @@ public class BakeryQueryRepository {
 	}
 
 	public Page<Bakery> getAdminBakeryList(List<AdminBakeryFilter> filterBy, String name, int page) {
-		Pageable pageable = PageRequest.of(page, 20);
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 
 		List<Bakery> content = queryFactory.selectFrom(bakery)
 			.where(adminBakeryCondition(filterBy), searchCondition(name))
