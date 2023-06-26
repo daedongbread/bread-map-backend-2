@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
@@ -39,6 +39,7 @@ public class BakeryServiceImpl implements BakeryService {
 	private final FlagRepository flagRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ReviewService reviewService;
+	private final List<SortProcessor> sortProcessors;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<BakeryCardDto> getBakeryList(
@@ -116,16 +117,15 @@ public class BakeryServiceImpl implements BakeryService {
 				.distance(bakery.getDistanceFromUser(latitude, longitude))
 				.color(getFlagColor(filterBy, userId, bakery))
 				.build())
-			.sorted(getBakeryComparator(sortBy))
+			.sorted(getSortProcessor(sortBy).getComparator())
 			.toList();
 	}
 
-	private Comparator<BakeryCardDto> getBakeryComparator(final BakerySortType sortBy) {
-		return switch (sortBy) {
-			case DISTANCE -> Comparator.comparing(BakeryCardDto::getDistance);
-			case POPULAR -> Comparator.comparing(BakeryCardDto::getPopularNum).reversed();
-			default -> throw new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION);
-		};
+	private SortProcessor getSortProcessor(final BakerySortType sortBy) {
+		return sortProcessors.stream()
+			.filter(sortProcessor -> sortProcessor.supports(sortBy))
+			.findFirst()
+			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_SORT_TYPE_EXCEPTION));
 	}
 
 	private FlagColor getFlagColor(final boolean filterBy, final Long userId, final Bakery bakery) {
