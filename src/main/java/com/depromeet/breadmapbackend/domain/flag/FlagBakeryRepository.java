@@ -22,8 +22,8 @@ public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
 
 	Optional<FlagBakery> findByBakeryAndUser(Bakery bakery, User user);
 
-	@Query("SELECT fb.flag FROM FlagBakery fb where fb.bakery = ?1 and fb.user = ?2")
-	Optional<Flag> findFlagByBakeryAndUser(Bakery bakery, User user);
+	@Query("SELECT fb.flag FROM FlagBakery fb where fb.bakery = ?1 and fb.user.id = ?2")
+	Optional<Flag> findFlagByBakeryAndUser(Bakery bakery, Long userId);
 
 	@Transactional
 	void delete(FlagBakery flagBakery);
@@ -56,19 +56,4 @@ public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
 		@Param("userId") Long userId
 	);
 
-	@Query("SELECT fb.bakery.id as bakeryId, "
-		+ " count(fb.bakery) "
-		+ "FROM FlagBakery fb "
-		+ "INNER JOIN Flag f ON f = fb.flag "
-		+ "WHERE fb.bakery in (:bakeryList)  "
-		+ "AND f.name = '가봤어요' "
-		+ "group by fb.bakery.id")
-	List<BakeryCountInFlag> countFlagNum(@Param("bakeryList") List<Bakery> bakeryList);
-
-	interface BakeryCountInFlag {
-		Long getBakeryId();
-
-		Long getCount();
-
-	}
 }
