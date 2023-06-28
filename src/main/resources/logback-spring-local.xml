@@ -4,7 +4,7 @@
 
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>
-                [REQUEST %X{TRX_ID}] ${LOG_PATTERN}
+                [REQUEST %X{TRX_ID}] ${LOG_PATTERN_LOCAL}
             </pattern>
             <outputPatternAsHeader>true</outputPatternAsHeader>
         </encoder>
