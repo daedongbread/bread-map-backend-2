@@ -40,11 +40,11 @@ public class LoggingFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 
-		log.info("Request Ended ==>  [REQUEST_TIME] : {} ms",
-			MDC.get(TRX_TIME.name()) != null ?
-				(System.currentTimeMillis() - Long.parseLong(MDC.get(TRX_TIME.name()))) :
-				0
-		);
+		if (!request.getRequestURI().equals("/v1/actuator/health")) {
+			log.info("Request Ended ==>  [REQUEST_TIME] : {} ms",
+				MDC.get(TRX_TIME.name()) != null ?
+					(System.currentTimeMillis() - Long.parseLong(MDC.get(TRX_TIME.name()))) : 0);
+		}
 
 		MDC.clear();
 	}
