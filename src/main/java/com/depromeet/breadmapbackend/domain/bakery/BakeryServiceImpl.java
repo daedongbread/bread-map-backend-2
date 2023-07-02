@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
@@ -19,7 +20,7 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
-import com.depromeet.breadmapbackend.domain.review.ReviewService;
+import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -38,7 +39,7 @@ public class BakeryServiceImpl implements BakeryService {
 	private final UserRepository userRepository;
 	private final FlagRepository flagRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
-	private final ReviewService reviewService;
+	private final ReviewQueryRepository reviewQueryRepository;
 	private final List<SortProcessor> sortProcessors;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -76,7 +77,8 @@ public class BakeryServiceImpl implements BakeryService {
 		//                .filter(Review::isValid)
 		//                .filter(review -> blockUserRepository.findByFromUserAndToUser(me, review.getUser()).isEmpty())
 		//                .collect(Collectors.toList());
-		List<Review> reviewList = reviewService.getReviewList(me, bakery);
+
+		List<Review> reviewList = reviewQueryRepository.findReviewList(me, bakery);
 
 		BakeryDto.BakeryInfo bakeryInfo = BakeryDto.BakeryInfo.builder()
 			.bakery(bakery)
@@ -96,6 +98,11 @@ public class BakeryServiceImpl implements BakeryService {
 			.build();
 	}
 
+	@Override
+	public List<BakeryRankingCard> getBakeryRankingTop(final int size, final Long userId) {
+		return null;
+	}
+
 	private List<BakeryCardDto> getBakeryCardDtos(
 		final Long userId,
 		final BakerySortType sortBy,
@@ -104,8 +111,8 @@ public class BakeryServiceImpl implements BakeryService {
 		final Double longitude,
 		final List<Bakery> bakeries
 	) {
-		final Map<Long, List<Review>> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId,
-			bakeries);
+		final Map<Long, List<Review>> reviewListForAllBakeries =
+			reviewQueryRepository.findReviewListInBakeries(userId, bakeries);
 		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
 
 		return bakeries
