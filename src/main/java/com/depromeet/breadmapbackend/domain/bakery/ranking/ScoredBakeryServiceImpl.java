@@ -35,6 +35,6 @@ class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	@Override
 	public List<ScoredBakery> findBakeriesRankTop(final int count) {
-		return null;
+		return scoredBakeryRepository.findBakeriesRankTop(count);
 	}
 }

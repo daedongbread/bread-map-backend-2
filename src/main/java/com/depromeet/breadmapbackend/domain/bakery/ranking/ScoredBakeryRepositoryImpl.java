@@ -18,4 +18,9 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	public int bulkInsert(final List<ScoredBakery> scoredBakeryList) {
 		return 0;
 	}
+
+	@Override
+	public List<ScoredBakery> findBakeriesRankTop(final int count) {
+		return null;
+	}
 }

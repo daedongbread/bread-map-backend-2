@@ -24,7 +24,7 @@ class ScoredBakeryServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		final ScoredBakeryRepository repository = new ScoredBakeryRepositoryImpl();
+		final ScoredBakeryRepository repository = new FakeScoredBakeryRepositoryImpl();
 		sut = new ScoredBakeryServiceImpl(repository);
 
 		final Bakery bakery1 = Bakery.builder()
