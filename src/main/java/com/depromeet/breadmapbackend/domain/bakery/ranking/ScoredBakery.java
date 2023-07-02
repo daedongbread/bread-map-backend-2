@@ -1,12 +1,21 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
 import org.springframework.util.Assert;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * ScoredBakery
@@ -15,14 +24,20 @@ import lombok.Getter;
  * @version 1.0.0
  * @since 2023/07/02
  */
+@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ScoredBakery {
 
-	private final Long id;
-	private final Bakery bakery;
-	private final double bakeryRating;
-	private final Long flagCount;
-	private final double totalScore;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@OneToOne
+	@JoinColumn(name = "bakery_id")
+	private Bakery bakery;
+	private double bakeryRating;
+	private Long flagCount;
+	private double totalScore;
 
 	@Builder
 	private ScoredBakery(final Long id, final Bakery bakery, final double bakeryRating,

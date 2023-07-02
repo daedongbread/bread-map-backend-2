@@ -11,7 +11,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
  * @version 1.0.0
  * @since 2023/07/02
  */
-interface ScoredBakeryService {
+public interface ScoredBakeryService {
 	int registerBakeriesRank(List<BakeryScores> bakeriesScores);
 
 	List<ScoredBakery> findBakeriesRankTop(int count);

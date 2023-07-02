@@ -148,4 +148,9 @@ public class Bakery extends BaseEntity {
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
 	}
 
+	public String getShortAddress() {
+
+		final String[] addressSplit = this.address.split("\\s");
+		return addressSplit[0] + " " + addressSplit[1];
+	}
 }

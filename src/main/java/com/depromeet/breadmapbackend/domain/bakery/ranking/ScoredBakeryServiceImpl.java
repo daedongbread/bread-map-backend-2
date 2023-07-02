@@ -15,7 +15,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
  * @since 2023/07/02
  */
 @Service
-class ScoredBakeryServiceImpl implements ScoredBakeryService {
+public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	private final ScoredBakeryRepository scoredBakeryRepository;
 

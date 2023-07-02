@@ -56,4 +56,10 @@ public interface FlagBakeryRepository extends JpaRepository<FlagBakery, Long> {
 		@Param("userId") Long userId
 	);
 
+	// @Query("select fb.bakery.id "
+	// 	+ "from FlagBakery fb "
+	// 	+ "where fb.user.id = :userId "
+	// 	+ "and fb.bakery.id in (:bakeryIdList)"
+	// )
+	List<FlagBakery> findByUserIdAndBakeryIdIn(Long userId, List<Long> bakeryIdList);
 }

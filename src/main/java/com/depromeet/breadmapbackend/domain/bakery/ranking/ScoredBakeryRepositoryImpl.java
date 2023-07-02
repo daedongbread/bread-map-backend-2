@@ -2,7 +2,10 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * ScoredBakeryRepositoryImpl
@@ -12,7 +15,10 @@ import org.springframework.stereotype.Repository;
  * @since 2023/07/02
  */
 @Repository
+@RequiredArgsConstructor
 public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
+
+	private final ScoredBakeryJpaRepository scoredBakeryJpaRepository;
 
 	@Override
 	public int bulkInsert(final List<ScoredBakery> scoredBakeryList) {
@@ -21,6 +27,6 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 	@Override
 	public List<ScoredBakery> findBakeriesRankTop(final int count) {
-		return null;
+		return scoredBakeryJpaRepository.findBakeriesRankTop(Pageable.ofSize(count));
 	}
 }

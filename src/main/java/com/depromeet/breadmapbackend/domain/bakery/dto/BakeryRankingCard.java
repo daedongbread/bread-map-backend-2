@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.dto;
 
+import lombok.Builder;
+
 /**
  * BakeryRankingCard
  *
@@ -7,11 +9,13 @@ package com.depromeet.breadmapbackend.domain.bakery.dto;
  * @version 1.0.0
  * @since 2023/07/02
  */
+
+@Builder
 public record BakeryRankingCard(
 	Long id,
 	String name,
 	String image,
-	int flagNum,
+	Long flagNum,
 	double rating,
 	String shortAddress,
 	boolean isFlagged

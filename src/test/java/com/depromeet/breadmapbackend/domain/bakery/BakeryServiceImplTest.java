@@ -42,7 +42,7 @@ class BakeryServiceImplTest extends BakeryServiceTest {
 		// given
 		final Long userId = 111L;
 		final int searchSize = 5;
-		final List<Long> rankingIdList = List.of(300L, 100L, 700L, 600L, 500L);
+		final List<Long> rankingIdList = List.of(600L, 500L, 100L, 200L, 300L);
 
 		// when
 		final List<BakeryRankingCard> bakeryRankingCardList = sut.getBakeryRankingTop(searchSize, userId);
@@ -51,7 +51,10 @@ class BakeryServiceImplTest extends BakeryServiceTest {
 		assertThat(bakeryRankingCardList.size()).isEqualTo(5);
 		assertThat(bakeryRankingCardList.stream().map(BakeryRankingCard::id).toList())
 			.containsExactlyElementsOf(rankingIdList);
-		assertThat(bakeryRankingCardList.get(3).rating()).isEqualTo(2.5);
-		assertThat(bakeryRankingCardList.get(0).shortAddress()).isEqualTo("서울특별시 송파구");
+		assertThat(bakeryRankingCardList.get(3).rating()).isEqualTo(4.9);
+		assertThat(bakeryRankingCardList.get(0).shortAddress()).isEqualTo("서울 강동구");
+		assertThat(bakeryRankingCardList.get(0).isFlagged()).isTrue();
+		assertThat(bakeryRankingCardList.get(1).isFlagged()).isFalse();
+		assertThat(bakeryRankingCardList.get(2).isFlagged()).isTrue();
 	}
 }
