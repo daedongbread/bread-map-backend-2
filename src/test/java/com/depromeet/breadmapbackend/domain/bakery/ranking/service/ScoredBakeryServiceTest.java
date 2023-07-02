@@ -1,7 +1,9 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.service;
 
 import org.springframework.context.annotation.Import;
 
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepositoryImpl;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryServiceImpl;
 import com.depromeet.breadmapbackend.global.infra.AsyncConfig;
 import com.depromeet.breadmapbackend.utils.ServiceTest;
 import com.depromeet.breadmapbackend.utils.TestConfig;

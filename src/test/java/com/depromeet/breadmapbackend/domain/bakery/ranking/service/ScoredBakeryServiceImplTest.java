@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.service;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -10,6 +10,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryServiceImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 

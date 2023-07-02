@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.controller;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;

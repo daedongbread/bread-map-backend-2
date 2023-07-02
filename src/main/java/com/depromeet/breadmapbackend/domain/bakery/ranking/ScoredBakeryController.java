@@ -34,9 +34,11 @@ public class ScoredBakeryController {
 	@GetMapping("/{count}")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<List<BakeryRankingCard>> getBakery(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@PathVariable("count") int count
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
+		@PathVariable("count") final int count
 	) {
-		return new ApiResponse<>(scoredBakeryService.findBakeriesRankTop(currentUserInfo.getId(), count));
+		return new ApiResponse<>(
+			scoredBakeryService.findBakeriesRankTop(currentUserInfo.getId(), count)
+		);
 	}
 }

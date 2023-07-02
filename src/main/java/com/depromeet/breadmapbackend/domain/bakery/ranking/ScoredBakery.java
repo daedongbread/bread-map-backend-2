@@ -40,8 +40,13 @@ public class ScoredBakery {
 	private double totalScore;
 
 	@Builder
-	private ScoredBakery(final Long id, final Bakery bakery, final double bakeryRating,
-		final Long flagCount, final double totalScore) {
+	private ScoredBakery(
+		final Long id,
+		final Bakery bakery,
+		final double bakeryRating,
+		final Long flagCount,
+		final double totalScore
+	) {
 
 		Assert.notNull(bakery, "bakery must not be null");
 		Assert.isTrue(bakeryRating >= 0 && bakeryRating <= 5, "bakeryRating must be between 0 and 5");
