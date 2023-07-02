@@ -25,6 +25,7 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	private static final String TABLE = "scored_bakery";
 	private final ScoredBakeryJpaRepository scoredBakeryJpaRepository;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private final ScoredBakeryCacheRepository scoredBakeryCacheRepository;
 
 	@Transactional
 	public int bulkInsert(List<ScoredBakery> scoredBakeryList) {
@@ -47,6 +48,10 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 	@Override
 	public List<ScoredBakery> findBakeriesRankTop(final int count) {
+		final List<ScoredBakery> cachedRank = scoredBakeryCacheRepository.findBakeriesRankTop(count);
+		if (cachedRank.isEmpty()) {
+			return cachedRank;
+		}
 		return scoredBakeryJpaRepository.findBakeriesRankTop(Pageable.ofSize(count));
 	}
 }
