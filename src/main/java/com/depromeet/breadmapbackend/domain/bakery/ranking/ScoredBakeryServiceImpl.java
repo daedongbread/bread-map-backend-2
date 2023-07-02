@@ -32,4 +32,9 @@ class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 		return scoredBakeryRepository.bulkInsert(scoredBakeryList);
 	}
+
+	@Override
+	public List<ScoredBakery> findBakeriesRankTop(final int count) {
+		return null;
+	}
 }
