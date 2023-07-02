@@ -8,6 +8,8 @@ package com.depromeet.breadmapbackend.domain.bakery.dto;
  * @since 2023/07/02
  */
 public record BakeryRankingCard(
+	Long id,
+	String name,
 	String image,
 	int flagNum,
 	double rating,
