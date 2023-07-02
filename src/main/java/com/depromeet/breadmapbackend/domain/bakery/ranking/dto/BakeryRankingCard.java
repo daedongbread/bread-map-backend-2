@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.dto;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.dto;
 
 import lombok.Builder;
 

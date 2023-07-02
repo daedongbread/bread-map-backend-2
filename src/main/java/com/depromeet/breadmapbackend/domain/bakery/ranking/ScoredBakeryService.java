@@ -2,7 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRankingCard;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 
 /**

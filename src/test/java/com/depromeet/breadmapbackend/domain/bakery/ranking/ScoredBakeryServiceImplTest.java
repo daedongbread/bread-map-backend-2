@@ -10,7 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRankingCard;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 
 /**
