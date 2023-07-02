@@ -12,5 +12,5 @@ import java.util.List;
 interface ScoredBakeryRepository {
 	int bulkInsert(final List<ScoredBakery> scoredBakeryList);
 
-	List<ScoredBakery> findBakeriesRankTop(int count);
+	List<ScoredBakery> findBakeriesRankTop(final int count);
 }

@@ -11,14 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRankingCard;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryService;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
-import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
@@ -99,47 +96,6 @@ public class BakeryServiceImpl implements BakeryService {
 			.facilityInfoList(bakery.getFacilityInfoList())
 			.pioneerInfo(pioneerInfo)
 			.build();
-	}
-
-	@Override
-	public List<BakeryRankingCard> getBakeryRankingTop(final int size, final Long userId) {
-		final List<ScoredBakery> bakeriesScores = scoredBakeryService.findBakeriesRankTop(
-			size); // TODO : redis caching 적용
-
-		final List<FlagBakery> flagBakeryList =
-			flagBakeryRepository.findByUserIdAndBakeryIdIn(
-				userId,
-				bakeriesScores.stream()
-					.map(scoredBakery -> scoredBakery.getBakery().getId())
-					.toList()
-			);
-
-		return bakeriesScores.stream()
-			.map(bakeryScores ->
-				BakeryRankingCard.builder()
-					.id(bakeryScores.getBakery().getId())
-					.name(bakeryScores.getBakery().getName())
-					.image(bakeryScores.getBakery().getImage())
-					.flagNum(bakeryScores.getFlagCount())
-					.rating(bakeryScores.getBakeryRating())
-					.shortAddress(bakeryScores.getBakery().getShortAddress())
-					.isFlagged(doesUserFlaggedBakery(bakeryScores, flagBakeryList))
-					.build()
-			)
-			.limit(size)
-			.toList();
-
-	}
-
-	private static boolean doesUserFlaggedBakery(
-		final ScoredBakery bakeryScores,
-		final List<FlagBakery> flagBakeryList
-	) {
-		return flagBakeryList.stream()
-			.anyMatch(flagBakery ->
-				flagBakery.getBakery().getId()
-					.equals(bakeryScores.getBakery().getId())
-			);
 	}
 
 	private List<BakeryCardDto> getBakeryCardDtos(

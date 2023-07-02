@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 
 /**
@@ -12,7 +13,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
  * @since 2023/07/02
  */
 public interface ScoredBakeryService {
-	int registerBakeriesRank(List<BakeryScores> bakeriesScores);
+	int registerBakeriesRank(final List<BakeryScores> bakeriesScores);
 
-	List<ScoredBakery> findBakeriesRankTop(int count);
+	List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int count);
 }
