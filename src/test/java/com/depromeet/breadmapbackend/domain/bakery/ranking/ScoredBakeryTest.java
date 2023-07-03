@@ -32,7 +32,7 @@ class ScoredBakeryTest {
 		final Long flagCount = 2L;
 
 		final double expectedTotalScore = 6.5;
-		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount);
+		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, "2022-1-1");
 		//when
 		final ScoredBakery result = ScoredBakery.from(bakeryScores);
 		//then
