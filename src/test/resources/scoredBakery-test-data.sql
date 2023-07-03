@@ -57,14 +57,7 @@ insert into bakery (id, created_at, modified_at, address, blogurl, facebookurl, 
 (1100, '2023-04-05 15:00:00', '2023-04-05 15:00:00', '서울특별시 서대문구 연희맛로 7-29, 지하1층', null, null, 'http://www.instagram.com/lesoleil_official', null, 'WIFI', '월 정기휴무화 정기휴무수 12:00 - 19:00목 12:00 - 19:00금 12:00 - 19:00토 12:00 - 19:00일 12:00 - 19:00', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery5.png', 37.5663689, 126.927985, '르솔레이', '0507-1315-6371', 'POSTING', null, null, null),
 (1200, '2023-04-05 15:00:00', '2023-04-05 15:00:00', '서울특별시 마포구 창전로 45, 101동 1층 109호', null, null, null, null, null, '매일 11:00 - 19:00', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery3.png', 37.5462603, 126.931899, '파이앤브라우니', '0507-1416-3132', 'POSTING', null, null, null);
 
-insert into scored_bakery (id ,bakery_rating ,flag_count ,total_score,bakery_id) values
-(100, 3.7,100, 103.7, 100),
-(101, 4.9,20, 24.9, 200),
-(102, 1.5,17, 18.5, 300),
-(103, 3.2,1532, 1535.2, 500),
-(104, 3.2,1532, 1535.2, 600),
-(105, 0,0, 0, 700)
-;
+
 insert into review (id, created_at, modified_at, content, is_block, is_delete, is_hide, is_new  ,bakery_id, user_id )values
     (111,  '2023-01-01', '2023-01-01', '수원',  'N', 'N', 'N', 'N', 100, 112),
     (112,  '2023-01-02', '2023-01-01', '서울',  'N', 'N', 'N', 'N', 300, 112),

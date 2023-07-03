@@ -58,7 +58,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@Import({AmazonS3MockConfig.class, EmbeddedRedisConfig.class})
+@Import({AmazonS3MockConfig.class, EmbeddedRedisConfig.class, TestRedisStreamConfig.class})
 public abstract class ControllerTest {
 	@Autowired
 	protected MockMvc mockMvc;
