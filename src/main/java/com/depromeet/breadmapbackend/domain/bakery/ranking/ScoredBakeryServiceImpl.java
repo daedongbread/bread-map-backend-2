@@ -44,19 +44,19 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	@Override
 	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
-		final List<ScoredBakery> bakeriesScores =
-			getScoredBakeries(CalenderUtil.getYearWeekOfMonth(LocalDate.now()), size);
+		final List<ScoredBakery> scoredBakeries =
+			findScoredBakeryBy(CalenderUtil.getYearWeekOfMonth(LocalDate.now()), size);
 
-		final List<FlagBakery> flagBakeryList = findUserFlagBakeries(userId, bakeriesScores);
+		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
 
-		return bakeriesScores.stream()
-			.map(bakeryScores -> from(flagBakeryList, bakeryScores))
+		return scoredBakeries.stream()
+			.map(bakeryScores -> from(userFlaggedBakeries, bakeryScores))
 			.limit(size)
 			.toList();
 
 	}
 
-	private List<ScoredBakery> getScoredBakeries(final String weekOfMonthYear, final int size) {
+	private List<ScoredBakery> findScoredBakeryBy(final String weekOfMonthYear, final int size) {
 
 		final List<ScoredBakery> cachedRank =
 			scoredBakeryRepository.findCachedScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
@@ -75,7 +75,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 		throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
 	}
 
-	private List<FlagBakery> findUserFlagBakeries(final Long userId, final List<ScoredBakery> bakeriesScores) {
+	private List<FlagBakery> findFlagBakeryBy(final Long userId, final List<ScoredBakery> bakeriesScores) {
 		return flagBakeryRepository.findByUserIdAndBakeryIdIn(
 			userId,
 			bakeriesScores.stream()
@@ -92,11 +92,11 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.flagNum(bakeryScores.getFlagCount())
 			.rating(bakeryScores.getBakeryRating())
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
-			.isFlagged(doesUserFlaggedBakery(bakeryScores, flagBakeryList))
+			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
 			.build();
 	}
 
-	private boolean doesUserFlaggedBakery(
+	private boolean isUserFlaggedBakery(
 		final ScoredBakery bakeryScores,
 		final List<FlagBakery> flagBakeryList
 	) {
