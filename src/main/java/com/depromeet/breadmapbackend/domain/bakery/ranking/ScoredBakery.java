@@ -38,6 +38,7 @@ public class ScoredBakery {
 	private double bakeryRating;
 	private Long flagCount;
 	private double totalScore;
+	private String createdWeekOfMonthYear;
 
 	@Builder
 	private ScoredBakery(
@@ -45,18 +46,21 @@ public class ScoredBakery {
 		final Bakery bakery,
 		final double bakeryRating,
 		final Long flagCount,
-		final double totalScore
+		final double totalScore,
+		final String createdWeekOfMonthYear
 	) {
 
 		Assert.notNull(bakery, "bakery must not be null");
 		Assert.isTrue(bakeryRating >= 0 && bakeryRating <= 5, "bakeryRating must be between 0 and 5");
 		Assert.notNull(flagCount, "flagCount must not be null");
+		Assert.notNull(createdWeekOfMonthYear, "weekOfMonth must not be null");
 
 		this.id = id;
 		this.bakery = bakery;
 		this.bakeryRating = bakeryRating;
 		this.flagCount = flagCount;
 		this.totalScore = totalScore;
+		this.createdWeekOfMonthYear = createdWeekOfMonthYear;
 	}
 
 	public static ScoredBakery from(final BakeryScores bakeryScores) {
@@ -65,6 +69,7 @@ public class ScoredBakery {
 			.bakeryRating(bakeryScores.bakeryRating())
 			.flagCount(bakeryScores.flagCount())
 			.totalScore(calculateTotalScore(bakeryScores.bakeryRating(), bakeryScores.flagCount()))
+			.createdWeekOfMonthYear(bakeryScores.weekOfMonth())
 			.build();
 	}
 

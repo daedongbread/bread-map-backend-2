@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,6 +10,9 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.global.util.CalenderUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,46 +23,56 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0.0
  * @since 2023/07/02
  */
-
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	private final ScoredBakeryRepository scoredBakeryRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
+	private final ScoredBakeryEventStream scoredBakeryEventStream;
 
 	@Transactional
-	public int registerBakeriesRank(final List<BakeryScores> bakeriesScores) {
+	public int registerBakeriesRank(final List<BakeryScores> bakeriesScores, final String weekOfMonthYear) {
 		final List<ScoredBakery> scoredBakeryList =
 			bakeriesScores.stream()
 				.map(ScoredBakery::from)
 				.toList();
 
-		return scoredBakeryRepository.bulkInsert(scoredBakeryList);
+		return scoredBakeryRepository.bulkInsert(scoredBakeryList, weekOfMonthYear);
 	}
 
 	@Override
 	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
 		final List<ScoredBakery> bakeriesScores =
-			scoredBakeryRepository.findBakeriesRankTop(size); // TODO : redis caching 적용
+			getScoredBakeries(CalenderUtil.getYearWeekOfMonth(LocalDate.now()), size);
 
 		final List<FlagBakery> flagBakeryList = findUserFlagBakeries(userId, bakeriesScores);
 
 		return bakeriesScores.stream()
-			.map(bakeryScores ->
-				BakeryRankingCard.builder()
-					.id(bakeryScores.getBakery().getId())
-					.name(bakeryScores.getBakery().getName())
-					.image(bakeryScores.getBakery().getImage())
-					.flagNum(bakeryScores.getFlagCount())
-					.rating(bakeryScores.getBakeryRating())
-					.shortAddress(bakeryScores.getBakery().getShortAddress())
-					.isFlagged(doesUserFlaggedBakery(bakeryScores, flagBakeryList))
-					.build()
-			)
+			.map(bakeryScores -> from(flagBakeryList, bakeryScores))
 			.limit(size)
 			.toList();
 
+	}
+
+	private List<ScoredBakery> getScoredBakeries(final String weekOfMonthYear, final int size) {
+
+		final List<ScoredBakery> cachedRank =
+			scoredBakeryRepository.findCachedScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
+		if (!cachedRank.isEmpty()) {
+			return cachedRank;
+		}
+
+		final List<ScoredBakery> rankedBakeries =
+			scoredBakeryRepository.findScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
+		if (!rankedBakeries.isEmpty()) {
+			scoredBakeryEventStream.publish(ScoredBakeryEvents.CACHE_RANKING, weekOfMonthYear);
+			return rankedBakeries;
+		}
+
+		scoredBakeryEventStream.publish(ScoredBakeryEvents.CALCULATE_RANKING, weekOfMonthYear);
+		throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
 	}
 
 	private List<FlagBakery> findUserFlagBakeries(final Long userId, final List<ScoredBakery> bakeriesScores) {
@@ -68,6 +82,18 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 				.map(scoredBakery -> scoredBakery.getBakery().getId())
 				.toList()
 		);
+	}
+
+	private BakeryRankingCard from(final List<FlagBakery> flagBakeryList, final ScoredBakery bakeryScores) {
+		return BakeryRankingCard.builder()
+			.id(bakeryScores.getBakery().getId())
+			.name(bakeryScores.getBakery().getName())
+			.image(bakeryScores.getBakery().getImage())
+			.flagNum(bakeryScores.getFlagCount())
+			.rating(bakeryScores.getBakeryRating())
+			.shortAddress(bakeryScores.getBakery().getShortAddress())
+			.isFlagged(doesUserFlaggedBakery(bakeryScores, flagBakeryList))
+			.build();
 	}
 
 	private boolean doesUserFlaggedBakery(

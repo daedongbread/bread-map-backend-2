@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * ScoredBakeryJpaRepository
@@ -17,6 +18,10 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 
 	@Query("select sb "
 		+ "from ScoredBakery sb "
+		+ "where sb.createdWeekOfMonthYear = :weekOfMonthYear "
 		+ "order by sb.totalScore desc, sb.bakery.id desc")
-	List<ScoredBakery> findBakeriesRankTop(final Pageable pageable);
+	List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(
+		@Param("weekOfMonthYear") final String weekOfMonthYear,
+		final Pageable pageable
+	);
 }

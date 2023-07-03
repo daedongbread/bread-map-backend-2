@@ -26,10 +26,10 @@ public class ScoredBakeryCacheRepository {
 	private final StringRedisTemplate redisTemplate;
 	private final ObjectMapper objectMapper;
 
-	public List<ScoredBakery> findBakeriesRankTop(final int count) {
+	public List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(final String weekOfMonth, final int count) {
 
-		final Optional<Set<String>> scoredBakeriesInString = Optional.ofNullable(
-			redisTemplate.opsForZSet().range(getKey(), 0, count - 1));
+		final Optional<Set<String>> scoredBakeriesInString =
+			Optional.ofNullable(redisTemplate.opsForZSet().range(getKey(weekOfMonth), 0, count - 1));
 		return scoredBakeriesInString
 			.map(this::getScoredBakeryListFrom)
 			.orElseGet(List::of);
@@ -46,11 +46,8 @@ public class ScoredBakeryCacheRepository {
 			}).toList();
 	}
 
-	private String getKey() {
-		// final LocalDate now = LocalDate.now();
-		// WeekFields weekFields = WeekFields.of(Locale.getDefault());
-		// int weekOfMonth = now.get(weekFields.weekOfMonth());
-		return "SCORED_BAKERY"; // + weekOfMonth;
+	private String getKey(final String weekOfMonth) {
+		return "SCORED_BAKERY:" + weekOfMonth;
 	}
 
 }

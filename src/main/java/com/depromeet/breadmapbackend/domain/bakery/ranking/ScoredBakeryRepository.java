@@ -9,8 +9,10 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023/07/02
  */
-interface ScoredBakeryRepository {
-	int bulkInsert(final List<ScoredBakery> scoredBakeryList);
+public interface ScoredBakeryRepository {
+	int bulkInsert(final List<ScoredBakery> scoredBakeryList, final String weekOfMonthYear);
 
-	List<ScoredBakery> findBakeriesRankTop(final int count);
+	List<ScoredBakery> findCachedScoredBakeryByWeekOfMonthYear(final String weekOfMonthYear, final int size);
+
+	List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(final String weekOfMonthYear, final int size);
 }

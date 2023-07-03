@@ -12,7 +12,8 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 public record BakeryScores(
 	Bakery bakery,
 	double bakeryRating,
-	Long flagCount
+	Long flagCount,
+	String weekOfMonth
 ) {
 
 }

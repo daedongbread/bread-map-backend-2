@@ -149,8 +149,8 @@ public class Bakery extends BaseEntity {
 	}
 
 	public String getShortAddress() {
-
 		final String[] addressSplit = this.address.split("\\s");
-		return addressSplit[0] + " " + addressSplit[1];
+		return addressSplit.length == 1 ? addressSplit[0] : addressSplit[0] + " " + addressSplit[1];
+
 	}
 }
