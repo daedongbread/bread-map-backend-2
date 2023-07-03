@@ -4,7 +4,6 @@ import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -147,21 +146,6 @@ public class Bakery extends BaseEntity {
 	public Double bakeryRating(List<Review> reviewList) {
 		return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		Bakery bakery = (Bakery)o;
-		return Objects.equals(id, bakery.getId());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
 	}
 
 }
