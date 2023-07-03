@@ -33,7 +33,4 @@ public interface BakeryRepository extends JpaRepository<Bakery, Long> {
 	Page<Bakery> findByNameContainsOrderByUpdatedAt(@Param("name") String name, Pageable pageable);
 
 	Long countByStatus(BakeryStatus status);
-
-	@Query("select b from Bakery b where b.id in :ids")
-	List<Bakery> findBakeriesInIds(@Param("ids") List<Long> ids);
 }
