@@ -29,7 +29,7 @@ public class ScoredBakeryCacheRepository {
 	public List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(final String weekOfMonth, final int count) {
 
 		final Optional<Set<String>> scoredBakeriesInString =
-			Optional.ofNullable(redisTemplate.opsForZSet().range(getKey(weekOfMonth), 0, count - 1));
+			Optional.ofNullable(redisTemplate.opsForZSet().reverseRange(getKey(weekOfMonth), 0, count - 1));
 		return scoredBakeriesInString
 			.map(this::getScoredBakeryListFrom)
 			.orElseGet(List::of);
