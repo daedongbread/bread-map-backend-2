@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,6 +57,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
+import com.depromeet.breadmapbackend.global.DaeDongEvents;
 import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -92,6 +94,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final CustomSGISKeyProperties customSGISKeyProperties;
 	private final CustomAWSS3Properties customAWSS3Properties;
+	private final AdminBakeryEventStream adminBakeryEventStream;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public AdminBakeryAlarmBar getBakeryAlarmBar() {
@@ -152,9 +155,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		SgisTokenDto token = sgisClient.getToken(customSGISKeyProperties.getKey(), customSGISKeyProperties.getSecret());
 		SgisGeocodeDto geocode = getGeocode(token.getResult().getAccessToken(), address);
 		SgisTranscoordDto transcoord = getTranscoord(
-				token.getResult().getAccessToken(),
-				geocode.getResult().getResultdata().get(0).getX(),
-				geocode.getResult().getResultdata().get(0).getY()
+			token.getResult().getAccessToken(),
+			geocode.getResult().getResultdata().get(0).getX(),
+			geocode.getResult().getResultdata().get(0).getY()
 		);
 
 		Double latitude = transcoord.getResult().getPosY();
@@ -172,7 +175,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private SgisTranscoordDto getTranscoord(String accessToken, String posX, String posY) {
 		for (final Integer dst : List.of(customSGISKeyProperties.getDst1(), customSGISKeyProperties.getDst2())) {
 			SgisTranscoordDto transcoord =
-					sgisClient.getTranscoord(accessToken, customSGISKeyProperties.getSrc(), dst, posX, posY);
+				sgisClient.getTranscoord(accessToken, customSGISKeyProperties.getSrc(), dst, posX, posY);
 
 			if (transcoord.getResult() != null)
 				return transcoord;
@@ -206,7 +209,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			.status(request.getStatus())
 			.pioneer(pioneer)
 			.build();
-		bakeryRepository.save(bakery);
+		final Bakery savedBakery = bakeryRepository.save(bakery);
 		bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
 
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
@@ -231,6 +234,10 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					.noticeType(NoticeType.ADD_BAKERY)
 					.build()
 			);
+		final HashMap<String, String> fieldMap = new HashMap<>();
+		fieldMap.put("bakeryId", savedBakery.getId().toString());
+		adminBakeryEventStream.publish(DaeDongEvents.ADD_BAKERY_EVENT, fieldMap);
+
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
 	}
 
