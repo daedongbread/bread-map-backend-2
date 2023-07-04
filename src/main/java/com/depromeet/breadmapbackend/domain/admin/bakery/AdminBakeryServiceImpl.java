@@ -236,7 +236,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			);
 		final HashMap<String, String> fieldMap = new HashMap<>();
 		fieldMap.put("bakeryId", savedBakery.getId().toString());
-		adminBakeryEventStream.publish(DaeDongEvents.ADD_BAKERY_EVENT, fieldMap);
+		adminBakeryEventStream.publish(DaeDongEvents.BAKERY_ADD_EVENT, fieldMap);
 
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
 	}

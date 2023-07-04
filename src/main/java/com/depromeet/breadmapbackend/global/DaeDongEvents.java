@@ -9,5 +9,5 @@ package com.depromeet.breadmapbackend.global;
  */
 public enum DaeDongEvents {
 
-	ADD_BAKERY_EVENT
+	BAKERY_ADD_EVENT
 }
