@@ -495,8 +495,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_깃발_리스트_조회_api_get_http_request"><a class="link" href="#_깃발_리스트_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/flags/users/50 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/flags/users/122 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -570,12 +570,12 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 222
+Content-Length: 213
 
 {
   "data" : [ {
     "flagInfo" : {
-      "id" : 8,
+      "id" : 121,
       "name" : "testFlagName",
       "color" : "ORANGE",
       "icon" : "HEART",
@@ -662,9 +662,9 @@ PINK("핑크색"))</p></td>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/flags HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Accept: application/json
-Content-Length: 49
+Content-Length: 46
 Host: localhost:8080
 
 {
@@ -767,11 +767,11 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_깃발_업데이트_api_patch_http_request"><a class="link" href="#_깃발_업데이트_api_patch_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/flags/3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /v1/flags/116 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Accept: application/json
-Content-Length: 56
+Content-Length: 53
 Host: localhost:8080
 
 {
@@ -904,8 +904,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_깃발_삭제_api_delete_http_request"><a class="link" href="#_깃발_삭제_api_delete_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/flags/5 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/flags/118 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -988,8 +988,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_깃발에_추가된_빵집_리스트_조회_get_http_request"><a class="link" href="#_깃발에_추가된_빵집_리스트_조회_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/flags/4 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/flags/117 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1063,26 +1063,26 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 457
+Content-Length: 440
 
 {
   "data" : {
     "flagInfo" : {
-      "id" : 4,
+      "id" : 117,
       "name" : "testFlagName",
       "color" : "ORANGE",
       "icon" : "HEART",
       "bakeryNum" : 1
     },
     "flagBakeryInfoList" : [ {
-      "id" : 40,
+      "id" : 1206,
       "image" : "bakeryImage",
       "name" : "bakery1",
       "flagNum" : 0,
       "rating" : 4.0,
       "reviewNum" : 1,
       "simpleReviewList" : [ {
-        "id" : 34,
+        "id" : 116,
         "content" : "content1"
       } ]
     } ]
@@ -1209,8 +1209,8 @@ PINK("핑크색"))</p></td>
 <h4 id="_깃발에_빵집_추가_api_post_http_request"><a class="link" href="#_깃발에_빵집_추가_api_post_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/flags/6/bakeries/42 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/flags/119/bakeries/1208 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1297,8 +1297,8 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_깃발에_등록된_빵집_삭제_delete_http_request"><a class="link" href="#_깃발에_등록된_빵집_삭제_delete_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/flags/7/bakeries/43 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk0LCJleHAiOjE2ODYzNzM5OTR9.jOr3IU52wJIVw_W9z9eumZ6hpYgW7yJLieTjz2xiJSM
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/flags/120/bakeries/1209 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1385,7 +1385,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-29 01:56:53 +0900
+Last updated 2023-06-16 18:10:34 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
