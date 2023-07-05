@@ -20,10 +20,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
@@ -82,6 +84,10 @@ public class Bakery extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id")
 	private User owner;
+
+	@OneToOne
+	@JoinColumn(name = "report_id")
+	private BakeryAddReport bakeryAddReport;
 
 	@Builder
 	public Bakery(
