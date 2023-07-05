@@ -39,21 +39,23 @@ public class BakeryAddEventStreamListener implements StreamListener<String, MapR
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {
 
-		final Bakery bakery = bakeryRepository.findById(getBakeryIdFrom(message))
-			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+		adjustCachedBakerySize();
 
-		makeCachedBakeryCorrectSize();
-
-		cacheNewBakery(bakery);
+		cacheNewBakeryFrom(getBakeryIdFrom(message));
 	}
 
-	private void cacheNewBakery(final Bakery bakery) {
+	private void cacheNewBakeryFrom(final Long bakeryId) {
+
+		final Bakery bakery = bakeryRepository.findById(bakeryId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
+
 		String serializedValue = null;
 		try {
 			serializedValue = objectMapper.writeValueAsString(new AddedBakeryCardDto(bakery));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
+		
 		redisTemplate.opsForZSet().add(
 			KEY,
 			serializedValue,
@@ -61,7 +63,7 @@ public class BakeryAddEventStreamListener implements StreamListener<String, MapR
 		);
 	}
 
-	private void makeCachedBakeryCorrectSize() {
+	private void adjustCachedBakerySize() {
 		final Set<String> cachedBakery = redisTemplate.opsForZSet().range(KEY, 0, -1);
 
 		if (cachedBakery != null && cachedBakery.size() >= DISPLAY_SIZE) {

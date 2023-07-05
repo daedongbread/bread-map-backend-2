@@ -1,5 +1,8 @@
 package com.depromeet.breadmapbackend.global;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * DaeDongEvents
  *
@@ -7,7 +10,13 @@ package com.depromeet.breadmapbackend.global;
  * @version 1.0.0
  * @since 2023/07/04
  */
+
+@Getter
+@AllArgsConstructor
 public enum DaeDongEvents {
 
-	BAKERY_ADD_EVENT
+	BAKERY_ADD_EVENT("new-bakery-cache-service-group");
+
+	private final String group;
+
 }

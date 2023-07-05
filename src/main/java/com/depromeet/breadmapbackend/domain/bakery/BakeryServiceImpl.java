@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
@@ -94,6 +95,11 @@ public class BakeryServiceImpl implements BakeryService {
 			.facilityInfoList(bakery.getFacilityInfoList())
 			.pioneerInfo(pioneerInfo)
 			.build();
+	}
+
+	@Override
+	public List<NewBakeryDto> getNewBakeryList() {
+		return null;
 	}
 
 	private List<BakeryCardDto> getBakeryCardDtos(
