@@ -5,13 +5,15 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CurrentUserInfo {
 
-	private final Long id;
-	private final String delimiterValue;
-	private final RoleType roleType;
+	private Long id;
+	private String delimiterValue;
+	private RoleType roleType;
 
 	public CurrentUserInfo(final Long id, final String delimiterValue, final RoleType roleType) {
 		this.id = id;
