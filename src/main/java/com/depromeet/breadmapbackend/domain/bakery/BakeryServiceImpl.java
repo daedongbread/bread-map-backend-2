@@ -5,13 +5,16 @@ import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.bakery.dto.AddedBakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
@@ -25,6 +28,8 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class BakeryServiceImpl implements BakeryService {
+	private final static int NEW_BAKERY_LIST_SIZE = 10;
 	private final BakeryRepository bakeryRepository;
 	private final BakeryQueryRepository bakeryQueryRepository;
 	private final BakeryViewRepository bakeryViewRepository;
@@ -41,6 +47,8 @@ public class BakeryServiceImpl implements BakeryService {
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ReviewService reviewService;
 	private final List<SortProcessor> sortProcessors;
+	private final StringRedisTemplate redisTemplate;
+	private final ObjectMapper objectMapper;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<BakeryCardDto> getBakeryList(
@@ -98,8 +106,25 @@ public class BakeryServiceImpl implements BakeryService {
 	}
 
 	@Override
-	public List<NewBakeryDto> getNewBakeryList() {
+	public List<NewBakeryCardDto> getNewBakeryList(final Long userId) {
+		final Set<String> cachedNewBakeries = redisTemplate.opsForZSet().reverseRange("newBakery", 0, 9);
+		if (cachedNewBakeries != null) {
+			cachedNewBakeries.stream()
+				.map(this::getAddedBakeryCardDtoFrom)
+				.toList();
+		} else {
+			bakeryQueryRepository.findBakeryWithPioneerByCreatedAtDesc(userId, NEW_BAKERY_LIST_SIZE);
+
+		}
 		return null;
+	}
+
+	private AddedBakeryCardDto getAddedBakeryCardDtoFrom(final String bakery) {
+		try {
+			return objectMapper.readValue(bakery, AddedBakeryCardDto.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private List<BakeryCardDto> getBakeryCardDtos(

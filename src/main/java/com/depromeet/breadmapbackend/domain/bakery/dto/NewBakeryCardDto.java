@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.bakery.dto;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-
 /**
  * NewBakeryDto
  *
@@ -9,10 +7,14 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
  * @version 1.0.0
  * @since 2023/07/05
  */
-public record NewBakeryDto(
-	Bakery bakery,
+public record NewBakeryCardDto(
+	Long id,
+	String image,
+	String name,
+	Long pioneerId,
+	String shortAddress,
+	String content,
 	boolean isFlagged,
 	boolean isFollowed
-
 ) {
 }
