@@ -42,7 +42,6 @@ public class ScoredBakery {
 
 	@Builder
 	private ScoredBakery(
-		final Long id,
 		final Bakery bakery,
 		final double bakeryRating,
 		final Long flagCount,
@@ -55,7 +54,6 @@ public class ScoredBakery {
 		Assert.notNull(flagCount, "flagCount must not be null");
 		Assert.notNull(createdWeekOfMonthYear, "weekOfMonth must not be null");
 
-		this.id = id;
 		this.bakery = bakery;
 		this.bakeryRating = bakeryRating;
 		this.flagCount = flagCount;
