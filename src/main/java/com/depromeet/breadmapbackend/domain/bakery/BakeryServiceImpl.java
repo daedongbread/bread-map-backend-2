@@ -115,7 +115,7 @@ public class BakeryServiceImpl implements BakeryService {
 			.map(bakery -> BakeryCardDto.builder()
 				.bakery(bakery)
 				.flagNum(getFlagNum(bakeryCountInFlags, bakery))
-				.reviewList(reviewListForAllBakeries.getOrDefault(bakery.getId(), null))
+				.reviewList(reviewListForAllBakeries.getOrDefault(bakery.getId(), List.of()))
 				.distance(bakery.getDistanceFromUser(latitude, longitude))
 				.color(getFlagColor(filterBy, userId, bakery))
 				.build())
