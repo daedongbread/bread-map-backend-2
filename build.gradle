@@ -46,7 +46,8 @@ dependencies {
     implementation "com.querydsl:querydsl-core"  // querydsl
     implementation "com.querydsl:querydsl-jpa"  // querydsl
     implementation "com.querydsl:querydsl-apt"  // querydsl
-    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" // querydsl JPAAnnotationProcessor 사용 지정
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    // querydsl JPAAnnotationProcessor 사용 지정
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 
@@ -97,6 +98,9 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:3.1.0"
     // JsonPath
     implementation "com.jayway.jsonpath:json-path:2.5.0"
+
+    // easy random
+    testImplementation 'org.jeasy:easy-random-core:5.0.0'
 }
 
 tasks.named('test') {
@@ -129,7 +133,7 @@ def querydslSrcDir = "src/main/generated"
 sourceSets {
     main {
         java {
-            srcDirs += [ querydslSrcDir ]
+            srcDirs += [querydslSrcDir]
         }
     }
 }

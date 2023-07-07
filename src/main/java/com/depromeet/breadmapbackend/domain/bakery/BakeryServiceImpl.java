@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryService;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
@@ -40,6 +41,7 @@ public class BakeryServiceImpl implements BakeryService {
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ReviewService reviewService;
 	private final List<SortProcessor> sortProcessors;
+	private final ScoredBakeryService scoredBakeryService;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<BakeryCardDto> getBakeryList(

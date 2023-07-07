@@ -10,4 +10,5 @@ public interface BakeryService {
 		Double longitude, Double height, Double width);
 
 	BakeryDto getBakery(String oAuthId, Long bakeryId);
+
 }
