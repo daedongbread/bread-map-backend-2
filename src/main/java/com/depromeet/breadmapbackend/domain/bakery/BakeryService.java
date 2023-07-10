@@ -9,6 +9,6 @@ public interface BakeryService {
 	List<BakeryCardDto> getBakeryList(Long userId, BakerySortType sortBy, boolean filterBy, Double latitude,
 		Double longitude, Double height, Double width);
 
-	BakeryDto getBakery(String oAuthId, Long bakeryId);
+	BakeryDto getBakery(Long userId, Long bakeryId);
 
 }

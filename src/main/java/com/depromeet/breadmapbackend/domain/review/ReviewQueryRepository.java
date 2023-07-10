@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.QBakery;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -38,6 +39,24 @@ public class ReviewQueryRepository {
 	private final int PRODUCT_REVIEW_SIZE = 5;
 	private final int USER_REVIEW_SIZE = 5;
 
+
+	public List<Review> findByUserIdAndBakery(Long userId, Bakery targetBakery) {
+		return queryFactory
+			.selectFrom(review)
+			.join(review.bakery, bakery).fetchJoin()
+			.join(review.ratings, reviewProductRating).fetchJoin()
+			.where(review.isDelete.isFalse(), // 리뷰 삭제 여부
+				review.isBlock.isFalse(), // 리뷰 차단 여부
+				review.bakery.eq(targetBakery), // 해당 빵집 리뷰
+				review.user.notIn( // 리뷰 유처 차단 여부
+					JPAExpressions.select(blockUser.toUser)
+						.from(blockUser)
+						.where(blockUser.fromUser.id.eq(userId))
+				))
+			.fetch();
+	}
+
+
 	public Map<Long, List<Review>> findReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
 		return queryFactory
 			.selectFrom(review)
@@ -55,12 +74,12 @@ public class ReviewQueryRepository {
 
 	}
 
-	public List<Review> findReviewList(User me, Bakery bakery) {
+	public List<Review> findReviewList(User me, Bakery targetBakery) {
 		return queryFactory.selectFrom(review)
-			.join(review.bakery, com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery).fetchJoin() // TODO
+			.join(review.bakery, bakery).fetchJoin() // TODO
 			.where(review.isDelete.isFalse(), // 리뷰 삭제 여부
 				review.isBlock.isFalse(), // 리뷰 차단 여부
-				review.bakery.eq(bakery), // 해당 빵집 리뷰
+				review.bakery.eq(targetBakery), // 해당 빵집 리뷰
 				review.user.notIn( // 리뷰 유처 차단 여부
 					JPAExpressions.select(blockUser.toUser)
 						.from(blockUser)
