@@ -207,7 +207,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			.pioneer(pioneer)
 			.build();
 		bakeryRepository.save(bakery);
-		bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
+		// bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
 
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
 			for (BakeryAddRequest.ProductAddRequest productAddRequest : request.getProductList()) {
