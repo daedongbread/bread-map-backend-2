@@ -26,7 +26,6 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 	@Transactional
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {
-		System.out.println("=-=========================");
 		final Map<String, String> value = message.getValue();
 		final Long bakeryId = Long.parseLong(value.get("bakeryId"));
 		final LocalDate viewDate = LocalDate.parse(value.get("viewDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
