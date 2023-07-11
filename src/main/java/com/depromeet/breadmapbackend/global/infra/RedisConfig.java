@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 
 @Slf4j
-@Profile({"prod", "stage", "local"})
+@Profile({"prod", "stage"})
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {

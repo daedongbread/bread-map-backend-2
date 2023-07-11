@@ -2,10 +2,8 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import static java.time.LocalDate.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +16,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewId;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 
@@ -30,8 +27,9 @@ import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
  * @since 2023/07/10
  */
 
+
 @SpringBootTest
-class BakeryServiceImplTest {
+class BakeryServiceImplTest  {
 
 	@Autowired
 	private BakeryService sut;
@@ -42,7 +40,6 @@ class BakeryServiceImplTest {
 	@Autowired
 	private StringRedisTemplate redisTemplate;
 
-	private final Long userId = 111L;
 	private final Long bakeryId = 100L;
 
 	@BeforeEach
@@ -54,6 +51,8 @@ class BakeryServiceImplTest {
 	@Sql("classpath:bakery-test-data.sql")
 	void 최초조회() throws Exception{
 		//given
+		final Long userId = 111L;
+
 	    //when
 		final BakeryDto result = sut.getBakery(userId, bakeryId);
 
@@ -67,7 +66,7 @@ class BakeryServiceImplTest {
 	@Sql("classpath:bakery-test-data.sql")
 	void 동시_조회() throws Exception {
 		//given
-
+		final Long userId = 111L;
 		final int threadCount = 500;
 		final ExecutorService executorService = Executors.newFixedThreadPool(16);
 		final CountDownLatch countDownLatch = new CountDownLatch(threadCount);

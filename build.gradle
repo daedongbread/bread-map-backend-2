@@ -101,6 +101,10 @@ dependencies {
 
     // easy random
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
+
+    testImplementation 'org.testcontainers:testcontainers:1.17.2'
+
+    testImplementation 'org.testcontainers:junit-jupiter:1.17.2'
 }
 
 tasks.named('test') {
