@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.service;
 import static com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEvents.*;
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -66,11 +67,11 @@ class ScoredBakeryServiceImplTest {
 			.build();
 		final double bakeryRating = 4.5;
 		final Long flagCount = 2L;
-		final String weekOfMonthYear = "2022-1-1";
-		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, weekOfMonthYear);
+		final LocalDate calculatedDate = LocalDate.of(2022,1,1);
+		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, calculatedDate);
 
 		//when
-		final int insertedCount = sut.registerBakeriesRank(List.of(bakeryScores), weekOfMonthYear);
+		final int insertedCount = sut.registerBakeriesRank(List.of(bakeryScores) );
 
 		//then
 		assertThat(insertedCount).isEqualTo(1);
@@ -112,7 +113,7 @@ class ScoredBakeryServiceImplTest {
 	}
 
 	@Test
-	void 캐시_DB_모두_데이터가_없을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
+	void 캐시_DB_하루전_랭킹_데이터_모두_데이터가_없을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
 		// given
 		final int count = 1;
 		final Long userId = 1L;
@@ -123,6 +124,28 @@ class ScoredBakeryServiceImplTest {
 		assertThat(thrown).isInstanceOf(DaedongException.class);
 		assertThat(((DaedongException)thrown).getDaedongStatus())
 			.isEqualTo(DaedongStatus.CALCULATING_BAKERY_RANKING);
+
+		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
+		assertThat(fieldMap).hasSize(1);
+		assertThat(fieldMap.get(CALCULATE_RANKING.name())).isNotNull();
+	}
+
+
+	@Test
+	void 캐시_DB_모두_데이터가_없고_하루전_랭킹_데이터만_있을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
+		// given
+		final List<ScoredBakery> preparedData = prepareYesterdayData();
+		final int count = 3;
+		final Long userId = 1L;
+		//when
+		final List<BakeryRankingCard> result = sut.findBakeriesRankTop(userId, count);
+
+		//then
+		assertThat(result).hasSize(3);
+		assertThat(result.get(0).name()).isEqualTo(preparedData.get(0).getBakery().getName());
+		assertThat(result.get(0).isFlagged()).isTrue();
+		assertThat(result.get(1).isFlagged()).isFalse();
+
 
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
@@ -141,6 +164,15 @@ class ScoredBakeryServiceImplTest {
 	private List<ScoredBakery> prepareCacheData() {
 		final List<ScoredBakery> preparedDate = LongStream.range(1, 10)
 			.mapToObj(i -> FixtureFactory.getScoredBakery(i).nextObject(ScoredBakery.class))
+			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
+			.toList();
+		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);
+		return preparedDate;
+	}
+
+	private List<ScoredBakery> prepareYesterdayData() {
+		final List<ScoredBakery> preparedDate = LongStream.range(1, 10)
+			.mapToObj(i -> FixtureFactory.getYesterdayScoredBakery(i).nextObject(ScoredBakery.class))
 			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
 			.toList();
 		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);

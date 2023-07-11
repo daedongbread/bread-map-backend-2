@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
@@ -32,7 +34,7 @@ class ScoredBakeryTest {
 		final Long flagCount = 2L;
 
 		final double expectedTotalScore = 6.5;
-		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, "2022-1-1");
+		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, LocalDate.now());
 		//when
 		final ScoredBakery result = ScoredBakery.from(bakeryScores);
 		//then

@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.util;
 import static org.jeasy.random.FieldPredicates.*;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.function.Predicate;
 
 import org.jeasy.random.EasyRandom;
@@ -60,8 +61,26 @@ public class FixtureFactory {
 		Predicate<Field> bakeryPredicate = named("bakery").and(ofType(Bakery.class))
 			.and(inClass(ScoredBakery.class));
 
+		Predicate<Field> calculatedDate = named("calculatedDate").and(ofType(LocalDate.class))
+			.and(inClass(ScoredBakery.class));
+
 		EasyRandomParameters param = new EasyRandomParameters()
-			.randomize(bakeryPredicate, () -> randomBakery);
+			.randomize(bakeryPredicate, () -> randomBakery)
+			.randomize(calculatedDate, LocalDate::now);
+		return new EasyRandom(param);
+	}
+
+	public static EasyRandom getYesterdayScoredBakery(final Long bakeryId) {
+		final Bakery randomBakery = getBakery(bakeryId).nextObject(Bakery.class);
+		Predicate<Field> bakeryPredicate = named("bakery").and(ofType(Bakery.class))
+			.and(inClass(ScoredBakery.class));
+
+		Predicate<Field> calculatedDate = named("calculatedDate").and(ofType(LocalDate.class))
+			.and(inClass(ScoredBakery.class));
+
+		EasyRandomParameters param = new EasyRandomParameters()
+			.randomize(bakeryPredicate, () -> randomBakery)
+			.randomize(calculatedDate, () -> LocalDate.now().minusDays(1));
 		return new EasyRandom(param);
 	}
 }

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.sql.DataSource;
 
@@ -24,7 +25,6 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
-import com.depromeet.breadmapbackend.global.util.CalenderUtil;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 
 /**
@@ -93,14 +93,14 @@ public class ScoredBakeryControllerTest extends ControllerTest {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("scoredBakery-test-data.sql"));
 			final String sql = """
-						insert into scored_bakery (id ,bakery_rating ,flag_count ,total_score,bakery_id, created_week_of_month_year) values
-						(100, 3.7,100, 103.7, 100, '%s'),
-						(101, 4.9,20, 24.9, 200, '%s'),
-						(102, 1.5,17, 18.5, 300, '%s'),
-						(103, 3.2,1532, 1535.2, 500, '%s'),
-						(104, 3.2,1532, 1535.2, 600, '%s'),
-						(105, 0,0, 0, 700, '%s')
-				""".replaceAll("%s", CalenderUtil.getYearWeekOfMonth(LocalDate.now()));
+						insert into scored_bakery (id ,total_score,bakery_id, calculated_date) values
+						(100,  103.7, 100, '%s'),
+						(101, 24.9, 200, '%s'),
+						(102, 18.5, 300, '%s'),
+						(103,  1535.2, 500, '%s'),
+						(104,  1535.2, 600, '%s'),
+						(105,   0, 700, '%s')
+				""".replaceAll("%s", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
 		}
