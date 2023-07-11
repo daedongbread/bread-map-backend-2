@@ -40,7 +40,7 @@ public class EmbeddedRedisConfig {
 	public void setUp(){
 		try {
 			redisTemplate.opsForStream()
-				.createGroup("bakery-view-event", "bakery-view-event:group")
+				.createGroup("bakery-view-event", "bakery-view-event:group");
 		} catch (Exception e) {
 			log.info("bakery-view-event:group already exists : {} ",e.getMessage());
 		}
