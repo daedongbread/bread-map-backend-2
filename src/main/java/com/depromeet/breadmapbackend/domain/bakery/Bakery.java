@@ -140,6 +140,10 @@ public class Bakery extends BaseEntity {
 			+ sin(toRadians(userLatitude)) * sin(toRadians(getLatitude()))) * earthRadius);
 	}
 
+	public User getPioneer() {
+		return this.bakeryAddReport != null ? this.bakeryAddReport.getUser() : null;
+	}
+
 	public Double bakeryRating(List<Review> reviewList) {
 		return Math.floor(reviewList.stream().map(Review::getAverageRating).toList()
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
