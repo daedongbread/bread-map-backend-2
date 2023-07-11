@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,11 +41,12 @@ import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddRepo
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImage;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportRepository;
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImage;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReport;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportRepository;
-import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
@@ -57,7 +57,6 @@ import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.DaeDongEvents;
 import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -95,6 +94,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private final CustomSGISKeyProperties customSGISKeyProperties;
 	private final CustomAWSS3Properties customAWSS3Properties;
 	private final AdminBakeryEventStream adminBakeryEventStream;
+	private final BakeryAddReportRepository bakeryAddReportRepository;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public AdminBakeryAlarmBar getBakeryAlarmBar() {
@@ -137,18 +137,10 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			bakery.getImage();
 		return AdminBakeryDto.builder()
 			.bakery(bakery)
-			.pioneer(bakery.getPioneer())
 			.image(image)
 			.productList(productList)
 			.build();
 	}
-
-	//    @Transactional(readOnly = true, rollbackFor = Exception.class)
-	//    public PageResponseDto<AdminSimpleBakeryDto> searchBakeryList(String name, int page) {
-	//        PageRequest pageRequest = PageRequest.of(page, 20);
-	//        Page<Bakery> all = bakeryRepository.findByNameContainsOrderByUpdatedAt(name, pageRequest);
-	//        return PageResponseDto.of(all, AdminSimpleBakeryDto::new);
-	//    }
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public BakeryLocationDto getBakeryLatitudeLongitude(String address) {
@@ -185,8 +177,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 
 	@Transactional(rollbackFor = Exception.class)
 	public BakeryAddDto addBakery(BakeryAddRequest request) {
-		User pioneer = (request.getPioneerId() == null) ? null : userRepository.findById(request.getPioneerId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+		final Long reportId = request.getReportId();
+		final BakeryAddReport bakeryAddReport = bakeryAddReportRepository.findBakeryReportWithPioneerById(reportId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_REPORT_NOT_FOUND));
+		final User pioneer = bakeryAddReport.getUser();
+
 		if (bakeryRepository.existsByNameAndAddress(request.getName(), request.getAddress()))
 			throw new DaedongException(DaedongStatus.BAKERY_DUPLICATE_EXCEPTION); // TODO
 
@@ -207,10 +202,10 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			.phoneNumber(request.getPhoneNumber())
 			.facilityInfoList(request.getFacilityInfoList())
 			.status(request.getStatus())
-			.pioneer(pioneer)
+			.bakeryAddReport(bakeryAddReport)
 			.build();
-		final Bakery savedBakery = bakeryRepository.save(bakery);
-		bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
+
+		bakeryRepository.save(bakery);
 
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
 			for (BakeryAddRequest.ProductAddRequest productAddRequest : request.getProductList()) {
@@ -234,9 +229,6 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					.noticeType(NoticeType.ADD_BAKERY)
 					.build()
 			);
-		final HashMap<String, String> fieldMap = new HashMap<>();
-		fieldMap.put("bakeryId", savedBakery.getId().toString());
-		adminBakeryEventStream.publish(DaeDongEvents.BAKERY_ADD_EVENT, fieldMap);
 
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
 	}
@@ -274,35 +266,6 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 						productUpdateRequest.getPrice(), productUpdateRequest.getImage());
 				}
 			}
-		}
-
-		if (bakery.getStatus().equals(BakeryStatus.POSTING))
-			updatePioneer(bakery, request.getPioneerId());
-	}
-
-	private void updatePioneer(Bakery bakery, Long pioneerId) {
-		User beforePioneer = bakery.getPioneer();
-		User pioneer = (pioneerId == null) ? null :
-			userRepository.findById(pioneerId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		// 1. 그전에 null 이번에도 null -> 아무것도 안함
-		// 2. 그전에 null 이번에는 있음 -> 업데이트와 알림
-		// 3. 그전에 있음 이번에는 null -> 업데이트
-		// 4. 그전에 있음 이번에도 있는데 다름 -> 업데이트와 알림
-		// 4. 그전에 있음 이번에도 있는데 같음 -> 아무것도 안함
-		if (pioneer == null && beforePioneer != null) {
-			bakery.updatePioneer(pioneer);
-		} else if (pioneer != null && !pioneer.equals(beforePioneer)) {
-			bakery.updatePioneer(pioneer);
-			eventPublisher.publishEvent(
-				NoticeEvent.builder()
-					.isAlarmOn(pioneer.getIsAlarmOn())
-					.user(pioneer)
-					.fromUser(pioneer)
-					.contentId(bakery.getId())
-					.content(bakery.getName())
-					.noticeType(NoticeType.ADD_BAKERY)
-					.build()
-			);
 		}
 	}
 
@@ -548,20 +511,4 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		review.delete();
 	}
 
-	//    @Transactional(rollbackFor = Exception.class)
-	//    public void deleteBakery(Long bakeryId) { // TODO : casacade
-	//        Bakery bakery = bakeryRepository.findById(bakeryId).orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-	//        flagBakeryRepository.deleteByBakery(bakery);
-	//        bakeryUpdateReportRepository.deleteByBakery(bakery);
-	//        bakeryReportImageRepository.deleteByBakery(bakery);
-	//        productAddReportRepository.deleteByBakery(bakery);
-	//        reviewImageRepository.deleteByBakery(bakery);
-	//        reviewProductRatingRepository.deleteByBakeryId(bakeryId);
-	//        reviewRepository.findByBakery(bakery).forEach(review -> {
-	//            reviewReportRepository.deleteByReview(review);
-	//            reviewViewRepository.deleteByReview(review);
-	//        });
-	//        bakeryViewRepository.deleteByBakery(bakery);
-	//        bakeryRepository.deleteById(bakeryId);
-	//    }
 }

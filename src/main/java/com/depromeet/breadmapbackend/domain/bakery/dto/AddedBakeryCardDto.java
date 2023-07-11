@@ -21,7 +21,7 @@ public record AddedBakeryCardDto(
 		this(bakery.getId(),
 			bakery.getImage(),
 			bakery.getName(),
-			bakery.getPioneer().getId(),
+			bakery.getBakeryAddReport().getUser().getId(),
 			bakery.getAddress()
 		);
 	}
