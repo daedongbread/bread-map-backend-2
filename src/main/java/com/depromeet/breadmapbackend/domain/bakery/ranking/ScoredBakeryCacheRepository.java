@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,10 +28,10 @@ public class ScoredBakeryCacheRepository {
 	private final StringRedisTemplate redisTemplate;
 	private final ObjectMapper objectMapper;
 
-	public List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(final String weekOfMonth, final int count) {
+	public List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int count) {
 
 		final Optional<Set<String>> scoredBakeriesInString =
-			Optional.ofNullable(redisTemplate.opsForZSet().reverseRange(getKey(weekOfMonth), 0, count - 1));
+			Optional.ofNullable(redisTemplate.opsForZSet().reverseRange(getKey(calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))), 0, count - 1));
 		return scoredBakeriesInString
 			.map(this::getScoredBakeryListFrom)
 			.orElseGet(List::of);
@@ -46,8 +48,8 @@ public class ScoredBakeryCacheRepository {
 			}).toList();
 	}
 
-	private String getKey(final String weekOfMonth) {
-		return "SCORED_BAKERY:" + weekOfMonth;
+	private String getKey(final String calculatedDate) {
+		return "SCORED_BAKERY:" + calculatedDate;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,10 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 
 	@Query("select sb "
 		+ "from ScoredBakery sb "
-		+ "where sb.createdWeekOfMonthYear = :weekOfMonthYear "
+		+ "where sb.calculatedDate = :calculatedDate "
 		+ "order by sb.totalScore desc, sb.bakery.id desc")
-	List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(
-		@Param("weekOfMonthYear") final String weekOfMonthYear,
+	List<ScoredBakery> findScoredBakeryByCalculatedDate(
+		@Param("calculatedDate") final LocalDate calculatedDate,
 		final Pageable pageable
 	);
 }

@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,9 +22,9 @@ public class ScoredBakeryEventStreamRedisImpl implements ScoredBakeryEventStream
 
 	private final StringRedisTemplate redisTemplate;
 
-	public void publish(final ScoredBakeryEvents event, final String yearWeekOfMonth) {
+	public void publish(final ScoredBakeryEvents event, final LocalDate calculatedDate) {
 		final HashMap<String, String> fieldMap = new HashMap<>();
-		fieldMap.put("yearWeekOfMonth", yearWeekOfMonth);
+		fieldMap.put("calculatedDate", calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
 		redisTemplate.opsForStream()
 			.add(event.name(), fieldMap);

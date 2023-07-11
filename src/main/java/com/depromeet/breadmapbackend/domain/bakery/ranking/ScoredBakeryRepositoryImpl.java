@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private final ScoredBakeryCacheRepository scoredBakeryCacheRepository;
 
-	public int bulkInsert(final List<ScoredBakery> scoredBakeryList, final String yearWeekOfMonth) {
+	public int bulkInsert(final List<ScoredBakery> scoredBakeryList ) {
 
 		String sql = String.format(
 			"""
@@ -37,22 +38,20 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 		SqlParameterSource[] params = scoredBakeryList.stream()
 			.map(scoredBakery -> new MapSqlParameterSource()
 				.addValue("bakery", scoredBakery.getBakery().getId())
-				.addValue("bakeryRating", scoredBakery.getBakeryRating())
-				.addValue("flagCount", scoredBakery.getFlagCount())
 				.addValue("totalScore", scoredBakery.getTotalScore())
-				.addValue("createdWeekOfMonthYear", yearWeekOfMonth)
+				.addValue("calculatedDate", scoredBakery.getCalculatedDate())
 			)
 			.toArray(SqlParameterSource[]::new);
 		return namedParameterJdbcTemplate.batchUpdate(sql, params).length;
 	}
 
 	@Override
-	public List<ScoredBakery> findCachedScoredBakeryByWeekOfMonthYear(final String weekOfMonthYear, final int size) {
-		return scoredBakeryCacheRepository.findScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
+	public List<ScoredBakery> findCachedScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
+		return scoredBakeryCacheRepository.findScoredBakeryByCalculatedDate(calculatedDate, size);
 	}
 
 	@Override
-	public List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(final String weekOfMonthYear, final int size) {
-		return scoredBakeryJpaRepository.findScoredBakeryByWeekOfMonthYear(weekOfMonthYear, Pageable.ofSize(size));
+	public List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
+		return scoredBakeryJpaRepository.findScoredBakeryByCalculatedDate(calculatedDate, Pageable.ofSize(size));
 	}
 }

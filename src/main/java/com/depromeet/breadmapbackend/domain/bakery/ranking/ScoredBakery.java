@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,39 +37,29 @@ public class ScoredBakery {
 	@OneToOne
 	@JoinColumn(name = "bakery_id")
 	private Bakery bakery;
-	private double bakeryRating;
-	private Long flagCount;
 	private double totalScore;
-	private String createdWeekOfMonthYear;
+	private LocalDate calculatedDate;
 
 	@Builder
 	private ScoredBakery(
 		final Bakery bakery,
-		final double bakeryRating,
-		final Long flagCount,
 		final double totalScore,
-		final String createdWeekOfMonthYear
+		final LocalDate calculatedDate
 	) {
 
 		Assert.notNull(bakery, "bakery must not be null");
-		Assert.isTrue(bakeryRating >= 0 && bakeryRating <= 5, "bakeryRating must be between 0 and 5");
-		Assert.notNull(flagCount, "flagCount must not be null");
-		Assert.notNull(createdWeekOfMonthYear, "weekOfMonth must not be null");
+		Assert.notNull(calculatedDate, "calculatedDate must not be null");
 
 		this.bakery = bakery;
-		this.bakeryRating = bakeryRating;
-		this.flagCount = flagCount;
 		this.totalScore = totalScore;
-		this.createdWeekOfMonthYear = createdWeekOfMonthYear;
+		this.calculatedDate = calculatedDate;
 	}
 
 	public static ScoredBakery from(final BakeryScores bakeryScores) {
 		return builder()
 			.bakery(bakeryScores.bakery())
-			.bakeryRating(bakeryScores.bakeryRating())
-			.flagCount(bakeryScores.flagCount())
 			.totalScore(calculateTotalScore(bakeryScores.bakeryRating(), bakeryScores.flagCount()))
-			.createdWeekOfMonthYear(bakeryScores.weekOfMonth())
+			.calculatedDate(bakeryScores.calculatedDate())
 			.build();
 	}
 
