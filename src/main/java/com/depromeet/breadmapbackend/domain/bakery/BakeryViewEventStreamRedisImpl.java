@@ -1,10 +1,13 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.data.redis.connection.stream.StreamInfo;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import com.depromeet.breadmapbackend.global.EventInfo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BakeryViewEventStreamRedisImpl implements BakeryViewEventStream {
 
-	private static final String BAKERY_VIEW_EVENT = "bakery-view-event";
 	private final StringRedisTemplate redisTemplate;
 
 	@Override
 	public void publish(final Map<String, String> fieldMap) {
-		redisTemplate.opsForStream().add(BAKERY_VIEW_EVENT, fieldMap);
-		try {
-			final StreamInfo.XInfoConsumers consumers = redisTemplate.opsForStream()
-				.consumers(BAKERY_VIEW_EVENT, "bakery-view-event:group");
-			if (consumers.size() > 0) {
-				redisTemplate.opsForStream().createGroup(BAKERY_VIEW_EVENT, "bakery-view-event:group");
-			}
-		} catch (Exception e) {
-			log.info("bakery-view-event:group already exists : {} ",e.getMessage());
-		}
+		redisTemplate.opsForStream().add(EventInfo.BAKERY_VIEW_EVENT.getEventName(), fieldMap);
 	}
 }

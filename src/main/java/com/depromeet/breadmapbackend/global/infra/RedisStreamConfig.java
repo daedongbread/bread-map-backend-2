@@ -1,6 +1,9 @@
 package com.depromeet.breadmapbackend.global.infra;
 
+import static com.depromeet.breadmapbackend.global.EventConsumerGroupInfo.*;
+
 import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
@@ -9,14 +12,19 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.stream.Consumer;
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.ReadOffset;
+import org.springframework.data.redis.connection.stream.StreamInfo;
 import org.springframework.data.redis.connection.stream.StreamOffset;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.data.redis.stream.Subscription;
 
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewEventStreamListener;
+import com.depromeet.breadmapbackend.global.EventConsumerGroupInfo;
+import com.depromeet.breadmapbackend.global.EventInfo;
 import com.querydsl.core.annotations.Config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * RedisStreamConfig
@@ -27,12 +35,25 @@ import lombok.RequiredArgsConstructor;
  */
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class RedisStreamConfig {
 
 	private final BakeryViewEventStreamListener bakeryViewEventStreamListener;
+	private final StringRedisTemplate redisTemplate;
+	private static final String INSTANCE = "instance";
 
 	@Bean
 	public Subscription bakeryAddSubscription(RedisConnectionFactory factory) {
+		final EventInfo bakeryViewEvent = EventInfo.BAKERY_VIEW_EVENT;
+		final String eventName = bakeryViewEvent.getEventName();
+		final String consumerGroupName = bakeryViewEvent.getConsumerGroupName(BAKERY_VIEW_COUNT);
+		try {
+			redisTemplate.opsForStream().consumers(eventName, consumerGroupName);
+			log.info(consumerGroupName + " already exists");
+		} catch (Exception e) {
+			redisTemplate.opsForStream().createGroup(eventName, consumerGroupName);
+		}
+
 		final StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, String>> options =
 			StreamMessageListenerContainer
 				.StreamMessageListenerContainerOptions
@@ -45,8 +66,8 @@ public class RedisStreamConfig {
 
 		final Subscription subscription =
 			listenerContainer.receiveAutoAck(
-				Consumer.from("bakery-view-event:" + "group", "instance:" + getInstanceId()),
-				StreamOffset.create("bakery-view-event", ReadOffset.lastConsumed()),
+				Consumer.from(consumerGroupName, INSTANCE + ":" + getInstanceId()),
+				StreamOffset.create(eventName, ReadOffset.lastConsumed()),
 				bakeryViewEventStreamListener
 			);
 
