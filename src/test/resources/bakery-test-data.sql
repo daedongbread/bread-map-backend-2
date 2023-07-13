@@ -29,6 +29,8 @@ TRUNCATE TABLE bakery_add_report;
 ALTER TABLE bakery_add_report
     ALTER COLUMN ID RESTART WITH 1;
 
+TRUNCATE TABLE bakery_view;
+
 
 
 insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
