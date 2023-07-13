@@ -4,7 +4,6 @@ import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -144,7 +143,7 @@ public class Bakery extends BaseEntity {
 	}
 
 	public Double bakeryRating(List<Review> reviewList) {
-		return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
+		return Math.floor(reviewList.stream().map(Review::getAverageRating).toList()
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
 	}
 
