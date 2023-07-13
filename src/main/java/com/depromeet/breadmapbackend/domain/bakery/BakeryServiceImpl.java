@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
-import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
-import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
@@ -35,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 public class BakeryServiceImpl implements BakeryService {
 	private final BakeryRepository bakeryRepository;
 	private final BakeryQueryRepository bakeryQueryRepository;
-	private final BakeryViewRepository bakeryViewRepository;
 	private final FlagRepository flagRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ReviewService reviewService;
@@ -74,11 +71,11 @@ public class BakeryServiceImpl implements BakeryService {
 			.userFlagBakery(flagBakeryRepository.findByBakeryAndUserId(bakery, userId).orElse(null))
 			.build();
 
-		bakeryViewEventStream.publish(createEvenMessage(bakery));
+		bakeryViewEventStream.publish(createEventMessage(bakery));
 		return bakeryDto;
 	}
 
-	private HashMap<String, String> createEvenMessage(final Bakery bakery) {
+	private HashMap<String, String> createEventMessage(final Bakery bakery) {
 		final HashMap<String, String> fieldMap = new HashMap<>();
 		fieldMap.put("bakeryId", bakery.getId().toString());
 		fieldMap.put("viewDate", LocalDate.now().toString());
