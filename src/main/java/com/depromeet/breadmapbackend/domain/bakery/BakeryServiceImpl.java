@@ -57,7 +57,7 @@ public class BakeryServiceImpl implements BakeryService {
 			bakeryQueryRepository.findTop20BakeriesByCoordinateRange(
 				CoordinateRange.of(latitude, latitudeDelta, longitude, longitudeDelta)
 			);
-		return bakeries.size() == 0 ?
+		return bakeries.isEmpty() ?
 			List.of(new BakeryCardDto()) :
 			getBakeryCardDtos(userId, sortBy, filterBy, latitude, longitude, bakeries);
 	}
@@ -106,8 +106,7 @@ public class BakeryServiceImpl implements BakeryService {
 		final Double longitude,
 		final List<Bakery> bakeries
 	) {
-		final Map<Long, List<Review>> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId,
-			bakeries);
+		final Map<Long, List<Review>> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
 		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
 
 		return bakeries
@@ -142,7 +141,7 @@ public class BakeryServiceImpl implements BakeryService {
 	private int getFlagNum(final List<BakeryCountInFlag> bakeryCountInFlags, final Bakery bakery) {
 		return bakeryCountInFlags.stream()
 			.filter(bakeryCountInFlag -> bakeryCountInFlag.getBakeryId().equals(bakery.getId()))
-			.map(BakeryCountInFlag::getCount)
+			.map(bakeryCountInFlag -> bakeryCountInFlag.getCount() == null ? 0L : bakeryCountInFlag.getCount())
 			.findFirst()
 			.orElse(0L).intValue();
 	}
