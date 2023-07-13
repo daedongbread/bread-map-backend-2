@@ -1,15 +1,23 @@
 package com.depromeet.breadmapbackend.domain.notice.token;
 
-import com.depromeet.breadmapbackend.domain.user.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.depromeet.breadmapbackend.domain.user.User;
+
 public interface NoticeTokenRepository extends JpaRepository<NoticeToken, Long> {
-    void deleteByUser(User user);
-    void deleteByDeviceToken(String deviceToken);
-    Optional<NoticeToken> findByDeviceToken(String deviceToken);
-    List<NoticeToken> findByUser(User user);
-    Optional<NoticeToken> findByUserAndDeviceToken(User user, String deviceToken);
+	void deleteByUser(User user);
+
+	void deleteByDeviceToken(String deviceToken);
+
+	Optional<NoticeToken> findByDeviceToken(String deviceToken);
+
+	@Query("select nt from NoticeToken nt where nt.user.id = :userId")
+	List<NoticeToken> findByUser(@Param("userId") Long user);
+
+	Optional<NoticeToken> findByUserAndDeviceToken(User user, String deviceToken);
 }

@@ -1,12 +1,14 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import com.depromeet.breadmapbackend.domain.bakery.dto.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+
 public interface BakeryService {
-    List<BakeryCardDto> getBakeryList(String oAuthId, BakerySortType sortBy, boolean filterBy, Double latitude, Double longitude, Double height, Double width);
-    BakeryDto getBakery(String oAuthId, Long bakeryId);
+	List<BakeryCardDto> getBakeryList(Long userId, BakerySortType sortBy, boolean filterBy, Double latitude,
+		Double longitude, Double height, Double width);
+
+	BakeryDto getBakery(String oAuthId, Long bakeryId);
+
 }

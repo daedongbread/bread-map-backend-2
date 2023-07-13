@@ -12,4 +12,11 @@
 
 ## 👩🏻‍💻👨🏻‍💻 대동빵지도 Back-end
 
+### Infra Architecture
+- **stage, prod(AS-IS)**
+<img src="https://github.com/daedongbread/bread-map-backend-2/assets/26589166/ee8912cd-22a4-461a-ac87-2bea7d2d7dc1" width="650" height="500"/>
+
+- **prod (TO-BE)**
+<img src="https://github.com/daedongbread/bread-map-backend-2/assets/26589166/c86b78fd-1c58-4bc6-bb21-8eacdde1a66f" width="650" height="500"/>
+
 <br>

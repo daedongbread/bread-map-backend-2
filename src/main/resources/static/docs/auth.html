@@ -486,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 52
+Content-Length: 49
 Host: localhost:8080
 
 {
@@ -547,13 +547,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 416
+Content-Length: 409
 
 {
   "data" : {
     "userId" : 35,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzEwLCJleHAiOjE2ODUwOTUzMTB9.O4FsAedpfdyN0xl2XMUhNeZfHM-NqYPRcb6KUo9FW84",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODYzMDEzMTB9.8BWfniB9neneaqtRcG63bEY2dStc28EraGyxeUrqlEc",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODk2NTY0Mzh9.Syy1_bqLj5I1miI8RYibyQD4BhHrRNcxU1W4iioPjk4",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -612,7 +612,7 @@ Content-Length: 416
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/register HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 177
+Content-Length: 171
 Host: localhost:8080
 
 {
@@ -694,13 +694,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 416
+Content-Length: 409
 
 {
   "data" : {
     "userId" : 34,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzA5LCJleHAiOjE2ODUwOTUzMDl9.4l_Ap6QmifUSdnc-PC0Uk3rplvDYurGDjYMtAeOV_1Y",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODYzMDEzMDl9.B0jcsXRTosp70FllwWfMe6Ht7wgpapq7hU64hnkiDb4",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODk2NTY0Mzh9.Syy1_bqLj5I1miI8RYibyQD4BhHrRNcxU1W4iioPjk4",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -759,12 +759,12 @@ Content-Length: 416
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/reissue HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 332
+Content-Length: 329
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzEwLCJleHAiOjE2ODUwOTUzMTB9.O4FsAedpfdyN0xl2XMUhNeZfHM-NqYPRcb6KUo9FW84",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODYzMDEzMTB9.8BWfniB9neneaqtRcG63bEY2dStc28EraGyxeUrqlEc"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODk2NTY0Mzh9.Syy1_bqLj5I1miI8RYibyQD4BhHrRNcxU1W4iioPjk4"
 }</code></pre>
 </div>
 </div>
@@ -820,13 +820,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 416
+Content-Length: 409
 
 {
   "data" : {
     "userId" : 36,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzEwLCJleHAiOjE2ODUwOTUzMTB9.O4FsAedpfdyN0xl2XMUhNeZfHM-NqYPRcb6KUo9FW84",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODYzMDEzMTB9.8BWfniB9neneaqtRcG63bEY2dStc28EraGyxeUrqlEc",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODk2NTY0Mzh9.Syy1_bqLj5I1miI8RYibyQD4BhHrRNcxU1W4iioPjk4",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -884,14 +884,14 @@ Content-Length: 416
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzA5LCJleHAiOjE2ODUwOTUzMDl9.4l_Ap6QmifUSdnc-PC0Uk3rplvDYurGDjYMtAeOV_1Y
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY
 Accept: application/json
-Content-Length: 367
+Content-Length: 363
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg1MDkxNzA5LCJleHAiOjE2ODUwOTUzMDl9.4l_Ap6QmifUSdnc-PC0Uk3rplvDYurGDjYMtAeOV_1Y",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODYzMDEzMDl9.B0jcsXRTosp70FllwWfMe6Ht7wgpapq7hU64hnkiDb4",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg4NDQ2ODM4LCJleHAiOjE2ODg0NTA0Mzh9.wY7dKIW2mO7AbsOk99XjLshubNKyHToswdJ_dR6EdOY",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODk2NTY0Mzh9.Syy1_bqLj5I1miI8RYibyQD4BhHrRNcxU1W4iioPjk4",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>
@@ -987,7 +987,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-04-28 21:35:32 +0900
+Last updated 2023-06-07 16:27:50 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
