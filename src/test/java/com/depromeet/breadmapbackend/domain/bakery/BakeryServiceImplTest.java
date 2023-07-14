@@ -81,7 +81,7 @@ class BakeryServiceImplTest  {
 			});
 		}
 		countDownLatch.await();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 
 		assertThat(repository.findById(
 			new BakeryViewId(bakeryId, now())
