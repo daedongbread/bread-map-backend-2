@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,7 +59,7 @@ public class BakeryServiceImpl implements BakeryService {
 				CoordinateRange.of(latitude, latitudeDelta, longitude, longitudeDelta)
 			);
 		return bakeries.isEmpty() ?
-			List.of(new BakeryCardDto()) :
+			List.of() :
 			getBakeryCardDtos(userId, sortBy, filterBy, latitude, longitude, bakeries);
 	}
 
