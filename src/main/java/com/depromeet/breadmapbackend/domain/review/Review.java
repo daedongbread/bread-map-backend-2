@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.review.post.PostTopic;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.domain.review.comment.ReviewComment;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -16,7 +17,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -38,6 +38,10 @@ public class Review extends BaseEntity {
 
     @Column(nullable = false, length = 200)
     private String content;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostTopic topic;
 
 //    @Convert(converter = StringListConverter.class)
 //    private List<String> imageList = new ArrayList<>();
