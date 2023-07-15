@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import org.springframework.util.Assert;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -55,16 +55,17 @@ public class ScoredBakery {
 		this.calculatedDate = calculatedDate;
 	}
 
-	public static ScoredBakery from(final BakeryScores bakeryScores) {
+	public static ScoredBakery from(final CalculateBakeryScoreBase bakeryScoreBase, final LocalDate calculatedDate) {
 		return builder()
-			.bakery(bakeryScores.bakery())
-			.totalScore(calculateTotalScore(bakeryScores.bakeryRating(), bakeryScores.flagCount()))
-			.calculatedDate(bakeryScores.calculatedDate())
+			.bakery(bakeryScoreBase.bakery())
+			.totalScore(calculateTotalScore(bakeryScoreBase.bakeryRating(), bakeryScoreBase.flagCount(), bakeryScoreBase.viewCount()))
+			.calculatedDate(calculatedDate)
 			.build();
 	}
 
-	private static double calculateTotalScore(final double bakeryRating, final Long flagCount) {
+	private static double calculateTotalScore(final double bakeryRating, final Long flagCount, final Long viewCount) {
 		return (bakeryRating * RankWeight.RATING_WEIGHT.getWeight()) +
-			(flagCount.doubleValue() * RankWeight.FLAG_COUNT_WEIGHT.getWeight());
+			(flagCount.doubleValue() * RankWeight.FLAG_COUNT_WEIGHT.getWeight()) +
+			(viewCount.doubleValue() * RankWeight.VIEW_COUNT_WEIGHT.getWeight());
 	}
 }

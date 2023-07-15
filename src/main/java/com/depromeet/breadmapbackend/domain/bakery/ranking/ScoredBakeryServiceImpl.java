@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakeryQueryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -32,13 +33,12 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
 
 	@Transactional
-	public int registerBakeriesRank(final List<BakeryScores> bakeriesScores) {
-		final List<ScoredBakery> scoredBakeryList =
-			bakeriesScores.stream()
-				.map(ScoredBakery::from)
-				.toList();
-
-		return scoredBakeryRepository.bulkInsert(scoredBakeryList);
+	public int calculateBakeryScore(final List<CalculateBakeryScoreBase> bakeryScoreBaseList, final LocalDate calculatedDate) {
+		return scoredBakeryRepository.bulkInsert(
+			bakeryScoreBaseList.stream()
+			.map(bakeryScoreBase -> ScoredBakery.from(bakeryScoreBase, calculatedDate))
+			.toList()
+		);
 	}
 
 	@Override

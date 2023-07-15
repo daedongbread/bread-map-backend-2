@@ -31,8 +31,8 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 		String sql = String.format(
 			"""
-					INSERT INTO `%s` (bakery_id, bakery_rating, flag_count, total_score, created_week_of_month_year)
-					VALUES (:bakery, :bakeryRating, :flagCount, :totalScore, :createdWeekOfMonthYear)
+					INSERT INTO `%s` (bakery_id, total_score, calculated_date)
+					VALUES (:bakery, :totalScore, :calculatedDate)
 				""", TABLE);
 
 		SqlParameterSource[] params = scoredBakeryList.stream()
