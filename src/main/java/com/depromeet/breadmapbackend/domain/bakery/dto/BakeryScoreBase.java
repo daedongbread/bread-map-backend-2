@@ -11,11 +11,10 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
  * @version 1.0.0
  * @since 2023/07/02
  */
-public record CalculateBakeryScoreBase(
+public record BakeryScoreBase(
 	Bakery bakery,
 	double bakeryRating,
 	Long flagCount,
-	Long viewCount,
-	LocalDate calculatedDate
+	Long viewCount
 ) {
 }

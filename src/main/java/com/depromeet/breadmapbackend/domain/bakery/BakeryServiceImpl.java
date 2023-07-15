@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
@@ -77,8 +79,12 @@ public class BakeryServiceImpl implements BakeryService {
 	}
 
 	@Override
-	public List<CalculateBakeryScoreBase> getBakeryScoreBaseList() {
-		return bakeryQueryRepository.findBakeryTopRanking(LocalDate.now());
+	public List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors() {
+		return bakeryQueryRepository.findBakeryTopRanking(LocalDate.now())
+			.stream()
+			.map(base -> new BakeryScoreBaseWithSelectedDate(base, LocalDate.now()))
+			.toList();
+
 	}
 
 	private HashMap<String, String> createEventMessage(final Bakery bakery) {

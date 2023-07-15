@@ -12,7 +12,8 @@ import javax.persistence.OneToOne;
 import org.springframework.util.Assert;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -55,11 +56,11 @@ public class ScoredBakery {
 		this.calculatedDate = calculatedDate;
 	}
 
-	public static ScoredBakery from(final CalculateBakeryScoreBase bakeryScoreBase) {
+	public static ScoredBakery from(final BakeryScoreBaseWithSelectedDate bakeryScoreBase) {
 		return builder()
 			.bakery(bakeryScoreBase.bakery())
 			.totalScore(calculateTotalScore(bakeryScoreBase.bakeryRating(), bakeryScoreBase.flagCount(), bakeryScoreBase.viewCount()))
-			.calculatedDate(bakeryScoreBase.calculatedDate())
+			.calculatedDate(bakeryScoreBase.selectedDate())
 			.build();
 	}
 

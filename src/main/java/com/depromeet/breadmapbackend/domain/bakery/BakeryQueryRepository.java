@@ -19,13 +19,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -110,15 +110,14 @@ public class BakeryQueryRepository {
 			return null;
 	}
 
-	public List<CalculateBakeryScoreBase> findBakeryTopRanking(final LocalDate date) {
+	public List<BakeryScoreBase> findBakeryTopRanking(final LocalDate date) {
 		return queryFactory
 			.select(Projections.constructor(
-				CalculateBakeryScoreBase.class
+				BakeryScoreBase.class
 				, bakery.as("bakery")
 				, reviewProductRating.rating.avg().coalesce(0.0).as("bakeryRating")
 				, flagBakery.id.count().as("flagCount")
 				, bakeryView.viewCount.sum().as("viewCount")
-				, Expressions.dateTemplate(LocalDate.class, "{0}", date).as("calculatedDate")
 				)
 			)
 			.from(bakery)

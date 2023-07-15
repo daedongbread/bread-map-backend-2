@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery;
+package com.depromeet.breadmapbackend.domain.bakery.dto;
 
 public record CoordinateRange(
 	Double leftLatitude,

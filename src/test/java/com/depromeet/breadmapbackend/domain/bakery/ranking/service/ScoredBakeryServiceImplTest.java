@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
@@ -69,10 +70,11 @@ class ScoredBakeryServiceImplTest {
 		final Long flagCount = 2L;
 		final Long viewCount = 100L;
 		final LocalDate calculatedDate = LocalDate.now();
-		final CalculateBakeryScoreBase calculateBakeryScoreBase = new CalculateBakeryScoreBase(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
+		final BakeryScoreBaseWithSelectedDate bakeryScoreBaseWithSelectedDate =
+			new BakeryScoreBaseWithSelectedDate(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
 
 		//when
-		final int insertedCount = sut.calculateBakeryScore(List.of(calculateBakeryScoreBase));
+		final int insertedCount = sut.calculateBakeryScore(List.of(bakeryScoreBaseWithSelectedDate));
 
 		//then
 		assertThat(insertedCount).isEqualTo(1);

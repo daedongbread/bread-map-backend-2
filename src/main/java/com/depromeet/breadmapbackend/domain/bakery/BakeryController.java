@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryListRequest;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
-import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 import lombok.RequiredArgsConstructor;

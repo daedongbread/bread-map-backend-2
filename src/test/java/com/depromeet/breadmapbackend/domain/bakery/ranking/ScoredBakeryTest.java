@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 
 /**
  * ScoredBakeryTest
@@ -35,9 +36,12 @@ class ScoredBakeryTest {
 		final Long viewCount = 1000L;
 		final LocalDate calculatedDate = LocalDate.now();
 		final double expectedTotalScore = 1006.5;
-		final CalculateBakeryScoreBase bakeryScores = new CalculateBakeryScoreBase(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
+		final BakeryScoreBaseWithSelectedDate bakeryScoreBaseWithSelectedDate =
+			new BakeryScoreBaseWithSelectedDate(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
+
 		//when
-		final ScoredBakery result = ScoredBakery.from(bakeryScores);
+		final ScoredBakery result = ScoredBakery.from(bakeryScoreBaseWithSelectedDate);
+
 		//then
 		assertThat(result.getTotalScore()).isEqualTo(expectedTotalScore);
 

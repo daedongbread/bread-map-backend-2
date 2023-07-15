@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 
 public interface BakeryService {
 	List<BakeryCardDto> getBakeryList(
@@ -14,5 +14,5 @@ public interface BakeryService {
 
 	BakeryDto getBakery(Long userId, Long bakeryId);
 
-	List<CalculateBakeryScoreBase> getBakeryScoreBaseList();
+	List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors();
 }

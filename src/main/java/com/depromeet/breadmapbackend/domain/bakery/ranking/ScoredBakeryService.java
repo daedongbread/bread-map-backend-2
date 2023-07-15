@@ -1,9 +1,9 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 
 /**
@@ -14,7 +14,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard
  * @since 2023/07/02
  */
 public interface ScoredBakeryService {
-	int calculateBakeryScore(final List<CalculateBakeryScoreBase> bakeryScoreBaseList);
+	int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList);
 
 	List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int count);
 }

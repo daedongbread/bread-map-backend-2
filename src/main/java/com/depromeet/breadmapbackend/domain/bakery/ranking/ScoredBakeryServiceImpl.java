@@ -6,8 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.bakery.BakeryQueryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
@@ -33,7 +32,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
 
 	@Transactional
-	public int calculateBakeryScore(final List<CalculateBakeryScoreBase> bakeryScoreBaseList) {
+	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
 		return scoredBakeryRepository.bulkInsert(
 			bakeryScoreBaseList.stream()
 			.map(ScoredBakery::from)
