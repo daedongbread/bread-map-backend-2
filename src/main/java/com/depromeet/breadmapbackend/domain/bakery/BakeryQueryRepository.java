@@ -128,13 +128,13 @@ public class BakeryQueryRepository {
 
 	}
 
-	private static JPQLQuery<Long> countFlagBakerySubQuery() {
+	private JPQLQuery<Long> countFlagBakerySubQuery() {
 		return JPAExpressions.select(flagBakery.id.count())
 			.from(flagBakery)
 			.where(bakery.id.eq(flagBakery.bakery.id));
 	}
 
-	private static JPQLQuery<Double> avgRatringSubQuery() {
+	private JPQLQuery<Double> avgRatringSubQuery() {
 		return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
 			.from(reviewProductRating)
 			.where(bakery.id.eq(reviewProductRating.bakery.id));
