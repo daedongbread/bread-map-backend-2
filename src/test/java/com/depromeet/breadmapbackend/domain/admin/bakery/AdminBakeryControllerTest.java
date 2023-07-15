@@ -80,7 +80,7 @@ class AdminBakeryControllerTest extends ControllerTest {
         s3Uploader.upload(
                 new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
                 "bakeryImage.jpg");
-        bakeryViewRepository.save(BakeryView.builder().bakery(bakery).build());
+
 
         product = Product.builder()
                 .bakery(bakery).productType(ProductType.BREAD).name("bread1").price("3000").image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg").build();
