@@ -27,6 +27,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -110,22 +111,32 @@ public class BakeryQueryRepository {
 			return null;
 	}
 
-	public List<BakeryScoreBase> findBakeryTopRanking(final LocalDate date) {
+	public List<BakeryScoreBase> getBakeriesScoreFactors(final LocalDate date) {
 		return queryFactory
 			.select(Projections.constructor(
 				BakeryScoreBase.class
 				, bakery.as("bakery")
-				, reviewProductRating.rating.avg().coalesce(0.0).as("bakeryRating")
-				, flagBakery.id.count().as("flagCount")
-				, bakeryView.viewCount.sum().as("viewCount")
+				, avgRatringSubQuery()
+				, countFlagBakerySubQuery()
+				, bakeryView.viewCount.sum().coalesce(0L)
 				)
 			)
 			.from(bakery)
-			.leftJoin(flagBakery).on(bakery.id.eq(flagBakery.bakery.id))
-			.leftJoin(reviewProductRating).on(bakery.id.eq(reviewProductRating.bakery.id))
 			.leftJoin(bakeryView).on(bakery.id.eq(bakeryView.bakeryId)).on(bakeryView.viewDate.between(date.minusDays(7), date))
 			.groupBy(bakery.id)
 			.fetch();
 
+	}
+
+	private static JPQLQuery<Long> countFlagBakerySubQuery() {
+		return JPAExpressions.select(flagBakery.id.count())
+			.from(flagBakery)
+			.where(bakery.id.eq(flagBakery.bakery.id));
+	}
+
+	private static JPQLQuery<Double> avgRatringSubQuery() {
+		return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
+			.from(reviewProductRating)
+			.where(bakery.id.eq(reviewProductRating.bakery.id));
 	}
 }

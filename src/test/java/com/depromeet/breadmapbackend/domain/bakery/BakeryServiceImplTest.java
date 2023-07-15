@@ -149,6 +149,26 @@ class BakeryServiceImplTest  {
 		assertThat(firstBakeryScore.flagCount()).isEqualTo(1L);
 		assertThat(firstBakeryScore.viewCount()).isEqualTo(0L);
 
+		final BakeryScoreBaseWithSelectedDate secondBakeryScore =
+			bakeryScoreBaseList.stream()
+				.filter(b -> b.bakery().getId().equals(300L))
+				.findFirst()
+				.get();
+
+		assertThat(secondBakeryScore.bakeryRating()).isEqualTo(4D);
+		assertThat(secondBakeryScore.flagCount()).isEqualTo(1L);
+		assertThat(secondBakeryScore.viewCount()).isEqualTo(400L);
+
+		final BakeryScoreBaseWithSelectedDate thirdBakeryScore =
+			bakeryScoreBaseList.stream()
+				.filter(b -> b.bakery().getId().equals(700L))
+				.findFirst()
+				.get();
+
+		assertThat(thirdBakeryScore.bakeryRating()).isEqualTo(2.5D);
+		assertThat(thirdBakeryScore.flagCount()).isEqualTo(0L);
+		assertThat(thirdBakeryScore.viewCount()).isEqualTo(0L);
+
 	}
 
 }

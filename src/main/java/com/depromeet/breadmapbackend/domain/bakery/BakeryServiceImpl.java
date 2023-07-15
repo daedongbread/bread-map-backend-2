@@ -80,7 +80,7 @@ public class BakeryServiceImpl implements BakeryService {
 
 	@Override
 	public List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors() {
-		return bakeryQueryRepository.findBakeryTopRanking(LocalDate.now())
+		return bakeryQueryRepository.getBakeriesScoreFactors(LocalDate.now())
 			.stream()
 			.map(base -> new BakeryScoreBaseWithSelectedDate(base, LocalDate.now()))
 			.toList();
