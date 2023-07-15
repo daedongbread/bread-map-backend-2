@@ -4,10 +4,12 @@ import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
 import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.*;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.*;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.*;
+import static com.depromeet.breadmapbackend.domain.bakery.view.QBakeryView.*;
 import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
 import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -17,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRanking;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
@@ -107,18 +109,20 @@ public class BakeryQueryRepository {
 			return null;
 	}
 
-	public List<BakeryRanking> findBakeryTopRanking() {
+	public List<CalculateBakeryScoreBase> findBakeryTopRanking(final LocalDate date) {
 		return queryFactory
 			.select(Projections.constructor(
-				BakeryRanking.class
+				CalculateBakeryScoreBase.class
 				, bakery
 				, reviewProductRating.rating.avg().coalesce(0.0)
-				, reviewProductRating.id.count()
-				, flagBakery.id.count())
+				, flagBakery.id.count()
+				, bakeryView.viewCount.sum()
+				)
 			)
 			.from(bakery)
 			.leftJoin(flagBakery).on(bakery.id.eq(flagBakery.bakery.id))
 			.leftJoin(reviewProductRating).on(bakery.id.eq(reviewProductRating.bakery.id))
+			.leftJoin(bakeryView).on(bakery.id.eq(bakeryView.bakeryId)).on(bakeryView.viewDate.between(date.minusDays(7), date))
 			.groupBy(bakery.id)
 			.fetch();
 
