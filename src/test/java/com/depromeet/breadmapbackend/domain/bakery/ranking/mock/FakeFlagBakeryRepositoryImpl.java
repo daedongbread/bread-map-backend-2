@@ -46,7 +46,7 @@ public class FakeFlagBakeryRepositoryImpl implements FlagBakeryRepository {
 	}
 
 	@Override
-	public Optional<Flag> findFlagByBakeryAndUser(final Bakery bakery, final Long userId) {
+	public Optional<FlagBakery> findByBakeryAndUserId(final Bakery bakery, final Long userId) {
 		return Optional.empty();
 	}
 

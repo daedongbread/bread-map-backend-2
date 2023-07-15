@@ -47,7 +47,6 @@ import com.depromeet.breadmapbackend.domain.user.UserService;
 import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.infra.EmbeddedRedisConfig;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
@@ -58,7 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@Import({AmazonS3MockConfig.class, EmbeddedRedisConfig.class, TestRedisStreamConfig.class})
+@Import({AmazonS3MockConfig.class })
 public abstract class ControllerTest {
 	@Autowired
 	protected MockMvc mockMvc;

@@ -50,7 +50,10 @@ public class BakeryController {
 
 	@GetMapping("/{bakeryId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<BakeryDto> getBakery(@CurrentUser String oAuthId, @PathVariable Long bakeryId) {
-		return new ApiResponse<>(bakeryService.getBakery(oAuthId, bakeryId));
+	public ApiResponse<BakeryDto> getBakery(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
+		@PathVariable Long bakeryId
+	) {
+		return new ApiResponse<>(bakeryService.getBakery(currentUserInfo.getId(), bakeryId));
 	}
 }
