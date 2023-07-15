@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
@@ -73,6 +74,11 @@ public class BakeryServiceImpl implements BakeryService {
 
 		bakeryViewEventStream.publish(createEventMessage(bakery));
 		return bakeryDto;
+	}
+
+	@Override
+	public List<CalculateBakeryScoreBase> getBakeryScoreBaseList() {
+		return bakeryQueryRepository.findBakeryTopRanking(LocalDate.now());
 	}
 
 	private HashMap<String, String> createEventMessage(final Bakery bakery) {

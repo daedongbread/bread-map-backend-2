@@ -25,6 +25,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -113,10 +114,11 @@ public class BakeryQueryRepository {
 		return queryFactory
 			.select(Projections.constructor(
 				CalculateBakeryScoreBase.class
-				, bakery
-				, reviewProductRating.rating.avg().coalesce(0.0)
-				, flagBakery.id.count()
-				, bakeryView.viewCount.sum()
+				, bakery.as("bakery")
+				, reviewProductRating.rating.avg().coalesce(0.0).as("bakeryRating")
+				, flagBakery.id.count().as("flagCount")
+				, bakeryView.viewCount.sum().as("viewCount")
+				, Expressions.dateTemplate(LocalDate.class, "{0}", date).as("calculatedDate")
 				)
 			)
 			.from(bakery)

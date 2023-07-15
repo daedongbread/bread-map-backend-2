@@ -22,6 +22,8 @@ ALTER TABLE review
     ALTER COLUMN ID RESTART WITH 1;
 
 
+TRUNCATE TABLE bakery_view;
+
 insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
 (111,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_111', 'nick_name', 'test@apple.com' , 'MALE', 'image'),
 (112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'image')
@@ -59,9 +61,9 @@ insert into bakery (id, created_at, modified_at, address, blogurl, facebookurl, 
 
 
 insert into review (id, created_at, modified_at, content, is_block, is_delete, is_hide, is_new  ,bakery_id, user_id )values
-    (111,  '2023-01-01', '2023-01-01', '수원',  'N', 'N', 'N', 'N', 100, 112),
-    (112,  '2023-01-02', '2023-01-01', '서울',  'N', 'N', 'N', 'N', 300, 112),
-    (113,  '2023-01-03', '2023-01-01', '제주도', 'N', 'N', 'N', 'N', 700, 112)
+(111,  '2023-01-01', '2023-01-01', '수원',  'N', 'N', 'N', 'N', 100, 112),
+(112,  '2023-01-02', '2023-01-01', '서울',  'N', 'N', 'N', 'N', 300, 112),
+(113,  '2023-01-03', '2023-01-01', '제주도', 'N', 'N', 'N', 'N', 700, 112)
 ;
 
 insert into review_product_rating (id, created_at, modified_at, rating, bakery_id, product_id, review_id, user_id   )values

@@ -33,10 +33,10 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
 
 	@Transactional
-	public int calculateBakeryScore(final List<CalculateBakeryScoreBase> bakeryScoreBaseList, final LocalDate calculatedDate) {
+	public int calculateBakeryScore(final List<CalculateBakeryScoreBase> bakeryScoreBaseList) {
 		return scoredBakeryRepository.bulkInsert(
 			bakeryScoreBaseList.stream()
-			.map(bakeryScoreBase -> ScoredBakery.from(bakeryScoreBase, calculatedDate))
+			.map(ScoredBakery::from)
 			.toList()
 		);
 	}

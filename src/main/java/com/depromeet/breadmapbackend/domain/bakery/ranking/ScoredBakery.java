@@ -55,11 +55,11 @@ public class ScoredBakery {
 		this.calculatedDate = calculatedDate;
 	}
 
-	public static ScoredBakery from(final CalculateBakeryScoreBase bakeryScoreBase, final LocalDate calculatedDate) {
+	public static ScoredBakery from(final CalculateBakeryScoreBase bakeryScoreBase) {
 		return builder()
 			.bakery(bakeryScoreBase.bakery())
 			.totalScore(calculateTotalScore(bakeryScoreBase.bakeryRating(), bakeryScoreBase.flagCount(), bakeryScoreBase.viewCount()))
-			.calculatedDate(calculatedDate)
+			.calculatedDate(bakeryScoreBase.calculatedDate())
 			.build();
 	}
 

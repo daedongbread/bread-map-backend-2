@@ -86,8 +86,17 @@ class BakeryServiceImplTest  {
 		assertThat(repository.findById(
 			new BakeryViewId(bakeryId, now())
 		).get().getViewCount()).isEqualTo(500L);
-
-
+	}
+	
+	@Test
+	void 빵집_점수_조회() throws Exception{
+	    //given
+	    
+	    
+	    //when
+	    
+	    //then
+	    
 	}
 
 }

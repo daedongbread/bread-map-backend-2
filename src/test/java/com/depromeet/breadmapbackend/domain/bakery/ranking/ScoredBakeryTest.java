@@ -33,11 +33,11 @@ class ScoredBakeryTest {
 		final double bakeryRating = 4.5;
 		final Long flagCount = 2L;
 		final Long viewCount = 1000L;
-
+		final LocalDate calculatedDate = LocalDate.now();
 		final double expectedTotalScore = 1006.5;
-		final CalculateBakeryScoreBase bakeryScores = new CalculateBakeryScoreBase(bakery, bakeryRating, flagCount, viewCount);
+		final CalculateBakeryScoreBase bakeryScores = new CalculateBakeryScoreBase(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
 		//when
-		final ScoredBakery result = ScoredBakery.from(bakeryScores, LocalDate.now());
+		final ScoredBakery result = ScoredBakery.from(bakeryScores);
 		//then
 		assertThat(result.getTotalScore()).isEqualTo(expectedTotalScore);
 

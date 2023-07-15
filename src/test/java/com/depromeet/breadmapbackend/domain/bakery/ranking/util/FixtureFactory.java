@@ -11,6 +11,7 @@ import org.jeasy.random.EasyRandomParameters;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.user.User;
 
@@ -81,6 +82,17 @@ public class FixtureFactory {
 		EasyRandomParameters param = new EasyRandomParameters()
 			.randomize(bakeryPredicate, () -> randomBakery)
 			.randomize(calculatedDate, () -> LocalDate.now().minusDays(1));
+		return new EasyRandom(param);
+	}
+
+	public static EasyRandom getBakeryView(final Long bakeryId) {
+		Predicate<Field> bakeryPredicate = named("bakeryId").and(ofType(Long.class))
+			.and(inClass(BakeryView.class));
+
+		EasyRandomParameters param = new EasyRandomParameters()
+			.randomize(bakeryPredicate, () -> bakeryId )
+			.dateRange(LocalDate.now().minusDays(6), LocalDate.now());
+
 		return new EasyRandom(param);
 	}
 }

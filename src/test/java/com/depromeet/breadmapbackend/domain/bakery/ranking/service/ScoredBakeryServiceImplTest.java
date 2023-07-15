@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.dto.CalculateBakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryService;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryServiceImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeFlagBakeryRepositoryImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryEventStreamImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryRepositoryImpl;
@@ -67,11 +67,12 @@ class ScoredBakeryServiceImplTest {
 			.build();
 		final double bakeryRating = 4.5;
 		final Long flagCount = 2L;
-		final LocalDate calculatedDate = LocalDate.of(2022,1,1);
-		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, calculatedDate);
+		final Long viewCount = 100L;
+		final LocalDate calculatedDate = LocalDate.now();
+		final CalculateBakeryScoreBase calculateBakeryScoreBase = new CalculateBakeryScoreBase(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
 
 		//when
-		final int insertedCount = sut.registerBakeriesRank(List.of(bakeryScores) );
+		final int insertedCount = sut.calculateBakeryScore(List.of(calculateBakeryScoreBase));
 
 		//then
 		assertThat(insertedCount).isEqualTo(1);
@@ -151,6 +152,7 @@ class ScoredBakeryServiceImplTest {
 		assertThat(fieldMap).hasSize(1);
 		assertThat(fieldMap.get(CALCULATE_RANKING.name())).isNotNull();
 	}
+
 
 	private List<ScoredBakery> prepareData() {
 		final List<ScoredBakery> preparedDate = LongStream.range(1, 10)
