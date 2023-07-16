@@ -4,7 +4,6 @@ import static com.depromeet.breadmapbackend.global.EventConsumerGroupInfo.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -58,7 +57,7 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 		if (Objects.equals(cachedViewCount, INITIAL_VALUE)) {
 			return reCountWhenErrorOrInitialCount(bakeryId, viewDate);
 		} else {
-			return 	redisTemplate.opsForValue()
+			return redisTemplate.opsForValue()
 				.increment(getRedisViewCountKey(bakeryId, viewDate));
 		}
 	}
@@ -88,7 +87,6 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 	private String getRedisViewCountKey(final Long bakeryId, final LocalDate viewDate) {
 		return "BAKERY-VIEW:" + bakeryId + ":" + viewDate;
 	}
-
 
 	private Long getRankValueTTLInHours() {
 		final LocalTime now = LocalTime.now();

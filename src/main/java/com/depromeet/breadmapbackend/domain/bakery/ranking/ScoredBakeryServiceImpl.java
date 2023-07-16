@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelect
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.global.EventInfo;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -62,11 +63,11 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 		final List<ScoredBakery> ranksFromDb = getRanksFromDb(calculatedDate, size);
 		if (!ranksFromDb.isEmpty()) {
-			scoredBakeryEventStream.publish(ScoredBakeryEvents.CACHE_RANKING, calculatedDate);
+			scoredBakeryEventStream.publish(EventInfo.CACHE_RANKING_EVENT, calculatedDate);
 			return ranksFromDb;
 		}
 
-		scoredBakeryEventStream.publish(ScoredBakeryEvents.CALCULATE_RANKING, calculatedDate);
+		scoredBakeryEventStream.publish(EventInfo.CALCULATE_RANKING_EVENT, calculatedDate);
 
 		final List<ScoredBakery> lastCalculatedRank = getLastCalculatedRanks(calculatedDate, size);
 		if (!lastCalculatedRank.isEmpty()) {

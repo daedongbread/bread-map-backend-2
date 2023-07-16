@@ -7,6 +7,8 @@ import java.util.HashMap;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.depromeet.breadmapbackend.global.EventInfo;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -22,7 +24,7 @@ public class ScoredBakeryEventStreamRedisImpl implements ScoredBakeryEventStream
 
 	private final StringRedisTemplate redisTemplate;
 
-	public void publish(final ScoredBakeryEvents event, final LocalDate calculatedDate) {
+	public void publish(final EventInfo event, final LocalDate calculatedDate) {
 		final HashMap<String, String> fieldMap = new HashMap<>();
 		fieldMap.put("calculatedDate", calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 

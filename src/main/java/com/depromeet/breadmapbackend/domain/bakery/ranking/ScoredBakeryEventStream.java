@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
 
+import com.depromeet.breadmapbackend.global.EventInfo;
+
 /**
  * ScoredBakeryEventStream
  *
@@ -11,5 +13,5 @@ import java.time.LocalDate;
  */
 public interface ScoredBakeryEventStream {
 
-	void publish(final ScoredBakeryEvents event, final LocalDate calculatedDate);
+	void publish(final EventInfo event, final LocalDate calculatedDate);
 }

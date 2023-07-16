@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEvents;
+import com.depromeet.breadmapbackend.global.EventInfo;
 
 /**
  * FakeScoreBakeryEventStreamImpl
@@ -27,7 +28,7 @@ public class FakeScoredBakeryEventStreamImpl implements ScoredBakeryEventStream 
 	}
 
 	@Override
-	public void publish(final ScoredBakeryEvents event, final LocalDate calculatedDate) {
+	public void publish(final EventInfo event, final LocalDate calculatedDate) {
 		fieldMap.put(event.name(), calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 	}
 

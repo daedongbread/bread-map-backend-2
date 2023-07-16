@@ -20,6 +20,8 @@ import lombok.Getter;
 public enum EventInfo {
 
 	BAKERY_VIEW_EVENT("bakery-view-event", List.of(EventConsumerGroupInfo.BAKERY_VIEW_COUNT)),
+	CALCULATE_RANKING_EVENT("calculate_raking_event",List.of()),
+	CACHE_RANKING_EVENT("cache_ranking_event", List.of()),
 	;
 
 	final String eventName;
