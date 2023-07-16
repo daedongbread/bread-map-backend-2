@@ -2,7 +2,10 @@ package com.depromeet.breadmapbackend.domain.bakery.view;
 
 import static com.depromeet.breadmapbackend.global.EventConsumerGroupInfo.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,8 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 
 	private final BakeryViewRepository repository;
 	private final StringRedisTemplate redisTemplate;
-	private static final Long INITIAL_COUNT = 1L;
+	private static final Long INITIAL_COUNTED_VALUE = 1L;
+	private static final Long INITIAL_VALUE = 0L;
 
 	@Transactional
 	@Override
@@ -45,13 +49,17 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 	}
 
 	private Long getIncrementedViewCount(final Long bakeryId, final LocalDate viewDate) {
-		final Long cachedViewCount = redisTemplate.opsForValue()
-			.increment(getRedisViewCountKey(bakeryId, viewDate));
-
-		if (cachedViewCount == null || Objects.equals(cachedViewCount , INITIAL_COUNT)) {
+		final Long cachedViewCount = Long.parseLong(
+			Optional.ofNullable(
+				redisTemplate.opsForValue()
+					.get(getRedisViewCountKey(bakeryId, viewDate))
+			).orElse("0")
+		);
+		if (Objects.equals(cachedViewCount, INITIAL_VALUE)) {
 			return reCountWhenErrorOrInitialCount(bakeryId, viewDate);
-		}else {
-			return cachedViewCount;
+		} else {
+			return 	redisTemplate.opsForValue()
+				.increment(getRedisViewCountKey(bakeryId, viewDate));
 		}
 	}
 
@@ -60,14 +68,33 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 
 		if (bakeryView.isPresent()) {
 			final Long incrementedViewCount = (bakeryView.get().getViewCount()) + 1L;
-			redisTemplate.opsForValue().set(getRedisViewCountKey(bakeryId, viewDate), incrementedViewCount.toString());
+			redisTemplate.opsForValue().set(
+				getRedisViewCountKey(bakeryId, viewDate),
+				incrementedViewCount.toString(),
+				Duration.ofHours(getRankValueTTLInHours())
+			);
 			return incrementedViewCount;
-		}else{
-			return INITIAL_COUNT;
+		} else {
+			redisTemplate.opsForValue()
+				.set(
+					getRedisViewCountKey(bakeryId, viewDate),
+					INITIAL_COUNTED_VALUE.toString(),
+					Duration.ofHours(getRankValueTTLInHours())
+				);
+			return INITIAL_COUNTED_VALUE;
 		}
 	}
 
 	private String getRedisViewCountKey(final Long bakeryId, final LocalDate viewDate) {
 		return "BAKERY-VIEW:" + bakeryId + ":" + viewDate;
+	}
+
+
+	private Long getRankValueTTLInHours() {
+		final LocalTime now = LocalTime.now();
+		final LocalTime endOfDateTime = LocalTime.of(23, 59, 59);
+		final LocalTime ttl = endOfDateTime.minusHours(now.getHour())
+			.plusHours(2L);
+		return Long.valueOf(ttl.getHour());
 	}
 }

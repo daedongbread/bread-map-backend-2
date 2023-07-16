@@ -116,7 +116,7 @@ public class BakeryQueryRepository {
 			.select(Projections.constructor(
 				BakeryScoreBase.class
 				, bakery.as("bakery")
-				, avgRatringSubQuery()
+				, avgRatingSubQuery()
 				, countFlagBakerySubQuery()
 				, bakeryView.viewCount.sum().coalesce(0L)
 				)
@@ -134,7 +134,7 @@ public class BakeryQueryRepository {
 			.where(bakery.id.eq(flagBakery.bakery.id));
 	}
 
-	private JPQLQuery<Double> avgRatringSubQuery() {
+	private JPQLQuery<Double> avgRatingSubQuery() {
 		return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
 			.from(reviewProductRating)
 			.where(bakery.id.eq(reviewProductRating.bakery.id));
