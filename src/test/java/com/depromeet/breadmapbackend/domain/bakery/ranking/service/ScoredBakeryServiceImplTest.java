@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.service;
 
-import static com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEvents.*;
+import static com.depromeet.breadmapbackend.global.EventInfo.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
@@ -96,7 +96,7 @@ class ScoredBakeryServiceImplTest {
 		assertThat(result.get(1).isFlagged()).isFalse();
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CACHE_RANKING.name())).isNotNull();
+		assertThat(fieldMap.get(CACHE_RANKING_EVENT.name())).isNotNull();
 	}
 
 	@Test
@@ -130,7 +130,7 @@ class ScoredBakeryServiceImplTest {
 
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CALCULATE_RANKING.name())).isNotNull();
+		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
 
 
@@ -152,7 +152,7 @@ class ScoredBakeryServiceImplTest {
 
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CALCULATE_RANKING.name())).isNotNull();
+		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
 
 

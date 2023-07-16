@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEvents;
 import com.depromeet.breadmapbackend.global.EventInfo;
 
 /**
