@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.bakery.view;
 
-import static com.depromeet.breadmapbackend.global.EventConsumerGroupInfo.*;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +15,8 @@ import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.global.EventInfo;
+
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,7 +31,7 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 	@Transactional
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {
-		final List<String> keys = BAKERY_VIEW_COUNT.getEvenMessageKeys();
+		final List<String> keys = EventInfo.BAKERY_VIEW_EVENT.getEvenMessageKeys();
 		final Map<String, String> value = message.getValue();
 
 		final Long bakeryId = Long.parseLong(value.get(keys.get(0)));

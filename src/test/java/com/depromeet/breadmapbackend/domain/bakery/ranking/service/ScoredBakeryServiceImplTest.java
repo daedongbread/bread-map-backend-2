@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
@@ -96,7 +95,7 @@ class ScoredBakeryServiceImplTest {
 		assertThat(result.get(1).isFlagged()).isFalse();
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CACHE_RANKING_EVENT.name())).isNotNull();
+		assertThat(fieldMap.get(RE_CACHE_RANKING_EVENT.name())).isNotNull();
 	}
 
 	@Test
@@ -130,9 +129,8 @@ class ScoredBakeryServiceImplTest {
 
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
+		assertThat(fieldMap.get(RE_CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
-
 
 	@Test
 	void 캐시_DB_모두_데이터가_없고_하루전_랭킹_데이터만_있을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
@@ -149,12 +147,10 @@ class ScoredBakeryServiceImplTest {
 		assertThat(result.get(0).isFlagged()).isTrue();
 		assertThat(result.get(1).isFlagged()).isFalse();
 
-
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
+		assertThat(fieldMap.get(RE_CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
-
 
 	private List<ScoredBakery> prepareData() {
 		final List<ScoredBakery> preparedDate = LongStream.range(1, 10)

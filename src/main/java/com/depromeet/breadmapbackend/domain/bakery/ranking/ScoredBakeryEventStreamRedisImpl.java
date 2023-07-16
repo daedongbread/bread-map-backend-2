@@ -24,11 +24,24 @@ public class ScoredBakeryEventStreamRedisImpl implements ScoredBakeryEventStream
 
 	private final StringRedisTemplate redisTemplate;
 
-	public void publish(final EventInfo event, final LocalDate calculatedDate) {
+	public void publishCalculateRankingEvent(final LocalDate calculatedDate) {
+		final EventInfo calculateRankingEvent = EventInfo.RE_CALCULATE_RANKING_EVENT;
 		final HashMap<String, String> fieldMap = new HashMap<>();
-		fieldMap.put("calculatedDate", calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		fieldMap.put(calculateRankingEvent.getEvenMessageKeys().get(0),
+			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
 		redisTemplate.opsForStream()
-			.add(event.name(), fieldMap);
+			.add(calculateRankingEvent.name(), fieldMap);
+	}
+
+	@Override
+	public void publishCachingRankingEvent(final LocalDate calculatedDate) {
+		final EventInfo cacheRankingEvent = EventInfo.RE_CACHE_RANKING_EVENT;
+		final HashMap<String, String> fieldMap = new HashMap<>();
+		fieldMap.put(cacheRankingEvent.getEvenMessageKeys().get(0),
+			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+		redisTemplate.opsForStream()
+			.add(cacheRankingEvent.name(), fieldMap);
 	}
 }

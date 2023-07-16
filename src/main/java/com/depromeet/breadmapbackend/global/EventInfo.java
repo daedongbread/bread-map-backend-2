@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.global;
 
+import static com.depromeet.breadmapbackend.global.EventConsumerGroupInfo.*;
+
 import java.util.List;
 
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -19,12 +21,14 @@ import lombok.Getter;
 @Getter
 public enum EventInfo {
 
-	BAKERY_VIEW_EVENT("bakery-view-event", List.of(EventConsumerGroupInfo.BAKERY_VIEW_COUNT)),
-	CALCULATE_RANKING_EVENT("calculate_raking_event",List.of()),
-	CACHE_RANKING_EVENT("cache_ranking_event", List.of()),
+	BAKERY_VIEW_EVENT("bakery-view-event", List.of("bakeryId", "viewDate"), List.of(BAKERY_VIEW_COUNT)),
+	INITIAL_CALCULATE_RANKING_EVENT("calculate_raking_event", List.of("calculatedDate"), List.of(CALCULATE_RANKING)),
+	RE_CALCULATE_RANKING_EVENT("re_calculate_raking_event", List.of("calculatedDate"), List.of(CALCULATE_RANKING)),
+	RE_CACHE_RANKING_EVENT("re_cache_ranking_event", List.of("calculatedDate"), List.of(CACHE_RANKING)),
 	;
 
 	final String eventName;
+	final List<String> evenMessageKeys;
 	final List<EventConsumerGroupInfo> consumerGroupInfos;
 
 	public String getConsumerGroupName(EventConsumerGroupInfo consumerGroup) {
