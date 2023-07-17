@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -33,11 +34,19 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	@Transactional
 	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
-		return scoredBakeryRepository.bulkInsert(
-			bakeryScoreBaseList.stream()
-				.map(ScoredBakery::from)
-				.toList()
-		);
+		final List<ScoredBakery> sortedBakeryRank = bakeryScoreBaseList.stream()
+			.map(ScoredBakery::from)
+			.sorted(Comparator.comparing(ScoredBakery::getTotalScore)
+				.reversed()
+				.thenComparing(ScoredBakery::getId)
+				.reversed())
+			.toList();
+
+		for (final ScoredBakery scoredBakery : sortedBakeryRank) {
+			scoredBakery.setRank(sortedBakeryRank.indexOf(scoredBakery) + 1);
+		}
+
+		return scoredBakeryRepository.bulkInsert(sortedBakeryRank);
 	}
 
 	@Override
