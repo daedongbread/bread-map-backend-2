@@ -36,9 +36,8 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
  * @since 2023/07/10
  */
 
-
 @SpringBootTest
-class BakeryServiceImplTest  {
+class BakeryServiceImplTest {
 
 	@Autowired
 	private BakeryService sut;
@@ -72,11 +71,11 @@ class BakeryServiceImplTest  {
 						(500, 'date2', count200),
 						(600, 'date2', count200)
 				""".replaceAll("date1", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-					.replaceAll("date2", LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-						.replaceAll("count100", "100")
-						.replaceAll("count200", "200")
-						.replaceAll("count300", "300")
-						.replaceAll("count50", "50");
+				.replaceAll("date2", LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+				.replaceAll("count100", "100")
+				.replaceAll("count200", "200")
+				.replaceAll("count300", "300")
+				.replaceAll("count50", "50");
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
 		}
@@ -85,11 +84,11 @@ class BakeryServiceImplTest  {
 
 	@Test
 	@Sql("classpath:bakery-test-data.sql")
-	void 최초조회() throws Exception{
+	void 최초조회() throws Exception {
 		//given
 		final Long userId = 111L;
 
-	    //when
+		//when
 		final BakeryDto result = sut.getBakery(userId, bakeryId);
 
 		//then
@@ -123,28 +122,26 @@ class BakeryServiceImplTest  {
 			new BakeryViewId(bakeryId, now())
 		).get().getViewCount()).isEqualTo(500L);
 	}
-	
+
 	@Test
 	@Sql("classpath:scoredBakery-test-data.sql")
-	void 빵집_점수_조회() throws Exception{
-	    //given
+	void 빵집_점수_조회() throws Exception {
+		//given
 		//when
-		final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList = sut.getBakeriesScoreFactors();
+		final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList = sut.getBakeriesScoreFactors(LocalDate.now());
 
 		final List<FlagBakery> resultList = em.createQuery(
 				"select fb from FlagBakery fb where fb.bakery.id = :bakeryId ", FlagBakery.class)
 			.setParameter("bakeryId", 100L)
 			.getResultList();
 
-
-
 		//then
 		assertThat(bakeryScoreBaseList.size()).isEqualTo(11);
 		final BakeryScoreBaseWithSelectedDate firstBakeryScore =
 			bakeryScoreBaseList.stream()
-			.filter(b -> b.bakery().getId().equals(100L))
-			.findFirst()
-			.get();
+				.filter(b -> b.bakery().getId().equals(100L))
+				.findFirst()
+				.get();
 		assertThat(firstBakeryScore.bakeryRating()).isEqualTo(3D);
 		assertThat(firstBakeryScore.flagCount()).isEqualTo(1L);
 		assertThat(firstBakeryScore.viewCount()).isEqualTo(0L);

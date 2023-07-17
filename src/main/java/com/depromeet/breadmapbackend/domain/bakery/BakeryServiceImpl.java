@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
@@ -79,10 +78,10 @@ public class BakeryServiceImpl implements BakeryService {
 	}
 
 	@Override
-	public List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors() {
-		return bakeryQueryRepository.getBakeriesScoreFactors(LocalDate.now())
+	public List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors(final LocalDate calculateDate) {
+		return bakeryQueryRepository.getBakeriesScoreFactors(calculateDate)
 			.stream()
-			.map(base -> new BakeryScoreBaseWithSelectedDate(base, LocalDate.now()))
+			.map(base -> new BakeryScoreBaseWithSelectedDate(base, calculateDate))
 			.toList();
 
 	}
@@ -102,7 +101,8 @@ public class BakeryServiceImpl implements BakeryService {
 		final Double longitude,
 		final List<Bakery> bakeries
 	) {
-		final Map<Long, List<Review>> reviewListForAllBakeries = reviewService.getReviewListInBakeries(userId, bakeries);
+		final Map<Long, List<Review>> reviewListForAllBakeries =
+			reviewService.getReviewListInBakeries(userId, bakeries);
 		final List<BakeryCountInFlag> bakeryCountInFlags = flagRepository.countFlagNum(bakeries);
 
 		return bakeries

@@ -27,7 +27,7 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private final ScoredBakeryCacheRepository scoredBakeryCacheRepository;
 
-	public int bulkInsert(final List<ScoredBakery> scoredBakeryList ) {
+	public int bulkInsert(final List<ScoredBakery> scoredBakeryList) {
 
 		String sql = String.format(
 			"""

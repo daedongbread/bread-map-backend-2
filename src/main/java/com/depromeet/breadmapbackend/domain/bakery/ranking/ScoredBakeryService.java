@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 

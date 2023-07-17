@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
@@ -14,5 +15,5 @@ public interface BakeryService {
 
 	BakeryDto getBakery(Long userId, Long bakeryId);
 
-	List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors();
+	List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors(final LocalDate calculateDate);
 }

@@ -11,7 +11,7 @@ import java.util.List;
  * @since 2023/07/02
  */
 public interface ScoredBakeryRepository {
-	int bulkInsert(final List<ScoredBakery> scoredBakeryList );
+	int bulkInsert(final List<ScoredBakery> scoredBakeryList);
 
 	List<ScoredBakery> findCachedScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size);
 
