@@ -19,10 +19,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
@@ -74,9 +76,9 @@ public class Bakery extends BaseEntity {
 	@Convert(converter = FacilityInfoListConverter.class)
 	private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "pioneer_id")
-	private User pioneer;
+	@OneToOne
+	@JoinColumn(name = "report_id")
+	private BakeryAddReport bakeryAddReport;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id")
@@ -87,7 +89,7 @@ public class Bakery extends BaseEntity {
 		String name, Double latitude, Double longitude,
 		String address, String detailedAddress, String hours, String phoneNumber,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
-		List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
+		List<FacilityInfo> facilityInfoList, BakeryStatus status,  BakeryAddReport bakeryAddReport
 	) {
 		this.name = name;
 		this.latitude = latitude;
@@ -101,7 +103,7 @@ public class Bakery extends BaseEntity {
 		this.image = image;
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
-		this.pioneer = pioneer;
+		this.bakeryAddReport = bakeryAddReport;
 	}
 
 	public void update(
@@ -120,10 +122,6 @@ public class Bakery extends BaseEntity {
 		this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
-	}
-
-	public void updatePioneer(User pioneer) {
-		this.pioneer = pioneer;
 	}
 
 	public boolean isPosting() {
@@ -147,9 +145,12 @@ public class Bakery extends BaseEntity {
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
 	}
 
+	public User getPioneer() {
+		return this.bakeryAddReport != null ? this.bakeryAddReport.getUser() : null;
+	}
+
 	public String getShortAddress() {
 		final String[] addressSplit = this.address.split("\\s");
 		return addressSplit.length == 1 ? addressSplit[0] : addressSplit[0] + " " + addressSplit[1];
-
 	}
 }
