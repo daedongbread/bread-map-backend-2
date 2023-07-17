@@ -80,25 +80,6 @@ class ScoredBakeryServiceImplTest {
 	}
 
 	@Test
-	void 캐싱된_데이터가_없을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
-		// given
-		final List<ScoredBakery> preparedData = prepareData();
-		final int count = 3;
-		final Long userId = 1L;
-		//when
-		final List<BakeryRankingCard> result = sut.findBakeriesRankTop(userId, count);
-
-		//then
-		assertThat(result).hasSize(3);
-		assertThat(result.get(0).name()).isEqualTo(preparedData.get(0).getBakery().getName());
-		assertThat(result.get(0).isFlagged()).isTrue();
-		assertThat(result.get(1).isFlagged()).isFalse();
-		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
-		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(RE_CACHE_RANKING_EVENT.name())).isNotNull();
-	}
-
-	@Test
 	void 캐싱된_데이터가_있을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
 		// given
 		final List<ScoredBakery> preparedData = prepareCacheData();
@@ -129,7 +110,7 @@ class ScoredBakeryServiceImplTest {
 
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(RE_CALCULATE_RANKING_EVENT.name())).isNotNull();
+		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
 
 	@Test
@@ -149,16 +130,7 @@ class ScoredBakeryServiceImplTest {
 
 		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(RE_CALCULATE_RANKING_EVENT.name())).isNotNull();
-	}
-
-	private List<ScoredBakery> prepareData() {
-		final List<ScoredBakery> preparedDate = LongStream.range(1, 10)
-			.mapToObj(i -> FixtureFactory.getScoredBakery(i).nextObject(ScoredBakery.class))
-			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
-			.toList();
-		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);
-		return preparedDate;
+		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
 
 	private List<ScoredBakery> prepareCacheData() {

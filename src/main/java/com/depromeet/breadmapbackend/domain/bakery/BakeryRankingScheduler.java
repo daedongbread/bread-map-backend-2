@@ -28,7 +28,7 @@ public class BakeryRankingScheduler {
 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void publishBakeryRankingCalculationEvent() {
-		final EventInfo calculateRankingEvent = EventInfo.INITIAL_CALCULATE_RANKING_EVENT;
+		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
 		final HashMap<String, String> fieldMap = new HashMap<>();
 		fieldMap.put(calculateRankingEvent.getEvenMessageKeys().get(0),
 			LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));

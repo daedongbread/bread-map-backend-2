@@ -41,17 +41,7 @@ public class FakeScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 		return data.size();
 	}
-
-	@Override
-	public List<ScoredBakery> findCachedScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
-		return cachedData.stream()
-			.filter(scoredBakery -> scoredBakery.getCalculatedDate().equals(calculatedDate))
-			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed()
-				.thenComparing((ScoredBakery scoredBakery) -> scoredBakery.getBakery().getId()))
-			.limit(size)
-			.toList();
-	}
-
+ 
 	@Override
 	public List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
 		return data.stream()

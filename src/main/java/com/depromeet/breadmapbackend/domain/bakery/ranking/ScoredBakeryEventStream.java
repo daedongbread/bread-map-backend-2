@@ -13,5 +13,4 @@ public interface ScoredBakeryEventStream {
 
 	void publishCalculateRankingEvent(final LocalDate calculatedDate);
 
-	void publishCachingRankingEvent(final LocalDate calculatedDate);
 }

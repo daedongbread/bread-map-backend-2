@@ -26,7 +26,7 @@ public class BakeryRankingCalculationEventStreamListener
 	private final BakeryService bakeryService;
 	private final ScoredBakeryService scoredBakeryService;
 	private final StringRedisTemplate redisTemplate;
-	private static final EventInfo event = EventInfo.INITIAL_CALCULATE_RANKING_EVENT;
+	private static final EventInfo event = EventInfo.CALCULATE_RANKING_EVENT;
 
 	@Transactional
 	@Override

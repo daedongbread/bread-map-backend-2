@@ -46,11 +46,6 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	}
 
 	@Override
-	public List<ScoredBakery> findCachedScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
-		return scoredBakeryCacheRepository.findScoredBakeryByCalculatedDate(calculatedDate, size);
-	}
-
-	@Override
 	public List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
 		return scoredBakeryJpaRepository.findScoredBakeryByCalculatedDate(calculatedDate, Pageable.ofSize(size));
 	}

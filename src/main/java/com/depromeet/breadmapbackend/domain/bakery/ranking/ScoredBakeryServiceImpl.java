@@ -55,14 +55,8 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	private List<ScoredBakery> findScoredBakeryBy(final LocalDate calculatedDate, final int size) {
 
-		final List<ScoredBakery> cachedRanks = getRanksFromCache(calculatedDate, size);
-		if (!cachedRanks.isEmpty()) {
-			return cachedRanks;
-		}
-
 		final List<ScoredBakery> ranksFromDb = getRanksFromDb(calculatedDate, size);
 		if (!ranksFromDb.isEmpty()) {
-			scoredBakeryEventStream.publishCachingRankingEvent(calculatedDate);
 			return ranksFromDb;
 		}
 
@@ -82,10 +76,6 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	private List<ScoredBakery> getRanksFromDb(final LocalDate calculatedDate, final int size) {
 		return scoredBakeryRepository.findScoredBakeryByCalculatedDate(calculatedDate, size);
-	}
-
-	private List<ScoredBakery> getRanksFromCache(final LocalDate calculatedDate, final int size) {
-		return scoredBakeryRepository.findCachedScoredBakeryByCalculatedDate(calculatedDate, size);
 	}
 
 	private List<FlagBakery> findFlagBakeryBy(final Long userId, final List<ScoredBakery> bakeriesScores) {

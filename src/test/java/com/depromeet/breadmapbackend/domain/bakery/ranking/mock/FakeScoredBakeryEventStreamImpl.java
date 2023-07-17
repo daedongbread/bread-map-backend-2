@@ -28,13 +28,7 @@ public class FakeScoredBakeryEventStreamImpl implements ScoredBakeryEventStream 
 
 	@Override
 	public void publishCalculateRankingEvent(final LocalDate calculatedDate) {
-		fieldMap.put(EventInfo.RE_CALCULATE_RANKING_EVENT.name(),
-			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-	}
-
-	@Override
-	public void publishCachingRankingEvent(final LocalDate calculatedDate) {
-		fieldMap.put(EventInfo.RE_CACHE_RANKING_EVENT.name(),
+		fieldMap.put(EventInfo.CALCULATE_RANKING_EVENT.name(),
 			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 	}
 }
