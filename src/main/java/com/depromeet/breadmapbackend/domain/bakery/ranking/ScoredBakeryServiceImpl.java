@@ -42,8 +42,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	@Override
 	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
-		final List<ScoredBakery> scoredBakeries =
-			findScoredBakeryBy(LocalDate.now(), size);
+		final List<ScoredBakery> scoredBakeries = findScoredBakeryBy(LocalDate.now(), size);
 
 		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
 
@@ -54,7 +53,6 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	}
 
 	private List<ScoredBakery> findScoredBakeryBy(final LocalDate calculatedDate, final int size) {
-
 		final List<ScoredBakery> ranksFromDb = getRanksFromDb(calculatedDate, size);
 		if (!ranksFromDb.isEmpty()) {
 			return ranksFromDb;

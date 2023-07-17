@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery;
+package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.depromeet.breadmapbackend.global.EventInfo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * BakeryRankingScheduler
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
  * @since 2023/07/17
  */
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BakeryRankingScheduler {
@@ -28,6 +30,7 @@ public class BakeryRankingScheduler {
 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void publishBakeryRankingCalculationEvent() {
+		log.info("========================= Start Calculating Bakery Ranking =========================");
 		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
 		final HashMap<String, String> fieldMap = new HashMap<>();
 		fieldMap.put(calculateRankingEvent.getEvenMessageKeys().get(0),
