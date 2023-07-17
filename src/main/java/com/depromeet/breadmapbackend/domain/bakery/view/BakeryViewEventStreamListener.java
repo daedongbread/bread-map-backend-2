@@ -70,7 +70,7 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 			redisTemplate.opsForValue().set(
 				getRedisViewCountKey(bakeryId, viewDate),
 				incrementedViewCount.toString(),
-				Duration.ofHours(getRankValueTTLInHours())
+				Duration.ofSeconds(getRankValueTTLInHours())
 			);
 			return incrementedViewCount;
 		} else {
@@ -78,7 +78,7 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 				.set(
 					getRedisViewCountKey(bakeryId, viewDate),
 					INITIAL_COUNTED_VALUE.toString(),
-					Duration.ofHours(getRankValueTTLInHours())
+					Duration.ofSeconds(getRankValueTTLInHours())
 				);
 			return INITIAL_COUNTED_VALUE;
 		}
@@ -88,11 +88,11 @@ public class BakeryViewEventStreamListener implements StreamListener<String, Map
 		return "BAKERY-VIEW:" + bakeryId + ":" + viewDate;
 	}
 
-	private Long getRankValueTTLInHours() {
-		final LocalTime now = LocalTime.now();
-		final LocalTime endOfDateTime = LocalTime.of(23, 59, 59);
-		final LocalTime ttl = endOfDateTime.minusHours(now.getHour())
-			.plusHours(2L);
-		return Long.valueOf(ttl.getHour());
+	private long getRankValueTTLInHours() {
+
+		final int now = LocalTime.now().toSecondOfDay();
+		final int endOfDateTime = LocalTime.MAX.toSecondOfDay() + (1 * 60 * 60);
+
+		return (long)endOfDateTime - now;
 	}
 }
