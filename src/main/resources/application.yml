@@ -5,6 +5,7 @@ spring:
     #    show-sql: true
     open-in-view: false # OSIV
     properties:
+      default_batch_fetch_size: 100
       hibernate:
         #        format_sql: true
         create_empty_composites:

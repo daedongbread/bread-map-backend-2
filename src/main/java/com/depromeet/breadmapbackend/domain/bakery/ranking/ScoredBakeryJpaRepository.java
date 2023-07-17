@@ -19,6 +19,7 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 
 	@Query("select sb "
 		+ "from ScoredBakery sb "
+		+ "join fetch sb.bakery b "
 		+ "where sb.calculatedDate = :calculatedDate "
 		+ "order by sb.totalScore desc, sb.bakery.id desc")
 	List<ScoredBakery> findScoredBakeryByCalculatedDate(
