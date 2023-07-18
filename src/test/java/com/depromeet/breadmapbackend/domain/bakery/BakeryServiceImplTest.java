@@ -109,5 +109,9 @@ class BakeryServiceImplTest {
 			.findFirst().get();
 		assertThat(bakery300.isFlagged()).isFalse();
 		assertThat(bakery300.isFollowed()).isTrue();
+		final NewBakeryCardDto bakery600 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(600L))
+			.findFirst().get();
+		assertThat(bakery600.isFlagged()).isTrue();
+		assertThat(bakery600.isFollowed()).isFalse();
 	}
 }
