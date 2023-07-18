@@ -37,6 +37,9 @@ public class ScoredBakery {
 	@OneToOne
 	@JoinColumn(name = "bakery_id")
 	private Bakery bakery;
+	private long viewCount;
+	private long flagCount;
+	private double rating;
 	private double totalScore;
 	private LocalDate calculatedDate;
 	private int rank;
@@ -44,6 +47,9 @@ public class ScoredBakery {
 	@Builder
 	private ScoredBakery(
 		final Bakery bakery,
+		final long viewCount,
+		final long flagCount,
+		final double rating,
 		final double totalScore,
 		final LocalDate calculatedDate
 	) {
@@ -52,6 +58,9 @@ public class ScoredBakery {
 		Assert.notNull(calculatedDate, "calculatedDate must not be null");
 
 		this.bakery = bakery;
+		this.viewCount = viewCount;
+		this.flagCount = flagCount;
+		this.rating = rating;
 		this.totalScore = totalScore;
 		this.calculatedDate = calculatedDate;
 	}
@@ -63,6 +72,9 @@ public class ScoredBakery {
 	public static ScoredBakery from(final BakeryScoreBaseWithSelectedDate bakeryScoreBase) {
 		return builder()
 			.bakery(bakeryScoreBase.bakery())
+			.flagCount(bakeryScoreBase.flagCount())
+			.viewCount(bakeryScoreBase.viewCount())
+			.rating(bakeryScoreBase.bakeryRating())
 			.totalScore(
 				calculateTotalScore(
 					bakeryScoreBase.bakeryRating(),
