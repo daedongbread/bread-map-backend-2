@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -60,30 +62,15 @@ class BakeryServiceImplTest {
 	void setUp() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 
-			final String sql = """
-						insert into bakery_view (bakery_id, view_date, view_count) values
-						(200, 'date1', count200),
-						(300, 'date1', count300),
-						(500, 'date1', count100),
-						(600, 'date1', count50),
-						(200, 'date2', count300),
-						(300, 'date2', count100),
-						(500, 'date2', count200),
-						(600, 'date2', count200)
-				""".replaceAll("date1", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-				.replaceAll("date2", LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-				.replaceAll("count100", "100")
-				.replaceAll("count200", "200")
-				.replaceAll("count300", "300")
-				.replaceAll("count50", "50");
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			insertBakeryViewTestData(connection);
+			insertReviewProductRatingTestData(connection);
+			insertFlagBakeryTestData(connection);
 		}
 		redisTemplate.opsForValue().getAndDelete("BAKERY-VIEW:" + bakeryId + ":" + LocalDate.now());
 	}
 
 	@Test
-	@Sql("classpath:bakery-test-data.sql")
+	@Sql("classpath:scoredBakery-test-data.sql")
 	void 최초조회() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -98,7 +85,7 @@ class BakeryServiceImplTest {
 	}
 
 	@Test
-	@Sql("classpath:bakery-test-data.sql")
+	@Sql("classpath:scoredBakery-test-data.sql")
 	void 동시_조회() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -166,6 +153,68 @@ class BakeryServiceImplTest {
 		assertThat(thirdBakeryScore.flagCount()).isEqualTo(0L);
 		assertThat(thirdBakeryScore.viewCount()).isEqualTo(0L);
 
+	}
+
+	private void insertBakeryViewTestData(final Connection connection) throws SQLException {
+		final String sql = """
+					insert into bakery_view (bakery_id, view_date, view_count) values
+					(200, 'date1', 200),
+					(300, 'date1', 300),
+					(500, 'date1', 100),
+					(600, 'date1', 50),
+					(200, 'date2', 300),
+					(300, 'date2', 100),
+					(500, 'date2', 200),
+					(600, 'date2', 200)
+			""".replaceAll("date1", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+			.replaceAll("date2", LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+	}
+
+	private void insertReviewProductRatingTestData(final Connection connection) throws SQLException {
+		final String sql = """
+				insert into review_product_rating (id, created_at, modified_at, rating, bakery_id, product_id, review_id, user_id   )values
+				(111,  'date1', '2023-01-01', 4, 100, 5534, 111,112),
+			 	(112,  'date2', '2023-01-01', 3, 100, 5535 , 111, 112),
+				(113,  'date3', '2023-01-01', 2, 100, 5536 , 111, 112),
+				(114,  'date4', '2023-01-01', 2, 100, 5536 , 111, 112),-- 빵집 100 평균 평점 3
+			 
+				(116,  'date1', '2023-01-01', 4, 300, 1505 , 112, 112), -- 빵집 300 평균 평점 4
+			 
+			 	(117,  'date1', '2023-01-01', 4, 700, 5011 , 113, 112),
+			 	(118,  'date1', '2023-01-01', 2, 700, 5012 , 113, 112),
+			 	(119,  'date1', '2023-01-01', 1, 700, 5013 , 113, 112),
+			 	(120,  'date1', '2023-01-01', 3, 700, 5014 , 113, 112); -- 빵집 700 평균 평점 2.5
+			"""
+			.replaceAll(
+				"date1", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+			)
+			.replaceAll(
+				"date2", LocalDateTime.now().minusDays(6).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+			)
+			.replaceAll(
+				"date3", LocalDateTime.now().minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+			)
+			.replaceAll(
+				"date4", LocalDateTime.now().minusDays(8).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+			);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+	}
+
+	private void insertFlagBakeryTestData(final Connection connection) throws SQLException {
+		final String sql = """
+					insert into FLAG_BAKERY (id, created_at, modified_at, bakery_id, flag_id, user_id )values
+						(111,  'date1', '2023-01-01', 100, 111, 111),
+						(112,  'date1', '2023-01-01', 200, 112, 111),
+						(113,  'date1', '2023-01-01', 600, 112, 111),
+						(114,  'date1', '2023-01-01', 300, 113, 112),
+						(115,  'date1', '2023-01-01', 400, 113, 112),
+						(116,  'date1', '2023-01-01', 500, 113, 112)
+			""".replaceAll("date1", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
 	}
 
 }

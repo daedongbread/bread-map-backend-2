@@ -10,6 +10,7 @@ import static com.depromeet.breadmapbackend.domain.review.QReview.*;
 import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -114,29 +115,37 @@ public class BakeryQueryRepository {
 	public List<BakeryScoreBase> getBakeriesScoreFactors(final LocalDate date) {
 		return queryFactory
 			.select(Projections.constructor(
-				BakeryScoreBase.class
-				, bakery.as("bakery")
-				, avgRatingSubQuery()
-				, countFlagBakerySubQuery()
-				, bakeryView.viewCount.sum().coalesce(0L)
+					BakeryScoreBase.class
+					, bakery.as("bakery")
+					, avgRatingSubQuery(date)
+					, countFlagBakerySubQuery(date)
+					, bakeryView.viewCount.sum().coalesce(0L)
 				)
 			)
 			.from(bakery)
-			.leftJoin(bakeryView).on(bakery.id.eq(bakeryView.bakeryId)).on(bakeryView.viewDate.between(date.minusDays(7), date))
+			.leftJoin(bakeryView)
+			.on(bakery.id.eq(bakeryView.bakeryId))
+			.on(bakeryView.viewDate.between(date.minusDays(7), date))
 			.groupBy(bakery.id)
 			.fetch();
 
 	}
 
-	private JPQLQuery<Long> countFlagBakerySubQuery() {
+	private JPQLQuery<Long> countFlagBakerySubQuery(LocalDate startDate) {
 		return JPAExpressions.select(flagBakery.id.count())
 			.from(flagBakery)
-			.where(bakery.id.eq(flagBakery.bakery.id));
+			.where(bakery.id.eq(flagBakery.bakery.id)
+				.and(flagBakery.createdAt.between(
+					startDate.minusDays(7).atStartOfDay(),
+					startDate.atTime(LocalTime.MAX))));
 	}
 
-	private JPQLQuery<Double> avgRatingSubQuery() {
+	private JPQLQuery<Double> avgRatingSubQuery(LocalDate startDate) {
 		return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
 			.from(reviewProductRating)
-			.where(bakery.id.eq(reviewProductRating.bakery.id));
+			.where(bakery.id.eq(reviewProductRating.bakery.id)
+				.and(reviewProductRating.createdAt.between(
+					startDate.minusDays(7).atStartOfDay(),
+					startDate.atTime(LocalTime.MAX))));
 	}
 }

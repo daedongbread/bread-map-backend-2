@@ -21,6 +21,14 @@ TRUNCATE TABLE review;
 ALTER TABLE review
     ALTER COLUMN ID RESTART WITH 1;
 
+TRUNCATE TABLE review_product_rating;
+ALTER TABLE review_product_rating
+    ALTER COLUMN ID RESTART WITH 1;
+
+TRUNCATE TABLE product;
+ALTER TABLE product
+    ALTER COLUMN ID RESTART WITH 1;
+
 
 TRUNCATE TABLE bakery_view;
 
@@ -37,14 +45,6 @@ insert into FLAG (id, created_at, modified_at, color, name, user_id )values
 (113,  '2023-01-03', '2023-01-01', 'PINK', 'flag2', 112)
 ;
 
-insert into FLAG_BAKERY (id, created_at, modified_at, bakery_id, flag_id, user_id )values
-(111,  '2023-01-01', '2023-01-01', 100, 111, 111),
-(112,  '2023-01-02', '2023-01-01', 200, 112, 111),
-(113,  '2023-02-01', '2023-01-01', 600, 112, 111),
-(114,  '2023-01-03', '2023-01-01', 300, 113, 112),
-(115,  '2023-01-03', '2023-01-01', 400, 113, 112),
-(116,  '2023-01-03', '2023-01-01', 500, 113, 112)
-;
 
 insert into bakery (id, created_at, modified_at, address, blogurl, facebookurl, instagramurl, websiteurl, facility_info_list, hours, image, latitude, longitude, name, phone_number, status, pioneer_id, owner_id, detailed_address)values
 (100, '2023-04-05 15:00:00', '2023-04-05 15:00:00', '서울특별시 중랑구 동일로 778', null, null, null, null, null, '정보 없음', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery4.png', 37.5999492, 127.08009, '케이크하우스밀레 중화점', '02-433-8039', 'POSTING', null, null, null),
@@ -66,17 +66,6 @@ insert into review (id, created_at, modified_at, content, is_block, is_delete, i
 (113,  '2023-01-03', '2023-01-01', '제주도', 'N', 'N', 'N', 'N', 700, 112)
 ;
 
-insert into review_product_rating (id, created_at, modified_at, rating, bakery_id, product_id, review_id, user_id   )values
-(111,  '2023-01-01', '2023-01-01', 4, 100, 5534, 111,112),
-(112,  '2023-01-03', '2023-01-01', 3, 100, 5535 , 111, 112),
-(113,  '2023-01-03', '2023-01-01', 2, 100, 5536 , 111, 112), -- 빵집 100 평균 평점 3
-
-(114,  '2023-01-03', '2023-01-01', 4, 300, 1505 , 112, 112), -- 빵집 300 평균 평점 4
-
-(115,  '2023-01-03', '2023-01-01', 4, 700, 5011 , 113, 112),
-(116,  '2023-01-03', '2023-01-01', 2, 700, 5012 , 113, 112),
-(117,  '2023-01-03', '2023-01-01', 1, 700, 5013 , 113, 112),
-(118,  '2023-01-03', '2023-01-01', 3, 700, 5014 , 113, 112); -- 빵집 700 평균 평점 2.5
 
 
 insert into product (id, created_at, modified_at, image, is_true, name, price, product_type,  bakery_id )values
