@@ -62,8 +62,8 @@ public class FakeScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	}
 
 	@Override
-	public void updateRank(final List<RankingUpdateRequest.BakeryRankInfo> bakeryRankInfos) {
-
+	public int updateRank(final RankingUpdateRequest bakeryRankInfos) {
+		return 0;
 	}
 
 	public static void prepareData(final List<ScoredBakery> scoredBakery) {

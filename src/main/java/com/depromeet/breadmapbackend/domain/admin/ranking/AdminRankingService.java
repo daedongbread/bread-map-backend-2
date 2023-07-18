@@ -15,5 +15,5 @@ import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateReque
 public interface AdminRankingService {
 	List<RankingResponse> getRanking(String startDateString);
 
-	void updateRanking(RankingUpdateRequest request);
+	int updateRanking(RankingUpdateRequest request);
 }

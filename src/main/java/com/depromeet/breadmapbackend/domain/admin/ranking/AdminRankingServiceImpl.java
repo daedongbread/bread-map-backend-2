@@ -35,7 +35,7 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 
 	@Transactional
 	@Override
-	public void updateRanking(final RankingUpdateRequest request) {
-		scoredBakeryRepository.updateRank(request.bakeryRankInfoList());
+	public int updateRanking(final RankingUpdateRequest request) {
+		return scoredBakeryRepository.updateRank(request);
 	}
 }

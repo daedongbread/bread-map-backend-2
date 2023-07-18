@@ -33,8 +33,8 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 		String sql = String.format(
 			"""
-					INSERT INTO `%s` (bakery_id, total_score, view_count, flag_count, calculated_date)
-					VALUES (:bakery, :totalScore, :viewCount, :flagCount, :calculatedDate)
+					INSERT INTO `%s` (bakery_id, total_score, view_count, flag_count, calculated_date, rank)
+					VALUES (:bakery, :totalScore, :viewCount, :flagCount, :calculatedDate, :rank)
 				""", TABLE);
 
 		SqlParameterSource[] params = scoredBakeryList.stream()
@@ -44,6 +44,7 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 				.addValue("viewCount", scoredBakery.getViewCount())
 				.addValue("flagCount", scoredBakery.getFlagCount())
 				.addValue("calculatedDate", scoredBakery.getCalculatedDate())
+				.addValue("rank", scoredBakery.getRank())
 			)
 			.toArray(SqlParameterSource[]::new);
 		return namedParameterJdbcTemplate.batchUpdate(sql, params).length;
@@ -61,7 +62,22 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	}
 
 	@Override
-	public void updateRank(final List<RankingUpdateRequest.BakeryRankInfo> bakeryRankInfos) {
+	public int updateRank(final RankingUpdateRequest request) {
 
+		String sql = String.format(
+			"""
+					UPDATE `%s` SET rank = :rank
+					WHERE id = :id
+				""", TABLE);
+
+		final List<RankingUpdateRequest.BakeryRankInfo> bakeryRankInfos = request.bakeryRankInfoList();
+
+		SqlParameterSource[] params = bakeryRankInfos.stream()
+			.map(rankInfo -> new MapSqlParameterSource()
+				.addValue("rank", rankInfo.rank())
+				.addValue("id", rankInfo.id())
+			)
+			.toArray(SqlParameterSource[]::new);
+		return namedParameterJdbcTemplate.batchUpdate(sql, params).length;
 	}
 }

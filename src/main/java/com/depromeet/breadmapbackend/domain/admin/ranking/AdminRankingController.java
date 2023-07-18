@@ -37,8 +37,8 @@ public class AdminRankingController {
 	}
 
 	@PostMapping
-	void updateRanking(@RequestBody RankingUpdateRequest request) {
-		adminRankingService.updateRanking(request);
+	ApiResponse<Integer> updateRanking(@RequestBody RankingUpdateRequest request) {
+		return new ApiResponse<>(adminRankingService.updateRanking(request));
 	}
 
 }

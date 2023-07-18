@@ -20,5 +20,5 @@ public interface ScoredBakeryRepository {
 
 	List<RankingResponse> findScoredBakeryByStartDate(final LocalDate startDate);
 
-	void updateRank(List<RankingUpdateRequest.BakeryRankInfo> bakeryRankInfos);
+	int updateRank(RankingUpdateRequest request);
 }
