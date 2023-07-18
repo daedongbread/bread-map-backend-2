@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
+import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
 
@@ -52,6 +54,16 @@ public class FakeScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 				.thenComparing((ScoredBakery scoredBakery) -> scoredBakery.getBakery().getId()))
 			.limit(size)
 			.toList();
+	}
+
+	@Override
+	public List<RankingResponse> findScoredBakeryByStartDate(final LocalDate startDate) {
+		return null;
+	}
+
+	@Override
+	public void updateRank(final List<RankingUpdateRequest.BakeryRankInfo> bakeryRankInfos) {
+
 	}
 
 	public static void prepareData(final List<ScoredBakery> scoredBakery) {

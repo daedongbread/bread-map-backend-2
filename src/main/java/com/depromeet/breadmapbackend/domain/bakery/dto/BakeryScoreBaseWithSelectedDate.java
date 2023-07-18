@@ -13,13 +13,19 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
  */
 public record BakeryScoreBaseWithSelectedDate(
 	Bakery bakery,
-	double bakeryRating,
+	// double bakeryRating,
 	Long flagCount,
-	Long viewCount ,
+	Long viewCount,
 	LocalDate selectedDate
 ) {
 
 	public BakeryScoreBaseWithSelectedDate(final BakeryScoreBase bakeryScoreBase, final LocalDate selectedDate) {
-		this(bakeryScoreBase.bakery(), bakeryScoreBase.bakeryRating(), bakeryScoreBase.flagCount(), bakeryScoreBase.viewCount(), selectedDate);
+		this(
+			bakeryScoreBase.bakery(),
+			// bakeryScoreBase.bakeryRating(),
+			bakeryScoreBase.flagCount(),
+			bakeryScoreBase.viewCount(),
+			selectedDate
+		);
 	}
 }

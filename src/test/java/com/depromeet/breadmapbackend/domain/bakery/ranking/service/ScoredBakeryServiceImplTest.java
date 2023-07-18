@@ -70,7 +70,7 @@ class ScoredBakeryServiceImplTest {
 		final Long viewCount = 100L;
 		final LocalDate calculatedDate = LocalDate.now();
 		final BakeryScoreBaseWithSelectedDate bakeryScoreBaseWithSelectedDate =
-			new BakeryScoreBaseWithSelectedDate(bakery, bakeryRating, flagCount, viewCount, calculatedDate);
+			new BakeryScoreBaseWithSelectedDate(bakery, flagCount, viewCount, calculatedDate);
 
 		//when
 		final int insertedCount = sut.calculateBakeryScore(List.of(bakeryScoreBaseWithSelectedDate));

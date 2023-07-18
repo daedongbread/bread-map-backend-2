@@ -93,13 +93,13 @@ public class ScoredBakeryControllerTest extends ControllerTest {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("scoredBakery-test-data.sql"));
 			final String sql = """
-						insert into scored_bakery (id , rating, flag_count, view_count, total_score,bakery_id, calculated_date, rank) values
-						(100,3.7, 50,50 , 103.7, 100, '%s', 3),
-						(101, 4.9, 10,10,  24.9, 200, '%s', 4),
-						(102,3.5, 10,5, 18.5, 300, '%s', 5),
-						(103,4.2, 31,1500,  1535.2, 500, '%s', 2),
-						(104,4.2, 31,1500,  1535.2, 600, '%s', 1),
-						(105, 0.0, 0,0,   0, 700, '%s', 6)
+						insert into scored_bakery (id , flag_count, view_count, total_score,bakery_id, calculated_date, rank) values
+						(100, 50, 50 ,  100, 100, '%s', 3),
+						(101, 10, 10,   20, 200, '%s', 4),
+						(102, 10, 5,    15, 300, '%s', 5),
+						(103, 31, 1500, 1531, 500, '%s', 2),
+						(104, 31, 1500, 1531, 600, '%s', 1),
+						(105,  0, 0,       0, 700, '%s', 6)
 				""".replaceAll("%s", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.executeUpdate();

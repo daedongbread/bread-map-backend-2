@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.bakery.dto;
 
-import java.time.LocalDate;
-
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 
 /**
@@ -13,7 +11,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
  */
 public record BakeryScoreBase(
 	Bakery bakery,
-	double bakeryRating,
+	// double bakeryRating,
 	Long flagCount,
 	Long viewCount
 ) {
