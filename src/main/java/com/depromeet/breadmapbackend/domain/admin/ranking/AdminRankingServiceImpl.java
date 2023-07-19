@@ -1,14 +1,12 @@
 package com.depromeet.breadmapbackend.domain.admin.ranking;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
-import com.depromeet.breadmapbackend.global.converter.LocalDateTimeParser;
+import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +25,9 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<RankingResponse> getRanking(final String startDateString) {
+	public RankingResponse getRanking(final String startDateString) {
 		return scoredBakeryRepository.findScoredBakeryByStartDate(
-			LocalDateTimeParser.parse(startDateString)
+			LocalDateParser.parse(startDateString)
 		);
 	}
 

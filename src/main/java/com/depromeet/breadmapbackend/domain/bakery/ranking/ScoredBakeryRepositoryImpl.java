@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
+import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,9 +59,27 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	}
 
 	@Override
-	public List<RankingResponse> findScoredBakeryByStartDate(final LocalDate startDate) {
-		final Pageable pageable = Pageable.ofSize(7);
-		return scoredBakeryJpaRepository.findScoredBakeryWithStartDate(startDate, pageable);
+	public RankingResponse findScoredBakeryByStartDate(final LocalDate startDate) {
+		final LocalDate endDate = startDate.plusDays(6);
+		final List<ScoredBakery> bakeryRanking = scoredBakeryJpaRepository.findScoredBakeryWithStartDate(
+			startDate, endDate);
+
+		if (!bakeryRanking.isEmpty()) {
+			final List<String> dateList = bakeryRanking.stream()
+				.map(ScoredBakery::getCalculatedDate)
+				.distinct()
+				.sorted()
+				.map(LocalDate::toString)
+				.toList();
+
+			return new RankingResponse(
+				LocalDateParser.parse(startDate),
+				LocalDateParser.parse(endDate),
+				dateList,
+				bakeryRanking.stream().map(RankingResponse.SimpleBakeryResponse::new).toList()
+			);
+		}
+		throw new DaedongException(DaedongStatus.BAKERY_RANKING_NOT_FOUND);
 	}
 
 	@Override

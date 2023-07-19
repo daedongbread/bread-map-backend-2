@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  * @version 1.0.0
  * @since 2023/07/17
  */
-public class LocalDateTimeParser {
+public class LocalDateParser {
 
 	public static LocalDate parse(final String stringLocalDate) {
 		return LocalDate.parse(

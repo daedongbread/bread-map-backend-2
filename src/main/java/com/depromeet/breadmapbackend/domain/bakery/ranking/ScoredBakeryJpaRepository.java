@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
-
 /**
  * ScoredBakeryJpaRepository
  *
@@ -32,9 +30,9 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 	@Query("select sb "
 		+ "from ScoredBakery sb "
 		+ "join fetch sb.bakery b "
-		+ "where sb.calculatedDate >= :startDate ")
-	List<RankingResponse> findScoredBakeryWithStartDate(
+		+ "where sb.calculatedDate between :startDate and :endDate")
+	List<ScoredBakery> findScoredBakeryWithStartDate(
 		@Param("startDate") final LocalDate startDate,
-		final Pageable pageable
+		@Param("endDate") final LocalDate endDate
 	);
 }

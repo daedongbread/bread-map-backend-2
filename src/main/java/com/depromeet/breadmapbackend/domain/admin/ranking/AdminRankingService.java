@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.ranking;
 
-import java.util.List;
-
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 
@@ -13,7 +11,7 @@ import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateReque
  * @since 2023/07/18
  */
 public interface AdminRankingService {
-	List<RankingResponse> getRanking(String startDateString);
+	RankingResponse getRanking(String startDateString);
 
 	int updateRanking(RankingUpdateRequest request);
 }

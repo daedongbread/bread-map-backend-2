@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 
@@ -28,6 +29,29 @@ class AdminRankingServiceImplTest {
 	private AdminRankingService sut;
 	@Autowired
 	private EntityManager em;
+
+	@Test
+	@Sql("classpath:admin-rank-test-data.sql")
+	void 랭킹_조회() throws Exception {
+		//given
+		final String startDate = "2023-07-07";
+
+		//when
+		final RankingResponse result = sut.getRanking(startDate);
+
+		//then
+		assertThat(result.startDate()).isEqualTo("2023-07-07");
+		assertThat(result.endDate()).isEqualTo("2023-07-13");
+		assertThat(result.dateList())
+			.containsExactly(
+				"2023-07-07",
+				"2023-07-08",
+				"2023-07-09",
+				"2023-07-10",
+				"2023-07-11",
+				"2023-07-13"
+			);
+	}
 
 	@Test
 	@Sql("classpath:admin-rank-test-data.sql")

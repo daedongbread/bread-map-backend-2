@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryService;
 import com.depromeet.breadmapbackend.global.EventInfo;
-import com.depromeet.breadmapbackend.global.converter.LocalDateTimeParser;
+import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +36,7 @@ public class BakeryRankingCalculationEventStreamListener
 
 		final String EVENT_KEY = event.getEventName() + ":" + value.get(keys.get(0));
 
-		final LocalDate calculateDate = LocalDateTimeParser.parse(value.get(keys.get(0)));
+		final LocalDate calculateDate = LocalDateParser.parse(value.get(keys.get(0)));
 
 		if (isFirstInstanceToCalculateRanks(EVENT_KEY)) {
 			calculateRankAndSave(calculateDate);

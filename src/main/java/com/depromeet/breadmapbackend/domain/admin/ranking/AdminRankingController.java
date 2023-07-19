@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.ranking;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +30,7 @@ public class AdminRankingController {
 	private final AdminRankingService adminRankingService;
 
 	@GetMapping("/{startDate}")
-	ApiResponse<List<RankingResponse>> getRanking(@PathVariable("startDate") String startDate) {
+	ApiResponse<RankingResponse> getRanking(@PathVariable("startDate") String startDate) {
 		return new ApiResponse<>(adminRankingService.getRanking(startDate));
 	}
 

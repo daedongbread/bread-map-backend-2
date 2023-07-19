@@ -18,7 +18,7 @@ public interface ScoredBakeryRepository {
 
 	List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size);
 
-	List<RankingResponse> findScoredBakeryByStartDate(final LocalDate startDate);
+	RankingResponse findScoredBakeryByStartDate(final LocalDate startDate);
 
 	int updateRank(RankingUpdateRequest request);
 }

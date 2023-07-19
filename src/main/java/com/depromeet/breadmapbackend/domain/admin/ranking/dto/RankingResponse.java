@@ -3,6 +3,8 @@ package com.depromeet.breadmapbackend.domain.admin.ranking.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
+
 /**
  * RankingResponse
  *
@@ -13,10 +15,11 @@ import java.util.List;
 public record RankingResponse(
 	String startDate,
 	String endDate,
+	List<String> dateList,
 	List<SimpleBakeryResponse> simpleBakeryInfoList
 ) {
 
-	record SimpleBakeryResponse(
+	public record SimpleBakeryResponse(
 		int rank,
 		Long bakeryId,
 		String bakeryName,
@@ -25,5 +28,16 @@ public record RankingResponse(
 		Double score,
 		LocalDate calculatedDate
 	) {
+
+		public SimpleBakeryResponse(final ScoredBakery scoredBakery) {
+			this(scoredBakery.getRank(),
+				scoredBakery.getBakery().getId(),
+				scoredBakery.getBakery().getName(),
+				scoredBakery.getViewCount(),
+				scoredBakery.getFlagCount(),
+				scoredBakery.getTotalScore(),
+				scoredBakery.getCalculatedDate()
+			);
+		}
 	}
 }

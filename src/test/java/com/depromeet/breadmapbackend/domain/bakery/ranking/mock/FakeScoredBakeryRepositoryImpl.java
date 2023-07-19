@@ -57,7 +57,7 @@ public class FakeScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 	}
 
 	@Override
-	public List<RankingResponse> findScoredBakeryByStartDate(final LocalDate startDate) {
+	public RankingResponse findScoredBakeryByStartDate(final LocalDate startDate) {
 		return null;
 	}
 

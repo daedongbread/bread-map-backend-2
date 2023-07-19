@@ -20,8 +20,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
@@ -61,6 +62,7 @@ class BakeryServiceImplTest {
 	void setUp() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 
+			ScriptUtils.executeSqlScript(connection, new ClassPathResource("scoredBakery-test-data.sql"));
 			insertBakeryViewTestData(connection);
 			// insertReviewProductRatingTestData(connection);
 			insertFlagBakeryTestData(connection);
@@ -69,7 +71,6 @@ class BakeryServiceImplTest {
 	}
 
 	@Test
-	@Sql("classpath:scoredBakery-test-data.sql")
 	void 최초조회() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -84,7 +85,6 @@ class BakeryServiceImplTest {
 	}
 
 	@Test
-	@Sql("classpath:scoredBakery-test-data.sql")
 	void 동시_조회() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -110,7 +110,6 @@ class BakeryServiceImplTest {
 	}
 
 	@Test
-	@Sql("classpath:scoredBakery-test-data.sql")
 	void 빵집_점수_조회() throws Exception {
 		//given
 		//when
