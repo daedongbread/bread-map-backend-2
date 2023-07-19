@@ -419,8 +419,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("productList.[].price").description("상품 가격"),
 					fieldWithPath("productList.[].image").optional().optional().description("상품 이미지"),
 					fieldWithPath("status").description("빵집 게시 상태 (" +
-						"POSTING(\"게시중\"), UNPOSTING(\"미게시\"))"),
-					fieldWithPath("pioneerId").optional().description("빵집 개척자 고유 번호")
+						"POSTING(\"게시중\"), UNPOSTING(\"미게시\"))")
 				)
 			))
 			.andExpect(status().isNoContent());
