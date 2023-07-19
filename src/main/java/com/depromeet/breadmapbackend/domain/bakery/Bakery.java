@@ -89,7 +89,7 @@ public class Bakery extends BaseEntity {
 		String name, Double latitude, Double longitude,
 		String address, String detailedAddress, String hours, String phoneNumber,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
-		List<FacilityInfo> facilityInfoList, BakeryStatus status,  BakeryAddReport bakeryAddReport
+		List<FacilityInfo> facilityInfoList, BakeryStatus status, BakeryAddReport bakeryAddReport
 	) {
 		this.name = name;
 		this.latitude = latitude;

@@ -1,5 +1,8 @@
 package com.depromeet.breadmapbackend.domain.bakery.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
+import com.depromeet.breadmapbackend.domain.user.User;
+
 public record NewBakeryCardDto(
 	Long id,
 	String image,
@@ -18,22 +21,22 @@ public record NewBakeryCardDto(
 			dto.bakery().getId(),
 			dto.bakery().getImage(),
 			dto.bakery().getName(),
-			dto.bakery().getPioneer() != null
-				? dto.bakery().getPioneer().getId()
-				: null,
-			dto.bakery().getPioneer() != null
-				? dto.bakery().getPioneer().getNickName()
-				: null,
-			dto.bakery().getPioneer() != null
-				? dto.bakery().getPioneer().getUserInfo().getImage()
-				: null,
+			getPioneer(dto) != null ? getPioneer(dto).getId() : null,
+			getPioneer(dto) != null ? getPioneer(dto).getNickName() : null,
+			getPioneer(dto) != null ? getPioneer(dto).getUserInfo().getImage() : null,
 			dto.bakery().getShortAddress(),
-			dto.bakery().getBakeryAddReport() != null
-				? dto.bakery().getBakeryAddReport().getContent()
-				: null,
+			getBakeryAddReport(dto) != null ? getBakeryAddReport(dto).getContent() : null,
 			dto.isFlagged(),
 			dto.isFollowed()
 		);
+	}
+
+	private static BakeryAddReport getBakeryAddReport(final NewBakeryDto dto) {
+		return dto.bakery().getBakeryAddReport();
+	}
+
+	private static User getPioneer(final NewBakeryDto dto) {
+		return dto.bakery().getPioneer();
 	}
 
 }
