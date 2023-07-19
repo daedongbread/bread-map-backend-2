@@ -21,12 +21,39 @@ TRUNCATE TABLE review;
 ALTER TABLE review
     ALTER COLUMN ID RESTART WITH 1;
 
+TRUNCATE TABLE admin;
+ALTER TABLE admin
+    ALTER COLUMN ID RESTART WITH 1;
+
+TRUNCATE TABLE bakery_add_report;
+ALTER TABLE bakery_add_report
+    ALTER COLUMN ID RESTART WITH 1;
+
+
+TRUNCATE TABLE REVIEW_PRODUCT_RATING;
+ALTER TABLE REVIEW_PRODUCT_RATING
+    ALTER COLUMN ID RESTART WITH 1;
+
+TRUNCATE TABLE product;
+ALTER TABLE product
+    ALTER COLUMN ID RESTART WITH 1;
 
 insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
 (111,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_111', 'nick_name', 'test@apple.com' , 'MALE', 'image'),
-(112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'image')
+(112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'image'),
+(113,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_333', 'nick_name333', 'test33@apple.com' , 'MALE', 'image')
 ;
 
+insert into admin (id,created_at,modified_at,email,password,role_type) values
+(111,  '2023-01-01', '2023-01-01', 'admin@email.com', 'test-password', 'ADMIN' )
+;
+
+INSERT INTO bakery_add_report (id, created_at, modified_at, content, location, name, status, user_id) VALUES
+(111, '2023-04-28 22:10:05', '2023-05-01 00:41:43', 'Shxjx', 'Xbxjx', 'Djdjx', 'NOT_REFLECT', 112),
+(211, '2023-04-29 12:49:56', '2023-05-01 00:41:50', '', '강남역', '테스트트트', 'NOT_REFLECT', 112),
+(311, '2023-04-30 18:37:41', '2023-05-01 16:48:02', '', '대전 중구 대종로480번길 15 (우)34921', '성심당 본점', 'REFLECT', 112),
+(411, '2023-04-30 18:38:37', '2023-05-01 16:57:36', '', '대전 중구 대종로 480 1층 (우)34921', '성심당 케익부띠끄', 'REFLECT', 113)
+;
 
 insert into FLAG (id, created_at, modified_at, color, name, user_id )values
 (100,  '2023-01-01', '2023-01-01', 'YELLOW', '가고싶어요', 111),
