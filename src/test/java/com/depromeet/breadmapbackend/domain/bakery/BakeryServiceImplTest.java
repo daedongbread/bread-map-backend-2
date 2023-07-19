@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -155,6 +154,31 @@ class BakeryServiceImplTest {
 
 	}
 
+	@Test
+	void 신상_빵집_조회() throws Exception {
+		//given
+		final Long userId = 111L;
+		//when
+		final List<NewBakeryCardDto> newBakeryList = sut.getNewBakeryList(userId);
+		//then
+		assertThat(newBakeryList).isNotNull();
+		assertThat(newBakeryList.size()).isEqualTo(10);
+		assertThat(newBakeryList.stream().map(NewBakeryCardDto::id))
+			.containsExactly(900L, 800L, 300L, 600L, 200L, 1100L, 1200L, 500L, 700L, 100L);
+		final NewBakeryCardDto bakery200 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(200L))
+			.findFirst().get();
+		assertThat(bakery200.isFlagged()).isTrue();
+		assertThat(bakery200.isFollowed()).isFalse();
+		final NewBakeryCardDto bakery300 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(300L))
+			.findFirst().get();
+		assertThat(bakery300.isFlagged()).isFalse();
+		assertThat(bakery300.isFollowed()).isTrue();
+		final NewBakeryCardDto bakery600 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(600L))
+			.findFirst().get();
+		assertThat(bakery600.isFlagged()).isTrue();
+		assertThat(bakery600.isFollowed()).isFalse();
+	}
+
 	private void insertBakeryViewTestData(final Connection connection) throws SQLException {
 		final String sql = """
 					insert into bakery_view (bakery_id, view_date, view_count) values
@@ -217,29 +241,4 @@ class BakeryServiceImplTest {
 		statement.executeUpdate();
 	}
 
-	@Test
-	@Sql("classpath:bakery-test-data.sql")
-	void 신상_빵집_조회() throws Exception {
-		//given
-		final Long userId = 111L;
-		//when
-		final List<NewBakeryCardDto> newBakeryList = sut.getNewBakeryList(userId);
-		//then
-		assertThat(newBakeryList).isNotNull();
-		assertThat(newBakeryList.size()).isEqualTo(10);
-		assertThat(newBakeryList.stream().map(NewBakeryCardDto::id))
-			.containsExactly(900L, 800L, 300L, 600L, 200L, 1100L, 1200L, 500L, 700L, 100L);
-		final NewBakeryCardDto bakery200 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(200L))
-			.findFirst().get();
-		assertThat(bakery200.isFlagged()).isTrue();
-		assertThat(bakery200.isFollowed()).isFalse();
-		final NewBakeryCardDto bakery300 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(300L))
-			.findFirst().get();
-		assertThat(bakery300.isFlagged()).isFalse();
-		assertThat(bakery300.isFollowed()).isTrue();
-		final NewBakeryCardDto bakery600 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(600L))
-			.findFirst().get();
-		assertThat(bakery600.isFlagged()).isTrue();
-		assertThat(bakery600.isFollowed()).isFalse();
-	}
 }

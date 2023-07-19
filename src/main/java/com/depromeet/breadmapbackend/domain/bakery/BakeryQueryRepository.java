@@ -8,7 +8,6 @@ import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateRe
 import static com.depromeet.breadmapbackend.domain.bakery.view.QBakeryView.*;
 import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
-import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
 import static com.depromeet.breadmapbackend.domain.user.QUser.*;
 import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.*;
 
@@ -23,10 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRanking;
-import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
