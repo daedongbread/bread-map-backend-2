@@ -31,7 +31,7 @@ class AdminBakeryAddReportControllerTest extends ControllerTest {
 	private JwtToken token;
 
 	@BeforeEach
-	public void setup() throws IOException {
+	public void setup() throws Exception {
 		Admin admin = Admin.builder().email("email").password(passwordEncoder.encode("password")).build();
 		adminRepository.save(admin);
 		token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());

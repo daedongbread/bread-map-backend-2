@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.sort.SortProcessor;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
@@ -33,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class BakeryServiceImpl implements BakeryService {
+	private final static int NEW_BAKERY_LIST_SIZE = 10;
+
 	private final BakeryRepository bakeryRepository;
 	private final BakeryQueryRepository bakeryQueryRepository;
 	private final FlagRepository flagRepository;
@@ -85,6 +89,14 @@ public class BakeryServiceImpl implements BakeryService {
 			.map(base -> new BakeryScoreBaseWithSelectedDate(base, calculateDate))
 			.toList();
 
+	}
+
+	@Override
+	public List<NewBakeryCardDto> getNewBakeryList(final Long userId) {
+		return bakeryQueryRepository.findBakeryWithPioneerByCreatedAtDesc(userId, NEW_BAKERY_LIST_SIZE)
+			.stream()
+			.map(NewBakeryCardDto::new)
+			.toList();
 	}
 
 	private HashMap<String, String> createEventMessage(final Bakery bakery) {

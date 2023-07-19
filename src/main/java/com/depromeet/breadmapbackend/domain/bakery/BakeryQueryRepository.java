@@ -2,11 +2,15 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
 import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.*;
+import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryAddReport.*;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.*;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.*;
 import static com.depromeet.breadmapbackend.domain.bakery.view.QBakeryView.*;
 import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
+import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
+import static com.depromeet.breadmapbackend.domain.user.QUser.*;
+import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRanking;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -26,6 +32,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -130,6 +137,30 @@ public class BakeryQueryRepository {
 
 	}
 
+	public List<NewBakeryDto> findBakeryWithPioneerByCreatedAtDesc(final Long userId, final int newBakeryListSize) {
+		return queryFactory
+			.select(Projections.constructor(NewBakeryDto.class
+				, bakery
+				, new CaseBuilder()
+					.when(flagBakery.count().eq(0L)).then(false)
+					.otherwise(true)
+				, new CaseBuilder()
+					.when(follow.isNull()).then(false)
+					.otherwise(true)
+			))
+			.from(bakery)
+			.leftJoin(bakery.bakeryAddReport, bakeryAddReport).fetchJoin()
+			.leftJoin(bakeryAddReport.user, user).fetchJoin()
+			.leftJoin(follow).on(follow.fromUser.id.eq(userId)
+				.and(follow.toUser.id.eq(bakery.bakeryAddReport.user.id)))
+			.leftJoin(flagBakery).on(flagBakery.bakery.eq(bakery)
+				.and(flagBakery.user.id.eq(userId)))
+			.groupBy(bakery.id, bakery.createdAt)
+			.orderBy(bakery.createdAt.desc())
+			.limit(newBakeryListSize)
+			.fetch();
+	}
+
 	private JPQLQuery<Long> countFlagBakerySubQuery(LocalDate startDate) {
 		return JPAExpressions.select(flagBakery.id.count().coalesce(0L))
 			.from(flagBakery)
@@ -147,4 +178,5 @@ public class BakeryQueryRepository {
 	// 				startDate.minusDays(7).atStartOfDay(),
 	// 				startDate.atTime(LocalTime.MAX))));
 	// }
+
 }
