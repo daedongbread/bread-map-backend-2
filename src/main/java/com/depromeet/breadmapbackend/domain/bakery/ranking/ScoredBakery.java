@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,6 +43,7 @@ public class ScoredBakery {
 	// private double rating;
 	private double totalScore;
 	private LocalDate calculatedDate;
+	@Column(name = "bakery_rank")
 	private int rank;
 
 	@Builder

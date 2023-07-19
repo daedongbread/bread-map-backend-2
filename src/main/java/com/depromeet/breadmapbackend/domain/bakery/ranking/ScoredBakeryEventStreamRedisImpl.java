@@ -31,7 +31,7 @@ public class ScoredBakeryEventStreamRedisImpl implements ScoredBakeryEventStream
 			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
 		redisTemplate.opsForStream()
-			.add(calculateRankingEvent.name(), fieldMap);
+			.add(calculateRankingEvent.getEventName(), fieldMap);
 	}
 
 }

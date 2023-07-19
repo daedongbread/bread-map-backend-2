@@ -131,7 +131,7 @@ public class BakeryQueryRepository {
 	}
 
 	private JPQLQuery<Long> countFlagBakerySubQuery(LocalDate startDate) {
-		return JPAExpressions.select(flagBakery.id.count())
+		return JPAExpressions.select(flagBakery.id.count().coalesce(0L))
 			.from(flagBakery)
 			.where(bakery.id.eq(flagBakery.bakery.id)
 				.and(flagBakery.createdAt.between(

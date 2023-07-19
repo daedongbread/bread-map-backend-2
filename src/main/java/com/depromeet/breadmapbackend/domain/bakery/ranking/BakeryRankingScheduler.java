@@ -28,7 +28,7 @@ public class BakeryRankingScheduler {
 
 	private final StringRedisTemplate redisTemplate;
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void publishBakeryRankingCalculationEvent() {
 		log.info("========================= Start Calculating Bakery Ranking =========================");
 		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
@@ -37,7 +37,7 @@ public class BakeryRankingScheduler {
 			LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
 		redisTemplate.opsForStream()
-			.add(calculateRankingEvent.name(), fieldMap);
+			.add(calculateRankingEvent.getEventName(), fieldMap);
 
 	}
 }

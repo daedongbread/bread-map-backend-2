@@ -93,7 +93,7 @@ public class ScoredBakeryControllerTest extends ControllerTest {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("scoredBakery-test-data.sql"));
 			final String sql = """
-						insert into scored_bakery (id , flag_count, view_count, total_score,bakery_id, calculated_date, rank) values
+						insert into scored_bakery (id , flag_count, view_count, total_score,bakery_id, calculated_date, bakery_rank) values
 						(100, 50, 50 ,  100, 100, '%s', 3),
 						(101, 10, 10,   20, 200, '%s', 4),
 						(102, 10, 5,    15, 300, '%s', 5),

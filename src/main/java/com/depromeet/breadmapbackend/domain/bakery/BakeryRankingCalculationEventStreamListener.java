@@ -40,7 +40,7 @@ public class BakeryRankingCalculationEventStreamListener
 
 		if (isFirstInstanceToCalculateRanks(EVENT_KEY)) {
 			calculateRankAndSave(calculateDate);
-			removeExpiredCacheData(EVENT_KEY);
+			// removeExpiredCacheData(EVENT_KEY);
 		}
 	}
 

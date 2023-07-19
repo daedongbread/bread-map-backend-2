@@ -67,7 +67,7 @@ insert into bakery (id, created_at, modified_at, address, blogurl, facebookurl, 
 (1200, '2023-04-05 15:00:00', '2023-04-05 15:00:00', '서울특별시 마포구 창전로 45, 101동 1층 109호', null, null, null, null, null, '매일 11:00 - 19:00', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery3.png', 37.5462603, 126.931899, '파이앤브라우니', '0507-1416-3132', 'POSTING', null, null, null)
 ;
 
-insert into scored_bakery (id, calculated_date, flag_count,rank,total_score,view_count,bakery_id) values
+insert into scored_bakery (id, calculated_date, flag_count,bakery_rank,total_score,view_count,bakery_id) values
 (111, '2023-07-07', 10, 1,110,100, 100),
 (112, '2023-07-07', 9, 2,109,100, 200),
 (113, '2023-07-07', 8, 3,108,100, 300),

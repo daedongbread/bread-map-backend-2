@@ -34,13 +34,15 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	@Transactional
 	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
-		final List<ScoredBakery> sortedBakeryRank = bakeryScoreBaseList.stream()
-			.map(ScoredBakery::from)
-			.sorted(Comparator.comparing(ScoredBakery::getTotalScore)
-				.reversed()
-				.thenComparing(ScoredBakery::getId)
-				.reversed())
-			.toList();
+		final List<ScoredBakery> sortedBakeryRank =
+			bakeryScoreBaseList
+				.stream()
+				.map(ScoredBakery::from)
+				.sorted(
+					Comparator.comparing(ScoredBakery::getTotalScore).reversed()
+						.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
+				)
+				.toList();
 
 		for (final ScoredBakery scoredBakery : sortedBakeryRank) {
 			scoredBakery.setRank(sortedBakeryRank.indexOf(scoredBakery) + 1);

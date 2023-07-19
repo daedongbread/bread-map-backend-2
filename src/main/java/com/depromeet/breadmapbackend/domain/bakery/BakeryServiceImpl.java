@@ -77,6 +77,7 @@ public class BakeryServiceImpl implements BakeryService {
 		return bakeryDto;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors(final LocalDate calculateDate) {
 		return bakeryQueryRepository.getBakeriesScoreFactors(calculateDate)

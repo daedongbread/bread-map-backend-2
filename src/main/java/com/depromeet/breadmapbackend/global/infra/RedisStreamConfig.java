@@ -42,7 +42,7 @@ public class RedisStreamConfig {
 	private static final String INSTANCE = "instance";
 
 	@Bean
-	public Subscription bakeryAddSubscription(RedisConnectionFactory factory) {
+	public Subscription bakeryViewSubscription(RedisConnectionFactory factory) {
 		final EventInfo bakeryViewEvent = EventInfo.BAKERY_VIEW_EVENT;
 		final String eventName = bakeryViewEvent.getEventName();
 		final String consumerGroupName = bakeryViewEvent.getConsumerGroupName(BAKERY_VIEW_COUNT);
@@ -57,6 +57,7 @@ public class RedisStreamConfig {
 		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
 		final String eventName = calculateRankingEvent.getEventName();
 		final String consumerGroupName = calculateRankingEvent.getConsumerGroupName(CALCULATE_RANKING);
+
 		registerConsumerGroup(eventName, consumerGroupName);
 
 		return getSubscription(factory, eventName, consumerGroupName, bakeryRankingCalculationEventStreamListener, 60);

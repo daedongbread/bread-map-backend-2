@@ -21,7 +21,8 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class BakeryViewEventStreamListener implements StreamListener<String, MapRecord<String, String, String>> {
+public class BakeryViewEventStreamListener
+	implements StreamListener<String, MapRecord<String, String, String>> {
 
 	private final BakeryViewRepository repository;
 	private final StringRedisTemplate redisTemplate;
