@@ -5,6 +5,7 @@ import static com.depromeet.breadmapbackend.global.EventConsumerGroupInfo.*;
 import java.time.Duration;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -36,6 +37,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RedisStreamConfig {
 
+	@Value("${redis.poll-timeout.bakery-view}")
+	private int bakeryViewPollTimeOut;
+	@Value("${redis.poll-timeout.bakery-ranking-calculator}")
+	private int bakeryRankingCalculatorPollTimeOut;
+
 	private final BakeryViewEventStreamListener bakeryViewEventStreamListener;
 	private final BakeryRankingCalculationEventStreamListener bakeryRankingCalculationEventStreamListener;
 	private final StringRedisTemplate redisTemplate;
@@ -49,7 +55,8 @@ public class RedisStreamConfig {
 
 		registerConsumerGroup(eventName, consumerGroupName);
 
-		return getSubscription(factory, eventName, consumerGroupName, bakeryViewEventStreamListener, 10);
+		return getSubscription(factory, eventName, consumerGroupName, bakeryViewEventStreamListener,
+			bakeryViewPollTimeOut);
 	}
 
 	@Bean
@@ -60,7 +67,8 @@ public class RedisStreamConfig {
 
 		registerConsumerGroup(eventName, consumerGroupName);
 
-		return getSubscription(factory, eventName, consumerGroupName, bakeryRankingCalculationEventStreamListener, 60);
+		return getSubscription(factory, eventName, consumerGroupName, bakeryRankingCalculationEventStreamListener,
+			bakeryRankingCalculatorPollTimeOut);
 	}
 
 	private void registerConsumerGroup(final String eventName, final String consumerGroupName) {

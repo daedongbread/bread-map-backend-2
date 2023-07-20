@@ -66,3 +66,8 @@ sgis:
   dst2: ${SGIS_DST2}
   key: ${SGIS_KEY}
   secret: ${SGIS_SECRET}
+
+redis:
+  poll-timeout:
+    bakery-view: 10
+    bakery-ranking-calculator: 60

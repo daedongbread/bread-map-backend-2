@@ -81,7 +81,7 @@ class BakeryServiceImplTest {
 
 		//then
 		assertThat(result).isNotNull();
-		Thread.sleep(1000);
+		Thread.sleep(5500);
 		assertThat(repository.findById(new BakeryViewId(bakeryId, now())).get().getViewCount()).isEqualTo(1L);
 	}
 
@@ -103,7 +103,7 @@ class BakeryServiceImplTest {
 			});
 		}
 		countDownLatch.await();
-		Thread.sleep(2000);
+		Thread.sleep(5500);
 
 		assertThat(repository.findById(
 			new BakeryViewId(bakeryId, now())
