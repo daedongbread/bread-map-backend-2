@@ -1,7 +1,9 @@
 package com.depromeet.breadmapbackend.domain.review.post;
 
+import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.review.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.review.post.dto.request.PostRequest;
+import com.depromeet.breadmapbackend.domain.review.post.dto.response.PostResponse;
 
 /**
  * Mapper
@@ -19,5 +21,9 @@ public class Mapper {
 			request.images(),
 			PostTopic.BREAD_STORY
 		);
+	}
+
+	public static PostResponse of(final PostDetailInfo post) {
+		throw new IllegalStateException("Mapper::of not implemented yet");
 	}
 }

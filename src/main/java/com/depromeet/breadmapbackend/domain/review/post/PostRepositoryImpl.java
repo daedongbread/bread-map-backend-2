@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.review.post;
 
 import org.springframework.stereotype.Repository;
 
+import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.review.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -34,7 +35,7 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public Post findPostBy(final Long postId, final Long userId) {
+	public PostDetailInfo findPostBy(final Long postId, final Long userId) {
 		return postQueryRepository.findPostDetailById(postId, userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.review.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.review.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.review.post.dto.response.PostResponse;
@@ -44,8 +45,8 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostResponse getPost(final Long userId, final Long postId) {
-		return PostResponse.of(postRepository.findPostBy(postId, userId));
+	public PostDetailInfo getPost(final Long userId, final Long postId) {
+		return postRepository.findPostBy(postId, userId);
 	}
 
 	@Override

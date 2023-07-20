@@ -45,7 +45,9 @@ public class PostController {
 		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@PathVariable Long postId
 	) {
-		return new ApiResponse<>(postService.getPost(currentUserInfo.getId(), postId));
+		return new ApiResponse<>(
+			Mapper.of(postService.getPost(currentUserInfo.getId(), postId))
+		);
 	}
 
 	// post 전체 조회

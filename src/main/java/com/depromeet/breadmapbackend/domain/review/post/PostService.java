@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.review.post;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.review.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.review.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.review.post.dto.response.PostResponse;
@@ -19,7 +20,7 @@ public interface PostService {
 	PageResponseDto<CommunityCardResponse> getPosts();
 
 	// post 상세 조회
-	PostResponse getPost(
+	PostDetailInfo getPost(
 		final Long userId,
 		final Long postId
 	);

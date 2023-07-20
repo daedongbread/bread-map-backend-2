@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.review.post;
 
+import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.review.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 
@@ -15,7 +16,7 @@ public interface PostRepository {
 
 	PageResponseDto<CommunityCardResponse> findAllCommunityCards();
 
-	Post findPostBy(Long postId, Long userId);
+	PostDetailInfo findPostBy(Long postId, Long userId);
 
 	void deletePostById(Long postId, Long userId);
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.review.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.review.post.image.PostImage;
 
@@ -53,6 +54,28 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(savedPost.getImages().stream().map(PostImage::getImage).toList())
 			.containsExactly("image1", "image2");
 		assertThat(savedPost.getUser().getNickName()).isEqualTo("nick_name");
+	}
+
+	@Test
+	@Sql("classpath:post-test-data.sql")
+	void 빵이야기_상세_조회() throws Exception {
+		//given
+		final Long userId = 111L;
+		final Long postId = 111L;
+
+		//when
+		final PostDetailInfo result = sut.getPost(postId, userId);
+
+		//then
+		assertThat(result.writerInfo()).isNotNull();
+		assertThat(result.writerInfo().followerCount()).isEqualTo(2);
+		assertThat(result.writerInfo().reviewCount()).isEqualTo(3);
+		assertThat(result.writerInfo().isFollowed()).isTrue();
+		assertThat(result.commentCount()).isEqualTo(2);
+		assertThat(result.title()).isEqualTo("test-title");
+		assertThat(result.content()).isEqualTo("test-content");
+		assertThat(result.createdDate()).isEqualTo("2021-07-20");
+		assertThat(result.images()).hasSize(2);
 
 	}
 
