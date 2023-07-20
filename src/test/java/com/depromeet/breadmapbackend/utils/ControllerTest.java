@@ -1,5 +1,9 @@
 package com.depromeet.breadmapbackend.utils;
 
+import java.sql.Connection;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -47,7 +53,6 @@ import com.depromeet.breadmapbackend.domain.user.UserService;
 import com.depromeet.breadmapbackend.domain.user.block.BlockUserRepository;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.S3Uploader;
-import com.depromeet.breadmapbackend.global.infra.EmbeddedRedisConfig;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
@@ -58,7 +63,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@Import({AmazonS3MockConfig.class, EmbeddedRedisConfig.class, TestRedisStreamConfig.class})
+@Import({AmazonS3MockConfig.class})
 public abstract class ControllerTest {
 	@Autowired
 	protected MockMvc mockMvc;
@@ -182,8 +187,16 @@ public abstract class ControllerTest {
 	@Autowired
 	protected CustomAWSS3Properties customAWSS3Properties;
 
+	@Autowired
+	DataSource dataSource;
+
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Exception {
+
+		try (final Connection connection = dataSource.getConnection()) {
+			ScriptUtils.executeSqlScript(connection, new ClassPathResource("reset-data.sql"));
+		}
+
 		redisTemplate.getConnectionFactory().getConnection().flushAll();
 	}
 

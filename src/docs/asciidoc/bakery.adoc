@@ -13,6 +13,7 @@
 
 - 빵집 지도 API
 - 빵집 단건 조회 API
+- 신규 빵집 조회 API
 
 === 빵집 지도 API [GET]
 
@@ -21,6 +22,10 @@ operation::v1/bakery/find/default[snippets='http-request,request-parameters,http
 === 빵집 단건 조회 API [GET]
 
 operation::v1/bakery/find[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== 신규 빵집 조회 API [GET]
+
+operation::v1/bakery/find/new[snippets='http-request,request-parameters,http-response,response-fields']
 
 == Bakery Product APIs
 

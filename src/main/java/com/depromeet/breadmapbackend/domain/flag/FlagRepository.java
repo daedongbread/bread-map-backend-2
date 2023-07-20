@@ -21,14 +21,21 @@ public interface FlagRepository extends JpaRepository<Flag, Long> {
 
 	Optional<Flag> findByIdAndUserId(Long flagId, Long userId);
 
-	@Query("SELECT fb.bakery.id as bakeryId, "
-		+ " count(fb.bakery) "
+	@Query("SELECT fb.bakery.id as bakeryId, count(fb.bakery) as count "
 		+ "FROM Flag f "
 		+ "INNER JOIN FlagBakery fb ON f = fb.flag "
 		+ "WHERE fb.bakery in (:bakeryList)  "
 		+ "AND f.name = '가봤어요' "
 		+ "group by fb.bakery.id")
 	List<BakeryCountInFlag> countFlagNum(@Param("bakeryList") List<Bakery> bakeryList);
+
+
+	@Query("SELECT f "
+		+ "FROM Flag f "
+		+ "INNER JOIN FlagBakery fb ON f = fb.flag "
+		+ "where fb.bakery = :bakery "
+		+ "and fb.user.id = :userId ")
+	Optional<Flag> findByBakeryAndUserId(@Param("bakery")Bakery bakery, @Param("userId")Long userId);
 
 	interface BakeryCountInFlag {
 		Long getBakeryId();
