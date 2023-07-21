@@ -106,6 +106,9 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(225L);
 		assertThat(secondResult.getContents().get(0).topic().name()).isEqualTo("EVENT");
 		assertThat(secondResult.getContents().get(1).topic().name()).isEqualTo("BREAD_STORY");
+		assertThat(secondResult.getContents().get(1).bakeryInfo().bakeryId()).isEqualTo(0L);
+		assertThat(secondResult.getContents().get(2).topic().name()).isEqualTo("REVIEW");
+		assertThat(secondResult.getContents().get(2).bakeryInfo().bakeryId()).isEqualTo(111L);
 	}
 
 	@Test
