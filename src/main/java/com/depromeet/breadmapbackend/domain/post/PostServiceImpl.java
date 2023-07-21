@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
+import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
+import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -78,7 +80,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostResponse> getHotPosts() {
+	public List<PostResponse> getHotPosts(final Long userId) {
 		return null;
 	}
 
@@ -89,5 +91,20 @@ public class PostServiceImpl implements PostService {
 		Long postId
 	) {
 		postRepository.deletePostById(postId, userId);
+	}
+
+	@Override
+	public void update(final Long userId, final PostUpdateCommand command) {
+
+	}
+
+	@Override
+	public void toggleLike(final Long userId, final Long postId) {
+
+	}
+
+	@Override
+	public void report(final Long userId, final PostReportCommand command) {
+
 	}
 }

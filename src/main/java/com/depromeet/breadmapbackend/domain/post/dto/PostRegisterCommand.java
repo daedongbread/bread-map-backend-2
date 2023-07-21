@@ -16,14 +16,13 @@ import com.depromeet.breadmapbackend.domain.user.User;
 public record PostRegisterCommand(
 	String title,
 	String content,
-	List<String> images,
-	PostTopic topic
+	List<String> images
 ) {
 	public Post toEntity(final User user) {
 		return Post.builder()
 			.title(title)
 			.content(content)
-			.postTopic(topic)
+			.postTopic(PostTopic.BREAD_STORY)
 			.user(user)
 			.build()
 			.addImages(images);

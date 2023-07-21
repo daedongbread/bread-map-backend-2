@@ -2,6 +2,9 @@ package com.depromeet.breadmapbackend.domain.post;
 
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
+import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
+import com.depromeet.breadmapbackend.domain.post.dto.PostReportRequest;
+import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.request.PostRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.domain.post.image.PostImage;
@@ -20,8 +23,7 @@ public class Mapper {
 		return new PostRegisterCommand(
 			request.title(),
 			request.content(),
-			request.images(),
-			PostTopic.BREAD_STORY
+			request.images()
 		);
 	}
 
@@ -46,6 +48,22 @@ public class Mapper {
 			post.likeCount(),
 			post.commentCount(),
 			selectedPost.getCreatedAt()
+		);
+	}
+
+	public static PostReportCommand of(final Long postId, final PostReportRequest request) {
+		return new PostReportCommand(
+			request.reason(),
+			request.content(),
+			postId);
+	}
+
+	public static PostUpdateCommand of(final PostRequest request, final Long postId) {
+		return new PostUpdateCommand(
+			postId,
+			request.title(),
+			request.content(),
+			request.images()
 		);
 	}
 }
