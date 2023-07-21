@@ -54,36 +54,40 @@ public class PostController {
 	@GetMapping("/all")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<PageResponseDto<CommunityCardResponse>> getAllPosts(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@Valid final CommunityPage page
 	) {
-		return new ApiResponse<>(postService.getAllPosts(page));
+		return new ApiResponse<>(postService.getAllPosts(page, currentUserInfo.getId()));
 	}
 
 	// post 빵이야기 조회
 	@GetMapping("/bread-story")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<PageResponseDto<CommunityCardResponse>> getBreadStoryPosts(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@Valid final CommunityPage page
 	) {
-		return new ApiResponse<>(postService.getBreadStoryPosts(page));
+		return new ApiResponse<>(postService.getBreadStoryPosts(page, currentUserInfo.getId()));
 	}
 
 	// post 리뷰 조회
 	@GetMapping("/review")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<PageResponseDto<CommunityCardResponse>> getReviewPosts(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@Valid final CommunityPage page
 	) {
-		return new ApiResponse<>(postService.getAllPosts(page));
+		return new ApiResponse<>(postService.getAllPosts(page, currentUserInfo.getId()));
 	}
 
 	// post 이벤트 조회
 	@GetMapping("/event")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<PageResponseDto<CommunityCardResponse>> getEventPosts(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@Valid final CommunityPage page
 	) {
-		return new ApiResponse<>(postService.getAllPosts(page));
+		return new ApiResponse<>(postService.getAllPosts(page, currentUserInfo.getId()));
 	}
 
 	// post 추천글 조회
@@ -102,4 +106,10 @@ public class PostController {
 	) {
 		postService.remove(currentUserInfo.getId(), postId);
 	}
+
+	// post 수정
+
+	// post 좋아요 토글
+
+	// post 신고
 }

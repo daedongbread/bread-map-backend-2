@@ -17,19 +17,24 @@ public interface PostService {
 	);
 
 	PageResponseDto<CommunityCardResponse> getAllPosts(
-		final CommunityPage page
+		final CommunityPage page,
+		final Long userId
+
 	);
 
 	PageResponseDto<CommunityCardResponse> getBreadStoryPosts(
-		final CommunityPage page
+		final CommunityPage page,
+		final Long userId
 	);
 
 	PageResponseDto<CommunityCardResponse> getReviewPosts(
-		final CommunityPage page
+		final CommunityPage page,
+		final Long userId
 	);
 
 	PageResponseDto<CommunityCardResponse> getEventPosts(
-		final CommunityPage page
+		final CommunityPage page,
+		final Long userId
 	);
 
 	// post 상세 조회

@@ -30,23 +30,23 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage) {
-		return postQueryRepository.findAllCommunityCards(communityPage);
+	public Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage, final Long userId) {
+		return postQueryRepository.findAllCommunityCards(communityPage, userId);
 	}
 
 	@Override
-	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage) {
-		return postQueryRepository.findBreadStoryCards(communityPage);
+	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage, final Long userId) {
+		return postQueryRepository.findBreadStoryCards(communityPage, userId);
 	}
 
 	@Override
-	public Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage) {
-		return postQueryRepository.findEventCards(communityPage);
+	public Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage, final Long userId) {
+		return postQueryRepository.findEventCards(communityPage, userId);
 	}
 
 	@Override
-	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage) {
-		return postQueryRepository.findReviewCards(communityPage);
+	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId) {
+		return postQueryRepository.findReviewCards(communityPage, userId);
 	}
 
 	@Override

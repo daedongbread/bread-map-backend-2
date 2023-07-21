@@ -15,13 +15,13 @@ import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 public interface PostRepository {
 	Post save(Post entity);
 
-	Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage);
+	Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage, final Long userId);
 
-	Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage);
+	Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage, final Long userId);
 
-	Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage);
+	Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage, final Long userId);
 
-	Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage);
+	Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId);
 
 	PostDetailInfo findPostBy(Long postId, Long userId);
 

@@ -93,12 +93,13 @@ public class PostQueryRepository {
 		);
 	}
 
-	public Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage) {
+	public Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage, final Long userId) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
 			.addValue("limit", PAGE_SIZE)
 			.addValue("reviewOffset", communityPage.reviewOffset())
-			.addValue("postOffset", communityPage.postOffset());
+			.addValue("postOffset", communityPage.postOffset())
+			.addValue("userId", userId);
 
 		final String postBaseSql = getPostBaseSqlWithWhereClaus("1 = 1");
 		final String reviewBaseSql = getReviewBaseSql();
@@ -116,43 +117,60 @@ public class PostQueryRepository {
 		return new PageImpl<>(
 			jdbcTemplate.query(sql, params, COMMUNITY_CARD_INFO_ROW_MAPPER),
 			PageRequest.of(communityPage.page(), PAGE_SIZE),
-			getAllCardsCount()
+			getAllCardsCount(userId)
 		);
 	}
 
-	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage) {
+	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage, final Long userId) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
 			.addValue("limit", PAGE_SIZE)
-			.addValue("postOffset", communityPage.postOffset());
+			.addValue("postOffset", communityPage.postOffset())
+			.addValue("userId", userId);
 
-		final String breadStorySql = getPostBaseSqlWithWhereClaus(
-			"(t4.is_fixed is true or t1.post_topic ='BREAD_STORY')");
-		List<CommunityCardInfo> cards = jdbcTemplate.query(breadStorySql, params, COMMUNITY_CARD_INFO_ROW_MAPPER);
-		return new PageImpl<>(cards, PageRequest.of(communityPage.page(), PAGE_SIZE),
-			getPostsCardsCount(PostTopic.BREAD_STORY, 1));
+		final List<CommunityCardInfo> cards =
+			jdbcTemplate.query(
+				getPostBaseSqlWithWhereClaus("(t4.is_fixed is true or t1.post_topic ='BREAD_STORY')"),
+				params,
+				COMMUNITY_CARD_INFO_ROW_MAPPER
+			);
+
+		return new PageImpl<>(
+			cards,
+			PageRequest.of(communityPage.page(), PAGE_SIZE),
+			getPostsCardsCount(PostTopic.BREAD_STORY, 1, userId)
+		);
 	}
 
-	public Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage) {
+	public Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage, final Long userId) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
 			.addValue("limit", PAGE_SIZE)
-			.addValue("postOffset", communityPage.postOffset());
+			.addValue("postOffset", communityPage.postOffset())
+			.addValue("userId", userId);
 
-		final String postBaseSql = getPostBaseSqlWithWhereClaus(
-			"(t1.post_topic = 'EVENT')");
-		List<CommunityCardInfo> cards = jdbcTemplate.query(postBaseSql, params, COMMUNITY_CARD_INFO_ROW_MAPPER);
-		return new PageImpl<>(cards, PageRequest.of(communityPage.page(), PAGE_SIZE),
-			getPostsCardsCount(PostTopic.EVENT, 0));
+		final List<CommunityCardInfo> cards =
+			jdbcTemplate.query(
+				getPostBaseSqlWithWhereClaus("(t1.post_topic = 'EVENT')"),
+				params,
+				COMMUNITY_CARD_INFO_ROW_MAPPER
+			);
+
+		return new PageImpl<>(
+			cards,
+			PageRequest.of(communityPage.page(), PAGE_SIZE),
+			getPostsCardsCount(PostTopic.EVENT, 0, userId)
+		);
 	}
 
-	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage) {
+	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
 			.addValue("limit", communityPage.reviewOffset() == 0 ? PAGE_SIZE - 1 : PAGE_SIZE)
-			.addValue("reviewOffset", communityPage.reviewOffset() != 0 ? communityPage.reviewOffset() - 1 : 0);
+			.addValue("reviewOffset", communityPage.reviewOffset() != 0 ? communityPage.reviewOffset() - 1 : 0)
+			.addValue("userId", userId);
 
-		List<CommunityCardInfo> reviewCards =
+		final List<CommunityCardInfo> reviewCards =
 			jdbcTemplate.query(
 				getReviewBaseSql(),
 				params,
@@ -160,16 +178,21 @@ public class PostQueryRepository {
 			);
 
 		if (communityPage.reviewOffset() == 0) {
-			reviewCards.add(0, getFixedEvent());
+			reviewCards.add(0, getFixedEvent(userId));
 		}
 
-		return new PageImpl<>(reviewCards, PageRequest.of(communityPage.page(), PAGE_SIZE), getReviewCardsCount());
+		return new PageImpl<>(
+			reviewCards,
+			PageRequest.of(communityPage.page(), PAGE_SIZE),
+			getReviewCardsCount(userId)
+		);
 	}
 
-	private CommunityCardInfo getFixedEvent() {
+	private CommunityCardInfo getFixedEvent(final Long userId) {
 		final MapSqlParameterSource fixedEventParams = new MapSqlParameterSource()
 			.addValue("limit", 1)
-			.addValue("postOffset", 0);
+			.addValue("postOffset", 0)
+			.addValue("userId", userId);
 		final String fixedEventSql = getPostBaseSqlWithWhereClaus(
 			"(t1.post_topic = 'EVENT')");
 		return jdbcTemplate.query(fixedEventSql, fixedEventParams, COMMUNITY_CARD_INFO_ROW_MAPPER).get(0);
@@ -208,7 +231,11 @@ public class PostQueryRepository {
 			   inner join user t2 on t1.user_id = t2.id
 			   left join post_manager_mapper t4 on t1.id = t4.post_id 
 			   									and t4.is_fixed is true
+			   left join (select to_user_id 
+			   			  from block_user
+			   			  where from_user_id = :userId) t3 on t1.user_id = t3.to_user_id										
 			   where %s
+			   and t3.to_user_id is null
 			   order by t4.is_fixed desc, t1.created_at desc, t1.id desc
 			   limit :limit offset :postOffset 
 			""", whereClause);
@@ -243,47 +270,71 @@ public class PostQueryRepository {
 				from review t1
 			    inner join user t2 on t1.user_id = t2.id
 			    inner join bakery t3 on t1.bakery_id = t3.id
+			    left join (select to_user_id 
+						  from block_user
+						  where from_user_id = :userId) t4 on t1.user_id = t4.to_user_id										
+			   where t4.to_user_id is null
 			 
 				order by t1.created_at desc , t1.id desc
 				limit :limit offset :reviewOffset		
 			""";
 	}
 
-	private Long getAllCardsCount() {
-		String sql = """
+	private Long getAllCardsCount(final Long userId) {
+		final String sql = """
 			select sum(total_count)
 			from (
-				   select count(*) AS total_count
-				   from review
-			   
+				   select count(t1.*) AS total_count
+				   from review t1
+				   left join (select to_user_id 
+							  from block_user
+							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
+				   where t2.to_user_id is null
+				   
 				   union all
 			   
-				   select count(*) AS total_count
-				   from post
+				   select count(t1.*) AS total_count
+				   from post t1
+				   left join (select to_user_id 
+							  from block_user
+							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
+				   where t2.to_user_id is null
 			   ) total
 			""";
-		MapSqlParameterSource param = new MapSqlParameterSource();
+		final MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("userId", userId);
 		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
 
-	private Long getPostsCardsCount(final PostTopic postTopic, final int postOffset) {
-		String sql = """
-			select count(*) + :postOffset
-			from post
+	private Long getPostsCardsCount(final PostTopic postTopic, final int postOffset, final Long userId) {
+		final String sql = """
+			select count(t1.*) + :postOffset
+			from post t1
+			left join (select to_user_id 
+			 			  from block_user
+			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
 			where post_topic = :postTopic
+			and t2.to_user_id is null
 			""";
-		MapSqlParameterSource param = new MapSqlParameterSource()
+		final MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("postTopic", postTopic.name())
-			.addValue("postOffset", postOffset);
+			.addValue("postOffset", postOffset)
+			.addValue("userId", userId);
 		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
 
-	private Long getReviewCardsCount() {
-		String sql = """
-			select count(*) + 1
-			from review
+	private Long getReviewCardsCount(final Long userId) {
+		final String sql = """
+			select count(t1.*) + 1
+			from review t1
+			   left join (select to_user_id 
+			 			  from block_user
+			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id										
+			    where t2.to_user_id is null
 			""";
-		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+		final MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("userId", userId);
+		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
 
 }
