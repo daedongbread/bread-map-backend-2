@@ -86,12 +86,106 @@ class PostServiceImplTest extends PostServiceTest {
 	@Sql("classpath:post-test-data.sql")
 	void 커뮤니티_전체_조회() throws Exception {
 		//given
-		final CommunityPage page = new CommunityPage(1L, 1L, 1);
+		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 		//when
 		final PageResponseDto<CommunityCardResponse> result = sut.getAllPosts(page);
 		//then
-		assertThat(result.getContents().size()).isEqualTo(6);
+		assertThat(result.getContents().size()).isEqualTo(7);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
+		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
+		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).topic().name()).isEqualTo("EVENT");
 
+		//given
+		final CommunityPage pageOne = new CommunityPage(1L, 1L, 1);
+		//when
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getAllPosts(pageOne);
+		//then
+		assertThat(secondResult.getContents().size()).isEqualTo(5);
+		assertThat(secondResult.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
+		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(225L);
+		assertThat(secondResult.getContents().get(0).topic().name()).isEqualTo("EVENT");
+		assertThat(secondResult.getContents().get(1).topic().name()).isEqualTo("BREAD_STORY");
+	}
+
+	@Test
+	@Sql("classpath:post-test-data.sql")
+	void 커뮤니티_빵이야기_조회() throws Exception {
+		//given
+		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+
+		//when
+		final PageResponseDto<CommunityCardResponse> result = sut.getBreadStoryPosts(page);
+
+		//then
+		assertThat(result.getContents().size()).isEqualTo(3);
+		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
+		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
+		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).topic().name()).isEqualTo("BREAD_STORY");
+		assertThat(result.getContents().get(2).topic().name()).isEqualTo("BREAD_STORY");
+
+		//given
+		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
+
+		//when
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getBreadStoryPosts(pageOne);
+
+		//then
+		assertThat(secondResult.getContents().size()).isEqualTo(1);
+		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(222L);
+	}
+
+	@Test
+	@Sql("classpath:post-test-data.sql")
+	void 커뮤니티_이벤트_조회() throws Exception {
+		//given
+		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+
+		//when
+		final PageResponseDto<CommunityCardResponse> result = sut.getEventPosts(page);
+
+		//then
+		assertThat(result.getContents().size()).isEqualTo(2);
+		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
+		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
+		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).topic().name()).isEqualTo("EVENT");
+
+		//given
+		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
+
+		//when
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getEventPosts(pageOne);
+
+		//then
+		assertThat(secondResult.getContents().size()).isEqualTo(0);
+	}
+
+	@Test
+	@Sql("classpath:post-test-data.sql")
+	void 커뮤니티_리뷰_조회() throws Exception {
+		//given
+		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+
+		//when
+		final PageResponseDto<CommunityCardResponse> result = sut.getReviewPosts(page);
+
+		//then
+		assertThat(result.getContents().size()).isEqualTo(4);
+		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
+		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
+		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).topic().name()).isEqualTo("REVIEW");
+
+		//given
+		final CommunityPage pageOne = new CommunityPage(2L, 0L, 1);
+
+		//when
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getReviewPosts(pageOne);
+
+		//then
+		assertThat(secondResult.getContents().size()).isEqualTo(2);
+		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(112L);
 	}
 }

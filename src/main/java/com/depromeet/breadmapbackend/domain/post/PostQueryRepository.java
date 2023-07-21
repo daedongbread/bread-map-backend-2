@@ -116,7 +116,7 @@ public class PostQueryRepository {
 		return new PageImpl<>(
 			jdbcTemplate.query(sql, params, COMMUNITY_CARD_INFO_ROW_MAPPER),
 			PageRequest.of(communityPage.page(), PAGE_SIZE),
-			20L
+			getAllCardsCount()
 		);
 	}
 
@@ -126,10 +126,11 @@ public class PostQueryRepository {
 			.addValue("limit", PAGE_SIZE)
 			.addValue("postOffset", communityPage.postOffset());
 
-		final String postBaseSql = getPostBaseSqlWithWhereClaus(
+		final String breadStorySql = getPostBaseSqlWithWhereClaus(
 			"(t4.is_fixed is true or t1.post_topic ='BREAD_STORY')");
-		List<CommunityCardInfo> cards = jdbcTemplate.query(postBaseSql, params, COMMUNITY_CARD_INFO_ROW_MAPPER);
-		return new PageImpl<>(cards, PageRequest.of(communityPage.page(), PAGE_SIZE), 20L);
+		List<CommunityCardInfo> cards = jdbcTemplate.query(breadStorySql, params, COMMUNITY_CARD_INFO_ROW_MAPPER);
+		return new PageImpl<>(cards, PageRequest.of(communityPage.page(), PAGE_SIZE),
+			getPostsCardsCount(PostTopic.BREAD_STORY, 1));
 	}
 
 	public Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage) {
@@ -141,7 +142,37 @@ public class PostQueryRepository {
 		final String postBaseSql = getPostBaseSqlWithWhereClaus(
 			"(t1.post_topic = 'EVENT')");
 		List<CommunityCardInfo> cards = jdbcTemplate.query(postBaseSql, params, COMMUNITY_CARD_INFO_ROW_MAPPER);
-		return new PageImpl<>(cards, PageRequest.of(communityPage.page(), PAGE_SIZE), 20L);
+		return new PageImpl<>(cards, PageRequest.of(communityPage.page(), PAGE_SIZE),
+			getPostsCardsCount(PostTopic.EVENT, 0));
+	}
+
+	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage) {
+
+		final MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("limit", communityPage.reviewOffset() == 0 ? PAGE_SIZE - 1 : PAGE_SIZE)
+			.addValue("reviewOffset", communityPage.reviewOffset() != 0 ? communityPage.reviewOffset() - 1 : 0);
+
+		List<CommunityCardInfo> reviewCards =
+			jdbcTemplate.query(
+				getReviewBaseSql(),
+				params,
+				COMMUNITY_CARD_INFO_ROW_MAPPER
+			);
+
+		if (communityPage.reviewOffset() == 0) {
+			reviewCards.add(0, getFixedEvent());
+		}
+
+		return new PageImpl<>(reviewCards, PageRequest.of(communityPage.page(), PAGE_SIZE), getReviewCardsCount());
+	}
+
+	private CommunityCardInfo getFixedEvent() {
+		final MapSqlParameterSource fixedEventParams = new MapSqlParameterSource()
+			.addValue("limit", 1)
+			.addValue("postOffset", 0);
+		final String fixedEventSql = getPostBaseSqlWithWhereClaus(
+			"(t1.post_topic = 'EVENT')");
+		return jdbcTemplate.query(fixedEventSql, fixedEventParams, COMMUNITY_CARD_INFO_ROW_MAPPER).get(0);
 	}
 
 	private String getPostBaseSqlWithWhereClaus(final String whereClause) {
@@ -218,7 +249,41 @@ public class PostQueryRepository {
 			""";
 	}
 
-	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage) {
-		throw new IllegalStateException("PostQueryRepository::findReviewCards not implemented yet");
+	private Long getAllCardsCount() {
+		String sql = """
+			select sum(total_count)
+			from (
+				   select count(*) AS total_count
+				   from review
+			   
+				   union all
+			   
+				   select count(*) AS total_count
+				   from post
+			   ) total
+			""";
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
+
+	private Long getPostsCardsCount(final PostTopic postTopic, final int postOffset) {
+		String sql = """
+			select count(*) + :postOffset
+			from post
+			where post_topic = :postTopic
+			""";
+		MapSqlParameterSource param = new MapSqlParameterSource()
+			.addValue("postTopic", postTopic.name())
+			.addValue("postOffset", postOffset);
+		return jdbcTemplate.queryForObject(sql, param, Long.class);
+	}
+
+	private Long getReviewCardsCount() {
+		String sql = """
+			select count(*) + 1
+			from review
+			""";
+		return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
+	}
+
 }
