@@ -37,8 +37,8 @@ public class PostController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	void register(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@Valid final PostRequest request
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
+		@RequestBody @Valid final PostRequest request
 	) {
 		postService.register(Mapper.of(request), currentUserInfo.getId());
 	}
@@ -47,59 +47,31 @@ public class PostController {
 	@GetMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PostResponse> getPost(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@PathVariable Long postId
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
+		@PathVariable final Long postId
 	) {
 		return new ApiResponse<>(
-			Mapper.of(postService.getPost(currentUserInfo.getId(), postId))
+			Mapper.of(postService.getPost(postId, currentUserInfo.getId()))
 		);
 	}
 
 	// post 전체 조회
-	@GetMapping("/all")
+	@GetMapping("/cards/{postTopic}")
 	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<PageResponseDto<CommunityCardResponse>> getAllPosts(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
+	ApiResponse<PageResponseDto<CommunityCardResponse>> getCommunityCards(
+		@PathVariable("postTopic") final String postTopic,
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@Valid final CommunityPage page
 	) {
-		return new ApiResponse<>(postService.getAllPosts(page, currentUserInfo.getId()));
-	}
-
-	// post 빵이야기 조회
-	@GetMapping("/bread-story")
-	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<PageResponseDto<CommunityCardResponse>> getBreadStoryPosts(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@Valid final CommunityPage page
-	) {
-		return new ApiResponse<>(postService.getBreadStoryPosts(page, currentUserInfo.getId()));
-	}
-
-	// post 리뷰 조회
-	@GetMapping("/review")
-	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<PageResponseDto<CommunityCardResponse>> getReviewPosts(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@Valid final CommunityPage page
-	) {
-		return new ApiResponse<>(postService.getAllPosts(page, currentUserInfo.getId()));
-	}
-
-	// post 이벤트 조회
-	@GetMapping("/event")
-	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<PageResponseDto<CommunityCardResponse>> getEventPosts(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@Valid final CommunityPage page
-	) {
-		return new ApiResponse<>(postService.getAllPosts(page, currentUserInfo.getId()));
+		final PostTopic topic = PostTopic.of(postTopic);
+		return new ApiResponse<>(postService.getCommunityCards(page, currentUserInfo.getId(), topic));
 	}
 
 	// post 추천글 조회
 	@GetMapping("/hot")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<?> getHotPosts(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
 		return new ApiResponse<>(postService.getHotPosts(currentUserInfo.getId()));
 	}
@@ -108,8 +80,8 @@ public class PostController {
 	@DeleteMapping("/{postId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	void remove(
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@PathVariable Long postId
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
+		@PathVariable final Long postId
 	) {
 		postService.remove(currentUserInfo.getId(), postId);
 	}
@@ -119,7 +91,7 @@ public class PostController {
 	@ResponseStatus(HttpStatus.CREATED)
 	void update(
 		@PathVariable("postId") final Long postId,
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@Valid final PostRequest request
 	) {
 		postService.update(currentUserInfo.getId(), Mapper.of(request, postId));

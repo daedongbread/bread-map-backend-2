@@ -37,6 +37,7 @@ public enum DaedongStatus {
 	ADMIN_IMAGE_TYPE_EXCEPTION(BAD_REQUEST, 40092, "invalid admin image type"), // 관리자 관련 이미지 조건이 틀렸을 때  TODO
 	ADMIN_IMAGE_UNDELETE_EXCEPTION(BAD_REQUEST, 40093, "admin image undelete"), // 관리자 관련 이미지가 사용 중이서 삭제할 수 없을 때
 	CALCULATING_BAKERY_RANKING(BAD_REQUEST, 40094, "re-calculating bakery rank"), // 랭킹 계산 중
+	INVALID_POST_TOPIC(BAD_REQUEST, 40095, "invalid post topic"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
@@ -93,6 +94,7 @@ public enum DaedongStatus {
 	EVENT_DOES_NOT_HAVE_CONSUMER_GROUP(INTERNAL_SERVER_ERROR, 50001,
 		"no registered consumer group"), // 해당 이벤트에 등록되지 않은 컨슈머 그룹입니다.
 	;
+
 	private final HttpStatus status;
 	private final Integer code;
 	private final String description;

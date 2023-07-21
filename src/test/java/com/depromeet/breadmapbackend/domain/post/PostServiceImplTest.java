@@ -41,7 +41,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final String content = "content test";
 		final PostTopic topic = PostTopic.BREAD_STORY;
 		final List<String> images = List.of("image1", "image2");
-		final PostRegisterCommand command = new PostRegisterCommand(title, content, images, topic);
+		final PostRegisterCommand command = new PostRegisterCommand(title, content, images);
 
 		//when
 		sut.register(command, userId);
@@ -89,27 +89,27 @@ class PostServiceImplTest extends PostServiceTest {
 		final Long userId = 111L;
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getAllPosts(page, userId);
+		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId, PostTopic.ALL);
 		//then
 		assertThat(result.getContents().size()).isEqualTo(4);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
 		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
-		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
-		assertThat(result.getContents().get(1).topic().name()).isEqualTo("REVIEW");
+		assertThat(result.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("REVIEW");
 
 		//given
 		final Long secondUserId = 113L;
 		final CommunityPage pageOne = new CommunityPage(1L, 1L, 1);
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getAllPosts(pageOne, secondUserId);
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(page, userId, PostTopic.ALL);
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(5);
 		assertThat(secondResult.getContents().get(0).writerInfo().userId()).isEqualTo(113L);
 		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(225L);
-		assertThat(secondResult.getContents().get(0).topic().name()).isEqualTo("EVENT");
-		assertThat(secondResult.getContents().get(1).topic().name()).isEqualTo("BREAD_STORY");
+		assertThat(secondResult.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
+		assertThat(secondResult.getContents().get(1).postTopic().name()).isEqualTo("BREAD_STORY");
 		assertThat(secondResult.getContents().get(1).bakeryInfo().bakeryId()).isEqualTo(0L);
-		assertThat(secondResult.getContents().get(2).topic().name()).isEqualTo("REVIEW");
+		assertThat(secondResult.getContents().get(2).postTopic().name()).isEqualTo("REVIEW");
 		assertThat(secondResult.getContents().get(2).bakeryInfo().bakeryId()).isEqualTo(111L);
 	}
 
@@ -121,21 +121,23 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getBreadStoryPosts(page, userId);
+		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
+			PostTopic.BREAD_STORY);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(3);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
 		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
-		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
-		assertThat(result.getContents().get(1).topic().name()).isEqualTo("BREAD_STORY");
-		assertThat(result.getContents().get(2).topic().name()).isEqualTo("BREAD_STORY");
+		assertThat(result.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("BREAD_STORY");
+		assertThat(result.getContents().get(2).postTopic().name()).isEqualTo("BREAD_STORY");
 
 		//given
 		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getBreadStoryPosts(pageOne, userId);
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(page, userId,
+			PostTopic.BREAD_STORY);
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(1);
@@ -150,20 +152,21 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getEventPosts(page, userId);
+		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId, PostTopic.EVENT);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(2);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
 		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
-		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
-		assertThat(result.getContents().get(1).topic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("EVENT");
 
 		//given
 		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getEventPosts(pageOne, userId);
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(page, userId,
+			PostTopic.EVENT);
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(0);
@@ -177,20 +180,21 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getReviewPosts(page, userId);
+		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId, PostTopic.REVIEW);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(4);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
 		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
-		assertThat(result.getContents().get(0).topic().name()).isEqualTo("EVENT");
-		assertThat(result.getContents().get(1).topic().name()).isEqualTo("REVIEW");
+		assertThat(result.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
+		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("REVIEW");
 
 		//given
 		final CommunityPage pageOne = new CommunityPage(2L, 0L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getReviewPosts(pageOne, userId);
+		final PageResponseDto<CommunityCardResponse> secondResult
+			= sut.getCommunityCards(page, userId, PostTopic.REVIEW);
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(2);

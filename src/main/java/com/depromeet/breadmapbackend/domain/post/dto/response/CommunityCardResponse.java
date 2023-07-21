@@ -19,7 +19,7 @@ public record CommunityCardResponse(
 	long likeCount,
 	long commentCount,
 	String thumbnail,
-	PostTopic topic,
+	PostTopic postTopic,
 	LocalDateTime createdDate,
 	BakeryInfo bakeryInfo
 ) {

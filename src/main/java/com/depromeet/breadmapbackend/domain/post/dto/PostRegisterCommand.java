@@ -20,11 +20,11 @@ public record PostRegisterCommand(
 ) {
 	public Post toEntity(final User user) {
 		return Post.builder()
-			.title(title)
-			.content(content)
+			.title(this.title)
+			.content(this.content)
 			.postTopic(PostTopic.BREAD_STORY)
 			.user(user)
 			.build()
-			.addImages(images);
+			.addImages(this.images);
 	}
 }

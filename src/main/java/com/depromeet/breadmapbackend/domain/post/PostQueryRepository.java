@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.post;
 
 import static com.depromeet.breadmapbackend.domain.post.QPost.*;
 import static com.depromeet.breadmapbackend.domain.post.comment.QComment.*;
+import static com.depromeet.breadmapbackend.domain.post.image.QPostImage.*;
 import static com.depromeet.breadmapbackend.domain.post.like.QPostLike.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
 import static com.depromeet.breadmapbackend.domain.user.QUser.*;
@@ -88,6 +89,7 @@ public class PostQueryRepository {
 				))
 				.from(post)
 				.join(post.user, user).fetchJoin()
+				.leftJoin(post.images, postImage).fetchJoin()
 				.where(post.id.eq(postId))
 				.fetchOne()
 		);

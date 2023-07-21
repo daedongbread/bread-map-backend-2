@@ -43,33 +43,18 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PageResponseDto<CommunityCardResponse> getAllPosts(final CommunityPage page, final Long userId) {
+	public PageResponseDto<CommunityCardResponse> getCommunityCards(
+		final CommunityPage page,
+		final Long userId,
+		final PostTopic postTopic
+	) {
 		return PageResponseDto.of(
-			postRepository.findAllCommunityCards(page, userId),
-			CommunityCardInfo::toResponse
-		);
-	}
-
-	@Override
-	public PageResponseDto<CommunityCardResponse> getBreadStoryPosts(final CommunityPage page, final Long userId) {
-		return PageResponseDto.of(
-			postRepository.findBreadStoryCards(page, userId),
-			CommunityCardInfo::toResponse
-		);
-	}
-
-	@Override
-	public PageResponseDto<CommunityCardResponse> getReviewPosts(final CommunityPage page, final Long userId) {
-		return PageResponseDto.of(
-			postRepository.findReviewCards(page, userId),
-			CommunityCardInfo::toResponse
-		);
-	}
-
-	@Override
-	public PageResponseDto<CommunityCardResponse> getEventPosts(final CommunityPage page, final Long userId) {
-		return PageResponseDto.of(
-			postRepository.findEventCards(page, userId),
+			switch (postTopic) {
+				case ALL -> postRepository.findAllCommunityCards(page, userId);
+				case BREAD_STORY -> postRepository.findBreadStoryCards(page, userId);
+				case REVIEW -> postRepository.findReviewCards(page, userId);
+				case EVENT -> postRepository.findEventCards(page, userId);
+			},
 			CommunityCardInfo::toResponse
 		);
 	}

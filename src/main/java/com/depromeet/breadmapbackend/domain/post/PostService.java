@@ -18,27 +18,13 @@ public interface PostService {
 		final Long userId
 	);
 
-	PageResponseDto<CommunityCardResponse> getAllPosts(
+	PageResponseDto<CommunityCardResponse> getCommunityCards(
 		final CommunityPage page,
-		final Long userId
+		final Long userId,
+		final PostTopic postTopic
 
 	);
-
-	PageResponseDto<CommunityCardResponse> getBreadStoryPosts(
-		final CommunityPage page,
-		final Long userId
-	);
-
-	PageResponseDto<CommunityCardResponse> getReviewPosts(
-		final CommunityPage page,
-		final Long userId
-	);
-
-	PageResponseDto<CommunityCardResponse> getEventPosts(
-		final CommunityPage page,
-		final Long userId
-	);
-
+ 
 	// post 상세 조회
 	PostDetailInfo getPost(
 		final Long userId,
