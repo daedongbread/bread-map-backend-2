@@ -1,7 +1,9 @@
 package com.depromeet.breadmapbackend.domain.post;
 
+import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,20 +50,21 @@ public class PostServiceImpl implements PostService {
 		final Long userId,
 		final PostTopic postTopic
 	) {
+		final Page<CommunityCardInfo> communityCards = getCommunityCardsBy(page, userId, postTopic);
+
 		return PageResponseDto.of(
-			switch (postTopic) {
-				case ALL -> postRepository.findAllCommunityCards(page, userId);
-				case BREAD_STORY -> postRepository.findBreadStoryCards(page, userId);
-				case REVIEW -> postRepository.findReviewCards(page, userId);
-				case EVENT -> postRepository.findEventCards(page, userId);
-			},
-			CommunityCardInfo::toResponse
+			communityCards,
+			communityCardInfo ->
+				communityCardInfo.toResponse(
+					getMaxPostId(communityCards),
+					getMaxReviewId(communityCards)
+				)
 		);
 	}
 
 	@Override
-	public PostDetailInfo getPost(final Long postId, final Long userId) {
-		return postRepository.findPostBy(postId, userId);
+	public PostDetailInfo getPost(final Long postId, final Long userId, final PostTopic postTopic) {
+		return postRepository.findPostBy(postId, userId, postTopic);
 	}
 
 	@Override
@@ -91,5 +94,39 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public void report(final Long userId, final PostReportCommand command) {
 
+	}
+
+	private Long getMaxPostId(final Page<CommunityCardInfo> communityCards) {
+		return communityCards.stream()
+			.filter(PostServiceImpl::isPost)
+			.max(Comparator.comparingLong(CommunityCardInfo::postId))
+			.map(CommunityCardInfo::postId)
+			.orElse(0L);
+	}
+
+	private Long getMaxReviewId(final Page<CommunityCardInfo> communityCards) {
+		return communityCards.stream()
+			.filter(PostServiceImpl::isReview)
+			.max(Comparator.comparingLong(CommunityCardInfo::postId))
+			.map(CommunityCardInfo::postId)
+			.orElse(0L);
+	}
+
+	private static boolean isReview(final CommunityCardInfo communityCard) {
+		return communityCard.topic().equals(PostTopic.REVIEW);
+	}
+
+	private static boolean isPost(final CommunityCardInfo communityCard) {
+		return !isReview(communityCard);
+	}
+
+	private Page<CommunityCardInfo> getCommunityCardsBy(final CommunityPage page, final Long userId,
+		final PostTopic postTopic) {
+		return switch (postTopic) {
+			case ALL -> postRepository.findAllCommunityCards(page, userId);
+			case BREAD_STORY -> postRepository.findBreadStoryCards(page, userId);
+			case REVIEW -> postRepository.findReviewCards(page, userId);
+			case EVENT -> postRepository.findEventCards(page, userId);
+		};
 	}
 }

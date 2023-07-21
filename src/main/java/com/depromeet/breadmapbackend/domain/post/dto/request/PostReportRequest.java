@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.post.dto;
+package com.depromeet.breadmapbackend.domain.post.dto.request;
 
 import com.depromeet.breadmapbackend.domain.post.report.PostReportReason;
 import com.depromeet.breadmapbackend.global.annotation.EnumCheck;

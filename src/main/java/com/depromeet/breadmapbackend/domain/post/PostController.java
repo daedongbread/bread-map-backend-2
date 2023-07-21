@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.depromeet.breadmapbackend.domain.post.dto.PostReportRequest;
+import com.depromeet.breadmapbackend.domain.post.dto.request.PostReportRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.request.PostRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
@@ -48,10 +49,12 @@ public class PostController {
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PostResponse> getPost(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
-		@PathVariable final Long postId
+		@PathVariable final Long postId,
+		@RequestParam(value = "postTopic", required = true) final String postTopic
 	) {
+		final PostTopic topic = PostTopic.of(postTopic);
 		return new ApiResponse<>(
-			Mapper.of(postService.getPost(postId, currentUserInfo.getId()))
+			Mapper.of(postService.getPost(postId, currentUserInfo.getId(), topic))
 		);
 	}
 

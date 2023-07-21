@@ -23,7 +23,7 @@ public interface PostRepository {
 
 	Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId);
 
-	PostDetailInfo findPostBy(Long postId, Long userId);
+	PostDetailInfo findPostBy(final Long postId, final Long userId, final PostTopic postTopic);
 
 	void deletePostById(Long postId, Long userId);
 }

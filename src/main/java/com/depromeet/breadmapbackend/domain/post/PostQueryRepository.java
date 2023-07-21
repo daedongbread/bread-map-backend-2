@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.domain.post;
 
 import static com.depromeet.breadmapbackend.domain.post.QPost.*;
 import static com.depromeet.breadmapbackend.domain.post.comment.QComment.*;
-import static com.depromeet.breadmapbackend.domain.post.image.QPostImage.*;
 import static com.depromeet.breadmapbackend.domain.post.like.QPostLike.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
 import static com.depromeet.breadmapbackend.domain.user.QUser.*;
@@ -63,10 +62,10 @@ public class PostQueryRepository {
 		resultSet.getString("bakeryThumbnail")
 	);
 
-	public Optional<PostDetailInfo> findPostDetailById(final Long postId, final Long userId) {
+	public Optional<PostDetailInfo> findPostDetailById(final Long postId, final Long userId, final PostTopic topic) {
 		return Optional.ofNullable(
 			queryFactory.
-				select(Projections.constructor(PostDetailInfo.class,
+				selectDistinct(Projections.constructor(PostDetailInfo.class,
 					post,
 					JPAExpressions.select(postLike.count().coalesce(0L))
 						.from(postLike)
@@ -89,8 +88,7 @@ public class PostQueryRepository {
 				))
 				.from(post)
 				.join(post.user, user).fetchJoin()
-				.leftJoin(post.images, postImage).fetchJoin()
-				.where(post.id.eq(postId))
+				.where(post.id.eq(postId).and(post.postTopic.eq(topic)))
 				.fetchOne()
 		);
 	}

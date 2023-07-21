@@ -24,11 +24,12 @@ public interface PostService {
 		final PostTopic postTopic
 
 	);
- 
+
 	// post 상세 조회
 	PostDetailInfo getPost(
 		final Long userId,
-		final Long postId
+		final Long postId,
+		final PostTopic postTopic
 	);
 
 	// post 추천글 조회

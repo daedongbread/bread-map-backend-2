@@ -67,7 +67,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final Long postId = 222L;
 
 		//when
-		final PostDetailInfo result = sut.getPost(postId, userId);
+		final PostDetailInfo result = sut.getPost(postId, userId, PostTopic.BREAD_STORY);
 
 		//then
 		assertThat(result.followerCount()).isEqualTo(2);
@@ -101,7 +101,8 @@ class PostServiceImplTest extends PostServiceTest {
 		final Long secondUserId = 113L;
 		final CommunityPage pageOne = new CommunityPage(1L, 1L, 1);
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(page, userId, PostTopic.ALL);
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, secondUserId,
+			PostTopic.ALL);
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(5);
 		assertThat(secondResult.getContents().get(0).writerInfo().userId()).isEqualTo(113L);
@@ -136,7 +137,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(page, userId,
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
 			PostTopic.BREAD_STORY);
 
 		//then
@@ -165,7 +166,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(page, userId,
+		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
 			PostTopic.EVENT);
 
 		//then
@@ -194,7 +195,7 @@ class PostServiceImplTest extends PostServiceTest {
 
 		//when
 		final PageResponseDto<CommunityCardResponse> secondResult
-			= sut.getCommunityCards(page, userId, PostTopic.REVIEW);
+			= sut.getCommunityCards(pageOne, userId, PostTopic.REVIEW);
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(2);

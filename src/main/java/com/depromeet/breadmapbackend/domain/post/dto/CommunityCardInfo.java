@@ -29,7 +29,10 @@ public record CommunityCardInfo(
 	String address,
 	String bakeryThumbnail
 ) {
-	public CommunityCardResponse toResponse() {
+	public CommunityCardResponse toResponse(
+		final Long lastPostId,
+		final Long lastReviewId
+	) {
 
 		final CommunityCardResponse.UserInfo userInfo =
 			new CommunityCardResponse.UserInfo(
@@ -54,7 +57,9 @@ public record CommunityCardInfo(
 			this.thumbnail,
 			this.topic,
 			this.createdDate,
-			bakeryInfo
+			bakeryInfo,
+			lastPostId,
+			lastReviewId
 		);
 
 	}

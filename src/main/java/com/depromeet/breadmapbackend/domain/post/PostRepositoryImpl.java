@@ -50,8 +50,12 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public PostDetailInfo findPostBy(final Long postId, final Long userId) {
-		return postQueryRepository.findPostDetailById(postId, userId)
+	public PostDetailInfo findPostBy(
+		final Long postId,
+		final Long userId,
+		final PostTopic postTopic
+	) {
+		return postQueryRepository.findPostDetailById(postId, userId, postTopic)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 	}
 
