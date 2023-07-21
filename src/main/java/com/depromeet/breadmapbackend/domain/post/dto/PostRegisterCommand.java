@@ -1,9 +1,9 @@
-package com.depromeet.breadmapbackend.domain.review.post.dto;
+package com.depromeet.breadmapbackend.domain.post.dto;
 
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.review.post.Post;
-import com.depromeet.breadmapbackend.domain.review.post.PostTopic;
+import com.depromeet.breadmapbackend.domain.post.Post;
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.user.User;
 
 /**

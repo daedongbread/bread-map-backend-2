@@ -1,0 +1,29 @@
+package com.depromeet.breadmapbackend.domain.post;
+
+import org.springframework.data.domain.Page;
+
+import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
+import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
+
+/**
+ * PostRepository
+ *
+ * @author jaypark
+ * @version 1.0.0
+ * @since 2023/07/20
+ */
+public interface PostRepository {
+	Post save(Post entity);
+
+	Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage);
+
+	Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage);
+
+	Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage);
+
+	Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage);
+
+	PostDetailInfo findPostBy(Long postId, Long userId);
+
+	void deletePostById(Long postId, Long userId);
+}

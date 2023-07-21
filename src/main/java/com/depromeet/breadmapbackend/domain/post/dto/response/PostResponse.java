@@ -1,11 +1,11 @@
-package com.depromeet.breadmapbackend.domain.review.post.dto;
+package com.depromeet.breadmapbackend.domain.post.dto.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.review.post.PostTopic;
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 
-public record PostDetailInfo(
+public record PostResponse(
 	Long postId,
 	PostTopic postTopic,
 	String title,
@@ -14,7 +14,7 @@ public record PostDetailInfo(
 	String content,
 	long likeCount,
 	long commentCount,
-	LocalDate createdDate
+	LocalDateTime createdDate
 
 ) {
 	public record UserInfo(
@@ -25,6 +25,5 @@ public record PostDetailInfo(
 		long followerCount,
 		boolean isFollowed
 	) {
-
 	}
 }

@@ -1,8 +1,8 @@
-package com.depromeet.breadmapbackend.domain.review.post.dto.response;
+package com.depromeet.breadmapbackend.domain.post.dto.response;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import com.depromeet.breadmapbackend.domain.review.post.PostTopic;
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 
 /**
  * PostCardResponseDto
@@ -20,9 +20,10 @@ public record CommunityCardResponse(
 	long commentCount,
 	String thumbnail,
 	PostTopic topic,
-	LocalDate createdDate,
+	LocalDateTime createdDate,
 	BakeryInfo bakeryInfo
 ) {
+
 	public record UserInfo(
 		Long userId,
 		String nickname,

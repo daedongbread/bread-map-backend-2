@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.review.post.dto.request;
+package com.depromeet.breadmapbackend.domain.post.dto.request;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.review.post.image;
+package com.depromeet.breadmapbackend.domain.post.image;
 
 import static javax.persistence.FetchType.*;
 import static javax.persistence.GenerationType.*;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.depromeet.breadmapbackend.domain.review.post.Post;
+import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 

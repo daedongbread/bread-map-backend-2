@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.review.post;
+package com.depromeet.breadmapbackend.domain.post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

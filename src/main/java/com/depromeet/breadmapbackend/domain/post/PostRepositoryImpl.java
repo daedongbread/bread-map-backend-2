@@ -1,10 +1,10 @@
-package com.depromeet.breadmapbackend.domain.review.post;
+package com.depromeet.breadmapbackend.domain.post;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import com.depromeet.breadmapbackend.domain.review.post.dto.PostDetailInfo;
-import com.depromeet.breadmapbackend.domain.review.post.dto.response.CommunityCardResponse;
-import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
+import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
+import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -30,8 +30,23 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public PageResponseDto<CommunityCardResponse> findAllCommunityCards() {
-		return null;
+	public Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage) {
+		return postQueryRepository.findAllCommunityCards(communityPage);
+	}
+
+	@Override
+	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage) {
+		return postQueryRepository.findBreadStoryCards(communityPage);
+	}
+
+	@Override
+	public Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage) {
+		return postQueryRepository.findEventCards(communityPage);
+	}
+
+	@Override
+	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage) {
+		return postQueryRepository.findReviewCards(communityPage);
 	}
 
 	@Override

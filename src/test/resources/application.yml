@@ -110,3 +110,10 @@ sgis:
   dst2: 4166
   key: 19d650af0ba14aa3a02c
   secret: 3dfe3c41a43140ba8e2d
+
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: debug
