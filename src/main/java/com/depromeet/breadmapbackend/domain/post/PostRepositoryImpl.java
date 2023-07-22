@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.post;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
@@ -63,5 +65,10 @@ public class PostRepositoryImpl implements PostRepository {
 	@Override
 	public void deletePostById(final Long postId, final Long userId) {
 
+	}
+
+	@Override
+	public List<CommunityCardInfo> findHotPosts(final Long userId) {
+		return postQueryRepository.findHotPosts(userId);
 	}
 }

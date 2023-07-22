@@ -4,13 +4,19 @@ import static com.depromeet.breadmapbackend.domain.post.QPost.*;
 import static com.depromeet.breadmapbackend.domain.post.comment.QComment.*;
 import static com.depromeet.breadmapbackend.domain.post.like.QPostLike.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
+import static com.depromeet.breadmapbackend.domain.review.comment.QReviewComment.*;
+import static com.depromeet.breadmapbackend.domain.review.like.QReviewLike.*;
 import static com.depromeet.breadmapbackend.domain.user.QUser.*;
+import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.*;
 import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.*;
 
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +28,7 @@ import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailQuery;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
@@ -102,7 +109,7 @@ public class PostQueryRepository {
 			.addValue("userId", userId);
 
 		final String postBaseSql = getPostBaseSqlWithWhereClaus("1 = 1");
-		final String reviewBaseSql = getReviewBaseSql();
+		final String reviewBaseSql = getReviewBaseSql("");
 		final String sql = String.format("""
 				with post_base as(
 					%s
@@ -172,7 +179,7 @@ public class PostQueryRepository {
 
 		final List<CommunityCardInfo> reviewCards =
 			jdbcTemplate.query(
-				getReviewBaseSql(),
+				getReviewBaseSql(""),
 				params,
 				COMMUNITY_CARD_INFO_ROW_MAPPER
 			);
@@ -186,6 +193,118 @@ public class PostQueryRepository {
 			PageRequest.of(communityPage.page(), PAGE_SIZE),
 			getReviewCardsCount(userId)
 		);
+	}
+
+	public List<CommunityCardInfo> findHotPosts(final Long userId) {
+		List<CommunityCardInfo> hotPostsWithFixedEvent = new ArrayList<>();
+		hotPostsWithFixedEvent.add(getFixedEvent(userId));
+
+		final List<Tuple> topReviewScores = queryFactory.select(review.id,
+				reviewLike.count().add(reviewComment.count()).as("score"),
+				review.createdAt)
+			.from(review)
+			.leftJoin(reviewLike)
+			.on(review.id.eq(reviewLike.review.id)
+				.and(reviewLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(reviewComment)
+			.on(review.id.eq(reviewComment.review.id)
+				.and(reviewComment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(blockUser).on(blockUser.toUser.id.eq(review.user.id).and(blockUser.fromUser.id.eq(userId)))
+			.where(blockUser.isNull())
+			.groupBy(review)
+			.orderBy(reviewLike.count().add(reviewComment.count()).desc(), review.createdAt.desc())
+			.limit(3)
+			.fetch();
+
+		final List<Tuple> topPostScores = queryFactory.select(post.id,
+				postLike.count().add(comment.count()).as("score"),
+				post.createdAt)
+			.from(post)
+			.leftJoin(postLike)
+			.on(post.id.eq(postLike.post.id)
+				.and(postLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(comment)
+			.on(post.id.eq(comment.post.id)
+				.and(comment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(blockUser).on(blockUser.toUser.id.eq(post.user.id).and(blockUser.fromUser.id.eq(userId)))
+			.where(post.postTopic.ne(PostTopic.EVENT).and(blockUser.isNull()))
+			.groupBy(post)
+			.orderBy(postLike.count().add(comment.count()).desc(), post.createdAt.desc())
+			.limit(3)
+			.fetch();
+
+		final List<HotCommunityRank> temp = getHotCommunityRanks(false, topPostScores);
+		temp.addAll(getHotCommunityRanks(true, topReviewScores));
+
+		final List<HotCommunityRank> list = temp.stream()
+			.sorted(Comparator.comparing(HotCommunityRank::score)
+				.thenComparing(HotCommunityRank::createdAt).reversed())
+			.toList();
+
+		List<Long> topReviewIdList = new ArrayList<>();
+		List<Long> topPostIdList = new ArrayList<>();
+
+		for (HotCommunityRank hotCommunityRank : list) {
+			if (hotCommunityRank.isReview) {
+				topReviewIdList.add(hotCommunityRank.id);
+			} else {
+				topPostIdList.add(hotCommunityRank.id);
+			}
+		}
+
+		if (!topPostIdList.isEmpty()) {
+			final MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("limit", topPostIdList.size())
+				.addValue("postOffset", 0)
+				.addValue("userId", userId);
+
+			hotPostsWithFixedEvent.addAll(jdbcTemplate.query(
+				getPostBaseSqlWithWhereClaus(String.format("t1.id in ( %s )",
+					topPostIdList.stream().map(String::valueOf).collect(Collectors.joining(",")))),
+				params,
+				COMMUNITY_CARD_INFO_ROW_MAPPER
+			))
+			;
+		}
+
+		if (!topReviewIdList.isEmpty()) {
+			final MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("limit", topReviewIdList.size())
+				.addValue("reviewOffset", 0)
+				.addValue("userId", userId);
+
+			hotPostsWithFixedEvent.addAll(jdbcTemplate.query(
+				getReviewBaseSql(String.format("and (t1.id in ( %s ))",
+					topReviewIdList.stream().map(String::valueOf).collect(Collectors.joining(",")))),
+				params,
+				COMMUNITY_CARD_INFO_ROW_MAPPER
+			));
+		}
+
+		return hotPostsWithFixedEvent;
+
+	}
+
+	private List<HotCommunityRank> getHotCommunityRanks(final boolean isReview, final List<Tuple> queryResult) {
+		return queryResult.stream()
+			.map(tuple ->
+				new HotCommunityRank(
+					isReview,
+					tuple.get(0, Long.class),
+					tuple.get(1, Long.class),
+					tuple.get(2, LocalDateTime.class)
+				)
+			)
+			.collect(Collectors.toList());
+	}
+
+	private record HotCommunityRank(
+		boolean isReview,
+		Long id,
+		Long score,
+		LocalDateTime createdAt
+	) {
+
 	}
 
 	private CommunityCardInfo getFixedEvent(final Long userId) {
@@ -241,8 +360,8 @@ public class PostQueryRepository {
 			""", whereClause);
 	}
 
-	private String getReviewBaseSql() {
-		return """
+	private String getReviewBaseSql(final String whereClause) {
+		return String.format("""
 				select t2.id                                   as userId
 				     , t2.nick_name                            as nickname
 				     , t2.image                                as profileImage
@@ -274,10 +393,11 @@ public class PostQueryRepository {
 						  from block_user
 						  where from_user_id = :userId) t4 on t1.user_id = t4.to_user_id										
 			   where t4.to_user_id is null
+			   %s
 			 
 				order by t1.created_at desc , t1.id desc
 				limit :limit offset :reviewOffset		
-			""";
+			""", whereClause);
 	}
 
 	private Long getAllCardsCount(final Long userId) {

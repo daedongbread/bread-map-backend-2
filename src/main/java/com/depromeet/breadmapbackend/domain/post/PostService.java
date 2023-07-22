@@ -7,7 +7,6 @@ import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
-import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 
 public interface PostService {
@@ -33,7 +32,7 @@ public interface PostService {
 	);
 
 	// post 추천글 조회
-	List<PostResponse> getHotPosts(
+	List<CommunityCardResponse> findHotPosts(
 		final Long userId
 	);
 

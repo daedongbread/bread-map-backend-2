@@ -205,4 +205,17 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(secondResult.getContents().size()).isEqualTo(2);
 		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(112L);
 	}
+
+	@Test
+	@Sql("classpath:post-test-data.sql")
+	void 커뮤니티_추천글_조회() throws Exception {
+		//given
+		final Long userId = 111L;
+
+		//when
+		final List<CommunityCardResponse> hotPosts = sut.findHotPosts(userId);
+		final CommunityCardResponse communityCardResponse = hotPosts.get(0);
+
+		//then
+	}
 }

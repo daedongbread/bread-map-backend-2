@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.post;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -72,10 +74,10 @@ public class PostController {
 	// post 추천글 조회
 	@GetMapping("/hot")
 	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<?> getHotPosts(
+	ApiResponse<List<CommunityCardResponse>> findHotPosts(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
-		return new ApiResponse<>(postService.getHotPosts(currentUserInfo.getId()));
+		return new ApiResponse<>(postService.findHotPosts(currentUserInfo.getId()));
 	}
 
 	// post 삭제

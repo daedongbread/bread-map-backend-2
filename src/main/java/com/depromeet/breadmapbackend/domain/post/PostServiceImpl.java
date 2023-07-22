@@ -12,7 +12,6 @@ import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
-import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
@@ -65,7 +64,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostResponse> getHotPosts(final Long userId) {
+	public List<CommunityCardResponse> findHotPosts(final Long userId) {
+		postRepository.findHotPosts(userId);
+
 		return null;
 	}
 

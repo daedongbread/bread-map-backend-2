@@ -66,9 +66,10 @@ insert into post_image (id, created_at, modified_at, image, is_registered, post_
 (223, '2023-01-01', '2023-01-01', 'iamge 222 2', true, 222)
 ;
 
-insert into post_like(	id,post_id,user_id)values
-(222, 222, 111),
-(223, 222, 112);
+insert into post_like(	id,post_id,user_id,created_at)values
+(222, 222, 111, '2023-07-23'),
+(224, 223, 111, '2023-07-23'),
+(223, 222, 112, '2023-07-23');
 
 
 insert into bakery (id, created_at, modified_at, address, latitude, longitude, name, status , image )values
@@ -79,13 +80,13 @@ insert into bakery (id, created_at, modified_at, address, latitude, longitude, n
 
 
 insert into review (id, created_at, modified_at, content, is_block, is_delete, is_hide, is_new, bakery_id, user_id   )values
-(111,  '2023-01-01', '2023-01-01', '좋아요!', 'N', 'N', 'N','N',111,111),
+(111,  '2023-07-23', '2023-01-01', '좋아요!', 'N', 'N', 'N','N',111,111),
 (112,  '2023-01-02', '2023-01-01', '맛있어요!', 'N', 'N', 'N','N',111,113),
 (113,  '2023-01-03', '2023-01-01', '으웩!', 'Y', 'N','N','N',112, 112)
 ;
 
 insert into review_comment (id, created_at, modified_at, content, is_delete, parent_id, review_id, user_id   )values
-(111,  '2023-01-01', '2023-01-01', '좋아요 좋아요 ', 'N', NULL, 111,112),
+(111,  '2023-07-23', '2023-01-01', '좋아요 좋아요 ', 'N', NULL, 111,112),
 (113,  '2023-01-03', '2023-01-01', '으웩 으웩', 'N',111 , 111, 112)
 ;
 
