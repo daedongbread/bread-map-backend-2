@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
+	private static final String DELETED_COMMENT_CONTENT = "삭제된 댓글입니다.";
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 
@@ -37,7 +38,6 @@ public class CommentServiceImpl implements CommentService {
 				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
 		);
 		commentRepository.save(comment);
-
 	}
 
 	@Override
@@ -55,6 +55,8 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public void deleteComment(final Long commentId, final Long userId) {
-		commentRepository.deleteComment(commentId, userId);
+		commentRepository.findByIdAndUserId(commentId, userId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND))
+			.update(DELETED_COMMENT_CONTENT);
 	}
 }
