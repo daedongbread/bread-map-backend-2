@@ -29,6 +29,8 @@ import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.FacilityInfoListConverter;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -147,6 +149,13 @@ public class Bakery extends BaseEntity {
 	public Double bakeryRating(List<Review> reviewList) {
 		return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
+	}
+
+	public Product getProduct(Long productId) {
+		return this.productList.stream()
+			.filter(product -> Objects.equals(product.getId(), productId))
+			.findAny()
+			.orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
 	}
 
 	@Override

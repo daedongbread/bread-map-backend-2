@@ -61,7 +61,8 @@ public enum DaedongStatus {
 	REVIEW_NOT_FOUND(NOT_FOUND, 40450, "review not found"), // 존재하지 않은 리뷰일 때
 	REVIEW_COMMENT_NOT_FOUND(NOT_FOUND, 40451, "review comment not found"), // 존재하지 않은 리뷰일 때
 	REVIEW_IMAGE_NOT_FOUND(NOT_FOUND, 40452, "review image not found"), // 존재하지 않은 리뷰 이미지일 때
-	CURATION_NOT_FOUND(NOT_FOUND, 40453, "curation not found"),
+	FEED_NOT_FOUND(NOT_FOUND, 40453, "feed not found"),
+	CATEGORY_NOT_FOUND(NOT_FOUND, 40454, "category not found"),
 	CURATION_CONTEXT_NOT_MATCHING(NOT_FOUND, 40454, "curation context not matching"),
 	//    NOTICE_TOKEN_NOT_FOUND(NOT_FOUND, 40460, "notice token not found"), // 알림 토큰이 존재하지 않을 때
 	ADMIN_NOT_FOUND(NOT_FOUND, 40490, "admin not found"), // 관리자가 존재하지 않을 때
