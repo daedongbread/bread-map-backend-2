@@ -50,7 +50,7 @@ public class PostController {
 	ApiResponse<PostResponse> getPost(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@PathVariable final Long postId,
-		@RequestParam(value = "postTopic", required = true) final String postTopic
+		@RequestParam(value = "postTopic") final String postTopic
 	) {
 		final PostTopic topic = PostTopic.of(postTopic);
 		return new ApiResponse<>(

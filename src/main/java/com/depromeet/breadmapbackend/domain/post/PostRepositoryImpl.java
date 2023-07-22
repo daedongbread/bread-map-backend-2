@@ -56,7 +56,8 @@ public class PostRepositoryImpl implements PostRepository {
 		final PostTopic postTopic
 	) {
 		return postQueryRepository.findPostDetailById(postId, userId, postTopic)
-			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND))
+			.toInfo();
 	}
 
 	@Override

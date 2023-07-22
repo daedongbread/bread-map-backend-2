@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
-import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
+import com.depromeet.breadmapbackend.domain.post.dto.PostDetailQuery;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
@@ -62,10 +62,10 @@ public class PostQueryRepository {
 		resultSet.getString("bakeryThumbnail")
 	);
 
-	public Optional<PostDetailInfo> findPostDetailById(final Long postId, final Long userId, final PostTopic topic) {
+	public Optional<PostDetailQuery> findPostDetailById(final Long postId, final Long userId, final PostTopic topic) {
 		return Optional.ofNullable(
 			queryFactory.
-				selectDistinct(Projections.constructor(PostDetailInfo.class,
+				selectDistinct(Projections.constructor(PostDetailQuery.class,
 					post,
 					JPAExpressions.select(postLike.count().coalesce(0L))
 						.from(postLike)
