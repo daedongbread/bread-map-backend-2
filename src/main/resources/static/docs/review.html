@@ -509,456 +509,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_빵집_리뷰_전체_조회_api_get"><a class="link" href="#_빵집_리뷰_전체_조회_api_get">빵집 리뷰 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_빵집_리뷰_전체_조회_api_get_http_request"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/50?sortBy=high&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk4LCJleHAiOjE2ODYzNzM5OTh9.QDcBeux1VR7JFPT1Ee7NCnzSajlRhv57Q6T1fgrSDnU
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/get/bakery</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_리뷰_전체_조회_api_get_request_headers"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/get/bakery</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_리뷰_전체_조회_api_get_path_parameters"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/bakeries/{bakeryId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/get/bakery</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_리뷰_전체_조회_api_get_request_parameters"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sortBy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 방법 (latest, high, low) (default = latest)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호 (0부터)</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-parameters not found for operation::v1/review/get/bakery</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_리뷰_전체_조회_api_get_http_response"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 4091
-
-{
-  "data" : {
-    "pageNumber" : 0,
-    "numberOfElements" : 5,
-    "size" : 5,
-    "totalElements" : 6,
-    "totalPages" : 2,
-    "contents" : [ {
-      "bakeryInfo" : {
-        "bakeryId" : 50,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 60,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 70,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 5
-        }, {
-          "productName" : "bread2",
-          "rating" : 4
-        } ],
-        "imageList" : [ "image1" ],
-        "content" : "content1",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.5
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 50,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 60,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 75,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 50,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 60,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 74,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 50,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 60,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 73,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 50,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 60,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 72,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    } ]
-  }
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/get/bakery</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_빵집_리뷰_전체_조회_api_get_response_fields"><a class="link" href="#_빵집_리뷰_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵집 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryAddress</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 주소</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 유저 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.reviewNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.followerNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.isFollow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로우 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.isMe</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 본인 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.imageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.isLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.commentNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 생성일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.averageRating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 평균 점수</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet response-fields not found for operation::v1/review/get/bakery</p>
 </div>
 </div>
 </div>
@@ -966,455 +548,38 @@ Content-Length: 4091
 <h3 id="_상품_리뷰_전체_조회_api_get"><a class="link" href="#_상품_리뷰_전체_조회_api_get">상품 리뷰 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_상품_리뷰_전체_조회_api_get_http_request"><a class="link" href="#_상품_리뷰_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/46/products/43?sortBy=low&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk4LCJleHAiOjE2ODYzNzM5OTh9.QDcBeux1VR7JFPT1Ee7NCnzSajlRhv57Q6T1fgrSDnU
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/get/product</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_상품_리뷰_전체_조회_api_get_request_headers"><a class="link" href="#_상품_리뷰_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/get/product</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_상품_리뷰_전체_조회_api_get_path_parameters"><a class="link" href="#_상품_리뷰_전체_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/bakeries/{bakeryId}/products/{productId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/get/product</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_상품_리뷰_전체_조회_api_get_request_parameters"><a class="link" href="#_상품_리뷰_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sortBy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 방법 (latest, high, low) (default = latest)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호 (0부터)</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-parameters not found for operation::v1/review/get/product</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_상품_리뷰_전체_조회_api_get_http_response"><a class="link" href="#_상품_리뷰_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 4091
-
-{
-  "data" : {
-    "pageNumber" : 0,
-    "numberOfElements" : 5,
-    "size" : 5,
-    "totalElements" : 6,
-    "totalPages" : 2,
-    "contents" : [ {
-      "bakeryInfo" : {
-        "bakeryId" : 46,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 56,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 50,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 46,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 56,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 49,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 46,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 56,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 48,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 46,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 56,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 47,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 46,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 56,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 46,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        }, {
-          "productName" : "bread2",
-          "rating" : 3
-        } ],
-        "imageList" : [ "image2" ],
-        "content" : "content2",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 3.5
-      }
-    } ]
-  }
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/get/product</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_상품_리뷰_전체_조회_api_get_response_fields"><a class="link" href="#_상품_리뷰_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵집 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryAddress</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 주소</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 유저 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.reviewNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.followerNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.isFollow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로우 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.isMe</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 본인 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.imageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.isLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.commentNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 생성일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.averageRating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 평균 점수</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet response-fields not found for operation::v1/review/get/product</p>
 </div>
 </div>
 </div>
@@ -1422,447 +587,38 @@ Content-Length: 4091
 <h3 id="_유저_리뷰_전체_조회_api_get"><a class="link" href="#_유저_리뷰_전체_조회_api_get">유저 리뷰 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_유저_리뷰_전체_조회_api_get_http_request"><a class="link" href="#_유저_리뷰_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/users/55?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk4LCJleHAiOjE2ODYzNzM5OTh9.QDcBeux1VR7JFPT1Ee7NCnzSajlRhv57Q6T1fgrSDnU
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/get/user</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_리뷰_전체_조회_api_get_request_headers"><a class="link" href="#_유저_리뷰_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/get/user</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_리뷰_전체_조회_api_get_path_parameters"><a class="link" href="#_유저_리뷰_전체_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/users/{userId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/get/user</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_리뷰_전체_조회_api_get_request_parameters"><a class="link" href="#_유저_리뷰_전체_조회_api_get_request_parameters">Request parameters</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호 (0부터)</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-parameters not found for operation::v1/review/get/user</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_유저_리뷰_전체_조회_api_get_http_response"><a class="link" href="#_유저_리뷰_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 4091
-
-{
-  "data" : {
-    "pageNumber" : 0,
-    "numberOfElements" : 5,
-    "size" : 5,
-    "totalElements" : 6,
-    "totalPages" : 2,
-    "contents" : [ {
-      "bakeryInfo" : {
-        "bakeryId" : 45,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 55,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 43,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 45,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 55,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 44,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 45,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 55,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 42,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 45,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 55,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 41,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 45,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 55,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 40,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        }, {
-          "productName" : "bread2",
-          "rating" : 3
-        } ],
-        "imageList" : [ "image2" ],
-        "content" : "content2",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 3.5
-      }
-    } ]
-  }
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/get/user</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_유저_리뷰_전체_조회_api_get_response_fields"><a class="link" href="#_유저_리뷰_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pageNumber</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 (0부터 시작)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.numberOfElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 데이터 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">전체 데이터 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.totalPages</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵집 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryAddress</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 주소</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 유저 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.reviewNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.followerNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.isFollow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로우 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].userInfo.isMe</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 본인 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.imageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.isLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.commentNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 생성일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].reviewInfo.averageRating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 평균 점수</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet response-fields not found for operation::v1/review/get/user</p>
 </div>
 </div>
 </div>
@@ -1870,358 +626,32 @@ Content-Length: 4091
 <h3 id="_리뷰_상세_조회_api_get"><a class="link" href="#_리뷰_상세_조회_api_get">리뷰 상세 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_상세_조회_api_get_http_request"><a class="link" href="#_리뷰_상세_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/64 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk4LCJleHAiOjE2ODYzNzM5OTh9.QDcBeux1VR7JFPT1Ee7NCnzSajlRhv57Q6T1fgrSDnU
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/get</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_상세_조회_api_get_request_headers"><a class="link" href="#_리뷰_상세_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/get</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_상세_조회_api_get_path_parameters"><a class="link" href="#_리뷰_상세_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/get</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_상세_조회_api_get_http_response"><a class="link" href="#_리뷰_상세_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 1694
-
-{
-  "data" : {
-    "reviewDto" : {
-      "bakeryInfo" : {
-        "bakeryId" : 49,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 59,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 64,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 5
-        }, {
-          "productName" : "bread2",
-          "rating" : 4
-        } ],
-        "imageList" : [ "image1" ],
-        "content" : "content1",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.06.10",
-        "averageRating" : 4.5
-      }
-    },
-    "userOtherReviews" : [ {
-      "id" : 69,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 68,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 67,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 66,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 65,
-      "image" : "image2",
-      "rating" : 3.5
-    } ],
-    "bakeryOtherReviews" : [ {
-      "id" : 69,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 68,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 67,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 66,
-      "image" : null,
-      "rating" : 4.0
-    }, {
-      "id" : 65,
-      "image" : "image2",
-      "rating" : 3.5
-    } ]
-  }
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/get</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_상세_조회_api_get_response_fields"><a class="link" href="#_리뷰_상세_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상세 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.bakeryInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 빵집 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.bakeryInfo.bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.bakeryInfo.bakeryName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.bakeryInfo.bakeryAddress</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 주소</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 유저 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.reviewNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 리뷰 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.followerNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로워 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.isFollow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 팔로우 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.userInfo.isMe</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 본인 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 정보</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.productRatingList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.imageList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지들</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.isLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 여부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.commentNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 생성일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.reviewInfo.averageRating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 평균 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userOtherReviews</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 다른 빵집 리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userOtherReviews.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userOtherReviews.[].image</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.userOtherReviews.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryOtherReviews</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 다른 리뷰 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryOtherReviews.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryOtherReviews.[].image</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.bakeryOtherReviews.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 점수</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet response-fields not found for operation::v1/review/get</p>
 </div>
 </div>
 </div>
@@ -2229,193 +659,32 @@ Content-Length: 1694
 <h3 id="_리뷰_추가_api_post"><a class="link" href="#_리뷰_추가_api_post">리뷰 추가 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_추가_api_post_http_request"><a class="link" href="#_리뷰_추가_api_post_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/bakeries/48 HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk4LCJleHAiOjE2ODYzNzM5OTh9.QDcBeux1VR7JFPT1Ee7NCnzSajlRhv57Q6T1fgrSDnU
-Content-Length: 473
-Host: localhost:8080
-
-{
-  "productRatingList" : [ {
-    "productId" : 47,
-    "rating" : 5
-  }, {
-    "productId" : 48,
-    "rating" : 4
-  } ],
-  "noExistProductRatingRequestList" : [ {
-    "productType" : "BREAD",
-    "productName" : "fakeBread1",
-    "price" : "3000",
-    "rating" : 5
-  }, {
-    "productType" : "BREAD",
-    "productName" : "fakeBread2",
-    "price" : "4000",
-    "rating" : 4
-  } ],
-  "content" : "review add test",
-  "images" : [ "image1", "image2" ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_추가_api_post_request_headers"><a class="link" href="#_리뷰_추가_api_post_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_추가_api_post_path_parameters"><a class="link" href="#_리뷰_추가_api_post_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/bakeries/{bakeryId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bakeryId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_추가_api_post_request_fields"><a class="link" href="#_리뷰_추가_api_post_request_fields">Request fields</a></h4>
-<div class="sect4">
-<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productRatingList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productRatingList.[].productId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productRatingList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 점수 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].productType</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상품 타입 (BREAD, BEVERAGE, ETC)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].productName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].price</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 가격</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noExistProductRatingRequestList.[].rating</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집에 없는 상품 점수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>images</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 이미지들</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-fields not found for operation::v1/review/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_추가_api_post_http_response"><a class="link" href="#_리뷰_추가_api_post_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/add</p>
 </div>
 </div>
 </div>
@@ -2423,83 +692,26 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_삭제_api_delete"><a class="link" href="#_리뷰_삭제_api_delete">리뷰 삭제 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_삭제_api_delete_http_request"><a class="link" href="#_리뷰_삭제_api_delete_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/51 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk4LCJleHAiOjE2ODYzNzM5OTh9.QDcBeux1VR7JFPT1Ee7NCnzSajlRhv57Q6T1fgrSDnU
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/remove</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_삭제_api_delete_request_headers"><a class="link" href="#_리뷰_삭제_api_delete_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/remove</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_삭제_api_delete_path_parameters"><a class="link" href="#_리뷰_삭제_api_delete_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/remove</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_삭제_api_delete_http_response"><a class="link" href="#_리뷰_삭제_api_delete_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/remove</p>
 </div>
 </div>
 </div>
@@ -2522,83 +734,26 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_좋아요_api_post"><a class="link" href="#_리뷰_좋아요_api_post">리뷰 좋아요 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_api_post_http_request"><a class="link" href="#_리뷰_좋아요_api_post_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/81/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/like</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_api_post_request_headers"><a class="link" href="#_리뷰_좋아요_api_post_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/like</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_api_post_path_parameters"><a class="link" href="#_리뷰_좋아요_api_post_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/like</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/like</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_api_post_http_response"><a class="link" href="#_리뷰_좋아요_api_post_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/like</p>
 </div>
 </div>
 </div>
@@ -2606,83 +761,26 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_좋아요_취소_api_delete"><a class="link" href="#_리뷰_좋아요_취소_api_delete">리뷰 좋아요 취소 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_취소_api_delete_http_request"><a class="link" href="#_리뷰_좋아요_취소_api_delete_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/84/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/unlike</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_취소_api_delete_request_headers"><a class="link" href="#_리뷰_좋아요_취소_api_delete_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/unlike</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_취소_api_delete_path_parameters"><a class="link" href="#_리뷰_좋아요_취소_api_delete_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/unlike</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/unlike</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_좋아요_취소_api_delete_http_response"><a class="link" href="#_리뷰_좋아요_취소_api_delete_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/unlike</p>
 </div>
 </div>
 </div>
@@ -2714,221 +812,32 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_댓글_전체_조회_api_get"><a class="link" href="#_리뷰_댓글_전체_조회_api_get">리뷰 댓글 전체 조회 API [GET]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_댓글_전체_조회_api_get_http_request"><a class="link" href="#_리뷰_댓글_전체_조회_api_get_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/77/comments HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/comment/all</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_전체_조회_api_get_request_headers"><a class="link" href="#_리뷰_댓글_전체_조회_api_get_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/comment/all</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_전체_조회_api_get_path_parameters"><a class="link" href="#_리뷰_댓글_전체_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/comments</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/comment/all</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_전체_조회_api_get_http_response"><a class="link" href="#_리뷰_댓글_전체_조회_api_get_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 519
-
-{
-  "data" : [ {
-    "id" : 3,
-    "userId" : 62,
-    "userImage" : null,
-    "nickName" : "nickname1",
-    "commentNickName" : null,
-    "content" : "comment1",
-    "createdAt" : "2023.06.10",
-    "likeNum" : 1,
-    "commentList" : [ {
-      "id" : 4,
-      "userId" : 62,
-      "userImage" : null,
-      "nickName" : "nickname1",
-      "commentNickName" : "nickname1",
-      "content" : "comment2",
-      "createdAt" : "2023.06.10",
-      "likeNum" : 0,
-      "commentList" : [ ]
-    } ]
-  } ]
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/comment/all</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_전체_조회_api_get_response_fields"><a class="link" href="#_리뷰_댓글_전체_조회_api_get_response_fields">Response fields</a></h4>
-<div class="sect4">
-<h5 id="_응답_필드"><a class="link" href="#_응답_필드">응답 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentNickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 생성일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 리스트</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].userId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].userImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이미지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].nickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].commentNickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">부모 댓글 유저 닉네임</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].createdAt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 생성일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].likeNum</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 좋아요 수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].commentList.[].commentList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">대댓글 리스트</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet response-fields not found for operation::v1/review/comment/all</p>
 </div>
 </div>
 </div>
@@ -2943,127 +852,32 @@ Content-Length: 519
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_추가_api_post_http_request"><a class="link" href="#_리뷰_댓글_추가_api_post_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/79/comments HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Content-Length: 71
-Host: localhost:8080
-
-{
-  "content" : "add review comment test",
-  "parentCommentId" : 0
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/comment/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_추가_api_post_request_headers"><a class="link" href="#_리뷰_댓글_추가_api_post_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/comment/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_추가_api_post_request_fields"><a class="link" href="#_리뷰_댓글_추가_api_post_request_fields">Request fields</a></h4>
-<div class="sect4">
-<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글 내용</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parentCommentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 댓글의 부모 댓글 고유 번호 (리뷰에 단 댓글일 땐 0)</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-fields not found for operation::v1/review/comment/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_추가_api_post_path_parameters"><a class="link" href="#_리뷰_댓글_추가_api_post_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/comments</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">빵집 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/comment/add</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_추가_api_post_http_response"><a class="link" href="#_리뷰_댓글_추가_api_post_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/comment/add</p>
 </div>
 </div>
 </div>
@@ -3071,87 +885,26 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_댓글_삭제_api_delete"><a class="link" href="#_리뷰_댓글_삭제_api_delete">리뷰 댓글 삭제 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_댓글_삭제_api_delete_http_request"><a class="link" href="#_리뷰_댓글_삭제_api_delete_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/80/comments/10 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/comment/remove</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_삭제_api_delete_request_headers"><a class="link" href="#_리뷰_댓글_삭제_api_delete_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/comment/remove</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_삭제_api_delete_path_parameters"><a class="link" href="#_리뷰_댓글_삭제_api_delete_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/comments/{commentId}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/comment/remove</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_삭제_api_delete_http_response"><a class="link" href="#_리뷰_댓글_삭제_api_delete_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/comment/remove</p>
 </div>
 </div>
 </div>
@@ -3159,87 +912,26 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_댓글_좋아요_api_post"><a class="link" href="#_리뷰_댓글_좋아요_api_post">리뷰 댓글 좋아요 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_api_post_http_request"><a class="link" href="#_리뷰_댓글_좋아요_api_post_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/76/comments/2/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/comment/like</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_api_post_request_headers"><a class="link" href="#_리뷰_댓글_좋아요_api_post_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/comment/like</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_api_post_path_parameters"><a class="link" href="#_리뷰_댓글_좋아요_api_post_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/comments/{commentId}/like</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/comment/like</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_api_post_http_response"><a class="link" href="#_리뷰_댓글_좋아요_api_post_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/comment/like</p>
 </div>
 </div>
 </div>
@@ -3247,87 +939,26 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_댓글_좋아요_취소_api_delete"><a class="link" href="#_리뷰_댓글_좋아요_취소_api_delete">리뷰 댓글 좋아요 취소 API [DELETE]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_취소_api_delete_http_request"><a class="link" href="#_리뷰_댓글_좋아요_취소_api_delete_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/78/comments/5/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Host: localhost:8080</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/comment/unlike</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_취소_api_delete_request_headers"><a class="link" href="#_리뷰_댓글_좋아요_취소_api_delete_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/comment/unlike</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_취소_api_delete_path_parameters"><a class="link" href="#_리뷰_댓글_좋아요_취소_api_delete_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/comments/{commentId}/unlike</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/comment/unlike</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_댓글_좋아요_취소_api_delete_http_response"><a class="link" href="#_리뷰_댓글_좋아요_취소_api_delete_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/comment/unlike</p>
 </div>
 </div>
 </div>
@@ -3347,132 +978,32 @@ X-Frame-Options: DENY</code></pre>
 <h3 id="_리뷰_신고_api_post"><a class="link" href="#_리뷰_신고_api_post">리뷰 신고 API [POST]</a></h3>
 <div class="sect3">
 <h4 id="_리뷰_신고_api_post_http_request"><a class="link" href="#_리뷰_신고_api_post_http_request">Example Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/85/report HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjg2MzcwMzk5LCJleHAiOjE2ODYzNzM5OTl9.uN1ocSZtFN14ebXIy8vHfeblUzlOrUaBL39DDok3oE0
-Accept: application/json
-Content-Length: 57
-Host: localhost:8080
-
-{
-  "reason" : "COPYRIGHT_THEFT",
-  "content" : null
-}</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::v1/review/report</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_api_post_request_headers"><a class="link" href="#_리뷰_신고_api_post_request_headers">Request headers</a></h4>
-<div class="sect4">
-<h5 id="_요청_헤더"><a class="link" href="#_요청_헤더">요청 헤더</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">헤더</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>유저의 Access Token</code></p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-headers not found for operation::v1/review/report</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_api_post_path_parameters"><a class="link" href="#_리뷰_신고_api_post_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/reviews/{reviewId}/report</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 고유 번호</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/review/report</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_api_post_request_fields"><a class="link" href="#_리뷰_신고_api_post_request_fields">Request fields</a></h4>
-<div class="sect4">
-<h5 id="_요청_필드"><a class="link" href="#_요청_필드">요청 필드</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">필수값</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reason</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 이유 (IRRELEVANT_CONTENT("리뷰와 관계없는 내용"),
-INAPPROPRIATE_CONTENT("음란성, 욕설 등 부적절한 내용"),
-IRRELEVANT_IMAGE("리뷰와 관련없는 사진 게시"),
-UNFIT_CONTENT("리뷰 작성 취지에 맞지 않는 내용(복사글 등)"),
-COPYRIGHT_THEFT("저작권 도용 의심(사진 등)"),
-ETC("기타(하단 내용 작성)"))</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 신고 내용</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Snippet request-fields not found for operation::v1/review/report</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_리뷰_신고_api_post_http_response"><a class="link" href="#_리뷰_신고_api_post_http_response">Example Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
-</div>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::v1/review/report</p>
 </div>
 </div>
 </div>
@@ -3482,7 +1013,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-29 01:56:53 +0900
+Last updated 2023-06-17 02:56:46 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
