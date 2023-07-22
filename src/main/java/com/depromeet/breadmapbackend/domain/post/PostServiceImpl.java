@@ -59,15 +59,16 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDetailInfo getPost(final Long postId, final Long userId, final PostTopic postTopic) {
-		return postRepository.findPostBy(postId, userId, postTopic);
+	public List<CommunityCardResponse> findHotPosts(final Long userId) {
+		return postRepository.findHotPosts(userId)
+			.stream()
+			.map(CommunityCardInfo::toResponse)
+			.toList();
 	}
 
 	@Override
-	public List<CommunityCardResponse> findHotPosts(final Long userId) {
-		postRepository.findHotPosts(userId);
-
-		return null;
+	public PostDetailInfo getPost(final Long postId, final Long userId, final PostTopic postTopic) {
+		return postRepository.findPostBy(postId, userId, postTopic);
 	}
 
 	@Override

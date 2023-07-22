@@ -66,34 +66,17 @@ insert into post_image (id, created_at, modified_at, image, is_registered, post_
 (223, '2023-01-01', '2023-01-01', 'iamge 222 2', true, 222)
 ;
 
-insert into post_like(	id,post_id,user_id,created_at)values
-(222, 222, 111, '2023-07-23'),
-(224, 223, 111, '2023-07-23'),
-(223, 222, 112, '2023-07-23');
-
-
 insert into bakery (id, created_at, modified_at, address, latitude, longitude, name, status , image )values
 (111,  '2023-01-01', '2023-01-01', '수원', 37.5596080725671, 127.044235133983,'수원빵집','POSTING', 'image'),
 (112,  '2023-01-02', '2023-01-01', '서울', 37.5596080725632, 127.044235133932,'서울 빵집','POSTING', 'image3'),
 (113,  '2023-01-03', '2023-01-01', '제주도', 37.5596080725679, 127.044235133911,'제주도 빵집', 'POSTING', 'image2')
 ;
 
-
-insert into review (id, created_at, modified_at, content, is_block, is_delete, is_hide, is_new, bakery_id, user_id   )values
-(111,  '2023-07-23', '2023-01-01', '좋아요!', 'N', 'N', 'N','N',111,111),
-(112,  '2023-01-02', '2023-01-01', '맛있어요!', 'N', 'N', 'N','N',111,113),
-(113,  '2023-01-03', '2023-01-01', '으웩!', 'Y', 'N','N','N',112, 112)
-;
-
-insert into review_comment (id, created_at, modified_at, content, is_delete, parent_id, review_id, user_id   )values
-(111,  '2023-07-23', '2023-01-01', '좋아요 좋아요 ', 'N', NULL, 111,112),
-(113,  '2023-01-03', '2023-01-01', '으웩 으웩', 'N',111 , 111, 112)
-;
-
 INSERT INTO follow (id, created_at, modified_at, from_user_id, to_user_id) VALUES
 (1, '2023-05-01 15:39:30', '2023-05-01 15:39:30', 111, 112),
 (2, '2023-05-02 10:13:19', '2023-05-02 10:13:19', 113, 112),
-(3, '2023-05-02 12:16:30', '2023-05-02 12:16:30', 112, 111);
+(3, '2023-05-02 12:16:30', '2023-05-02 12:16:30', 112, 111)
+;
 
 insert into comment( id, user_id, content,is_block, is_hide, is_delete, post_id, parent_id) values
 (111, 111, 'content', false, false, false, 222, 0),
@@ -109,6 +92,6 @@ insert into post_manager_mapper (id,created_at , modified_at ,is_carousal,is_fix
 
 insert into block_user (id,from_user_id,to_user_id) values
 (111, 111, 113)
-    ;
+;
 
 

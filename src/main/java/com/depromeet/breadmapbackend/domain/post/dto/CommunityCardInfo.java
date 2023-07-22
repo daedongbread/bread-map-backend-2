@@ -29,9 +29,7 @@ public record CommunityCardInfo(
 	String address,
 	String bakeryThumbnail
 ) {
-	public CommunityCardResponse toResponse(
-
-	) {
+	public CommunityCardResponse toResponse() {
 
 		final CommunityCardResponse.UserInfo userInfo =
 			new CommunityCardResponse.UserInfo(

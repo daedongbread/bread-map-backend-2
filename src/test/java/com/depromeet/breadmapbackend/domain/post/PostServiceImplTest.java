@@ -1,15 +1,20 @@
 package com.depromeet.breadmapbackend.domain.post;
 
+import static com.depromeet.breadmapbackend.domain.post.PostTestData.*;
 import static org.assertj.core.api.Assertions.*;
 
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
@@ -32,8 +37,20 @@ class PostServiceImplTest extends PostServiceTest {
 	@Autowired
 	private EntityManager em;
 
+	@Autowired
+	private DataSource dataSource;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		try (final Connection connection = dataSource.getConnection()) {
+			ScriptUtils.executeSqlScript(connection, new ClassPathResource("post-test-data.sql"));
+			prepareReviewData(connection);
+			prepareReviewCommentData(connection);
+			preparePostLikeData(connection);
+		}
+	}
+
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 빵이야기_등록() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -60,7 +77,6 @@ class PostServiceImplTest extends PostServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 빵이야기_상세_조회() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -83,7 +99,6 @@ class PostServiceImplTest extends PostServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 커뮤니티_전체_조회() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -110,14 +125,13 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(secondResult.getContents().get(0).writerInfo().userId()).isEqualTo(113L);
 		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(225L);
 		assertThat(secondResult.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
-		assertThat(secondResult.getContents().get(1).postTopic().name()).isEqualTo("BREAD_STORY");
-		assertThat(secondResult.getContents().get(1).bakeryInfo().bakeryId()).isEqualTo(0L);
-		assertThat(secondResult.getContents().get(2).postTopic().name()).isEqualTo("REVIEW");
-		assertThat(secondResult.getContents().get(2).bakeryInfo().bakeryId()).isEqualTo(111L);
+		assertThat(secondResult.getContents().get(1).postTopic().name()).isEqualTo("REVIEW");
+		assertThat(secondResult.getContents().get(1).bakeryInfo().bakeryId()).isEqualTo(112L);
+		assertThat(secondResult.getContents().get(2).postTopic().name()).isEqualTo("BREAD_STORY");
+		assertThat(secondResult.getContents().get(2).bakeryInfo().bakeryId()).isEqualTo(0L);
 	}
 
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 커뮤니티_빵이야기_조회() throws Exception {
 		//given
 		final Long userId = 113L;
@@ -148,7 +162,6 @@ class PostServiceImplTest extends PostServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 커뮤니티_이벤트_조회() throws Exception {
 		//given
 		final Long userId = 113L;
@@ -177,7 +190,6 @@ class PostServiceImplTest extends PostServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 커뮤니티_리뷰_조회() throws Exception {
 		//given
 		final Long userId = 113L;
@@ -203,19 +215,27 @@ class PostServiceImplTest extends PostServiceTest {
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(2);
-		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(112L);
+		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(113L);
 	}
 
 	@Test
-	@Sql("classpath:post-test-data.sql")
 	void 커뮤니티_추천글_조회() throws Exception {
 		//given
 		final Long userId = 111L;
-
+		//block user 113L
+		// post rank 222( like 2, userId 112) 223 (like 1, userId 113)
+		// review rank 111 ( date 1st, comment 1 ) 112, 113,
 		//when
 		final List<CommunityCardResponse> hotPosts = sut.findHotPosts(userId);
-		final CommunityCardResponse communityCardResponse = hotPosts.get(0);
 
 		//then
+		assertThat(hotPosts).hasSize(3);
+		assertThat(hotPosts.get(0).postTopic()).isEqualTo(PostTopic.EVENT);
+		assertThat(hotPosts.get(1).postTopic()).isEqualTo(PostTopic.REVIEW);
+		assertThat(hotPosts.get(1).postId()).isEqualTo(111L);
+
+		assertThat(hotPosts.get(2).postTopic()).isEqualTo(PostTopic.BREAD_STORY);
+		assertThat(hotPosts.get(2).postId()).isEqualTo(222L);
 	}
+
 }
