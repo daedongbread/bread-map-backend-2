@@ -65,9 +65,10 @@ class PostControllerTest extends ControllerTest {
 	void 빵_이야기_상세_조회() throws Exception {
 		// given
 		final var 빵_이야기_고유_번호 = 224;
+		final var 커뮤니티_토픽 = PostTopic.EVENT;
 
 		// when
-		final var 결과 = 빵_이야기_상세_조회_요청(빵_이야기_고유_번호, 사용자_토큰);
+		final var 결과 = 빵_이야기_상세_조회_요청(빵_이야기_고유_번호, 커뮤니티_토픽, 사용자_토큰);
 
 		//then
 		빵_이야기_상세_조회_요청_결과_검증(결과);
@@ -116,6 +117,8 @@ class PostControllerTest extends ControllerTest {
 					fieldWithPath("data.size").description("페이지 크기"),
 					fieldWithPath("data.totalElements").description("전체 데이터 수"),
 					fieldWithPath("data.totalPages").description("전체 페이지 수"),
+					fieldWithPath("data.postOffset").description("리뷰 제외 커뮤니티 조회 offset"),
+					fieldWithPath("data.reviewOffset").description("리뷰 조회 offset"),
 					fieldWithPath("data.contents").description("커뮤니티 카드 리스트"),
 					fieldWithPath("data.contents.[].writerInfo").description("커뮤니티 작성자 정보"),
 					fieldWithPath("data.contents.[].writerInfo.userId").description("커뮤니티 작성자 고유 번호"),
@@ -143,8 +146,9 @@ class PostControllerTest extends ControllerTest {
 			));
 	}
 
-	private ResultActions 빵_이야기_상세_조회_요청(final int 빵_이야기_고유_번호, final String 사용자_토큰) throws Exception {
-		return mockMvc.perform(get("/v1/posts/{postId}", 빵_이야기_고유_번호)
+	private ResultActions 빵_이야기_상세_조회_요청(final int 빵_이야기_고유_번호, final PostTopic postTopic, final String 사용자_토큰) throws
+		Exception {
+		return mockMvc.perform(get("/v1/posts/{postId}/{postTopic}", 빵_이야기_고유_번호, postTopic.getTopic())
 				.header("Authorization", "Bearer " + 사용자_토큰))
 			.andDo(print())
 			.andDo(document("v1/posts/get",
@@ -152,7 +156,8 @@ class PostControllerTest extends ControllerTest {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
 				pathParameters(
-					parameterWithName("postId").description("빵 이야기 고유 번호")),
+					parameterWithName("postId").description("빵 이야기 고유 번호"),
+					parameterWithName("postTopic").description("커뮤니티 토픽")),
 				responseFields(
 					fieldWithPath("data.postId").description("빵 이야기 고유 번호"),
 					fieldWithPath("data.postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW)"),

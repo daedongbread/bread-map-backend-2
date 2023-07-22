@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.post;
 
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -16,7 +15,7 @@ import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardRespo
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
+import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -45,20 +44,18 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PageResponseDto<CommunityCardResponse> getCommunityCards(
+	public PageCommunityResponseDto<CommunityCardResponse> getCommunityCards(
 		final CommunityPage page,
 		final Long userId,
 		final PostTopic postTopic
 	) {
 		final Page<CommunityCardInfo> communityCards = getCommunityCardsBy(page, userId, postTopic);
 
-		return PageResponseDto.of(
+		return PageCommunityResponseDto.of(
 			communityCards,
-			communityCardInfo ->
-				communityCardInfo.toResponse(
-					getMaxPostId(communityCards),
-					getMaxReviewId(communityCards)
-				)
+			CommunityCardInfo::toResponse,
+			getSelectedPostCount(communityCards) + page.postOffset(),
+			getSelectedReviewCount(communityCards) + page.postOffset()
 		);
 	}
 
@@ -96,20 +93,15 @@ public class PostServiceImpl implements PostService {
 
 	}
 
-	private Long getMaxPostId(final Page<CommunityCardInfo> communityCards) {
+	private Long getSelectedPostCount(final Page<CommunityCardInfo> communityCards) {
 		return communityCards.stream()
 			.filter(PostServiceImpl::isPost)
-			.max(Comparator.comparingLong(CommunityCardInfo::postId))
-			.map(CommunityCardInfo::postId)
-			.orElse(0L);
+			.count();
 	}
 
-	private Long getMaxReviewId(final Page<CommunityCardInfo> communityCards) {
+	private Long getSelectedReviewCount(final Page<CommunityCardInfo> communityCards) {
 		return communityCards.stream()
-			.filter(PostServiceImpl::isReview)
-			.max(Comparator.comparingLong(CommunityCardInfo::postId))
-			.map(CommunityCardInfo::postId)
-			.orElse(0L);
+			.filter(PostServiceImpl::isReview).count();
 	}
 
 	private static boolean isReview(final CommunityCardInfo communityCard) {

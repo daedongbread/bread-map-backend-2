@@ -15,7 +15,7 @@ import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.image.PostImage;
-import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
+import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 
 /**
  * PostServiceImplTest
@@ -75,10 +75,10 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(result.isFollowed()).isTrue();
 		assertThat(result.likeCount()).isEqualTo(2);
 		assertThat(result.commentCount()).isEqualTo(3);
-		assertThat(result.post().getTitle()).isEqualTo("test title");
-		assertThat(result.post().getContent()).isEqualTo("test 222 content");
-		assertThat(result.post().getCreatedAt()).isEqualTo(LocalDateTime.of(2023, 1, 1, 0, 0));
-		assertThat(result.post().getImages()).hasSize(2);
+		assertThat(result.title()).isEqualTo("test title");
+		assertThat(result.content()).isEqualTo("test 222 content");
+		assertThat(result.createdDate()).isEqualTo(LocalDateTime.of(2023, 1, 1, 0, 0));
+		assertThat(result.images()).hasSize(2);
 
 	}
 
@@ -89,7 +89,8 @@ class PostServiceImplTest extends PostServiceTest {
 		final Long userId = 111L;
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId, PostTopic.ALL);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
+			PostTopic.ALL);
 		//then
 		assertThat(result.getContents().size()).isEqualTo(4);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
@@ -101,7 +102,8 @@ class PostServiceImplTest extends PostServiceTest {
 		final Long secondUserId = 113L;
 		final CommunityPage pageOne = new CommunityPage(1L, 1L, 1);
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, secondUserId,
+		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne,
+			secondUserId,
 			PostTopic.ALL);
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(5);
@@ -122,7 +124,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
 			PostTopic.BREAD_STORY);
 
 		//then
@@ -137,7 +139,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
+		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
 			PostTopic.BREAD_STORY);
 
 		//then
@@ -153,7 +155,8 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId, PostTopic.EVENT);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
+			PostTopic.EVENT);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(2);
@@ -166,7 +169,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
+		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
 			PostTopic.EVENT);
 
 		//then
@@ -181,7 +184,8 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage page = new CommunityPage(0L, 0L, 0);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId, PostTopic.REVIEW);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
+			PostTopic.REVIEW);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(4);
@@ -194,7 +198,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final CommunityPage pageOne = new CommunityPage(2L, 0L, 1);
 
 		//when
-		final PageResponseDto<CommunityCardResponse> secondResult
+		final PageCommunityResponseDto<CommunityCardResponse> secondResult
 			= sut.getCommunityCards(pageOne, userId, PostTopic.REVIEW);
 
 		//then

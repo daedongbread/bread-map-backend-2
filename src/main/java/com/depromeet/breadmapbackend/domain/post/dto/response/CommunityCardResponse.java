@@ -21,9 +21,7 @@ public record CommunityCardResponse(
 	String thumbnail,
 	PostTopic postTopic,
 	LocalDateTime createdDate,
-	BakeryInfo bakeryInfo,
-	Long lastPostId,
-	Long lastReviewId
+	BakeryInfo bakeryInfo
 ) {
 
 	public record UserInfo(

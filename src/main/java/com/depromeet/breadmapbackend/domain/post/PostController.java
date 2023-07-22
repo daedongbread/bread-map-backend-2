@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +20,7 @@ import com.depromeet.breadmapbackend.domain.post.dto.request.PostRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
-import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
+import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
@@ -45,12 +44,12 @@ public class PostController {
 	}
 
 	// post 상세 조회
-	@GetMapping("/{postId}")
+	@GetMapping("/{postId}/{postTopic}")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PostResponse> getPost(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
-		@PathVariable final Long postId,
-		@RequestParam(value = "postTopic") final String postTopic
+		@PathVariable("postId") final Long postId,
+		@PathVariable("postTopic") final String postTopic
 	) {
 		final PostTopic topic = PostTopic.of(postTopic);
 		return new ApiResponse<>(
@@ -61,7 +60,7 @@ public class PostController {
 	// post 전체 조회
 	@GetMapping("/cards/{postTopic}")
 	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<PageResponseDto<CommunityCardResponse>> getCommunityCards(
+	ApiResponse<PageCommunityResponseDto<CommunityCardResponse>> getCommunityCards(
 		@PathVariable("postTopic") final String postTopic,
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@Valid final CommunityPage page

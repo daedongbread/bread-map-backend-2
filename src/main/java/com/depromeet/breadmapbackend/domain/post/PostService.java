@@ -8,7 +8,7 @@ import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
-import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
+import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 
 public interface PostService {
 
@@ -18,7 +18,7 @@ public interface PostService {
 		final Long userId
 	);
 
-	PageResponseDto<CommunityCardResponse> getCommunityCards(
+	PageCommunityResponseDto<CommunityCardResponse> getCommunityCards(
 		final CommunityPage page,
 		final Long userId,
 		final PostTopic postTopic
