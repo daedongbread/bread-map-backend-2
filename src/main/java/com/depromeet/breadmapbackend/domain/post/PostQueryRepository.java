@@ -196,27 +196,79 @@ public class PostQueryRepository {
 	}
 
 	public List<CommunityCardInfo> findHotPosts(final Long userId) {
-		List<CommunityCardInfo> hotPostsWithFixedEvent = new ArrayList<>();
-		hotPostsWithFixedEvent.add(getFixedEvent(userId));
+		List<CommunityCardInfo> hotPostsWithEvent = new ArrayList<>();
+		hotPostsWithEvent.add(getFixedEvent(userId));
 
-		final List<Tuple> topReviewScores = queryFactory.select(review.id,
-				reviewLike.count().add(reviewComment.count()).as("score"),
-				review.createdAt)
-			.from(review)
-			.leftJoin(reviewLike)
-			.on(review.id.eq(reviewLike.review.id)
-				.and(reviewLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
-			.leftJoin(reviewComment)
-			.on(review.id.eq(reviewComment.review.id)
-				.and(reviewComment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
-			.leftJoin(blockUser).on(blockUser.toUser.id.eq(review.user.id).and(blockUser.fromUser.id.eq(userId)))
-			.where(blockUser.isNull())
-			.groupBy(review)
-			.orderBy(reviewLike.count().add(reviewComment.count()).desc(), review.createdAt.desc())
-			.limit(3)
-			.fetch();
+		final List<HotCommunityRank> communityTopScoresWithIds = getCommunityTopScoresWithId(userId);
 
-		final List<Tuple> topPostScores = queryFactory.select(post.id,
+		List<Long> topReviewIds = new ArrayList<>();
+		List<Long> topPostIds = new ArrayList<>();
+
+		for (int i = 0; i < Math.min(communityTopScoresWithIds.size(), 2); i++) {
+			HotCommunityRank rank = communityTopScoresWithIds.get(i);
+			if (rank.isReview) {
+				topReviewIds.add(rank.id);
+			} else {
+				topPostIds.add(rank.id);
+			}
+		}
+
+		if (!topReviewIds.isEmpty()) {
+			hotPostsWithEvent.addAll(fetchTopReviews(userId, topReviewIds));
+		}
+
+		if (!topPostIds.isEmpty()) {
+			hotPostsWithEvent.addAll(fetchTopPosts(userId, topPostIds));
+		}
+		return hotPostsWithEvent;
+	}
+
+	private List<CommunityCardInfo> fetchTopPosts(final Long userId, final List<Long> topPostIds) {
+		final MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("limit", topPostIds.size())
+			.addValue("postOffset", 0)
+			.addValue("userId", userId);
+		return jdbcTemplate.query(
+			getPostBaseSqlWithWhereClaus(
+				String.format("t1.id in ( %s )",
+					topPostIds.stream().map(String::valueOf).collect(Collectors.joining(",")))
+			),
+			params,
+			COMMUNITY_CARD_INFO_ROW_MAPPER
+		);
+	}
+
+	private List<CommunityCardInfo> fetchTopReviews(final Long userId, final List<Long> topReviewIds) {
+		final MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("limit", topReviewIds.size())
+			.addValue("reviewOffset", 0)
+			.addValue("userId", userId);
+
+		return jdbcTemplate.query(
+			getReviewBaseSql(
+				String.format("and (t1.id in ( %s ))",
+					topReviewIds.stream().map(String::valueOf).collect(Collectors.joining(",")))
+			),
+			params,
+			COMMUNITY_CARD_INFO_ROW_MAPPER
+		);
+	}
+
+	private List<HotCommunityRank> getCommunityTopScoresWithId(final Long userId) {
+		final List<Tuple> topReviewScores = getTopThreeReviewScoresWithId(userId);
+		final List<Tuple> topPostScores = getTopThreePostScoresWIthId(userId);
+
+		final List<HotCommunityRank> combinedCommunityTopScores = getHotCommunityRanks(false, topPostScores);
+		combinedCommunityTopScores.addAll(getHotCommunityRanks(true, topReviewScores));
+
+		return combinedCommunityTopScores.stream()
+			.sorted(Comparator.comparing(HotCommunityRank::score)
+				.thenComparing(HotCommunityRank::createdAt).reversed())
+			.toList();
+	}
+
+	private List<Tuple> getTopThreePostScoresWIthId(final Long userId) {
+		return queryFactory.select(post.id,
 				postLike.count().add(comment.count()).as("score"),
 				post.createdAt)
 			.from(post)
@@ -232,57 +284,25 @@ public class PostQueryRepository {
 			.orderBy(postLike.count().add(comment.count()).desc(), post.createdAt.desc())
 			.limit(3)
 			.fetch();
+	}
 
-		final List<HotCommunityRank> temp = getHotCommunityRanks(false, topPostScores);
-		temp.addAll(getHotCommunityRanks(true, topReviewScores));
-
-		final List<HotCommunityRank> list = temp.stream()
-			.sorted(Comparator.comparing(HotCommunityRank::score)
-				.thenComparing(HotCommunityRank::createdAt).reversed())
-			.toList();
-
-		List<Long> topReviewIdList = new ArrayList<>();
-		List<Long> topPostIdList = new ArrayList<>();
-
-		for (HotCommunityRank hotCommunityRank : list) {
-			if (hotCommunityRank.isReview) {
-				topReviewIdList.add(hotCommunityRank.id);
-			} else {
-				topPostIdList.add(hotCommunityRank.id);
-			}
-		}
-
-		if (!topPostIdList.isEmpty()) {
-			final MapSqlParameterSource params = new MapSqlParameterSource()
-				.addValue("limit", topPostIdList.size())
-				.addValue("postOffset", 0)
-				.addValue("userId", userId);
-
-			hotPostsWithFixedEvent.addAll(jdbcTemplate.query(
-				getPostBaseSqlWithWhereClaus(String.format("t1.id in ( %s )",
-					topPostIdList.stream().map(String::valueOf).collect(Collectors.joining(",")))),
-				params,
-				COMMUNITY_CARD_INFO_ROW_MAPPER
-			))
-			;
-		}
-
-		if (!topReviewIdList.isEmpty()) {
-			final MapSqlParameterSource params = new MapSqlParameterSource()
-				.addValue("limit", topReviewIdList.size())
-				.addValue("reviewOffset", 0)
-				.addValue("userId", userId);
-
-			hotPostsWithFixedEvent.addAll(jdbcTemplate.query(
-				getReviewBaseSql(String.format("and (t1.id in ( %s ))",
-					topReviewIdList.stream().map(String::valueOf).collect(Collectors.joining(",")))),
-				params,
-				COMMUNITY_CARD_INFO_ROW_MAPPER
-			));
-		}
-
-		return hotPostsWithFixedEvent;
-
+	private List<Tuple> getTopThreeReviewScoresWithId(final Long userId) {
+		return queryFactory.select(review.id,
+				reviewLike.count().add(reviewComment.count()).as("score"),
+				review.createdAt)
+			.from(review)
+			.leftJoin(reviewLike)
+			.on(review.id.eq(reviewLike.review.id)
+				.and(reviewLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(reviewComment)
+			.on(review.id.eq(reviewComment.review.id)
+				.and(reviewComment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(blockUser).on(blockUser.toUser.id.eq(review.user.id).and(blockUser.fromUser.id.eq(userId)))
+			.where(blockUser.isNull())
+			.groupBy(review)
+			.orderBy(reviewLike.count().add(reviewComment.count()).desc(), review.createdAt.desc())
+			.limit(3)
+			.fetch();
 	}
 
 	private List<HotCommunityRank> getHotCommunityRanks(final boolean isReview, final List<Tuple> queryResult) {
