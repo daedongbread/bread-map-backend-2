@@ -48,7 +48,7 @@ public class Comment extends BaseEntity {
 
 	@Column(nullable = false)
 	@Convert(converter = BooleanToYNConverter.class)
-	private Boolean isHide = Boolean.FALSE; // 관리자 신규 리뷰 숨김
+	private Boolean isHide = Boolean.FALSE;
 
 	@Column(nullable = false)
 	@Convert(converter = BooleanToYNConverter.class)
@@ -58,7 +58,30 @@ public class Comment extends BaseEntity {
 	@JoinColumn(name = "post_id", insertable = false, updatable = false)
 	private Post post;
 
-	@Column(nullable = false)
-	private long parentId;
+	@Column(name = "post_id", insertable = false, updatable = false)
+	private Long postId;
 
+	@Column(nullable = false)
+	private boolean isFirstDepth;
+
+	@Column(nullable = false)
+	private Long parentId;
+
+	public Comment(
+		final User user,
+		final Long postId,
+		final String content,
+		final boolean isFirstDepth,
+		final Long parentId
+	) {
+		this.user = user;
+		this.content = content;
+		this.postId = postId;
+		this.isFirstDepth = isFirstDepth;
+		this.parentId = parentId;
+	}
+
+	public void update(final String content) {
+		this.content = content;
+	}
 }

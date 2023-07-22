@@ -38,6 +38,7 @@ public enum DaedongStatus {
 	ADMIN_IMAGE_UNDELETE_EXCEPTION(BAD_REQUEST, 40093, "admin image undelete"), // 관리자 관련 이미지가 사용 중이서 삭제할 수 없을 때
 	CALCULATING_BAKERY_RANKING(BAD_REQUEST, 40094, "re-calculating bakery rank"), // 랭킹 계산 중
 	INVALID_POST_TOPIC(BAD_REQUEST, 40095, "invalid post topic"),
+	COMMENT_NOT_FOUND(BAD_REQUEST, 40096, "comment not found"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
