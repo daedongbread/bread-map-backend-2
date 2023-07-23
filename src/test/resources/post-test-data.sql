@@ -45,9 +45,6 @@ TRUNCATE TABLE comment;
 ALTER TABLE comment
     ALTER COLUMN ID RESTART WITH 1;
 
-
-
-
 insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
 (111,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_111', 'nick_name', 'test@apple.com' , 'MALE', 'image'),
 (112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'image'),
@@ -78,10 +75,10 @@ INSERT INTO follow (id, created_at, modified_at, from_user_id, to_user_id) VALUE
 (3, '2023-05-02 12:16:30', '2023-05-02 12:16:30', 112, 111)
 ;
 
-insert into comment( id, user_id, content,is_block, is_hide, is_delete, post_id, parent_id, is_first_depth) values
+insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth) values
 (111, 111, 'content', false, false, false, 222, 0, true),
-(112, 112, 'content 1', false, false, false, 222, 111, true),
-(113, 113, 'content 2', false, false, false, 222, 111, true)
+(112, 112, 'content 1', false, false, false, 222, 111, false ),
+(113, 113, 'content 2', false, false, false, 222, 111, false)
 ;
 
 insert into post_manager_mapper (id,created_at , modified_at ,is_carousal,is_fixed, is_processed,post_id )values
@@ -89,9 +86,6 @@ insert into post_manager_mapper (id,created_at , modified_at ,is_carousal,is_fix
 (112, '2023-01-01','2023-01-01',true, false, true, 225 )
 ;
 
-
 insert into block_user (id,from_user_id,to_user_id) values
 (111, 111, 113)
 ;
-
-

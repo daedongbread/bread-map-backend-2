@@ -10,14 +10,15 @@ import java.time.LocalDate;
  * @since 2023/07/23
  */
 public record CommentQuery(
-	Long id,
+	Long commentId,
 	String content,
 	boolean isFirstDepth,
 	Long parentId,
 	Long userId,
-	Long nickname,
+	String nickname,
 	String profileImage,
 	Long likeCount,
-	LocalDate createdDate
+	LocalDate createdDate,
+	CommentStatus commentStatus
 ) {
 }
