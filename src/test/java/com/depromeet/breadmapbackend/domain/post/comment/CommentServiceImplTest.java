@@ -2,13 +2,17 @@ package com.depromeet.breadmapbackend.domain.post.comment;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
+import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
 
 /**
@@ -64,10 +68,18 @@ class CommentServiceImplTest extends CommentServiceTest {
 	@Sql("classpath:comment-test-data.sql")
 	void 댓글_조회() throws Exception {
 		//given
-		
+		final Long userId = 111L;
+		final Long postId = 222L;
 		//when
-
+		final Page<CommentInfo> result = sut.findComment(postId, userId, 0);
 		//then
+		final List<CommentInfo> comments = result.getContent();
+		assertThat(comments).hasSize(10);
+		assertThat(comments.get(0).content()).isEqualTo(CommentStatus.BLOCKED.getContent());
+		assertThat(comments.get(0).id()).isEqualTo(122L);
+		assertThat(comments.get(1).status()).isEqualTo(CommentStatus.ACTIVE);
+		assertThat(comments.get(5).content()).isEqualTo(CommentStatus.DELETED.getContent());
+
 	}
 
 	@Test

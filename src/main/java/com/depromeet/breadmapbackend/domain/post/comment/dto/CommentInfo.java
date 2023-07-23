@@ -24,20 +24,4 @@ public record CommentInfo(
 	CommentStatus status,
 	boolean isBlocked
 ) {
-	public CommentInfo toDisplayInfo() {
-		return new CommentInfo(
-			id,
-			content,
-			isFirstDepth,
-			parentId,
-			userId,
-			nickname,
-			profileImage,
-			likeCount,
-			createdDate,
-			status,
-			isBlocked
-		);
-	}
-
 }

@@ -34,14 +34,15 @@ insert into comment( id,created_at, user_id, content, post_id, parent_id, is_fir
 (111, '2023-01-01', 111, 'content',  222, 0, true, 'ACTIVE'),
 (112,'2023-01-02', 112, 'content 1', 222, 0, true, 'DELETED'),
 (113, '2023-01-03',113, 'content 2', 222, 111, false, 'ACTIVE'),
-(114, '2023-01-04',111, 'content 2', 222, 111, false, 'ACTIVE'),
+(114, '2023-01-04',113, 'content 2', 222, 111, false, 'ACTIVE'),
 (115, '2023-01-05',112, 'content 2', 222, 112, false, 'ACTIVE'),
 (116, '2023-01-06',113, 'content 2', 222, 0, true, 'BLOCKED'),
 (117, '2023-01-07',111, 'content 2', 222, 116, false, 'ACTIVE'),
 (118, '2023-01-08',111, 'content 2', 222, 112, false, 'ACTIVE'),
 (119, '2023-01-09',112, 'content 2', 222, 111, false, 'ACTIVE'),
-(120, '2023-01-01', 111, 'content',  223, 0, true, 'ACTIVE'),
-(121, '2023-01-01', 111, 'content',  222, 0, true, 'ACTIVE')
+(120, '2023-02-01', 111, 'content',  223, 0, true, 'ACTIVE'),
+(121, '2023-03-01', 111, 'content',  222, 0, true, 'ACTIVE'),
+(122, '2022-01-01', 111, 'content',  222, 0, true, 'BLOCKED')
 ;
 insert into block_user (id,from_user_id,to_user_id) values
 (111, 111, 113)

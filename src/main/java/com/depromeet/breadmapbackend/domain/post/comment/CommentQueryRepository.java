@@ -30,7 +30,7 @@ public class CommentQueryRepository {
 	private static final Integer PAGE_SIZE = 10;
 	private static final RowMapper<CommentQuery> COMMENT_QUERY_ROW_MAPPER = (ResultSet resultSet, int rowNum)
 		-> new CommentQuery(
-		resultSet.getLong("comment_id"),
+		resultSet.getLong("id"),
 		resultSet.getString("content"),
 		resultSet.getBoolean("is_first_depth"),
 		resultSet.getLong("parent_id"),
@@ -38,7 +38,7 @@ public class CommentQueryRepository {
 		resultSet.getString("nick_name"),
 		resultSet.getString("image"),
 		resultSet.getLong("like_count"),
-		resultSet.getObject("createdDate", LocalDate.class),
+		resultSet.getObject("created_at", LocalDate.class),
 		CommentStatus.valueOf(resultSet.getString("status")),
 		resultSet.getBoolean("isBlocked")
 	);
@@ -59,7 +59,7 @@ public class CommentQueryRepository {
 
 	private String getSortedCommentBaseSql() {
 		return """
-			with recursive recursive_comments as (
+			with recursive recursive_comments(id, created_at, user_id, content, post_id, parent_id, status, is_first_depth, depth, sort_key) as (
 				select id
 					 , created_at
 					 , user_id
@@ -92,7 +92,7 @@ public class CommentQueryRepository {
 					comment c
 					join recursive_comments rc on c.parent_id = rc.id
 			)
-			select rc.comment_id 
+			select rc.id 
 			     , rc.content
 			     , rc.is_first_depth
 			     , rc.parent_id
@@ -101,16 +101,16 @@ public class CommentQueryRepository {
 			     , u.image
 			     , (select count(id)
 			     	from comment_like cl
-			     	where cl.comment_id = rc.commentId
-			     	  and cl.status = 'ACTIVE') as like_count
-			     , rc.createdDate
+			     	where cl.comment_id = rc.id
+			     	  and rc.status = 'ACTIVE') as like_count
+			     , rc.created_at
 			     , rc.status
 			     , case when bu.id is null then false 
 			     		else true 
 			     	end as isBlocked 
 			from recursive_comments rc
 			join user u on rc.user_id = u.id
-			left join block_user bu on u.user_id = bu.to_user_id
+			left join block_user bu on u.id = bu.to_user_id
 									and bu.from_user_id = :userId
 						
 			order by
@@ -125,7 +125,7 @@ public class CommentQueryRepository {
 		final String sql = """
 			 select count(*) 
 			    from comment 			
-			    where postId = :postId
+			    where post_id = :postId
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("postId", postId);

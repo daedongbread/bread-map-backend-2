@@ -75,10 +75,10 @@ INSERT INTO follow (id, created_at, modified_at, from_user_id, to_user_id) VALUE
 (3, '2023-05-02 12:16:30', '2023-05-02 12:16:30', 112, 111)
 ;
 
-insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth) values
-(111, 111, 'content', false, false, false, 222, 0, true),
-(112, 112, 'content 1', false, false, false, 222, 111, false ),
-(113, 113, 'content 2', false, false, false, 222, 111, false)
+insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,status) values
+(111, 111, 'content',  222, 0, true, 'ACTIVE'),
+(112, 112, 'content 1', 222, 111, false, 'ACTIVE' ),
+(113, 113, 'content 2',  222, 111, false, 'ACTIVE')
 ;
 
 insert into post_manager_mapper (id,created_at , modified_at ,is_carousal,is_fixed, is_processed,post_id )values

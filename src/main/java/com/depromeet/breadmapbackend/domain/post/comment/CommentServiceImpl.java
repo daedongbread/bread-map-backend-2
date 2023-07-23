@@ -10,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
 	private static final String BLOCKED_USER_NICKNAME = "차단된 유저 입니다.";
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
+	private final CustomAWSS3Properties customAWSS3Properties;
 
 	@Transactional
 	@Override
@@ -51,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 				info.parentId(),
 				info.userId(),
 				info.isBlocked() ? BLOCKED_USER_NICKNAME : info.nickname(),
-				info.isBlocked() ? null : info.nickname(),
+				info.isBlocked() ? getDefaultImage() : info.nickname(),
 				info.likeCount(),
 				info.createdDate(),
 				info.status(),
@@ -59,8 +61,13 @@ public class CommentServiceImpl implements CommentService {
 			));
 	}
 
+	private String getDefaultImage() {
+		return customAWSS3Properties.getCloudFront() + "/" +
+			customAWSS3Properties.getDefaultImage().getUser() + ".png";
+	}
+
 	private String getContent(final boolean blocked, final CommentStatus status, final String content) {
-		return blocked ? BLOCKED_USER_COMMENT : status.getContent(content);
+		return blocked ? BLOCKED_USER_COMMENT : status.replaceContent(content);
 	}
 
 	@Override

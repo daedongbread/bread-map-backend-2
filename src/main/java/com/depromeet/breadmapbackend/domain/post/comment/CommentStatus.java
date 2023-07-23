@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
  * @since 2023/07/23
  */
 @RequiredArgsConstructor
+@Getter
 public enum CommentStatus {
 
 	ACTIVE(null),
@@ -23,7 +25,7 @@ public enum CommentStatus {
 
 	private final String content;
 
-	public String getContent(final String content) {
+	public String replaceContent(final String content) {
 		return this.content == null ? content : this.content;
 	}
 
