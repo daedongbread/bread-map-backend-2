@@ -114,11 +114,14 @@ public class PostServiceImpl implements PostService {
 		return !isReview(communityCard);
 	}
 
-	private Page<CommunityCardInfo> getCommunityCardsBy(final CommunityPage page, final Long userId,
-		final PostTopic postTopic) {
+	private Page<CommunityCardInfo> getCommunityCardsBy(
+		final CommunityPage page,
+		final Long userId,
+		final PostTopic postTopic
+	) {
 		return switch (postTopic) {
 			case ALL -> postRepository.findAllCommunityCards(page, userId);
-			case BREAD_STORY -> postRepository.findBreadStoryCards(page, userId);
+			case BREAD_STORY, FREE_TALK -> postRepository.findBreadStoryCards(page, userId, postTopic);
 			case REVIEW -> postRepository.findReviewCards(page, userId);
 			case EVENT -> postRepository.findEventCards(page, userId);
 		};

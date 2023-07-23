@@ -64,7 +64,7 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.[].likeCount").description("커뮤니티 좋아요 개수"),
 					fieldWithPath("data.[].commentCount").description("커뮤니티 댓글 개수"),
 					fieldWithPath("data.[].thumbnail").optional().description("커뮤니티 글 썸네일"),
-					fieldWithPath("data.[].postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW)"),
+					fieldWithPath("data.[].postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
 					fieldWithPath("data.[].createdDate").description("커뮤니티 작성 일자"),
 					fieldWithPath("data.[].bakeryInfo").optional().description("postTopic이 REVIEW일 경우 빵집 정보"),
 					fieldWithPath("data.[].bakeryInfo.bakeryId").optional()
@@ -92,7 +92,7 @@ public class PostControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
 				pathParameters(
-					parameterWithName("all").description("커뮤니티 토픽 종류 (all, review, bread-story, event")),
+					parameterWithName("all").description("커뮤니티 토픽 종류 (all, review, bread-story, event, free-talk)")),
 				requestParameters(
 					parameterWithName("reviewOffset").description("마지막 조회 리뷰 고유 번호"),
 					parameterWithName("postOffset").description("리뷰 제외 모든 커뮤니티글의 마지 고유 번호"),
@@ -116,7 +116,8 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.contents.[].likeCount").description("커뮤니티 좋아요 개수"),
 					fieldWithPath("data.contents.[].commentCount").description("커뮤니티 댓글 개수"),
 					fieldWithPath("data.contents.[].thumbnail").optional().description("커뮤니티 글 썸네일"),
-					fieldWithPath("data.contents.[].postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW)"),
+					fieldWithPath("data.contents.[].postTopic").description(
+						"커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
 					fieldWithPath("data.contents.[].createdDate").description("커뮤니티 작성 일자"),
 					fieldWithPath("data.contents.[].bakeryInfo").optional().description("postTopic이 REVIEW일 경우 빵집 정보"),
 					fieldWithPath("data.contents.[].bakeryInfo.bakeryId").optional()
@@ -144,10 +145,11 @@ public class PostControllerTestSteps {
 				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
 				pathParameters(
 					parameterWithName("postId").description("빵 이야기 고유 번호"),
-					parameterWithName("postTopic").description("커뮤니티 토픽")),
+					parameterWithName("postTopic").description(
+						"커뮤니티 토픽 종류 (all, review, bread-story, event, free-talk)")),
 				responseFields(
 					fieldWithPath("data.postId").description("빵 이야기 고유 번호"),
-					fieldWithPath("data.postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW)"),
+					fieldWithPath("data.postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
 					fieldWithPath("data.title").description("빵 이야기 제목"),
 					fieldWithPath("data.writerInfo").description("빵 이야기 작성자 정보"),
 					fieldWithPath("data.writerInfo.userId").description("빵 이야기 작성자 고유 번호"),

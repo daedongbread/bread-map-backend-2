@@ -128,16 +128,21 @@ public class PostQueryRepository {
 		);
 	}
 
-	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage, final Long userId) {
+	public Page<CommunityCardInfo> findBreadStoryCards(
+		final CommunityPage communityPage,
+		final Long userId,
+		final PostTopic postTopic
+	) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
 			.addValue("limit", PAGE_SIZE)
 			.addValue("postOffset", communityPage.postOffset())
 			.addValue("userId", userId);
 
+		final String whereClaus = String.format("(t4.is_fixed is true or t1.post_topic = '%s')", postTopic.name());
 		final List<CommunityCardInfo> cards =
 			jdbcTemplate.query(
-				getPostBaseSqlWithWhereClaus("(t4.is_fixed is true or t1.post_topic ='BREAD_STORY')"),
+				getPostBaseSqlWithWhereClaus(whereClaus),
 				params,
 				COMMUNITY_CARD_INFO_ROW_MAPPER
 			);

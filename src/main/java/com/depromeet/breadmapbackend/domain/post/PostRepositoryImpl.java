@@ -37,8 +37,12 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage, final Long userId) {
-		return postQueryRepository.findBreadStoryCards(communityPage, userId);
+	public Page<CommunityCardInfo> findBreadStoryCards(
+		final CommunityPage communityPage,
+		final Long userId,
+		final PostTopic postTopic
+	) {
+		return postQueryRepository.findBreadStoryCards(communityPage, userId, postTopic);
 	}
 
 	@Override
@@ -50,7 +54,7 @@ public class PostRepositoryImpl implements PostRepository {
 	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId) {
 		return postQueryRepository.findReviewCards(communityPage, userId);
 	}
-
+	
 	@Override
 	public PostDetailInfo findPostBy(
 		final Long postId,
@@ -71,4 +75,5 @@ public class PostRepositoryImpl implements PostRepository {
 	public List<CommunityCardInfo> findHotPosts(final Long userId) {
 		return postQueryRepository.findHotPosts(userId);
 	}
+
 }
