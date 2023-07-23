@@ -44,7 +44,7 @@ class PostControllerTest extends ControllerTest {
 	@Test
 	void 빵_이야기_등록() throws Exception {
 		// given
-		final var 빵_이야기_작성_데이터 = new PostRequest("제목", "내용", List.of("image1", "image2"));
+		final var 빵_이야기_작성_데이터 = new PostRequest("제목", "내용", List.of("image1", "image2"), PostTopic.BREAD_STORY);
 
 		// when
 		final var 결과 = 빵_이야기_작성_요청(빵_이야기_작성_데이터, 사용자_토큰, mockMvc, objectMapper);

@@ -21,7 +21,8 @@ public class Mapper {
 		return new PostRegisterCommand(
 			request.title(),
 			request.content(),
-			request.images()
+			request.images(),
+			request.postTopic()
 		);
 	}
 

@@ -58,7 +58,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final String content = "content test";
 		final PostTopic topic = PostTopic.BREAD_STORY;
 		final List<String> images = List.of("image1", "image2");
-		final PostRegisterCommand command = new PostRegisterCommand(title, content, images);
+		final PostRegisterCommand command = new PostRegisterCommand(title, content, images, topic);
 
 		//when
 		sut.register(command, userId);
