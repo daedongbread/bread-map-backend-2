@@ -25,24 +25,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-	private static final String DELETED_COMMENT_CONTENT = "삭제된 댓글입니다.";
+	private static final String BLOCKED_USER_COMMENT = "차단된 유저의 댓글 입니다.";
+	private static final String BLOCKED_USER_NICKNAME = "차단된 유저 입니다.";
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 
 	@Transactional
 	@Override
-	public void register(final Command command, final Long userId) {
+	public Comment register(final Command command, final Long userId) {
 
 		final Comment comment = command.toEntity(
 			userRepository.findById(userId)
 				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
 		);
-		commentRepository.save(comment);
+		return commentRepository.save(comment);
 	}
 
 	@Override
 	public Page<CommentInfo> findComment(final Long postId, final Long userId, final int page) {
-		return commentRepository.findComment(postId, userId, page);
+		return commentRepository.findComment(postId, userId, page)
+			.map(info -> new CommentInfo(
+				info.id(),
+				getContent(info.isBlocked(), info.status(), info.content()),
+				info.isFirstDepth(),
+				info.parentId(),
+				info.userId(),
+				info.isBlocked() ? BLOCKED_USER_NICKNAME : info.nickname(),
+				info.isBlocked() ? null : info.nickname(),
+				info.likeCount(),
+				info.createdDate(),
+				info.status(),
+				info.isBlocked()
+			));
+	}
+
+	private String getContent(final boolean blocked, final CommentStatus status, final String content) {
+		return blocked ? BLOCKED_USER_COMMENT : status.getContent(content);
 	}
 
 	@Override
@@ -57,6 +75,6 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteComment(final Long commentId, final Long userId) {
 		commentRepository.findByIdAndUserId(commentId, userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND))
-			.update(DELETED_COMMENT_CONTENT);
+			.delete();
 	}
 }

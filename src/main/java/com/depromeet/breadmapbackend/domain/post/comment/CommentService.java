@@ -14,7 +14,7 @@ import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
  * @since 2023/07/21
  */
 public interface CommentService {
-	void register(Command command, Long userId);
+	Comment register(Command command, Long userId);
 
 	Page<CommentInfo> findComment(
 		Long postId,

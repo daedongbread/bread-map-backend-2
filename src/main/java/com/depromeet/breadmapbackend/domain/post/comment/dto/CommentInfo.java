@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.post.comment.dto;
 
 import java.time.LocalDate;
 
+import com.depromeet.breadmapbackend.domain.post.comment.CommentStatus;
+
 /**
  * CommentInfo
  *
@@ -18,6 +20,24 @@ public record CommentInfo(
 	String nickname,
 	String profileImage,
 	Long likeCount,
-	LocalDate createdDate
+	LocalDate createdDate,
+	CommentStatus status,
+	boolean isBlocked
 ) {
+	public CommentInfo toDisplayInfo() {
+		return new CommentInfo(
+			id,
+			content,
+			isFirstDepth,
+			parentId,
+			userId,
+			nickname,
+			profileImage,
+			likeCount,
+			createdDate,
+			status,
+			isBlocked
+		);
+	}
+
 }

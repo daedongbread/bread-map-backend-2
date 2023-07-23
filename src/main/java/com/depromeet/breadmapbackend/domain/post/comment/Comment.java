@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
+	public static final String BLOCKED_USER_COMMENT = "차단된 사용자입니다.";
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;

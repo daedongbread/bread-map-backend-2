@@ -21,7 +21,8 @@ public record CommentQuery(
 	String profileImage,
 	Long likeCount,
 	LocalDate createdDate,
-	CommentStatus commentStatus
+	CommentStatus commentStatus,
+	boolean isBlocked
 ) {
 
 	public CommentInfo toInfo() {
@@ -34,7 +35,9 @@ public record CommentQuery(
 			nickname,
 			profileImage,
 			likeCount,
-			createdDate
+			createdDate,
+			commentStatus,
+			isBlocked
 		);
 	}
 }

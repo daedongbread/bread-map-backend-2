@@ -5,6 +5,8 @@ import java.util.Arrays;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * CommentStatus
  *
@@ -12,11 +14,18 @@ import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
  * @version 1.0.0
  * @since 2023/07/23
  */
+@RequiredArgsConstructor
 public enum CommentStatus {
 
-	ACTIVE,
-	DELETED,
-	BLOCKED;
+	ACTIVE(null),
+	DELETED("삭제된 댓글입니다."),
+	BLOCKED("차단된 댓글입니다.");
+
+	private final String content;
+
+	public String getContent(final String content) {
+		return this.content == null ? content : this.content;
+	}
 
 	public static CommentStatus of(final String status) {
 		return Arrays.stream(CommentStatus.values())

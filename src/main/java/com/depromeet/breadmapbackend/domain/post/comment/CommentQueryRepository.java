@@ -39,7 +39,8 @@ public class CommentQueryRepository {
 		resultSet.getString("image"),
 		resultSet.getLong("like_count"),
 		resultSet.getObject("createdDate", LocalDate.class),
-		CommentStatus.valueOf(resultSet.getString("status"))
+		CommentStatus.valueOf(resultSet.getString("status")),
+		resultSet.getBoolean("isBlocked")
 	);
 
 	public Page<CommentQuery> findComment(final Long postId, final Long userId, final int page) {
@@ -104,6 +105,9 @@ public class CommentQueryRepository {
 			     	  and cl.status = 'ACTIVE') as like_count
 			     , rc.createdDate
 			     , rc.status
+			     , case when bu.id is null then false 
+			     		else true 
+			     	end as isBlocked 
 			from recursive_comments rc
 			join user u on rc.user_id = u.id
 			left join block_user bu on u.user_id = bu.to_user_id
