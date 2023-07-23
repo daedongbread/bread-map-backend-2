@@ -16,7 +16,11 @@ import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
 public interface CommentService {
 	void register(Command command, Long userId);
 
-	Page<CommentInfo> findComment(int page, Long userId);
+	Page<CommentInfo> findComment(
+		Long postId,
+		Long userId,
+		int page
+	);
 
 	void updateComment(UpdateCommand command, Long userId);
 

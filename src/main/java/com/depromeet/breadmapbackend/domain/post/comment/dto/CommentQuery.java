@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.post.comment.dto;
 
 import java.time.LocalDate;
 
+import com.depromeet.breadmapbackend.domain.post.comment.CommentStatus;
+
 /**
  * CommentQuery
  *
@@ -21,4 +23,18 @@ public record CommentQuery(
 	LocalDate createdDate,
 	CommentStatus commentStatus
 ) {
+
+	public CommentInfo toInfo() {
+		return new CommentInfo(
+			commentId,
+			content,
+			isFirstDepth,
+			parentId,
+			userId,
+			nickname,
+			profileImage,
+			likeCount,
+			createdDate
+		);
+	}
 }

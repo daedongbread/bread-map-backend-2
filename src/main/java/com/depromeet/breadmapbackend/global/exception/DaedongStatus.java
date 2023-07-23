@@ -39,6 +39,7 @@ public enum DaedongStatus {
 	CALCULATING_BAKERY_RANKING(BAD_REQUEST, 40094, "re-calculating bakery rank"), // 랭킹 계산 중
 	INVALID_POST_TOPIC(BAD_REQUEST, 40095, "invalid post topic"),
 	COMMENT_NOT_FOUND(BAD_REQUEST, 40096, "comment not found"),
+	INVALID_COMMENT_STATUS(BAD_REQUEST, 40097, "comment status not valid"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외

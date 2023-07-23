@@ -41,8 +41,8 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Page<CommentInfo> findComment(final int page, final Long userId) {
-		return commentRepository.findComment(userId, page);
+	public Page<CommentInfo> findComment(final Long postId, final Long userId, final int page) {
+		return commentRepository.findComment(postId, userId, page);
 	}
 
 	@Override

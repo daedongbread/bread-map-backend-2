@@ -16,7 +16,11 @@ import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 public interface CommentRepository {
 	Comment save(Comment comment);
 
-	Page<CommentInfo> findComment(Long userId, int page);
+	Page<CommentInfo> findComment(
+		Long postId,
+		Long userId,
+		int page
+	);
 
 	Optional<Comment> findByIdAndUserId(Long commentId, Long userId);
 

@@ -49,13 +49,14 @@ public class CommentController {
 	}
 
 	// 댓글 조회
-	@GetMapping("/{page}")
+	@GetMapping("/{postId}/{page}")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PageResponseDto<CommentResponse>> findComment(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
-		@PathVariable("page") final int page
+		@PathVariable("page") final int page,
+		@PathVariable("postId") final Long postId
 	) {
-		return new ApiResponse<>(Mapper.of(commentService.findComment(page, currentUserInfo.getId())));
+		return new ApiResponse<>(Mapper.of(commentService.findComment(postId, currentUserInfo.getId(), page)));
 	}
 
 	//댓글 수정

@@ -15,7 +15,7 @@ public record CommentInfo(
 	boolean isFirstDepth,
 	Long parentId,
 	Long userId,
-	Long nickname,
+	String nickname,
 	String profileImage,
 	Long likeCount,
 	LocalDate createdDate

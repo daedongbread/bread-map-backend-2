@@ -5,6 +5,8 @@ import static javax.persistence.GenerationType.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -53,6 +55,10 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false)
 	private Long parentId;
 
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private CommentStatus status = CommentStatus.ACTIVE;
+
 	public Comment(
 		final User user,
 		final Long postId,
@@ -69,5 +75,17 @@ public class Comment extends BaseEntity {
 
 	public void update(final String content) {
 		this.content = content;
+	}
+
+	public void delete() {
+		this.status = CommentStatus.DELETED;
+	}
+
+	public void restore() {
+		this.status = CommentStatus.ACTIVE;
+	}
+
+	public void block() {
+		this.status = CommentStatus.BLOCKED;
 	}
 }

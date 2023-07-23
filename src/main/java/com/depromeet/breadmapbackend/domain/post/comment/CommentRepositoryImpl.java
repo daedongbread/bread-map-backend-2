@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
+import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentQuery;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,8 +30,13 @@ public class CommentRepositoryImpl implements CommentRepository {
 	}
 
 	@Override
-	public Page<CommentInfo> findComment(final Long userId, final int page) {
-		return null;//commentQueryRepository.findComment(userId, page);
+	public Page<CommentInfo> findComment(
+		final Long postId,
+		final Long userId,
+		final int page
+	) {
+		return commentQueryRepository.findComment(postId, userId, page)
+			.map(CommentQuery::toInfo);
 	}
 
 	@Override
