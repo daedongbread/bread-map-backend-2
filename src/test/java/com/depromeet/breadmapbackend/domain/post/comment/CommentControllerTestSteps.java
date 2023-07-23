@@ -56,6 +56,9 @@ public class CommentControllerTestSteps {
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				pathParameters(
+					parameterWithName("postId").description("댓글 조회할 커뮤니티글 id"),
+					parameterWithName("page").description("페이지 번호")),
 				responseFields(
 					fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
 					fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),
