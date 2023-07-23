@@ -88,11 +88,12 @@ public class Bakery extends BaseEntity {
 
 	@Builder
 	public Bakery(
-		String name, Double latitude, Double longitude,
+		Long id, String name, Double latitude, Double longitude,
 		String address, String detailedAddress, String hours, String phoneNumber,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
 	) {
+		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;

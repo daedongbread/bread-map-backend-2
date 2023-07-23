@@ -46,10 +46,19 @@ public class CurationBakeries {
 
 		validateDuplicateBakery(bakeries);
 		validatedMaximumSizeBakeries(bakeries);
+		validatedBakeryStatus(bakeries);
 
 		bakeries.stream()
 			.map(bakery -> new CurationBakery(curation, bakery, request.findCuration(bakery.getId())))
 			.forEach(this.bakeries::add);
+	}
+
+	private void validatedBakeryStatus(List<Bakery> bakeries) {
+		for (Bakery bakery : bakeries) {
+			if (!bakery.isPosting()) {
+				throw new DaedongException(DaedongStatus.BAKERY_NOT_POSTING);
+			}
+		}
 	}
 
 	private void validateDuplicateBakery(List<Bakery> bakeries) {

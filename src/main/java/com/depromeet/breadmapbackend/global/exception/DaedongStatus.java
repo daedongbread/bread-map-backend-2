@@ -38,6 +38,7 @@ public enum DaedongStatus {
 	ADMIN_IMAGE_UNDELETE_EXCEPTION(BAD_REQUEST, 40093, "admin image undelete"), // 관리자 관련 이미지가 사용 중이서 삭제할 수 없을 때
 	CURATION_BAKERY_SIZE_EXCEPTION(BAD_REQUEST, 40094, "curation size exceed"),
 	CURATION_UNEDIT_EXCEPTION(BAD_REQUEST, 40095, "curation cannot remove or update"),
+	BAKERY_NOT_POSTING(BAD_REQUEST, 40096, "bakery status is not posting"),
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
 	TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"), // access or refresh token이 유효하지 않을 때

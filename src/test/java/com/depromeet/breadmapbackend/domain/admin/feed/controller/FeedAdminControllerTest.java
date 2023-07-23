@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.admin.feed;
+package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
@@ -35,7 +36,7 @@ import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedR
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.LandingFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseDto;
-import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForUser;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForAdmin;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
@@ -48,8 +49,7 @@ import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 
-public class FeedControllerTest extends ControllerTest {
-
+public class FeedAdminControllerTest extends ControllerTest {
 	private FeedRequestDto curationRequest;
 	private FeedRequestDto landingRequest;
 	private Category category;
@@ -133,7 +133,7 @@ public class FeedControllerTest extends ControllerTest {
 			.thumbnailUrl(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
 			.activated(FeedStatus.POSTING)
 			.feedType(FeedType.CURATION)
-			.activeTime(LocalDateTime.of(2023, 1, 1, 0, 0, 0))
+			.activeTime(LocalDateTime.of(9999, 1, 1, 0, 0, 0))
 			.build();
 
 		CommonFeedRequestDto commonLanding = CommonFeedRequestDto.builder()
@@ -144,7 +144,7 @@ public class FeedControllerTest extends ControllerTest {
 			.thumbnailUrl(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
 			.activated(FeedStatus.POSTING)
 			.feedType(FeedType.LANDING)
-			.activeTime(LocalDateTime.of(2023, 1, 1, 0, 0, 1))
+			.activeTime(LocalDateTime.of(9999, 1, 1, 0, 0, 0))
 			.build();
 
 		List<CurationFeedRequestDto> curationDto = List.of(
@@ -196,51 +196,280 @@ public class FeedControllerTest extends ControllerTest {
 	}
 
 	@Test
-	@DisplayName("홈 화면의 모든 피드를 조회한다 - 유저")
-	void 홈_화면의_모든_피드_조회() throws Exception {
+	@DisplayName("피드를 등록한다 - 랜딩 피드")
+	void 랜딩피드_등록_테스트() throws Exception {
+
+		//given
+		String content = objectMapper.writeValueAsString(landingRequest);
+
+		//when
+		ResultActions perform = mockMvc.perform(post("/v1/admin/feed")
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.content(content));
+
+		perform.andExpect(status().isCreated());
+
+		//then
+		perform.andDo(print()).andDo(document("create-landing-feed-admin",
+			preprocessRequest(prettyPrint()),
+			preprocessResponse(prettyPrint()),
+			requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+			requestFields(
+				fieldWithPath("common.subTitle").description("피드 소제목"),
+				fieldWithPath("common.introduction").description("피드 시작하는 말"),
+				fieldWithPath("common.conclusion").description("피드 끝맺음 말"),
+				fieldWithPath("common.thumbnailUrl").description("피드 배너 이미지 url"),
+				fieldWithPath("common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
+				fieldWithPath("common.feedType").description("피드 타입(LANDING, CURATION)"),
+				fieldWithPath("common.categoryId").description("카테고리 아이디"),
+				fieldWithPath("common.activeTime").description("피드 게시 시작 날짜"),
+				fieldWithPath("curation").description("null 보내주세요"),
+				fieldWithPath("landing.redirectUrl").description("랜딩 RedirectUrl")),
+			responseHeaders(
+				headerWithName(HttpHeaders.LOCATION).description("어드민 - 피드 상세 보기 주소")
+			))
+		);
+	}
+
+	@Test
+	@DisplayName("피드를 등록한다 - 큐레이션 피드")
+	void 큐레이션피드_등록_테스트() throws Exception {
+
+		//given
+		String content = objectMapper.writeValueAsString(curationRequest);
+
+		//when
+		ResultActions perform = mockMvc.perform(post("/v1/admin/feed")
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.content(content));
+
+		perform.andExpect(status().isCreated());
+
+		//then
+		perform.andDo(print()).andDo(document("create-curation-feed-admin",
+			preprocessRequest(prettyPrint()),
+			preprocessResponse(prettyPrint()),
+			requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+			requestFields(
+				fieldWithPath("common.subTitle").description("피드 소제목"),
+				fieldWithPath("common.introduction").description("피드 시작하는 말"),
+				fieldWithPath("common.conclusion").description("피드 끝맺음 말"),
+				fieldWithPath("common.thumbnailUrl").description("피드 배너 이미지 url"),
+				fieldWithPath("common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
+				fieldWithPath("common.feedType").description("피드 타입(LANDING, CURATION)"),
+				fieldWithPath("common.categoryId").description("카테고리 아이디"),
+				fieldWithPath("common.activeTime").description("피드 게시 시작 날짜"),
+				fieldWithPath("curation.[].bakeryId").description("추천 빵집 ID"),
+				fieldWithPath("curation.[].productId").description("추천 빵집 메뉴 ID"),
+				fieldWithPath("curation.[].reason").description("추천 이유"),
+				fieldWithPath("landing").description("null 보내주세요")),
+			responseHeaders(
+				headerWithName(HttpHeaders.LOCATION).description("어드민 - 피드 상세 보기 주소")
+			))
+		);
+	}
+
+	@Test
+	@DisplayName("피드를 수정한다 - 랜딩 피드")
+	void 랜딩피드_수정_테스트() throws Exception {
+
+		//given
+
+		CommonFeedRequestDto updateCommon = CommonFeedRequestDto.builder()
+			.subTitle("업데이트된 큐레이션 테스트 피드")
+			.introduction("업데이트된 큐레이션 테스트 피드 서론")
+			.conclusion("업데이트된 큐레이션 테스트 피드 결론")
+			.categoryId(category.getId())
+			.thumbnailUrl(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
+			.activated(FeedStatus.INACTIVATED)
+			.feedType(FeedType.LANDING)
+			.activeTime(LocalDateTime.of(2023, 7, 1, 0, 0, 0))
+			.build();
+
+		LandingFeedRequestDto updateLandingDto = new LandingFeedRequestDto("/updateRedirectUrl");
+
+		FeedRequestDto updateRequest = new FeedRequestDto(updateCommon, updateLandingDto);
+
+		String content = objectMapper.writeValueAsString(updateRequest);
+
+		//when
+		ResultActions perform = mockMvc.perform(patch("/v1/admin/feed/{feedId}", landing.getId())
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.content(content));
+
+		perform.andExpect(status().isNoContent());
+
+		//then
+		perform.andDo(print()).andDo(document("update-landing-feed-admin",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+				pathParameters(
+					parameterWithName("feedId").description("피드 아이디")
+				),
+				requestFields(
+					fieldWithPath("common.subTitle").description("업데이트된 피드 소제목"),
+					fieldWithPath("common.introduction").description("업데이트된 피드 시작하는 말"),
+					fieldWithPath("common.conclusion").description("업데이트된 피드 끝맺음 말"),
+					fieldWithPath("common.thumbnailUrl").description("업데이트된 피드 배너 이미지 url"),
+					fieldWithPath("common.activated").description("업데이트된 피드 활성화 여부(POSTING, INACTIVATED)"),
+					fieldWithPath("common.feedType").description("업데이트된 피드 타입(LANDING, CURATION)"),
+					fieldWithPath("common.categoryId").description("카테고리 아이디"),
+					fieldWithPath("common.activeTime").description("업데이트된  피드 게시 시작 날짜"),
+					fieldWithPath("curation").description("null 보내주세요"),
+					fieldWithPath("landing.redirectUrl").description("업데이트된 redirectURl"))
+			)
+		);
+	}
+
+	@Test
+	@DisplayName("피드를 수정한다 - 큐레이션 피드")
+	void 큐레이션피드_수정_테스트() throws Exception {
+
+		//given
+
+		CommonFeedRequestDto updateCommon = CommonFeedRequestDto.builder()
+			.subTitle("업데이트된 큐레이션 테스트 피드")
+			.introduction("업데이트된 큐레이션 테스트 피드 서론")
+			.conclusion("업데이트된 큐레이션 테스트 피드 결론")
+			.categoryId(category.getId())
+			.thumbnailUrl(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
+			.activated(FeedStatus.POSTING)
+			.feedType(FeedType.CURATION)
+			.activeTime(LocalDateTime.of(2023, 7, 1, 0, 0, 0))
+			.build();
+
+		Bakery updateBakery = Bakery.builder()
+			.address("address")
+			.latitude(37.5596080751252)
+			.longitude(127.044235146211)
+			.facilityInfoList(Collections.singletonList(FacilityInfo.PARKING))
+			.name("update bakery")
+			.status(BakeryStatus.POSTING)
+			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.build();
+
+		Bakery updatebakery = bakeryRepository.save(updateBakery);
+
+		Product updateBakeryBread = Product.builder()
+			.bakery(updateBakery)
+			.productType(ProductType.BREAD)
+			.name("update bakery bread")
+			.price("20000")
+			.image(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
+			.build();
+
+		Product updateProduct = productRepository.save(updateBakeryBread);
+
+		CurationFeedRequestDto updateCurationDto = CurationFeedRequestDto.builder()
+			.bakeryId(updatebakery.getId())
+			.productId(updateProduct.getId())
+			.reason("update Reason")
+			.build();
+
+		FeedRequestDto updateRequest = new FeedRequestDto(updateCommon, List.of(updateCurationDto));
+
+		String content = objectMapper.writeValueAsString(updateRequest);
+
+		//when
+		ResultActions perform = mockMvc.perform(patch("/v1/admin/feed/{feedId}", 2L)
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.content(content));
+
+		perform.andExpect(status().isNoContent());
+
+		//then
+		perform.andDo(print()).andDo(document("update-curation-feed-admin",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+				pathParameters(
+					parameterWithName("feedId").description("피드 아이디")
+				),
+				requestFields(
+					fieldWithPath("common.subTitle").description("업데이트된 피드 소제목"),
+					fieldWithPath("common.introduction").description("업데이트된 피드시작하는 말"),
+					fieldWithPath("common.conclusion").description("업데이트된 피드 끝맺음 말"),
+					fieldWithPath("common.thumbnailUrl").description("업데이트된 피드 배너 이미지 url"),
+					fieldWithPath("common.activated").description("업데이트된 피드 활성화 여부(POSTING, INACTIVATED)"),
+					fieldWithPath("common.feedType").description("업데이트된 피드 타입(LANDING, CURATION)"),
+					fieldWithPath("common.categoryId").description("카테고리 아이디"),
+					fieldWithPath("common.activeTime").description("업데이트된 피드 게시 시작 날짜"),
+					fieldWithPath("curation.[].bakeryId").description("업데이트된 피드 추천 빵집 ID"),
+					fieldWithPath("curation.[].productId").description("업데이트된 피드 추천 빵집 메뉴 ID"),
+					fieldWithPath("curation.[].reason").description("업데이트된 피드 추천 빵집 추천 이유"),
+					fieldWithPath("landing").description("null 보내주세요"))
+			)
+		);
+	}
+
+	@Test
+	@DisplayName("전체 피드를 조회한다 - 관리자용")
+	void 피드_전체_조회_테스트_관리자() throws Exception {
 
 		//given
 		List<Feed> feedList = List.of(landing, curation);
 
-		List<FeedResponseForUser> content = FeedAssembler.toDtoForUser(feedList);
+		List<FeedResponseForAdmin> content = FeedAssembler.toDtoForAdmin(feedList);
 
 		String response = objectMapper.writeValueAsString(content);
 
 		//when
-		ResultActions perform = mockMvc.perform(get("/v1/feed/all")
+		ResultActions perform = mockMvc.perform(get("/v1/admin/feed/all")
 			.header("Authorization", "Bearer " + token.getAccessToken())
 			.accept(MediaType.APPLICATION_JSON_VALUE)
-			.contentType(MediaType.APPLICATION_JSON_VALUE));
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.queryParam("activeAt", "2023-06-01T00:00")
+			.queryParam("activated", "POSTING")
+			.queryParam("page", "0")
+			.queryParam("size", "20"));
 
 		perform.andExpect(status().isOk())
 			.andExpect(content().string(response));
 
 		//then
 		perform.andDo(print()).
-			andDo(document("findall-feed-user",
+			andDo(document("findall-feed-admin",
 					preprocessRequest(prettyPrint()),
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+					requestParameters(
+						parameterWithName("activeAt").optional()
+							.description("게시 일자(pattern = yyyy-MM-dd HH:mm:ss)"),
+						parameterWithName("createBy").optional().description("작성자 이메일"),
+						parameterWithName("activated").optional().description("게시 여부(POSTING, INACTIVATED)"),
+						parameterWithName("categoryName").optional().description("카테고리 이름"),
+						parameterWithName("page").optional().description("페이지(0부터시작)"),
+						parameterWithName("size").optional().description("한 페이지에 출력할 개수(default 20)")),
 					responseFields(
-						fieldWithPath("[].feedId").description("피드 아이디"),
-						fieldWithPath("[].imageUrl").description("피드 이미지"),
-						fieldWithPath("[].feedType").description("피드 타입"),
-						fieldWithPath("[].redirectUrl").optional().description("RedirectUrl (랜딩 타입만 사용)")
+						fieldWithPath("[].feedId").description("피드 번호"),
+						fieldWithPath("[].feedTitle").description("피드 제목"),
+						fieldWithPath("[].authorName").description("피드 작성자 이메일"),
+						fieldWithPath("[].activeTime").description("피드 게시 예약 일자 ( 해당 날짜 이후부터 조회됩니다)"),
+						fieldWithPath("[].isActive").description("피드 활성화 여부")
 					)
 				)
 			);
 	}
 
 	@Test
-	@DisplayName("랜딩 피드 상세 조회 - 유저")
-	void 랜딩_피드_상세_조회_유저() throws Exception {
+	@DisplayName("랜딩 피드 상세 조회 - 관리자")
+	void 랜딩_피드_상세_조회_관리자() throws Exception {
 
 		//given
 		FeedResponseDto response = FeedAssembler.toDto(landing);
 		String content = objectMapper.writeValueAsString(response);
 
 		//when
-		ResultActions perform = mockMvc.perform(get("/v1/feed/{feedId}", landing.getId())
+		ResultActions perform = mockMvc.perform(get("/v1/admin/feed/{feedId}", landing.getId())
 			.header("Authorization", "Bearer " + token.getAccessToken())
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -251,7 +480,7 @@ public class FeedControllerTest extends ControllerTest {
 
 		//then
 		perform.andDo(print()).
-			andDo(document("find-detail-landing-feed-user",
+			andDo(document("find-detail-landing-feed-admin",
 					preprocessRequest(prettyPrint()),
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
@@ -278,15 +507,15 @@ public class FeedControllerTest extends ControllerTest {
 	}
 
 	@Test
-	@DisplayName("큐레이션 피드 상세 조회 - 유저")
-	void 큐레이션_피드_상세_조회_유저() throws Exception {
+	@DisplayName("큐레이션 피드 상세 조회 - 관리자")
+	void 큐레이션_피드_상세_조회_관리자() throws Exception {
 
 		//given
 		FeedResponseDto response = FeedAssembler.toDto(curation);
 		String content = objectMapper.writeValueAsString(response);
 
 		//when
-		ResultActions perform = mockMvc.perform(get("/v1/feed/{feedId}", curation.getId())
+		ResultActions perform = mockMvc.perform(get("/v1/admin/feed/{feedId}", curation.getId())
 			.header("Authorization", "Bearer " + token.getAccessToken())
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -297,7 +526,7 @@ public class FeedControllerTest extends ControllerTest {
 
 		//then
 		perform.andDo(print()).
-			andDo(document("find-detail-curation-feed-user",
+			andDo(document("find-detail-curation-feed-admin",
 					preprocessRequest(prettyPrint()),
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
