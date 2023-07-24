@@ -53,7 +53,7 @@ public class PostControllerTestSteps {
 			.andDo(document("v1/posts/get/hot",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				responseFields(
 					fieldWithPath("data.[].writerInfo").description("커뮤니티 작성자 정보"),
 					fieldWithPath("data.[].writerInfo.userId").description("커뮤니티 작성자 고유 번호"),
@@ -93,7 +93,7 @@ public class PostControllerTestSteps {
 			.andDo(document("v1/posts/get/all",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
 					parameterWithName("all").description("커뮤니티 토픽 종류 (all, review, bread-story, event, free-talk)")),
 				requestParameters(
@@ -147,7 +147,7 @@ public class PostControllerTestSteps {
 			.andDo(document("v1/posts/get",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
 					parameterWithName("postId").description("빵 이야기 고유 번호"),
 					parameterWithName("postTopic").description(
@@ -186,7 +186,7 @@ public class PostControllerTestSteps {
 			.andDo(document("v1/posts/like",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
 					parameterWithName("postId").description("빵 이야기 고유 번호")),
 				responseFields(

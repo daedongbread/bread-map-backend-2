@@ -55,7 +55,7 @@ public class CommentControllerTestSteps {
 			.andDo(document("v1/comments/get",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
 					parameterWithName("postId").description("댓글 조회할 커뮤니티글 id"),
 					parameterWithName("page").description("페이지 번호")),
@@ -90,7 +90,7 @@ public class CommentControllerTestSteps {
 			.andDo(document("v1/comments/update",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				requestFields(
 					fieldWithPath("commentId").description("댓글 id"),
 					fieldWithPath("content").description("댓글 내용")
@@ -107,9 +107,30 @@ public class CommentControllerTestSteps {
 			.andDo(document("v1/comments/delete",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
 					parameterWithName("commentId").description("삭제할 댓글 id"))
+			));
+	}
+
+	public static ResultActions 커뮤니티_글_댓글_좋아요_요청(
+		final Long 좋아요_대상_커뮤니티글_댓글_고유_번호,
+		final String 사용자_토큰,
+		final MockMvc mockMvc
+	) throws
+		Exception {
+		return mockMvc.perform(post("/v1/comments/like/{commentId}", 좋아요_대상_커뮤니티글_댓글_고유_번호)
+				.header("Authorization", "Bearer " + 사용자_토큰))
+			.andDo(print())
+			.andDo(document("v1/comments/like",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+				pathParameters(
+					parameterWithName("commentId").description("커뮤니티글 댓글 고유 번호")),
+				responseFields(
+					fieldWithPath("data").description("커뮤니티글 댓글 좋아요 토글 여부 좋아요 = 1 / 좋아요 취소 = 0")
+				)
 			));
 	}
 

@@ -74,7 +74,7 @@ class CommentControllerTest extends ControllerTest {
 		final var 결과 = 댓글_수정_요청(댓글_수정_요청_데이터, 사용자_토큰, mockMvc, objectMapper);
 
 		// then
-		커뮤니티_전체_카테고리_조회_요청_결과_검증(결과);
+		댓글_수정_요청_결과_검증(결과);
 	}
 
 	@Test
@@ -87,6 +87,17 @@ class CommentControllerTest extends ControllerTest {
 
 		// then
 		댓글_삭제_요청_결과_검증(결과);
+	}
+
+	@Test
+	void 커뮤니티_댓글_좋아요() throws Exception {
+		// given
+		final var 좋아요_대상_커뮤니티글_댓글_고유_번호 = 111L;
+		// when
+		final var 결과 = 커뮤니티_글_댓글_좋아요_요청(좋아요_대상_커뮤니티글_댓글_고유_번호, 사용자_토큰, mockMvc);
+
+		// then
+		커뮤니티_글_댓글_좋아요_요청_결과_검증(결과);
 	}
 
 	private void setUpTestDate() throws Exception {

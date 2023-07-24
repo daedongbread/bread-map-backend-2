@@ -17,7 +17,7 @@ public class CommentControllerAssertions {
 		결과.andExpect(status().isCreated());
 	}
 
-	public static void 커뮤니티_전체_카테고리_조회_요청_결과_검증(final ResultActions 결과) throws Exception {
+	public static void 댓글_수정_요청_결과_검증(final ResultActions 결과) throws Exception {
 		결과.andExpect(status().isOk());
 	}
 
@@ -28,5 +28,11 @@ public class CommentControllerAssertions {
 	public static void 댓글_삭제_요청_결과_검증(final ResultActions 결과) throws Exception {
 		결과.andExpect(status().isOk());
 	}
+
+	public static void 커뮤니티_글_댓글_좋아요_요청_결과_검증(final ResultActions 결과) throws Exception {
+		결과.andExpect(status().isOk());
+	}
+
+
 
 }
