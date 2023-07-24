@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.domain.admin.feed.domain;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +31,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-025T00:00:00")
 				.introduction("안녕하세요")
 				.conclusion("다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
@@ -86,7 +85,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-025T00:00:00")
 				.introduction("안녕하세요")
 				.conclusion("다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
@@ -140,7 +139,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-025T00:00:00")
 				.introduction("안녕하세요")
 				.conclusion("다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
@@ -234,7 +233,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-025T00:00:00")
 				.introduction("안녕하세요")
 				.conclusion("다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
@@ -298,7 +297,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-025T00:00:00")
 				.introduction("안녕하세요")
 				.conclusion("다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
@@ -354,7 +353,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-025T00:00:00")
 				.introduction("안녕하세요")
 				.conclusion("다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
@@ -391,7 +390,7 @@ public class CurationFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.CURATION)
 				.subTitle("업데이트된 8월 추천 빵집")
-				.activeTime(LocalDateTime.now())
+				.activeTime("2023-07-25T00:00:00")
 				.introduction("업데이트된 안녕하세요")
 				.conclusion("업데이트된 다음에 또 만나요")
 				.activated(FeedStatus.POSTING)

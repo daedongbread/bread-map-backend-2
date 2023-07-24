@@ -37,7 +37,7 @@ public class LandingFeedTest {
 			CommonFeedRequestDto.builder()
 				.feedType(FeedType.LANDING)
 				.subTitle("업데이트된 8월 추천 빵집")
-				.activeTime("2023-07-025T00:00:00")
+				.activeTime("2023-07-25T00:00:00")
 				.introduction("업데이트된 안녕하세요")
 				.conclusion("업데이트된 다음에 또 만나요")
 				.activated(FeedStatus.POSTING)
