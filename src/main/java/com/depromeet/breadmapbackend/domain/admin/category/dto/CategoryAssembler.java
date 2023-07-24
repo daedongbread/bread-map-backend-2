@@ -19,6 +19,6 @@ public class CategoryAssembler {
 	}
 
 	public static CategoryResponse toDto(Category category) {
-		return new CategoryResponse(category.getCategoryName());
+		return new CategoryResponse(category.getId(), category.getCategoryName());
 	}
 }

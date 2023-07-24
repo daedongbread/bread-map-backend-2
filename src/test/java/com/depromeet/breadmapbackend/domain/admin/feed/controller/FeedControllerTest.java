@@ -43,6 +43,7 @@ import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -203,7 +204,9 @@ public class FeedControllerTest extends ControllerTest {
 
 		List<FeedResponseForUser> content = FeedAssembler.toDtoForUser(feedList);
 
-		String response = objectMapper.writeValueAsString(content);
+		ApiResponse<List<FeedResponseForUser>> res = new ApiResponse<>(content);
+
+		String response = objectMapper.writeValueAsString(res);
 
 		//when
 		ResultActions perform = mockMvc.perform(get("/v1/feed/all")
@@ -221,10 +224,10 @@ public class FeedControllerTest extends ControllerTest {
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
 					responseFields(
-						fieldWithPath("[].feedId").description("피드 아이디"),
-						fieldWithPath("[].imageUrl").description("피드 이미지"),
-						fieldWithPath("[].feedType").description("피드 타입"),
-						fieldWithPath("[].redirectUrl").optional().description("RedirectUrl (랜딩 타입만 사용)")
+						fieldWithPath("data.[].feedId").description("피드 아이디"),
+						fieldWithPath("data.[].imageUrl").description("피드 이미지"),
+						fieldWithPath("data.[].feedType").description("피드 타입"),
+						fieldWithPath("data.[].redirectUrl").optional().description("RedirectUrl (랜딩 타입만 사용)")
 					)
 				)
 			);
@@ -236,7 +239,8 @@ public class FeedControllerTest extends ControllerTest {
 
 		//given
 		FeedResponseDto response = FeedAssembler.toDto(landing);
-		String content = objectMapper.writeValueAsString(response);
+		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
+		String content = objectMapper.writeValueAsString(res);
 
 		//when
 		ResultActions perform = mockMvc.perform(get("/v1/feed/{feedId}", landing.getId())
@@ -258,20 +262,20 @@ public class FeedControllerTest extends ControllerTest {
 						parameterWithName("feedId").description("피드 아이디")
 					),
 					requestParameters(
-						parameterWithName("feedType").optional().description("피드 타입(LANDING, CURATION)")
+						parameterWithName("feedType").description("피드 타입(LANDING, CURATION)")
 					),
 					responseFields(
-						fieldWithPath("common.feedId").description("피드 소제목"),
-						fieldWithPath("common.subTitle").description("피드 소제목"),
-						fieldWithPath("common.introduction").description("피드 시작하는 말"),
-						fieldWithPath("common.conclusion").description("피드 끝맺음 말"),
-						fieldWithPath("common.thumbnailUrl").description("피드 배너 이미지 url"),
-						fieldWithPath("common.categoryName").description("카테고리 이름"),
-						fieldWithPath("common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-						fieldWithPath("common.feedType").description("피드 타입(LANDING, CURATION)"),
-						fieldWithPath("common.activateTime").description("피드 게시 시작 날짜"),
-						fieldWithPath("curation").optional().description("null"),
-						fieldWithPath("landing.redirectUrl").description("redirectURl"))
+						fieldWithPath("data.common.feedId").description("피드 소제목"),
+						fieldWithPath("data.common.subTitle").description("피드 소제목"),
+						fieldWithPath("data.common.introduction").description("피드 시작하는 말"),
+						fieldWithPath("data.common.conclusion").description("피드 끝맺음 말"),
+						fieldWithPath("data.common.thumbnailUrl").description("피드 배너 이미지 url"),
+						fieldWithPath("data.common.categoryName").description("카테고리 이름"),
+						fieldWithPath("data.common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
+						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
+						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
+						fieldWithPath("data.curation").optional().description("null"),
+						fieldWithPath("data.landing.redirectUrl").description("redirectURl"))
 				)
 			);
 	}
@@ -282,7 +286,8 @@ public class FeedControllerTest extends ControllerTest {
 
 		//given
 		FeedResponseDto response = FeedAssembler.toDto(curation);
-		String content = objectMapper.writeValueAsString(response);
+		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
+		String content = objectMapper.writeValueAsString(res);
 
 		//when
 		ResultActions perform = mockMvc.perform(get("/v1/feed/{feedId}", curation.getId())
@@ -304,30 +309,30 @@ public class FeedControllerTest extends ControllerTest {
 						parameterWithName("feedId").description("피드 아이디")
 					),
 					requestParameters(
-						parameterWithName("feedType").optional().description("피드 타입(LANDING, CURATION)")
+						parameterWithName("feedType").description("피드 타입(LANDING, CURATION)")
 					),
 					responseFields(
-						fieldWithPath("common.feedId").description("피드 소제목"),
-						fieldWithPath("common.subTitle").description("피드 소제목"),
-						fieldWithPath("common.introduction").description("피드 시작하는 말"),
-						fieldWithPath("common.conclusion").description("피드 끝맺음 말"),
-						fieldWithPath("common.thumbnailUrl").description("피드 배너 이미지 url"),
-						fieldWithPath("common.categoryName").description("카테고리 이름"),
-						fieldWithPath("common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-						fieldWithPath("common.feedType").description("피드 타입(LANDING, CURATION)"),
-						fieldWithPath("common.activateTime").description("피드 게시 시작 날짜"),
-						fieldWithPath("curation.[].bakeryId").description("큐레이션 피드 빵집 ID"),
-						fieldWithPath("curation.[].bakeryName").description("큐레이션 피드 빵집 이름"),
-						fieldWithPath("curation.[].bakeryAddress").description("큐레이션 피드 빵집 주소"),
-						fieldWithPath("curation.[].openingHours").description("큐레이션 피드 빵집 오픈시각"),
-						fieldWithPath("curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
-						fieldWithPath("curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
-						fieldWithPath("curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
-						fieldWithPath("curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
-						fieldWithPath("curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
-						fieldWithPath("curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
-						fieldWithPath("landing").optional().description("null"))
+						fieldWithPath("data.common.feedId").description("피드 소제목"),
+						fieldWithPath("data.common.subTitle").description("피드 소제목"),
+						fieldWithPath("data.common.introduction").description("피드 시작하는 말"),
+						fieldWithPath("data.common.conclusion").description("피드 끝맺음 말"),
+						fieldWithPath("data.common.thumbnailUrl").description("피드 배너 이미지 url"),
+						fieldWithPath("data.common.categoryName").description("카테고리 이름"),
+						fieldWithPath("data.common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
+						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
+						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
+						fieldWithPath("data.curation.[].bakeryId").description("큐레이션 피드 빵집 ID"),
+						fieldWithPath("data.curation.[].bakeryName").description("큐레이션 피드 빵집 이름"),
+						fieldWithPath("data.curation.[].bakeryAddress").description("큐레이션 피드 빵집 주소"),
+						fieldWithPath("data.curation.[].openingHours").description("큐레이션 피드 빵집 오픈시각"),
+						fieldWithPath("data.curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
+						fieldWithPath("data.curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
+						fieldWithPath("data.curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
+						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
+						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
+						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
+						fieldWithPath("data.landing").optional().description("null"))
 				)
 			);
 	}

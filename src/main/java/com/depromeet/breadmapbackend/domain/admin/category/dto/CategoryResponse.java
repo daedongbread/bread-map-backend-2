@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryResponse {
 
+	private Long categoryId;
 	private String categoryName;
 
-	public CategoryResponse(String categoryName) {
+	public CategoryResponse(Long categoryId, String categoryName) {
+		this.categoryId = categoryId;
 		this.categoryName = categoryName;
 	}
 }

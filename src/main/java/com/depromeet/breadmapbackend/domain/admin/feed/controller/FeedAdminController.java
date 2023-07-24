@@ -1,14 +1,14 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
-import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
@@ -28,6 +29,7 @@ import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponse
 import com.depromeet.breadmapbackend.domain.admin.feed.service.CommonFeedService;
 import com.depromeet.breadmapbackend.domain.admin.feed.service.FeedService;
 import com.depromeet.breadmapbackend.domain.admin.feed.service.FeedServiceFactory;
+import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 import lombok.RequiredArgsConstructor;
@@ -42,9 +44,11 @@ public class FeedAdminController {
 	private static final String REDIRECT_URL = "/v1/admin/feed/%d";
 
 	@PostMapping
-	public ResponseEntity<Void> addFeed(
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addFeed(
 		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-		@RequestBody FeedRequestDto requestDto
+		@RequestBody FeedRequestDto requestDto,
+		HttpServletResponse response
 	) {
 		FeedService feedService = serviceFactory.getService(requestDto.getCommon().getFeedType());
 
@@ -52,23 +56,23 @@ public class FeedAdminController {
 
 		String redirectUrl = String.format(REDIRECT_URL, feedId);
 
-		return ResponseEntity.created(URI.create(redirectUrl)).build();
+		response.setHeader("Location", redirectUrl);
 	}
 
 	@PatchMapping("/{feedId}")
-	public ResponseEntity<Void> updateFeed(
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updateFeed(
 		@PathVariable Long feedId,
 		@Valid @RequestBody FeedRequestDto updateDto
 	) {
 		FeedService feedService = serviceFactory.getService(updateDto.getCommon().getFeedType());
 
 		feedService.updateFeed(feedId, updateDto);
-
-		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<List<FeedResponseForAdmin>> readAllFeed(
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<List<FeedResponseForAdmin>> readAllFeed(
 		@RequestParam(required = false) String activeAt,
 		@RequestParam(required = false) String createBy,
 		@RequestParam(required = false) FeedStatus activated,
@@ -79,11 +83,12 @@ public class FeedAdminController {
 
 		List<FeedResponseForAdmin> feedResponse = commonFeedService.getAllFeedForAdmin(pageable, searchRequest);
 
-		return ResponseEntity.ok(feedResponse);
+		return new ApiResponse<>(feedResponse);
 	}
 
 	@GetMapping("/{feedId}")
-	public ResponseEntity<FeedResponseDto> readFeed(
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<FeedResponseDto> readFeed(
 		@PathVariable Long feedId,
 		@RequestParam FeedType feedType
 	) {
@@ -91,6 +96,6 @@ public class FeedAdminController {
 
 		FeedResponseDto feed = feedService.getFeed(feedId);
 
-		return ResponseEntity.ok(feed);
+		return new ApiResponse<>(feed);
 	}
 }
