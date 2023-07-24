@@ -27,7 +27,9 @@ public record CommunityCardInfo(
 	Long bakeryId,
 	String name,
 	String address,
-	String bakeryThumbnail
+	String bakeryThumbnail,
+	boolean isUserLiked,
+	boolean isUserCommented
 ) {
 	public CommunityCardResponse toResponse() {
 
@@ -54,7 +56,9 @@ public record CommunityCardInfo(
 			this.thumbnail,
 			this.topic,
 			this.createdDate,
-			bakeryInfo
+			bakeryInfo,
+			this.isUserLiked,
+			this.isUserCommented
 		);
 
 	}

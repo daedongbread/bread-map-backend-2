@@ -39,6 +39,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+// @SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
+// @Where(clause = "is_deleted = false")
 public class Post extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -93,6 +95,14 @@ public class Post extends BaseEntity {
 				.image(image)
 				.build()
 			).forEach(this.images::add);
+		return this;
+	}
+
+	public Post update(final String content, final String title, final List<String> images) {
+		this.content = content;
+		this.title = title;
+		this.images.clear();
+		this.addImages(images);
 		return this;
 	}
 }

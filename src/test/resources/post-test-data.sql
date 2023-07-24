@@ -81,11 +81,15 @@ insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,s
 (113, 113, 'content 2',  222, 111, false, 'ACTIVE')
 ;
 
-insert into post_manager_mapper (id,created_at , modified_at ,is_carousal,is_fixed, is_processed,post_id )values
-(111, '2023-01-01','2023-01-01',false, true, true, 224 ),
-(112, '2023-01-01','2023-01-01',true, false, true, 225 )
+insert into post_manager_mapper (id,created_at , modified_at ,is_carousel,is_fixed, is_posted,post_id ,banner_image)values
+(111, '2023-01-01','2023-01-01',false, true, true, 224 , 'bannerImage1'),
+(112, '2023-01-01','2023-01-01',true, false, true, 225 , 'bannerImage2')
 ;
 
 insert into block_user (id,from_user_id,to_user_id) values
 (111, 111, 113)
+;
+
+insert into post_like(id, post_id, user_id) values
+(111, 222, 111)
 ;

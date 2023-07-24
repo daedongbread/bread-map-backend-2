@@ -19,6 +19,8 @@ public record PostDetailInfo(
 	long commentCount,
 	long reviewCount,
 	long followerCount,
+	boolean isUserLiked,
+	boolean isUserCommented,
 	boolean isFollowed
 ) {
 }

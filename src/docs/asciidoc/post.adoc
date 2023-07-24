@@ -11,16 +11,17 @@
 
 == 커뮤니티 APIs
 
-- 빵 이야기 등록 API
-- 빵 이야기 상세 조회 API
+- 커뮤니티 등록 API
+- 커뮤니티 상세 조회 API
 - 커뮤니티 카드 리스트 조회 API
 - 커뮤니티 추천 카드 리스트 조회 API
+- 커뮤니티 좋아요 토글 API
 
-=== 빵 이야기 등록 API [POST]
+=== 커뮤니티 등록 API [POST]
 
 operation::v1/posts/add[snippets='http-request,request-headers,request-fields,http-response']
 
-=== 빵 이야기 상세 조회 API [GET]
+=== 커뮤니티 상세 조회 API [GET]
 
 operation::v1/posts/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
@@ -31,6 +32,10 @@ operation::v1/posts/get/all[snippets='http-request,request-headers,path-paramete
 === 커뮤니티 추천 카드 리스트 조회 API [GET]
 
 operation::v1/posts/get/hot[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 커뮤니티 좋아요 토글 API [POST]
+
+operation::v1/posts/like[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 == 댓글 APIs
 

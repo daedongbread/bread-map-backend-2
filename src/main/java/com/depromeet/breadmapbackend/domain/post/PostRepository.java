@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.post;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -26,10 +27,11 @@ public interface PostRepository {
 
 	Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId);
 
-	PostDetailInfo findPostBy(final Long postId, final Long userId, final PostTopic postTopic);
+	PostDetailInfo findPostDetailBy(final Long postId, final Long userId, final PostTopic postTopic);
 
 	void deletePostById(Long postId, Long userId);
 
 	List<CommunityCardInfo> findHotPosts(Long userId);
 
+	Optional<Post> findByPostIdAndUserIdAndPostTopic(Long postId, Long userId);
 }

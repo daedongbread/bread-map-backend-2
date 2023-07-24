@@ -44,6 +44,8 @@ public class Mapper {
 			post.content(),
 			post.likeCount(),
 			post.commentCount(),
+			post.isUserLiked(),
+			post.isUserCommented(),
 			post.createdDate()
 		);
 	}
@@ -60,6 +62,7 @@ public class Mapper {
 			postId,
 			request.title(),
 			request.content(),
+			request.postTopic(),
 			request.images()
 		);
 	}

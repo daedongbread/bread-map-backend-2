@@ -16,7 +16,9 @@ public record PostDetailQuery(
 	long commentCount,
 	long reviewCount,
 	long followerCount,
-	boolean isFollowed
+	boolean isFollowed,
+	boolean isUserLiked,
+	boolean isUserCommented
 ) {
 
 	public PostDetailInfo toInfo() {
@@ -34,6 +36,8 @@ public record PostDetailQuery(
 			this.commentCount(),
 			this.reviewCount(),
 			this.followerCount(),
+			this.isUserLiked,
+			this.isUserCommented,
 			this.isFollowed()
 		);
 	}

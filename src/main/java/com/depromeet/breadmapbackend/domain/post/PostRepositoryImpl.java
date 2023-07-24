@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.post;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
@@ -54,9 +55,9 @@ public class PostRepositoryImpl implements PostRepository {
 	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId) {
 		return postQueryRepository.findReviewCards(communityPage, userId);
 	}
-	
+
 	@Override
-	public PostDetailInfo findPostBy(
+	public PostDetailInfo findPostDetailBy(
 		final Long postId,
 		final Long userId,
 		final PostTopic postTopic
@@ -74,6 +75,14 @@ public class PostRepositoryImpl implements PostRepository {
 	@Override
 	public List<CommunityCardInfo> findHotPosts(final Long userId) {
 		return postQueryRepository.findHotPosts(userId);
+	}
+
+	@Override
+	public Optional<Post> findByPostIdAndUserIdAndPostTopic(
+		final Long postId,
+		final Long userId
+	) {
+		return postJpaRepository.findByIdAndUserId(postId, userId);
 	}
 
 }

@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.post.dto;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
+
 /**
  * PostUpdateCommand
  *
@@ -13,6 +15,7 @@ public record PostUpdateCommand(
 	Long postId,
 	String title,
 	String content,
+	PostTopic postTopic,
 	List<String> images
 ) {
 

@@ -66,7 +66,9 @@ public class PostQueryRepository {
 		resultSet.getLong("bakeryId"),
 		resultSet.getString("name"),
 		resultSet.getString("address"),
-		resultSet.getString("bakeryThumbnail")
+		resultSet.getString("bakeryThumbnail"),
+		resultSet.getBoolean("isUserLiked"),
+		resultSet.getBoolean("isUserCommented")
 	);
 
 	public Optional<PostDetailQuery> findPostDetailById(final Long postId, final Long userId, final PostTopic topic) {
@@ -90,8 +92,17 @@ public class PostQueryRepository {
 							.from(follow)
 							.where(follow.fromUser.id.eq(userId)
 								.and(follow.toUser.id.eq(post.user.id))).eq(1L)).then(true)
+						.otherwise(false),
+					new CaseBuilder().when(JPAExpressions.select(postLike.count())
+							.from(postLike)
+							.where(postLike.postId.eq(post.id)
+								.and(postLike.userId.eq(userId))).goe(1L)).then(true)
+						.otherwise(false),
+					new CaseBuilder().when(JPAExpressions.select(comment.count())
+							.from(comment)
+							.where(comment.postId.eq(post.id)
+								.and(comment.user.id.eq(post.user.id))).goe(1L)).then(true)
 						.otherwise(false)
-
 				))
 				.from(post)
 				.join(post.user, user).fetchJoin()
@@ -371,13 +382,28 @@ public class PostQueryRepository {
 				 			then 1 
 						else 2 
 					end 						  as sortOrder
+				 , case when t6.count >= 0 then true
+				  		else false
+				  end 							 as isUserLiked	
+				 , case when t5.count >= 0 then true
+				  		else false
+				  	end 							 as isUserCommented
+				
 			   from post t1
 			   inner join user t2 on t1.user_id = t2.id
 			   left join post_manager_mapper t4 on t1.id = t4.post_id 
 			   									and t4.is_fixed is true
 			   left join (select to_user_id 
 			   			  from block_user
-			   			  where from_user_id = :userId) t3 on t1.user_id = t3.to_user_id										
+			   			  where from_user_id = :userId) t3 on t1.user_id = t3.to_user_id	
+			   left join (select post_id, count(post_id) as count
+							from comment
+							where user_id = :userId 
+							group by post_id ) t5 on t1.id = t5.post_id
+			   left join (select post_id, count(post_id)  as count
+							from post_like
+							where user_id = :userId 
+							group by post_id ) t6 on t1.id = t6.post_id							
 			   where %s
 			   and t3.to_user_id is null
 			   order by t4.is_fixed desc, t1.created_at desc, t1.id desc
@@ -411,15 +437,28 @@ public class PostQueryRepository {
 				     , t3.address                               as address
 				     , t3.image                                 as bakeryThumbnail
 				     , 2 										as sortOrder
+				     , case when t6.count >= 0 then true
+							else false
+				  		end 							 as isUserCommented	
+				 	 , case when t5.count >= 0 then true
+				  			else false
+				  		end 							 as isUserLiked
 				from review t1
 			    inner join user t2 on t1.user_id = t2.id
 			    inner join bakery t3 on t1.bakery_id = t3.id
 			    left join (select to_user_id 
 						  from block_user
-						  where from_user_id = :userId) t4 on t1.user_id = t4.to_user_id										
+						  where from_user_id = :userId) t4 on t1.user_id = t4.to_user_id	
+				left join (select review_id, count(review_id) as count
+							from review_like
+							where user_id = :userId 
+							group by review_id ) t5 on t1.id = t5.review_id
+				left join (select review_id, count(review_id) as count
+							from review_comment
+							where user_id = :userId 
+							group by review_id ) t6 on t1.id = t6.review_id								
 			   where t4.to_user_id is null
 			   %s
-			 
 				order by t1.created_at desc , t1.id desc
 				limit :limit offset :reviewOffset		
 			""", whereClause);

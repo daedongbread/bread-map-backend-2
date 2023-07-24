@@ -17,7 +17,6 @@ public record PostRegisterCommand(
 	String title,
 	String content,
 	List<String> images,
-
 	PostTopic postTopic
 ) {
 	public Post toEntity(final User user) {
