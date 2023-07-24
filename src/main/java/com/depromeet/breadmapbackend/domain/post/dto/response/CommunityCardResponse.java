@@ -21,7 +21,9 @@ public record CommunityCardResponse(
 	String thumbnail,
 	PostTopic postTopic,
 	LocalDateTime createdDate,
-	BakeryInfo bakeryInfo
+	BakeryInfo bakeryInfo,
+	boolean isUserLiked,
+	boolean isUserCommented
 ) {
 
 	public record UserInfo(

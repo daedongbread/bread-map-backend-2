@@ -14,6 +14,8 @@ public record PostResponse(
 	String content,
 	long likeCount,
 	long commentCount,
+	boolean isUserLiked,
+	boolean isUserCommented,
 	LocalDateTime createdDate
 
 ) {
