@@ -2,9 +2,14 @@ package com.depromeet.breadmapbackend.domain.bakery;
 
 import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
 import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.*;
+import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryAddReport.*;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.*;
 import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.*;
+import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
+import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
+import static com.depromeet.breadmapbackend.domain.user.QUser.*;
+import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.*;
 
 import java.util.List;
 
@@ -15,10 +20,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryRanking;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -102,4 +111,46 @@ public class BakeryQueryRepository {
 		} else
 			return null;
 	}
+
+	public List<BakeryRanking> findBakeryTopRanking() {
+		return queryFactory
+			.select(Projections.constructor(
+				BakeryRanking.class
+				, bakery
+				, reviewProductRating.rating.avg().coalesce(0.0)
+				, reviewProductRating.id.count()
+				, flagBakery.id.count())
+			)
+			.from(bakery)
+			.leftJoin(flagBakery).on(bakery.id.eq(flagBakery.bakery.id))
+			.leftJoin(reviewProductRating).on(bakery.id.eq(reviewProductRating.bakery.id))
+			.groupBy(bakery.id)
+			.fetch();
+
+	}
+
+	public List<NewBakeryDto> findBakeryWithPioneerByCreatedAtDesc(final Long userId, final int newBakeryListSize) {
+		return queryFactory
+			.select(Projections.constructor(NewBakeryDto.class
+				, bakery
+				, new CaseBuilder()
+					.when(flagBakery.count().eq(0L)).then(false)
+					.otherwise(true)
+				, new CaseBuilder()
+					.when(follow.isNull()).then(false)
+					.otherwise(true)
+			))
+			.from(bakery)
+			.leftJoin(bakery.bakeryAddReport, bakeryAddReport).fetchJoin()
+			.leftJoin(bakeryAddReport.user, user).fetchJoin()
+			.leftJoin(follow).on(follow.fromUser.id.eq(userId)
+				.and(follow.toUser.id.eq(bakery.bakeryAddReport.user.id)))
+			.leftJoin(flagBakery).on(flagBakery.bakery.eq(bakery)
+				.and(flagBakery.user.id.eq(userId)))
+			.groupBy(bakery.id, bakery.createdAt)
+			.orderBy(bakery.createdAt.desc())
+			.limit(newBakeryListSize)
+			.fetch();
+	}
+
 }
