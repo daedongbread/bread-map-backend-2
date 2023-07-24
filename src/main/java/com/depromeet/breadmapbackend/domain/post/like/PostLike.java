@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.post.like;
 import static javax.persistence.FetchType.*;
 import static javax.persistence.GenerationType.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,16 +26,24 @@ public class PostLike extends BaseEntity {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "post_id")
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "post_id", updatable = false, insertable = false)
 	private Post post;
 
-	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "user_id")
+	@Column(name = "post_id")
+	private Long postId;
+
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "user_id", updatable = false, insertable = false)
 	private User user;
 
-	public PostLike(Post post, User user) {
-		this.post = post;
-		this.user = user;
+	@Column(name = "user_id")
+	private Long userId;
+
+	// private int likeCount = 0;
+
+	public PostLike(final Long postId, final Long userId) {
+		this.postId = postId;
+		this.userId = userId;
 	}
 }

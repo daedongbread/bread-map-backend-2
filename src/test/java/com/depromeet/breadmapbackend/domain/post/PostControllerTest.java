@@ -88,6 +88,17 @@ class PostControllerTest extends ControllerTest {
 		커뮤니티_추천_조회_요청_결과_검증(결과);
 	}
 
+	@Test
+	void 커뮤니티_글_좋아요() throws Exception {
+		// given
+		final var 좋아요_대상_커뮤니티글_고유_번호 = 224L;
+		// when
+		final var 결과 = 커뮤니티_글_좋아요_요청(좋아요_대상_커뮤니티글_고유_번호, 사용자_토큰, mockMvc);
+
+		// then
+		커뮤니티_글_좋아요_요청_결과_검증(결과);
+	}
+
 	private void setUpTestDate() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("post-test-data.sql"));

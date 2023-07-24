@@ -25,7 +25,7 @@ public interface PostService {
 	);
 
 	// post 상세 조회
-	PostDetailInfo getPost(
+	PostDetailInfo getDetailPost(
 		final Long userId,
 		final Long postId,
 		final PostTopic postTopic
@@ -48,10 +48,10 @@ public interface PostService {
 		final PostUpdateCommand command
 	);
 
-	// post 좋아요 토글
-	void toggleLike(
-		final Long userId,
-		final Long postId
+	// post 좋아요
+	int toggle(
+		final Long postId,
+		final Long userId
 	);
 
 	// post 신고

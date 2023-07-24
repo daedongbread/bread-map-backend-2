@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.post;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
+import com.depromeet.breadmapbackend.domain.post.like.PostLike;
+import com.depromeet.breadmapbackend.domain.post.like.PostLikeRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
@@ -29,6 +32,7 @@ public class PostServiceImpl implements PostService {
 
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
+	private final PostLikeRepository postLikeRepository;
 
 	@Override
 	@Transactional
@@ -67,8 +71,8 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostDetailInfo getPost(final Long postId, final Long userId, final PostTopic postTopic) {
-		return postRepository.findPostBy(postId, userId, postTopic);
+	public PostDetailInfo getDetailPost(final Long postId, final Long userId, final PostTopic postTopic) {
+		return postRepository.findPostDetailBy(postId, userId, postTopic);
 	}
 
 	@Override
@@ -82,12 +86,29 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public void update(final Long userId, final PostUpdateCommand command) {
-
+		// TODO postTopic 비교
+		final Post updatedPost = postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND))
+			.update(command.content(), command.title(), command.images());
+		postRepository.save(updatedPost);
 	}
 
+	// TODO : 좋아요 5개 가능 관련 확인 프론트에서 디바운스해서 한번에 보내주실지 아니면 백에서 처리할지
+	@Transactional
 	@Override
-	public void toggleLike(final Long userId, final Long postId) {
+	public int toggle(final Long postId, final Long userId) {
+		// redis 조회 없으면 db 조회
+		// db도 없으면 redis,db 둘다 저장 후 1 반환 redis ttl 3분
+		// DB에 있으면 update후 리턴 redis 저장 x
 
+		final Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUserId(postId, userId);
+		if (postLike.isEmpty()) {
+			postLikeRepository.save(new PostLike(postId, userId));
+			return 1;
+		} else {
+			postLikeRepository.delete(postLike.get());
+			return 0;
+		}
 	}
 
 	@Override

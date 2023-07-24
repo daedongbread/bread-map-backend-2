@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +19,10 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
+import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.image.PostImage;
+import com.depromeet.breadmapbackend.domain.post.like.PostLike;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 
 /**
@@ -79,23 +82,32 @@ class PostServiceImplTest extends PostServiceTest {
 	@Test
 	void 빵이야기_상세_조회() throws Exception {
 		//given
-		final Long userId = 111L;
-		final Long postId = 222L;
+		final Long userId111 = 111L;
+		final Long userId112 = 112L;
+		final Long postId222 = 222L;
+		final Long postId223 = 223L;
 
 		//when
-		final PostDetailInfo result = sut.getPost(postId, userId, PostTopic.BREAD_STORY);
+		final PostDetailInfo result = sut.getDetailPost(postId222, userId111, PostTopic.BREAD_STORY);
 
 		//then
 		assertThat(result.followerCount()).isEqualTo(2);
 		assertThat(result.reviewCount()).isEqualTo(1);
 		assertThat(result.isFollowed()).isTrue();
-		assertThat(result.likeCount()).isEqualTo(2);
+		assertThat(result.likeCount()).isEqualTo(3);
 		assertThat(result.commentCount()).isEqualTo(3);
 		assertThat(result.title()).isEqualTo("test title");
 		assertThat(result.content()).isEqualTo("test 222 content");
 		assertThat(result.createdDate()).isEqualTo(LocalDateTime.of(2023, 1, 1, 0, 0));
 		assertThat(result.images()).hasSize(2);
+		assertThat(result.isUserCommented()).isTrue();
+		assertThat(result.isUserLiked()).isTrue();
 
+		//when
+		final PostDetailInfo result2 = sut.getDetailPost(postId223, userId112, PostTopic.BREAD_STORY);
+		//then
+		assertThat(result2.isUserCommented()).isFalse();
+		assertThat(result2.isUserLiked()).isFalse();
 	}
 
 	@Test
@@ -112,6 +124,8 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(result.getContents().get(0).postId()).isEqualTo(224L);
 		assertThat(result.getContents().get(0).postTopic().name()).isEqualTo("EVENT");
 		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("REVIEW");
+		assertThat(result.getContents().get(3).isUserCommented()).isTrue();
+		assertThat(result.getContents().get(3).isUserLiked()).isTrue();
 
 		//given
 		final Long secondUserId = 113L;
@@ -238,4 +252,64 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(hotPosts.get(2).postId()).isEqualTo(222L);
 	}
 
+	@Test
+	void 좋아요() throws Exception {
+		//given
+		final Long userId = 111L;
+		final Long postId = 225L;
+
+		//when
+		final int reuslt = sut.toggle(postId, userId);
+
+		//then
+		assertThat(reuslt).isEqualTo(1);
+		final PostLike postLike = em.createQuery(
+				"select pl from PostLike pl where pl.userId =:userId and pl.postId =:postId", PostLike.class)
+			.setParameter("userId", userId)
+			.setParameter("postId", postId)
+			.getSingleResult();
+
+		assertThat(postLike.getUserId()).isEqualTo(userId);
+		assertThat(postLike.getPostId()).isEqualTo(postId);
+
+		//when
+		final int reuslt2 = sut.toggle(postId, userId);
+
+		//then
+		assertThat(reuslt2).isEqualTo(0);
+		assertThatThrownBy(() -> em.createQuery(
+				"select pl from PostLike pl where pl.userId =:userId and pl.postId =:postId", PostLike.class)
+			.setParameter("userId", userId)
+			.setParameter("postId", postId)
+			.getSingleResult()
+		).isInstanceOf(NoResultException.class);
+	}
+
+	@Test
+	void 포스트_수정() throws Exception {
+		//given
+		final Long userId = 112L;
+		final Long postId = 222L;
+		final String title = "updated title";
+		final String content = "updated content";
+		final PostTopic postTopic = PostTopic.BREAD_STORY;
+		final List<String> images = List.of("updated image1", "updated image2");
+		final PostUpdateCommand command = new PostUpdateCommand(
+			postId,
+			title,
+			content,
+			postTopic,
+			images
+		);
+
+		//when
+		sut.update(userId, command);
+
+		//then
+		final Post updatedPost = em.find(Post.class, postId);
+		assertThat(updatedPost.getTitle()).isEqualTo(title);
+		assertThat(updatedPost.getContent()).isEqualTo(content);
+		assertThat(updatedPost.getPostTopic()).isEqualTo(postTopic);
+		assertThat(updatedPost.getImages().stream().map(PostImage::getImage).toList()).isEqualTo(images);
+	}
 }

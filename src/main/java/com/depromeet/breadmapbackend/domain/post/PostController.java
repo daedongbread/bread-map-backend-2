@@ -23,6 +23,8 @@ import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardRespo
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
@@ -42,6 +44,8 @@ public class PostController {
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@RequestBody @Valid final PostRequest request
 	) {
+		validatePostTopic(request);
+
 		postService.register(Mapper.of(request), currentUserInfo.getId());
 	}
 
@@ -55,7 +59,7 @@ public class PostController {
 	) {
 		final PostTopic topic = PostTopic.of(postTopic);
 		return new ApiResponse<>(
-			Mapper.of(postService.getPost(postId, currentUserInfo.getId(), topic))
+			Mapper.of(postService.getDetailPost(postId, currentUserInfo.getId(), topic))
 		);
 	}
 
@@ -104,14 +108,15 @@ public class PostController {
 	// post 좋아요 토글
 	@PostMapping("/like/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	void toggleLike(
+	ApiResponse<Integer> toggle(
 		@PathVariable("postId") final Long postId,
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
-		postService.toggleLike(currentUserInfo.getId(), postId);
+		return new ApiResponse<>(postService.toggle(postId, currentUserInfo.getId()));
 	}
 
 	// post 신고
+	// TODO : 신고 처리 admin 화면 어디서 하는지 확인
 	@PostMapping("/report/{postId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	void report(
@@ -121,4 +126,13 @@ public class PostController {
 	) {
 		postService.report(currentUserInfo.getId(), Mapper.of(postId, request));
 	}
+
+	private void validatePostTopic(final PostRequest request) {
+		if (request.postTopic().equals(PostTopic.EVENT) ||
+			request.postTopic().equals(PostTopic.REVIEW)
+		) {
+			throw new DaedongException(DaedongStatus.INVALID_POST_TOPIC);
+		}
+	}
+
 }

@@ -67,6 +67,8 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.[].thumbnail").optional().description("커뮤니티 글 썸네일"),
 					fieldWithPath("data.[].postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
 					fieldWithPath("data.[].createdDate").description("커뮤니티 작성 일자"),
+					fieldWithPath("data.[].isUserLiked").description("조회 요청 유저 해당 글 좋아요 여부"),
+					fieldWithPath("data.[].isUserCommented").description("조회 요청 유저 해당 글 댓글 여부"),
 					fieldWithPath("data.[].bakeryInfo").optional().description("postTopic이 REVIEW일 경우 빵집 정보"),
 					fieldWithPath("data.[].bakeryInfo.bakeryId").optional()
 						.description("postTopic이 REVIEW일 경우 빵집 고유 번호"),
@@ -119,6 +121,8 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.contents.[].thumbnail").optional().description("커뮤니티 글 썸네일"),
 					fieldWithPath("data.contents.[].postTopic").description(
 						"커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
+					fieldWithPath("data.contents.[].isUserLiked").description("조회 요청 유저 해당 글 좋아요 여부"),
+					fieldWithPath("data.contents.[].isUserCommented").description("조회 요청 유저 해당 글 댓글 여부"),
 					fieldWithPath("data.contents.[].createdDate").description("커뮤니티 작성 일자"),
 					fieldWithPath("data.contents.[].bakeryInfo").optional().description("postTopic이 REVIEW일 경우 빵집 정보"),
 					fieldWithPath("data.contents.[].bakeryInfo.bakeryId").optional()
@@ -163,7 +167,30 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.content").description("빵 이야기 내용"),
 					fieldWithPath("data.likeCount").description("빵 이야기 좋아요 개수"),
 					fieldWithPath("data.commentCount").description("빵 이야기 댓글 개수"),
-					fieldWithPath("data.createdDate").description("빵 이야기 작성 일자")
+					fieldWithPath("data.createdDate").description("빵 이야기 작성 일자"),
+					fieldWithPath("data.isUserLiked").description("조회 요청 유저 해당 글 좋아요 여부"),
+					fieldWithPath("data.isUserCommented").description("조회 요청 유저 해당 글 댓글 여부")
+				)
+			));
+	}
+
+	public static ResultActions 커뮤니티_글_좋아요_요청(
+		final Long 좋아요_대상_커뮤니티글_고유_번호,
+		final String 사용자_토큰,
+		final MockMvc mockMvc
+	) throws
+		Exception {
+		return mockMvc.perform(post("/v1/posts/like/{postId}", 좋아요_대상_커뮤니티글_고유_번호)
+				.header("Authorization", "Bearer " + 사용자_토큰))
+			.andDo(print())
+			.andDo(document("v1/posts/like",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				pathParameters(
+					parameterWithName("postId").description("빵 이야기 고유 번호")),
+				responseFields(
+					fieldWithPath("data").description("커뮤니티글 좋아요 토글 여부 좋아요 = 1 / 좋아요 취소 = 0")
 				)
 			));
 	}
