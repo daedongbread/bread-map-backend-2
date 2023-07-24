@@ -115,5 +115,13 @@ sgis:
 logging:
   level:
     org:
+      hibernate:
+        type: trace
       springframework:
         jdbc: debug
+
+
+admin:
+  event:
+    post:
+      user-id: 999
