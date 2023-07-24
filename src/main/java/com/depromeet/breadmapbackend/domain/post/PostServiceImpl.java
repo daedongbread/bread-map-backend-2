@@ -85,12 +85,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional
 	public void update(final Long userId, final PostUpdateCommand command) {
-		// TODO postTopic 비교
-		final Post updatedPost = postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId)
-			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND))
-			.update(command.content(), command.title(), command.images());
-		postRepository.save(updatedPost);
+		final Post savedPost = postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+
+		savedPost.update(command.content(), command.title(), command.images());
+
+		postRepository.save(savedPost);
 	}
 
 	// TODO : 좋아요 5개 가능 관련 확인 프론트에서 디바운스해서 한번에 보내주실지 아니면 백에서 처리할지

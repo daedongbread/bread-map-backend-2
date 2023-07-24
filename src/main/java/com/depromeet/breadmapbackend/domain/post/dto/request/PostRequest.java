@@ -10,5 +10,4 @@ public record PostRequest(
 	List<String> images,
 	PostTopic postTopic
 ) {
-
 }

@@ -98,11 +98,10 @@ public class Post extends BaseEntity {
 		return this;
 	}
 
-	public Post update(final String content, final String title, final List<String> images) {
+	public void update(final String content, final String title, final List<String> images) {
 		this.content = content;
 		this.title = title;
 		this.images.clear();
 		this.addImages(images);
-		return this;
 	}
 }

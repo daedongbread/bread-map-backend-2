@@ -96,12 +96,13 @@ public class PostController {
 
 	// post 수정
 	@PutMapping("/{postId}")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	void update(
 		@PathVariable("postId") final Long postId,
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
-		@Valid final PostRequest request
+		@RequestBody @Valid final PostRequest request
 	) {
+		validatePostTopic(request);
 		postService.update(currentUserInfo.getId(), Mapper.of(request, postId));
 	}
 

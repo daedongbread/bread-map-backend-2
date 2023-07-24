@@ -99,12 +99,30 @@ class PostControllerTest extends ControllerTest {
 		커뮤니티_글_좋아요_요청_결과_검증(결과);
 	}
 
+	@Test
+	void 커뮤니티_글_수정() throws Exception {
+		// given
+		final var 커뮤니티글_수정_요청_데이터 = new PostRequest(
+			"updated title",
+			"updated content",
+			List.of("updated image1", "updated image2"),
+			PostTopic.BREAD_STORY
+		);
+		final var 수정_대상_커뮤니티_글 = 999L;
+		// when
+		final var 결과 = 커뮤니티_글_수정_요청(수정_대상_커뮤니티_글, 커뮤니티글_수정_요청_데이터, 사용자_토큰, mockMvc, objectMapper);
+
+		// then
+		커뮤니티_글_수정_요청_결과_검증(결과);
+	}
+
 	private void setUpTestDate() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("post-test-data.sql"));
 			prepareReviewData(connection);
 			prepareReviewCommentData(connection);
 			preparePostLikeData(connection);
+			preparePostData(connection);
 		}
 	}
 

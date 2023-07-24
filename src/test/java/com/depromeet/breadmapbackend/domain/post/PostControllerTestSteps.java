@@ -195,4 +195,31 @@ public class PostControllerTestSteps {
 			));
 	}
 
+	public static ResultActions 커뮤니티_글_수정_요청(
+		final Long 수정_대상_커뮤니티_글,
+		final PostRequest 커뮤니티글_수정_요청_데이터,
+		final String 사용자_토큰,
+		final MockMvc mockMvc,
+		final ObjectMapper objectMapper
+	) throws Exception {
+		final String request = objectMapper.writeValueAsString(커뮤니티글_수정_요청_데이터);
+		return mockMvc.perform(put("/v1/posts/{postId}", 수정_대상_커뮤니티_글)
+				.content(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + 사용자_토큰))
+			.andDo(print())
+			.andDo(document("v1/posts/update",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+				pathParameters(
+					parameterWithName("postId").description("수정 대상 커뮤니티글 id")),
+				requestFields(
+					fieldWithPath("title").description("커뮤니티 글 제목"),
+					fieldWithPath("content").description("커뮤니티 글 내용"),
+					fieldWithPath("images").optional().description("커뮤니티 글 첨부 이미지"),
+					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK)")
+				)
+			));
+	}
+
 }

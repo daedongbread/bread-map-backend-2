@@ -47,4 +47,14 @@ public class PostTestData {
 		PreparedStatement statement = connection.prepareStatement(reviewSql);
 		statement.executeUpdate();
 	}
+
+	static void preparePostData(final Connection connection) throws SQLException {
+		final String reviewSql = String.format("""
+			insert into post(id ,created_at ,modified_at ,content ,is_block ,is_delete ,is_hide ,post_topic ,title ,user_id) values
+			(999, '2023-01-01','2023-01-01','test 222 content',false,false,false,'BREAD_STORY','test title', 111)
+			 ;
+			""", LocalDateTime.now());
+		PreparedStatement statement = connection.prepareStatement(reviewSql);
+		statement.executeUpdate();
+	}
 }
