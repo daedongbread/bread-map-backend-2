@@ -13,6 +13,7 @@ import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDt
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForAdmin;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForUser;
+import com.depromeet.breadmapbackend.global.converter.DateTimeParser;
 
 public class FeedAssembler {
 
@@ -59,7 +60,7 @@ public class FeedAssembler {
 			.feedType(requestDto.getCommon().getFeedType().toString())
 			.like(0)
 			.activated(requestDto.getCommon().getActivated())
-			.activeTime(requestDto.getCommon().getActiveTime())
+			.activeTime(DateTimeParser.parse(requestDto.getCommon().getActiveTime()))
 			.build();
 	}
 
@@ -73,7 +74,7 @@ public class FeedAssembler {
 			.thumbnailUrl(requestDto.getCommon().getThumbnailUrl())
 			.feedType(requestDto.getCommon().getFeedType().toString())
 			.activated(requestDto.getCommon().getActivated())
-			.activeTime(requestDto.getCommon().getActiveTime())
+			.activeTime(DateTimeParser.parse(requestDto.getCommon().getActiveTime()))
 			.redirectUrl(requestDto.getLanding().getRedirectUrl())
 			.build();
 	}

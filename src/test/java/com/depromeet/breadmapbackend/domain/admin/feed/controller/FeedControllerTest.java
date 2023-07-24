@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -133,7 +132,7 @@ public class FeedControllerTest extends ControllerTest {
 			.thumbnailUrl(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
 			.activated(FeedStatus.POSTING)
 			.feedType(FeedType.CURATION)
-			.activeTime(LocalDateTime.of(2023, 1, 1, 0, 0, 0))
+			.activeTime("2023-01-01T00:00:00")
 			.build();
 
 		CommonFeedRequestDto commonLanding = CommonFeedRequestDto.builder()
@@ -144,7 +143,7 @@ public class FeedControllerTest extends ControllerTest {
 			.thumbnailUrl(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
 			.activated(FeedStatus.POSTING)
 			.feedType(FeedType.LANDING)
-			.activeTime(LocalDateTime.of(2023, 1, 1, 0, 0, 1))
+			.activeTime("2023-01-01T00:00:01")
 			.build();
 
 		List<CurationFeedRequestDto> curationDto = List.of(

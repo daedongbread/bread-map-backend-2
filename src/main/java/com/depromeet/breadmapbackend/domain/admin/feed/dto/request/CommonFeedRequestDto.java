@@ -1,10 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.dto.request;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
@@ -36,13 +32,12 @@ public class CommonFeedRequestDto {
 	@NotBlank(message = "피드 타입은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
 	private FeedType feedType;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@NotBlank(message = "게시 시간은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-	private LocalDateTime activeTime;
+	private String activeTime;
 
 	@Builder
 	public CommonFeedRequestDto(String subTitle, String introduction, String conclusion, String thumbnailUrl,
-		FeedStatus activated, Long categoryId, FeedType feedType, LocalDateTime activeTime) {
+		FeedStatus activated, Long categoryId, FeedType feedType, String activeTime) {
 		this.subTitle = subTitle;
 		this.categoryId = categoryId;
 		this.introduction = introduction;

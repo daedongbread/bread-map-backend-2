@@ -20,6 +20,7 @@ import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CommonFeedRequestDto;
 import com.depromeet.breadmapbackend.global.BaseEntity;
+import com.depromeet.breadmapbackend.global.converter.DateTimeParser;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -66,7 +67,7 @@ public abstract class Feed extends BaseEntity {
 		this.introduction = updateDto.getIntroduction();
 		this.conclusion = updateDto.getConclusion();
 		this.thumbnailUrl = updateDto.getThumbnailUrl();
-		this.activeTime = updateDto.getActiveTime();
+		this.activeTime = DateTimeParser.parse(updateDto.getActiveTime());
 		this.feedType = updateDto.getFeedType().toString();
 	}
 
