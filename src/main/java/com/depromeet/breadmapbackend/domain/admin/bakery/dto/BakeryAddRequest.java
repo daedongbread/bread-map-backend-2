@@ -43,6 +43,8 @@ public class BakeryAddRequest {
 	private String facebookURL;
 	private String blogURL;
 	private String phoneNumber;
+	private String checkPoint;
+	private String newBreadTime;
 	private List<@EnumCheck(groups = ValidationGroups.PatternCheckGroup.class) FacilityInfo> facilityInfoList;
 	// private Long ownerId;
 

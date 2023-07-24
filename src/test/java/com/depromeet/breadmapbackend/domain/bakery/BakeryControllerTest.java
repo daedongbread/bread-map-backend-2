@@ -164,6 +164,8 @@ class BakeryControllerTest extends ControllerTest {
 					fieldWithPath("data.bakeryInfo.facebookURL").description("빵집 페이스북"),
 					fieldWithPath("data.bakeryInfo.blogURL").description("빵집 블로그"),
 					fieldWithPath("data.bakeryInfo.phoneNumber").description("빵집 전화번호"),
+					fieldWithPath("data.bakeryInfo.checkPoint").description("빵집 체크포인트"),
+					fieldWithPath("data.bakeryInfo.newBreadTime").description("빵집 갓군빵나오는시간"),
 					fieldWithPath("data.flagInfo").description("빵집 깃발 정보"),
 					fieldWithPath("data.flagInfo.flagId").description("유저 빵집 깃발 고유 번호 (깃발 미선택 시 null)"),
 					fieldWithPath("data.flagInfo.isFlaged").description("유저 빵집 깃발 저장 유무 (깃발 미선택 시 false)"),

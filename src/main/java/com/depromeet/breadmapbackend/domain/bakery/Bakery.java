@@ -5,7 +5,6 @@ import static java.lang.Math.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -64,6 +63,8 @@ public class Bakery extends BaseEntity {
 	private String hours;
 
 	private String phoneNumber;
+	private String checkPoint;
+	private String newBreadTime;
 
 	@Embedded
 	private BakeryURL bakeryURL;
@@ -91,7 +92,8 @@ public class Bakery extends BaseEntity {
 	@Builder
 	public Bakery(
 		Long id, String name, Double latitude, Double longitude,
-		String address, String detailedAddress, String hours, String phoneNumber,
+		String address, String detailedAddress, String hours, String phoneNumber, String checkPoint,
+		String newBreadTime,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status, BakeryAddReport bakeryAddReport
 	) {
@@ -100,6 +102,8 @@ public class Bakery extends BaseEntity {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.address = address;
+		this.checkPoint = checkPoint;
+		this.newBreadTime = newBreadTime;
 		this.detailedAddress = detailedAddress;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
@@ -113,7 +117,9 @@ public class Bakery extends BaseEntity {
 
 	public void update(
 		String name, String address, String detailedAddress, Double latitude, Double longitude, String hours,
-		String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
+		String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber,
+		String checkPoint,
+		String newBreadTime, String image,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status
 	) {
 		this.name = name;
