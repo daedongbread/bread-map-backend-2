@@ -25,4 +25,6 @@ public interface CommentService {
 	void updateComment(UpdateCommand command, Long userId);
 
 	void deleteComment(Long commentId, Long userId);
+
+	int toggleLike(Long commentId, Long id);
 }

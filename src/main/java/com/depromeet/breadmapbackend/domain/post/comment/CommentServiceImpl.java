@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.post.comment;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
+import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLike;
+import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -31,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 	private final CustomAWSS3Properties customAWSS3Properties;
+	private final CommentLikeRepository commentLikeRepository;
 
 	@Transactional
 	@Override
@@ -52,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
 				info.isFirstDepth(),
 				info.parentId(),
 				info.userId(),
-				info.isBlocked() ? BLOCKED_USER_NICKNAME : info.nickname(),
+				info.isBlocked() ? BLOCKED_USER_NICKNAME : info.nickname(), // TODO : 차단된 사용자명, 이미지 확인
 				info.isBlocked() ? getDefaultImage() : info.nickname(),
 				info.likeCount(),
 				info.createdDate(),
@@ -70,6 +75,7 @@ public class CommentServiceImpl implements CommentService {
 		return blocked ? BLOCKED_USER_COMMENT : status.replaceContent(content);
 	}
 
+	// TODO : 댓글 수장 필요 업는지??
 	@Override
 	@Transactional
 	public void updateComment(final UpdateCommand command, final Long userId) {
@@ -83,5 +89,17 @@ public class CommentServiceImpl implements CommentService {
 		commentRepository.findByIdAndUserId(commentId, userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND))
 			.delete();
+	}
+
+	@Override
+	public int toggleLike(final Long commentId, final Long userId) {
+		final Optional<CommentLike> commentLike = commentLikeRepository.findByCommentIdAndUserId(commentId, userId);
+		if (commentLike.isEmpty()) {
+			commentLikeRepository.save(new CommentLike(commentId, userId));
+			return 1;
+		} else {
+			commentLikeRepository.delete(commentLike.get());
+			return 0;
+		}
 	}
 }

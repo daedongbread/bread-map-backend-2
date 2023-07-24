@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
+import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLike;
 
 /**
  * CommentServiceImplTest
@@ -96,7 +98,40 @@ class CommentServiceImplTest extends CommentServiceTest {
 		//then
 		final Comment updatedComment = em.find(Comment.class, command.commentId());
 		assertThat(updatedComment.getContent()).isEqualTo(command.content());
+	}
 
+	@Test
+	@Sql("classpath:comment-test-data.sql")
+	void 댓글_좋아요_토글() throws Exception {
+		//given
+		final Long userId = 111L;
+		final Long commentId = 111L;
+		//when
+		sut.toggleLike(commentId, userId);
+
+		//then
+		final CommentLike result = em.createQuery(
+				"select cl from CommentLike cl where userId =:userId and commentId =:commentId",
+				CommentLike.class)
+			.setParameter("userId", userId)
+			.setParameter("commentId", commentId)
+			.getSingleResult();
+
+		assertThat(result.getUserId()).isEqualTo(userId);
+		assertThat(result.getCommentId()).isEqualTo(commentId);
+
+		//when
+		final int reuslt2 = sut.toggleLike(commentId, userId);
+
+		//then
+		assertThat(reuslt2).isEqualTo(0);
+		assertThatThrownBy(() -> em.createQuery(
+				"select cl from CommentLike cl where userId =:userId and commentId =:commentId",
+				CommentLike.class)
+			.setParameter("userId", userId)
+			.setParameter("commentId", commentId)
+			.getSingleResult()
+		).isInstanceOf(NoResultException.class);
 	}
 
 }

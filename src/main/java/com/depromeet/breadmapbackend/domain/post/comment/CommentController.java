@@ -80,6 +80,13 @@ public class CommentController {
 	}
 
 	//댓글 좋아요
-
+	@PostMapping("/like/{commentId}")
+	@ResponseStatus(HttpStatus.OK)
+	ApiResponse<Integer> toggleLike(
+		@PathVariable("commentId") final Long commentId,
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
+	) {
+		return new ApiResponse<>(commentService.toggleLike(commentId, currentUserInfo.getId()));
+	}
 	//댓글 신고
 }
