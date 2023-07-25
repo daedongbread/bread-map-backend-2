@@ -43,10 +43,13 @@ public class BakeryUpdateRequest {
 	private String facebookURL;
 	private String blogURL;
 	private String phoneNumber;
+	private String checkPoint;
+	private String newBreadTime;
 	private List<@EnumCheck FacilityInfo> facilityInfoList;
 	@Valid
 	private List<ProductUpdateRequest> productList;
 	private BakeryStatus status;
+	private Long pioneerId;
 
 	@Getter
 	@Builder

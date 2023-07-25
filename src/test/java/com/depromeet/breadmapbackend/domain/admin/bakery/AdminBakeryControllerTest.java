@@ -248,6 +248,8 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("data.facebookURL").description("빵집 페이스북"),
 					fieldWithPath("data.blogURL").description("빵집 블로그"),
 					fieldWithPath("data.phoneNumber").description("빵집 전화번호"),
+					fieldWithPath("data.checkPoint").description("빵집 체크포인트"),
+					fieldWithPath("data.newBreadTime").description("빵집 갓군빵나오는시간"),
 					fieldWithPath("data.facilityInfoList")
 						.description("빵집 시설 정보 (PARKING(\"주차가능\"),\n" +
 							"WIFI(\"와이파이\"),\n" +
@@ -334,6 +336,8 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("blogURL").optional().description("빵집 블로그"),
 					fieldWithPath("websiteURL").optional().description("빵집 홈페이지"),
 					fieldWithPath("phoneNumber").optional().description("빵집 전화번호"),
+					fieldWithPath("checkPoint").description("빵집 체크포인트"),
+					fieldWithPath("newBreadTime").description("빵집 갓군빵나오는시간"),
 					fieldWithPath("facilityInfoList.[]").optional()
 						.description("빵집 시설 정보 (PARKING(\"주차가능\"),\n" +
 							"WIFI(\"와이파이\"),\n" +
@@ -405,6 +409,8 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("blogURL").optional().description("빵집 블로그"),
 					fieldWithPath("websiteURL").optional().description("빵집 홈페이지"),
 					fieldWithPath("phoneNumber").optional().description("빵집 전화번호"),
+					fieldWithPath("checkPoint").description("빵집 체크포인트"),
+					fieldWithPath("newBreadTime").description("빵집 갓군빵나오는시간"),
 					fieldWithPath("facilityInfoList.[]").optional()
 						.description("빵집 시설 정보 (PARKING(\"주차가능\"),\n" +
 							"WIFI(\"와이파이\"),\n" +

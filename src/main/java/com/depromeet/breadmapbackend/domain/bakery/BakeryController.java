@@ -49,6 +49,7 @@ public class BakeryController {
 		);
 	}
 
+	/** 여기 **/
 	@GetMapping("/{bakeryId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<BakeryDto> getBakery(

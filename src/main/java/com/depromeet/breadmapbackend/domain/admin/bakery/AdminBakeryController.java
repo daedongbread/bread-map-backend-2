@@ -61,6 +61,7 @@ public class AdminBakeryController {
 		return new ApiResponse<>(adminBakeryService.getBakeryList(filterBy, name, page));
 	}
 
+	/** 여기 **/
 	@GetMapping("/{bakeryId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<AdminBakeryDto> getBakery(@PathVariable Long bakeryId) {
@@ -73,6 +74,7 @@ public class AdminBakeryController {
 		return new ApiResponse<>(adminBakeryService.getBakeryLatitudeLongitude(address));
 	}
 
+	/** 여기 **/
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse<BakeryAddDto> addBakery(
@@ -80,6 +82,7 @@ public class AdminBakeryController {
 		return new ApiResponse<>(adminBakeryService.addBakery(request));
 	}
 
+	/** 여기 **/
 	@PatchMapping("/{bakeryId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateBakery(
