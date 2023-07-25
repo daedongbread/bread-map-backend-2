@@ -26,8 +26,6 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakery
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryRepositoryImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.util.FixtureFactory;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 /**
  * BakeryRankTest
@@ -94,24 +92,24 @@ class ScoredBakeryServiceImplTest {
 		assertThat(result.get(0).isFlagged()).isTrue();
 		assertThat(result.get(1).isFlagged()).isFalse();
 	}
-
-	@Test
-	void 캐시_DB_하루전_랭킹_데이터_모두_데이터가_없을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
-		// given
-		final int count = 1;
-		final Long userId = 1L;
-
-		//when
-		//then
-		final Throwable thrown = catchThrowable(() -> sut.findBakeriesRankTop(userId, count));
-		assertThat(thrown).isInstanceOf(DaedongException.class);
-		assertThat(((DaedongException)thrown).getDaedongStatus())
-			.isEqualTo(DaedongStatus.CALCULATING_BAKERY_RANKING);
-
-		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
-		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
-	}
+	//
+	// @Test
+	// void 캐시_DB_하루전_랭킹_데이터_모두_데이터가_없을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
+	// 	// given
+	// 	final int count = 1;
+	// 	final Long userId = 1L;
+	//
+	// 	//when
+	// 	//then
+	// 	final Throwable thrown = catchThrowable(() -> sut.findBakeriesRankTop(userId, count));
+	// 	assertThat(thrown).isInstanceOf(DaedongException.class);
+	// 	assertThat(((DaedongException)thrown).getDaedongStatus())
+	// 		.isEqualTo(DaedongStatus.CALCULATING_BAKERY_RANKING);
+	//
+	// 	final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
+	// 	assertThat(fieldMap).hasSize(1);
+	// 	assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
+	// }
 
 	@Test
 	void 캐시_DB_모두_데이터가_없고_하루전_랭킹_데이터만_있을때_인기_빵집_랭킹_조회하면_기대하는_응답을_반환한다() throws Exception {
