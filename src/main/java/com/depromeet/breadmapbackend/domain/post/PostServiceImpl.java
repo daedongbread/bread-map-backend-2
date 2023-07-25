@@ -78,20 +78,27 @@ public class PostServiceImpl implements PostService {
 	@Override
 	@Transactional
 	public void remove(
-		Long userId,
-		Long postId
+		final Long userId,
+		final PostTopic topic,
+		final Long postId
 	) {
+		final Post post = postRepository.findByPostIdAndUserIdAndPostTopic(postId, userId, topic)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+		// commentRepository.findByPostId(postId);
+		// commentLikeRepository.findByPostId(postId);
+		// postLikeRepository.findByPostId(postId);
+		// reportRepository.findByContentId();
+
 		postRepository.deletePostById(postId, userId);
 	}
 
 	@Override
 	@Transactional
 	public void update(final Long userId, final PostUpdateCommand command) {
-		final Post savedPost = postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId)
-			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
-
+		final Post savedPost =
+			postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId, command.postTopic())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 		savedPost.update(command.content(), command.title(), command.images());
-
 		postRepository.save(savedPost);
 	}
 

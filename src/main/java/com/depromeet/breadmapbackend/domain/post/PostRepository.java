@@ -33,5 +33,9 @@ public interface PostRepository {
 
 	List<CommunityCardInfo> findHotPosts(Long userId);
 
-	Optional<Post> findByPostIdAndUserIdAndPostTopic(Long postId, Long userId);
+	Optional<Post> findByPostIdAndUserIdAndPostTopic(Long postId, Long userId, final PostTopic postTopic);
+
+	Optional<Post> findByPostIdAndPostTopic(Long postId, PostTopic postTopic);
+
+	Optional<Post> findByPostIdAndPostTopic(Long postId, String postTopic);
 }

@@ -80,9 +80,20 @@ public class PostRepositoryImpl implements PostRepository {
 	@Override
 	public Optional<Post> findByPostIdAndUserIdAndPostTopic(
 		final Long postId,
-		final Long userId
+		final Long userId,
+		final PostTopic postTopic
 	) {
-		return postJpaRepository.findByIdAndUserId(postId, userId);
+		return postJpaRepository.findByIdAndUserIdAndPostTopic(postId, userId, postTopic);
+	}
+
+	@Override
+	public Optional<Post> findByPostIdAndPostTopic(final Long postId, final PostTopic postTopic) {
+		return postJpaRepository.findByIdAndPostTopic(postId, postTopic);
+	}
+
+	@Override
+	public Optional<Post> findByPostIdAndPostTopic(final Long postId, final String postTopic) {
+		return postJpaRepository.findByIdAndPostTopic(postId, PostTopic.of(postTopic));
 	}
 
 }

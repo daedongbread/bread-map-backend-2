@@ -44,8 +44,7 @@ public class PostController {
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@RequestBody @Valid final PostRequest request
 	) {
-		validatePostTopic(request);
-
+		validatePostTopic(request.postTopic());
 		postService.register(Mapper.of(request), currentUserInfo.getId());
 	}
 
@@ -85,13 +84,15 @@ public class PostController {
 	}
 
 	// post 삭제
-	@DeleteMapping("/{postId}")
+	@DeleteMapping("/{postTopic}/{postId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	void remove(
-		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
-		@PathVariable final Long postId
+		@PathVariable("postId") final Long postId,
+		@PathVariable("postTopic") final String postTopic,
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
-		postService.remove(currentUserInfo.getId(), postId);
+		final PostTopic topic = PostTopic.of(postTopic);
+		postService.remove(currentUserInfo.getId(), topic, postId);
 	}
 
 	// post 수정
@@ -102,7 +103,7 @@ public class PostController {
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
 		@RequestBody @Valid final PostRequest request
 	) {
-		validatePostTopic(request);
+		validatePostTopic(request.postTopic());
 		postService.update(currentUserInfo.getId(), Mapper.of(request, postId));
 	}
 
@@ -128,9 +129,9 @@ public class PostController {
 		postService.report(currentUserInfo.getId(), Mapper.of(postId, request));
 	}
 
-	private void validatePostTopic(final PostRequest request) {
-		if (request.postTopic().equals(PostTopic.EVENT) ||
-			request.postTopic().equals(PostTopic.REVIEW)
+	private void validatePostTopic(final PostTopic postTopic) {
+		if (postTopic.equals(PostTopic.EVENT) ||
+			postTopic.equals(PostTopic.REVIEW)
 		) {
 			throw new DaedongException(DaedongStatus.INVALID_POST_TOPIC);
 		}

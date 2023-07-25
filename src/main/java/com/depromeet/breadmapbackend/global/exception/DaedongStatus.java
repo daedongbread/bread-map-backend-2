@@ -40,6 +40,11 @@ public enum DaedongStatus {
 	INVALID_POST_TOPIC(BAD_REQUEST, 40095, "invalid post topic"),
 	COMMENT_NOT_FOUND(BAD_REQUEST, 40096, "comment not found"),
 	INVALID_COMMENT_STATUS(BAD_REQUEST, 40097, "comment status not valid"),
+	INVALID_POST(BAD_REQUEST, 40098, "invalid post"),
+	REPORT_CONTENT_EXCEPTION(BAD_REQUEST, 40099, "report conent exception"),
+	INVALID_REPORT_TYPE(BAD_REQUEST, 40100, "invalid report type"),
+	INVALID_REPORT_TARGET(BAD_REQUEST, 40101, "invalid report target"),
+	CANNOT_REPORT_OWN_POST(BAD_REQUEST, 40102, "cannot report own content"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외

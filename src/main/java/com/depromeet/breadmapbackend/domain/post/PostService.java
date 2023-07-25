@@ -39,6 +39,7 @@ public interface PostService {
 	// post 삭제
 	void remove(
 		final Long userId,
+		final PostTopic topic,
 		final Long postId
 	);
 
