@@ -50,3 +50,6 @@ endif::[]
 
 === Image API
 - xref:image.adoc[Image APIs]
+
+=== Feed API
+- xref:feed.adoc[Feed APIs]
