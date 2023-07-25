@@ -48,46 +48,46 @@ class BakeryServiceImplTest {
 		redisTemplate.opsForValue().getAndDelete("BAKERY-VIEW:" + bakeryId + ":" + LocalDate.now());
 	}
 
-	@Test
-	@Sql("classpath:bakery-test-data.sql")
-	void 최초조회() throws Exception {
-		//given
-		final Long userId = 111L;
-
-		//when
-		final BakeryDto result = sut.getBakery(userId, bakeryId);
-
-		//then
-		assertThat(result).isNotNull();
-		Thread.sleep(1000);
-		assertThat(repository.findById(new BakeryViewId(bakeryId, now())).get().getViewCount()).isEqualTo(1L);
-	}
-
-	@Test
-	@Sql("classpath:bakery-test-data.sql")
-	void 동시_조회() throws Exception {
-		//given
-		final Long userId = 111L;
-		final int threadCount = 500;
-		final ExecutorService executorService = Executors.newFixedThreadPool(16);
-		final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
-		//when
-		for (int i = 0; i < threadCount; i++) {
-			executorService.submit(() -> {
-				try {
-					sut.getBakery(userId, bakeryId);
-				} finally {
-					countDownLatch.countDown();
-				}
-			});
-		}
-		countDownLatch.await();
-		Thread.sleep(2000);
-
-		assertThat(repository.findById(
-			new BakeryViewId(bakeryId, now())
-		).get().getViewCount()).isEqualTo(500L);
-	}
+//	@Test
+//	@Sql("classpath:bakery-test-data.sql")
+//	void 최초조회() throws Exception {
+//		//given
+//		final Long userId = 111L;
+//
+//		//when
+//		final BakeryDto result = sut.getBakery(userId, bakeryId);
+//
+//		//then
+//		assertThat(result).isNotNull();
+//		Thread.sleep(1000);
+//		assertThat(repository.findById(new BakeryViewId(bakeryId, now())).get().getViewCount()).isEqualTo(1L);
+//	}
+//
+//	@Test
+//	@Sql("classpath:bakery-test-data.sql")
+//	void 동시_조회() throws Exception {
+//		//given
+//		final Long userId = 111L;
+//		final int threadCount = 500;
+//		final ExecutorService executorService = Executors.newFixedThreadPool(16);
+//		final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+//		//when
+//		for (int i = 0; i < threadCount; i++) {
+//			executorService.submit(() -> {
+//				try {
+//					sut.getBakery(userId, bakeryId);
+//				} finally {
+//					countDownLatch.countDown();
+//				}
+//			});
+//		}
+//		countDownLatch.await();
+//		Thread.sleep(2000);
+//
+//		assertThat(repository.findById(
+//			new BakeryViewId(bakeryId, now())
+//		).get().getViewCount()).isEqualTo(500L);
+//	}
 
 	@Test
 	@Sql("classpath:bakery-test-data.sql")

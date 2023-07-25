@@ -22,6 +22,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.AdminService;
+import com.depromeet.breadmapbackend.domain.admin.category.repository.CategoryRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.repository.CurationBakeryRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.repository.CurationFeedRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.repository.FeedRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.repository.LandingFeedRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.service.CommonFeedService;
+import com.depromeet.breadmapbackend.domain.admin.feed.service.CurationFeedService;
+import com.depromeet.breadmapbackend.domain.admin.feed.service.LandingFeedService;
 import com.depromeet.breadmapbackend.domain.auth.AuthService;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryService;
@@ -180,6 +188,30 @@ public abstract class ControllerTest {
 
 	@Autowired
 	protected AdminService adminService;
+
+	@Autowired
+	protected FeedRepository feedRepository;
+
+	@Autowired
+	protected CurationFeedRepository curationFeedRepository;
+
+	@Autowired
+	protected LandingFeedRepository landingFeedRepository;
+
+	@Autowired
+	protected CategoryRepository categoryRepository;
+
+	@Autowired
+	protected CurationBakeryRepository curationBakeryRepository;
+
+	@Autowired
+	protected CurationFeedService curationFeedService;
+
+	@Autowired
+	protected LandingFeedService landingFeedService;
+
+	@Autowired
+	protected CommonFeedService commonFeedService;
 
 	@Autowired
 	protected S3Uploader s3Uploader;

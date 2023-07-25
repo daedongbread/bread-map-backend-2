@@ -34,6 +34,8 @@ public class AdminBakeryDto {
 	private String phoneNumber;
 	private List<FacilityInfo> facilityInfoList;
 	private BakeryStatus status;
+	private String checkPoint;
+	private String newBreadTime;
 
 	private List<AdminProductDto> productList;
 	private Long reportId;
@@ -59,6 +61,8 @@ public class AdminBakeryDto {
 		this.phoneNumber = bakery.getPhoneNumber();
 		this.facilityInfoList = bakery.getFacilityInfoList();
 		this.status = bakery.getStatus();
+		this.checkPoint = bakery.getCheckPoint();
+		this.newBreadTime = bakery.getNewBreadTime();
 		this.productList = productList;
 	}
 }

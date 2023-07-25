@@ -196,6 +196,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			.facebookURL(request.getFacebookURL())
 			.blogURL(request.getBlogURL())
 			.phoneNumber(request.getPhoneNumber())
+			.checkPoint(request.getCheckPoint())
+			.newBreadTime(request.getNewBreadTime())
 			.facilityInfoList(request.getFacilityInfoList())
 			.status(request.getStatus())
 			.bakeryAddReport(bakeryAddReport.orElse(null))
@@ -236,7 +238,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			request.getAddress(), request.getDetailedAddress(), request.getLatitude(), request.getLongitude(),
 			request.getHours(),
 			request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
-			request.getPhoneNumber(),
+			request.getPhoneNumber(), request.getCheckPoint(), request.getNewBreadTime(),
 			(StringUtils.hasText(request.getImage())) ? request.getImage() :
 				customAWSS3Properties.getCloudFront() + "/" +
 					customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png",
