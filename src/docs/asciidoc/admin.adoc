@@ -67,6 +67,19 @@ operation::v1/admin/test[snippets='http-request,http-response,response-fields']
 - 빵집 리뷰 삭제 API
 - 빵집 삭제 API
 
+== Admin Bakery Ranking APIs
+
+- 빵집 랭킹 조회 API
+- 빵집 랭킹 수정 API
+
+=== 빵집 랭킹 조회 API [GET]
+
+operation::v1/admin/bakery/rank[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== 빵집 랭킹 수정 API [POST]
+
+operation::v1/admin/bakery/rank/update[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
 === 빵집 미확인 알람바 API
 
 operation::v1/admin/bakery/alarm-bar[snippets='http-request,request-headers,http-response,response-fields']

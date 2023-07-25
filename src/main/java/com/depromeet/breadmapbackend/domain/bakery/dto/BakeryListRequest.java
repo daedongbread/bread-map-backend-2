@@ -1,5 +1,6 @@
-package com.depromeet.breadmapbackend.domain.bakery;
+package com.depromeet.breadmapbackend.domain.bakery.dto;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakerySortType;
 import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 

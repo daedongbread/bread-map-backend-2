@@ -20,6 +20,7 @@ spring:
     show-sql: true
     open-in-view: false
     properties:
+      default_batch_fetch_size: 100
       hibernate:
         format_sql: true
         create_empty_composites:
@@ -110,3 +111,8 @@ sgis:
   dst2: 4166
   key: 19d650af0ba14aa3a02c
   secret: 3dfe3c41a43140ba8e2d
+
+redis:
+  poll-timeout:
+    bakery-view: 2
+    bakery-ranking-calculator: 2
