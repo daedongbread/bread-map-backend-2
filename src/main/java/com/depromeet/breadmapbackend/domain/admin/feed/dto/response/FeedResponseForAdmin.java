@@ -38,15 +38,4 @@ public class FeedResponseForAdmin {
 			.isActive(feed.getActivated() == FeedStatus.POSTING ? "게시중" : "미게시")
 			.build();
 	}
-
-	@Override
-	public String toString() {
-		return "FeedResponseForAdmin{" +
-			"feedId=" + feedId +
-			", feedTitle='" + feedTitle + '\'' +
-			", authorName='" + authorName + '\'' +
-			", activeTime=" + activeTime +
-			", isActive='" + isActive + '\'' +
-			'}';
-	}
 }
