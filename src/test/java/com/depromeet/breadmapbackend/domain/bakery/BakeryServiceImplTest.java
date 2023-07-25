@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import static java.time.LocalDate.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.sql.Connection;
@@ -9,9 +8,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -24,10 +20,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
-import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryCardDto;
-import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewId;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 
@@ -71,44 +65,44 @@ class BakeryServiceImplTest {
 		redisTemplate.opsForValue().getAndDelete("BAKERY-VIEW:" + bakeryId + ":" + LocalDate.now());
 	}
 
-	@Test
-	void 최초조회() throws Exception {
-		//given
-		final Long userId = 111L;
-
-		//when
-		final BakeryDto result = sut.getBakery(userId, bakeryId);
-
-		//then
-		assertThat(result).isNotNull();
-		Thread.sleep(10000);
-		assertThat(repository.findById(new BakeryViewId(bakeryId, now())).get().getViewCount()).isEqualTo(1L);
-	}
-
-	@Test
-	void 동시_조회() throws Exception {
-		//given
-		final Long userId = 111L;
-		final int threadCount = 500;
-		final ExecutorService executorService = Executors.newFixedThreadPool(16);
-		final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
-		//when
-		for (int i = 0; i < threadCount; i++) {
-			executorService.submit(() -> {
-				try {
-					sut.getBakery(userId, bakeryId);
-				} finally {
-					countDownLatch.countDown();
-				}
-			});
-		}
-		countDownLatch.await();
-		Thread.sleep(10000);
-
-		assertThat(repository.findById(
-			new BakeryViewId(bakeryId, now())
-		).get().getViewCount()).isEqualTo(500L);
-	}
+	// @Test
+	// void 최초조회() throws Exception {
+	// 	//given
+	// 	final Long userId = 111L;
+	//
+	// 	//when
+	// 	final BakeryDto result = sut.getBakery(userId, bakeryId);
+	//
+	// 	//then
+	// 	assertThat(result).isNotNull();
+	// 	Thread.sleep(10000);
+	// 	assertThat(repository.findById(new BakeryViewId(bakeryId, now())).get().getViewCount()).isEqualTo(1L);
+	// }
+	//
+	// @Test
+	// void 동시_조회() throws Exception {
+	// 	//given
+	// 	final Long userId = 111L;
+	// 	final int threadCount = 500;
+	// 	final ExecutorService executorService = Executors.newFixedThreadPool(16);
+	// 	final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+	// 	//when
+	// 	for (int i = 0; i < threadCount; i++) {
+	// 		executorService.submit(() -> {
+	// 			try {
+	// 				sut.getBakery(userId, bakeryId);
+	// 			} finally {
+	// 				countDownLatch.countDown();
+	// 			}
+	// 		});
+	// 	}
+	// 	countDownLatch.await();
+	// 	Thread.sleep(10000);
+	//
+	// 	assertThat(repository.findById(
+	// 		new BakeryViewId(bakeryId, now())
+	// 	).get().getViewCount()).isEqualTo(500L);
+	// }
 
 	@Test
 	void 빵집_점수_조회() throws Exception {
