@@ -79,10 +79,10 @@ insert into review (id, created_at, modified_at, content, is_block, is_delete, i
 (113,  '2023-01-03', '2023-01-01', '으웩!', 'Y', 'N','N','N',112, 112)
 ;
 
-insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,status) values
-(111, 111, 'content',  222, 0, true, 'ACTIVE'),
-(112, 112, 'content 1', 222, 111, false, 'ACTIVE' ),
-(113, 113, 'content 2',  222, 111, false, 'ACTIVE')
+insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,status, target_comment_user_id) values
+(111, 111, 'content',  222, 0, true, 'ACTIVE', 0),
+(112, 112, 'content 1', 222, 111, false, 'ACTIVE', 112 ),
+(113, 113, 'content 2',  222, 111, false, 'ACTIVE', 113)
 ;
 
 

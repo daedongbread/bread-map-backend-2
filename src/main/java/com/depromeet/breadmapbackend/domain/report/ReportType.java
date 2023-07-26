@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ReportType {
-	FREE_TALK("free-talk"),
-	BREAD_STORY("bread-story"),
+	FREE_TALK("free_talk"),
+	BREAD_STORY("bread_story"),
 	REVIEW("review"),
 	COMMENT("comment");
 

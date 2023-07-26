@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.depromeet.breadmapbackend.domain.review.Review;
 
 public interface ReviewReportRepository extends JpaRepository<ReviewReport, Long> {
-	@Query(value = "select r from PostReport r", countQuery = "select count(r) from PostReport r")
+	@Query(value = "select r from ReviewReport r", countQuery = "select count(r) from ReviewReport r")
 	Page<ReviewReport> findPageAll(Pageable pageable);
 
 	void deleteByReview(Review review);

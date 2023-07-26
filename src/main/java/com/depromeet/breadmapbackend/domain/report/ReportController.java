@@ -31,10 +31,10 @@ public class ReportController {
 
 	private final ReportService reportService;
 
-	@PostMapping("/{ReportType}/{contentId}")
+	@PostMapping("/{reportType}/{contentId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	void report(
-		@PathVariable("ReportType") final String reportType,
+		@PathVariable("reportType") final String reportType,
 		@PathVariable("contentId") final Long contentId,
 		@RequestBody @Validated(ValidationSequence.class) ReportRequest request,
 		@AuthenticationPrincipal final CurrentUserInfo CurrentUserInfo
