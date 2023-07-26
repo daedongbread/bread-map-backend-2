@@ -14,4 +14,7 @@ public interface AdminRankingService {
 	RankingResponse getRanking(String startDateString);
 
 	int updateRanking(RankingUpdateRequest request);
+
+	void reCalculateRanking();
+
 }

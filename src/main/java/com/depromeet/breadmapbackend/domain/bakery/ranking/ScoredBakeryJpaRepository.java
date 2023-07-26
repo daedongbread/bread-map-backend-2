@@ -35,4 +35,6 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 		@Param("startDate") final LocalDate startDate,
 		@Param("endDate") final LocalDate endDate
 	);
+
+	void deleteByCalculatedDate(LocalDate calculateDate);
 }
