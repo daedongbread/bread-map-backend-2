@@ -110,6 +110,17 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 	@Override
 	public void deleteByCalculatedDate(final LocalDate calculateDate) {
-		scoredBakeryJpaRepository.deleteByCalculatedDate(calculateDate);
+		log.info("bulk delete scored bakery list");
+
+		String sql = String.format(
+			"""
+					delete
+					from `%s` 
+					where calculated_date = :calculatedDate 
+				""", TABLE);
+
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("calculatedDate", LocalDateParser.parse(calculateDate));
+		namedParameterJdbcTemplate.update(sql, param);
 	}
 }

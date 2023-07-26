@@ -44,6 +44,7 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 		return scoredBakeryRepository.updateRank(request);
 	}
 
+	@Transactional
 	@Override
 	public void reCalculateRanking() {
 		final String eventName = EventInfo.CALCULATE_RANKING_EVENT.getEventName();
