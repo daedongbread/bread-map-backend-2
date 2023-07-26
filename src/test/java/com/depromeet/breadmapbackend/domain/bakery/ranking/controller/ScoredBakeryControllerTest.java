@@ -83,7 +83,8 @@ public class ScoredBakeryControllerTest extends ControllerTest {
 					fieldWithPath("data.[].flagNum").description("빵집 깃발 개수"),
 					fieldWithPath("data.[].rating").description("빵집 평점"),
 					fieldWithPath("data.[].shortAddress").description("빵집 축약 주소"),
-					fieldWithPath("data.[].isFlagged").description("해당 유저 빵집 깃발 추가 여부")
+					fieldWithPath("data.[].isFlagged").description("해당 유저 빵집 깃발 추가 여부"),
+					fieldWithPath("data.[].calculatedDate").description("랭킹 계산 날짜")
 				)
 			));
 
