@@ -189,7 +189,7 @@ class BakeryControllerTest extends ControllerTest {
 		mockMvc.perform(get("/v1/bakeries/new")
 				.header("Authorization", "Bearer " + token.getAccessToken()))
 			.andDo(print())
-			.andDo(document("v1/bakery/find",
+			.andDo(document("v1/bakery/find/new",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),

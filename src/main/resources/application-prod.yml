@@ -8,12 +8,14 @@ spring:
     password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 20
-#      idle-timeout: 300
-#      max-lifeitme: 300
+  #      idle-timeout: 300
+  #      max-lifeitme: 300
   jpa:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      default_batch_fetch_size: 100
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -64,3 +66,8 @@ sgis:
   dst2: ${SGIS_DST2}
   key: ${SGIS_KEY}
   secret: ${SGIS_SECRET}
+
+redis:
+  poll-timeout:
+    bakery-view: 5
+    bakery-ranking-calculator: 5

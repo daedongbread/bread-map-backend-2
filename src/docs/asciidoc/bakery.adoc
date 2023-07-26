@@ -25,7 +25,7 @@ operation::v1/bakery/find[snippets='http-request,path-parameters,http-response,r
 
 === 신규 빵집 조회 API [GET]
 
-operation::v1/bakery/find/new[snippets='http-request,request-parameters,http-response,response-fields']
+operation::v1/bakery/find/new[snippets='http-request,http-response,response-fields']
 
 == Bakery Product APIs
 

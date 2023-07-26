@@ -1,6 +1,10 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
+import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 
 /**
  * ScoredBakeryRepository
@@ -10,9 +14,14 @@ import java.util.List;
  * @since 2023/07/02
  */
 public interface ScoredBakeryRepository {
-	int bulkInsert(final List<ScoredBakery> scoredBakeryList, final String weekOfMonthYear);
+	int bulkInsert(final List<ScoredBakery> scoredBakeryList);
 
-	List<ScoredBakery> findCachedScoredBakeryByWeekOfMonthYear(final String weekOfMonthYear, final int size);
+	List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size);
 
-	List<ScoredBakery> findScoredBakeryByWeekOfMonthYear(final String weekOfMonthYear, final int size);
+	RankingResponse findScoredBakeryByStartDate(final LocalDate startDate);
+
+	int updateRank(RankingUpdateRequest request);
+
+	void deleteByCalculatedDate(LocalDate calculateDate);
+
 }

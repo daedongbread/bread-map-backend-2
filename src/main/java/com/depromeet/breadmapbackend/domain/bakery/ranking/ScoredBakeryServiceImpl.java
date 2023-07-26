@@ -1,18 +1,18 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.global.util.CalenderUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,19 +33,27 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
 
 	@Transactional
-	public int registerBakeriesRank(final List<BakeryScores> bakeriesScores, final String weekOfMonthYear) {
-		final List<ScoredBakery> scoredBakeryList =
-			bakeriesScores.stream()
+	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
+		final List<ScoredBakery> sortedBakeryRank =
+			bakeryScoreBaseList
+				.stream()
 				.map(ScoredBakery::from)
+				.sorted(
+					Comparator.comparing(ScoredBakery::getTotalScore).reversed()
+						.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
+				)
 				.toList();
 
-		return scoredBakeryRepository.bulkInsert(scoredBakeryList, weekOfMonthYear);
+		for (final ScoredBakery scoredBakery : sortedBakeryRank) {
+			scoredBakery.setRank(sortedBakeryRank.indexOf(scoredBakery) + 1);
+		}
+
+		return scoredBakeryRepository.bulkInsert(sortedBakeryRank);
 	}
 
 	@Override
 	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
-		final List<ScoredBakery> scoredBakeries =
-			findScoredBakeryBy(CalenderUtil.getYearWeekOfMonth(LocalDate.now()), size);
+		final List<ScoredBakery> scoredBakeries = findScoredBakeryBy(LocalDate.now(), size);
 
 		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
 
@@ -53,26 +61,30 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.map(bakeryScores -> from(userFlaggedBakeries, bakeryScores))
 			.limit(size)
 			.toList();
-
 	}
 
-	private List<ScoredBakery> findScoredBakeryBy(final String weekOfMonthYear, final int size) {
-
-		final List<ScoredBakery> cachedRank =
-			scoredBakeryRepository.findCachedScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
-		if (!cachedRank.isEmpty()) {
-			return cachedRank;
+	private List<ScoredBakery> findScoredBakeryBy(final LocalDate calculatedDate, final int size) {
+		final List<ScoredBakery> ranksFromDb = getRanksFromDb(calculatedDate, size);
+		if (!ranksFromDb.isEmpty()) {
+			return ranksFromDb;
 		}
 
-		final List<ScoredBakery> rankedBakeries =
-			scoredBakeryRepository.findScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
-		if (!rankedBakeries.isEmpty()) {
-			scoredBakeryEventStream.publish(ScoredBakeryEvents.CACHE_RANKING, weekOfMonthYear);
-			return rankedBakeries;
+		scoredBakeryEventStream.publishCalculateRankingEvent(calculatedDate);
+
+		final List<ScoredBakery> lastCalculatedRank = getLastCalculatedRanks(calculatedDate, size);
+		if (!lastCalculatedRank.isEmpty()) {
+			return lastCalculatedRank;
 		}
 
-		scoredBakeryEventStream.publish(ScoredBakeryEvents.CALCULATE_RANKING, weekOfMonthYear);
 		throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
+	}
+
+	private List<ScoredBakery> getLastCalculatedRanks(final LocalDate calculatedDate, final int size) {
+		return scoredBakeryRepository.findScoredBakeryByCalculatedDate(calculatedDate.minusDays(1L), size);
+	}
+
+	private List<ScoredBakery> getRanksFromDb(final LocalDate calculatedDate, final int size) {
+		return scoredBakeryRepository.findScoredBakeryByCalculatedDate(calculatedDate, size);
 	}
 
 	private List<FlagBakery> findFlagBakeryBy(final Long userId, final List<ScoredBakery> bakeriesScores) {
@@ -89,8 +101,6 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.id(bakeryScores.getBakery().getId())
 			.name(bakeryScores.getBakery().getName())
 			.image(bakeryScores.getBakery().getImage())
-			.flagNum(bakeryScores.getFlagCount())
-			.rating(bakeryScores.getBakeryRating())
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
 			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
 			.build();

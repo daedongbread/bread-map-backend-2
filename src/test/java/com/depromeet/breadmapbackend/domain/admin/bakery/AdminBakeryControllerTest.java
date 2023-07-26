@@ -428,6 +428,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 						"POSTING(\"게시중\"), UNPOSTING(\"미게시\"))"),
 					fieldWithPath("pioneerId").optional().description("빵집 개척자 고유 번호")
 				)
+
 			))
 			.andExpect(status().isNoContent());
 	}

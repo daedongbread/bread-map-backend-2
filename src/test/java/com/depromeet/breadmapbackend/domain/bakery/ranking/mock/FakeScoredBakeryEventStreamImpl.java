@@ -1,9 +1,11 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.mock;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEvents;
+import com.depromeet.breadmapbackend.global.EventInfo;
 
 /**
  * FakeScoreBakeryEventStreamImpl
@@ -25,8 +27,8 @@ public class FakeScoredBakeryEventStreamImpl implements ScoredBakeryEventStream 
 	}
 
 	@Override
-	public void publish(final ScoredBakeryEvents event, final String yearWeekOfMonth) {
-		fieldMap.put(event.name(), yearWeekOfMonth);
+	public void publishCalculateRankingEvent(final LocalDate calculatedDate) {
+		fieldMap.put(EventInfo.CALCULATE_RANKING_EVENT.name(),
+			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 	}
-
 }
