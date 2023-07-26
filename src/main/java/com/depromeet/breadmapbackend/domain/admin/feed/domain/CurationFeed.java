@@ -5,17 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 
+import com.depromeet.breadmapbackend.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +27,9 @@ public class CurationFeed extends Feed {
 
 	@Embedded
 	private CurationBakeries bakeries;
+
+	@Embedded
+	private FeedLikes likes;
 
 	@Column(name = "likes")
 	private int like;
@@ -56,6 +56,28 @@ public class CurationFeed extends Feed {
 
 		this.removeAllBakeries();
 		this.addAll(bakeries, updateDto);
+	}
+
+	public int getLikeCount() {
+		return this.likes.getCounts();
+	}
+
+	public int getLikeCountByUser(Long userId) {
+		return this.likes.getCountsByUser(userId);
+	}
+
+	public void like(User user) {
+		FeedLike like = new FeedLike(user, this);
+		FeedLike feedLike = likes.find(like);
+
+		likes.like(feedLike);
+	}
+
+	public void unLike(User user) {
+		FeedLike like = new FeedLike(user, this);
+		FeedLike feedLike = likes.find(like);
+
+		likes.unLike(feedLike);
 	}
 
 	@Override

@@ -98,7 +98,8 @@ public enum DaedongStatus {
 	OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key"), // OIDC public key가 문제일 때
 	EVENT_DOES_NOT_HAVE_CONSUMER_GROUP(INTERNAL_SERVER_ERROR, 50001,
 		"no registered consumer group"), // 해당 이벤트에 등록되지 않은 컨슈머 그룹입니다.
-	;
+	CANNOT_LIKE_MORE_THAN_COUNT(INTERNAL_SERVER_ERROR, 50002, "cannot like more than 5"),
+	CANNOT_UNLIKE_UNDER_ZERO(INTERNAL_SERVER_ERROR, 50002, "cannot like under 0");
 	private final HttpStatus status;
 	private final Integer code;
 	private final String description;

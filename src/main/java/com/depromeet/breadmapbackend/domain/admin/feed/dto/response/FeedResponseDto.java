@@ -19,13 +19,15 @@ public class FeedResponseDto {
 	private List<CurationFeedResponseDto> curation;
 
 	private LandingFeedResponseDto landing;
+	private int likeCounts;
 
 	@Builder
 	private FeedResponseDto(CommonFeedResponseDto common, List<CurationFeedResponseDto> curation,
-		LandingFeedResponseDto landing) {
+		LandingFeedResponseDto landing, int likeCounts) {
 		this.common = common;
 		this.curation = curation;
 		this.landing = landing;
+		this.likeCounts = likeCounts;
 	}
 
 	public static FeedResponseDto ofLanding(Feed feed) {
@@ -47,6 +49,7 @@ public class FeedResponseDto {
 		return FeedResponseDto.builder()
 			.common(CommonFeedResponseDto.of(feed))
 			.curation(curationFeedResponseDtos)
+			.likeCounts(curationFeed.getLikeCount())
 			.build();
 	}
 }
