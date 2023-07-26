@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
 import static com.google.protobuf.FieldType.*;
+import static org.springframework.asm.Type.ARRAY;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -558,6 +559,14 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
 						fieldWithPath("data.curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
 						fieldWithPath("data.curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].address").description("큐레이션 피드 빵집 주소"),
+						fieldWithPath("data.curation.[].detailedAddress").description("큐레이션 피드 빵집 상세주소"),
+						fieldWithPath("data.curation.[].websiteURL").description("큐레이션 피드 빵집 웹사이트 Url"),
+						fieldWithPath("data.curation.[].instagramURL").description("큐레이션 피드 빵집 인스타 Url"),
+						fieldWithPath("data.curation.[].facebookURL").description("큐레이션 피드 빵집 페이스북 Url"),
+						fieldWithPath("data.curation.[].blogURL").description("큐레이션 피드 빵집 상품 블로그 Url"),
+						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY).description("큐레이션 피드 빵집 태그 리스트"),
+						fieldWithPath("data.curation.[].phoneNumber").description("큐레이션 피드 빵집 전하번호"),
 						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
 						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
 						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
