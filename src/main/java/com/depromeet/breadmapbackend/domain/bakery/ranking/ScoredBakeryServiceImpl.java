@@ -40,9 +40,11 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	}
 
 	private List<ScoredBakery> rankBakeriesByScores(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
-		final List<ScoredBakery> sortedBakeryRank = sortBakeriesByScore(bakeryScoreBaseList).subList(0, 40);
-		for (final ScoredBakery scoredBakery : sortedBakeryRank) {
-			scoredBakery.setRank(sortedBakeryRank.indexOf(scoredBakery) + 1);
+		final List<ScoredBakery> sortedBakeryRank = sortBakeriesByScore(bakeryScoreBaseList);
+		final int rankLimit = Math.min(40, sortedBakeryRank.size());
+		int rank = 1;
+		for (final ScoredBakery scoredBakery : sortedBakeryRank.subList(0, rankLimit)) {
+			scoredBakery.setRank(rank++);
 		}
 		return sortedBakeryRank;
 	}
