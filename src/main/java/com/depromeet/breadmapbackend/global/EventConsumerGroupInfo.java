@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.global;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,8 +14,10 @@ import lombok.Getter;
 @Getter
 public enum EventConsumerGroupInfo {
 
-	BAKERY_VIEW_COUNT("count-group", List.of("bakeryId", "viewDate")),;
-
+	BAKERY_VIEW_COUNT("count-group"),
+	CALCULATE_RANKING("calculate-group"),
+	CACHE_RANKING("cache-group"),
+	;
 	final String groupName;
-	final List<String> evenMessageKeys;
+
 }

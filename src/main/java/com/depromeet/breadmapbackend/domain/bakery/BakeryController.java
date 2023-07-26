@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryCardDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryListRequest;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
@@ -48,6 +49,7 @@ public class BakeryController {
 		);
 	}
 
+	/** 여기 **/
 	@GetMapping("/{bakeryId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<BakeryDto> getBakery(

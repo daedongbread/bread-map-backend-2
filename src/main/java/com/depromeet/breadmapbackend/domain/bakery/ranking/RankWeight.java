@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.util.Locale;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,7 +17,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RankWeight {
 	RATING_WEIGHT(1),
-	FLAG_COUNT_WEIGHT(1);
+	FLAG_COUNT_WEIGHT(1),
+	VIEW_COUNT_WEIGHT(1);
 
 	final double weight;
 }

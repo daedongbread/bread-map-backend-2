@@ -20,6 +20,7 @@ spring:
     show-sql: true
     open-in-view: false
     properties:
+      default_batch_fetch_size: 100
       hibernate:
         format_sql: true
         create_empty_composites:
@@ -125,3 +126,7 @@ admin:
   event:
     post:
       user-id: 999
+redis:
+  poll-timeout:
+    bakery-view: 2
+    bakery-ranking-calculator: 2

@@ -5,6 +5,7 @@ spring:
     #    show-sql: true
     open-in-view: false # OSIV
     properties:
+      default_batch_fetch_size: 100
       hibernate:
         #        format_sql: true
         create_empty_composites:
@@ -57,3 +58,8 @@ cloud:
       instanceProfile: true # AWS 인스턴스 프로필 사용 여부
     stack:
       auto: false # AWS CloudFormation 사용 여부
+
+redis:
+  poll-timeout:
+    bakery-view: 2
+    bakery-ranking-calculator: 2

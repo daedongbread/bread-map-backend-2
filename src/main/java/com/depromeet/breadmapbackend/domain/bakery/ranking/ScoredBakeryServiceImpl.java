@@ -1,20 +1,24 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakeryServiceImpl;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.global.util.CalenderUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ScoredBakeryServiceImpl
@@ -23,56 +27,110 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0.0
  * @since 2023/07/02
  */
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
+	private static final int RANK_LIMIT = 40;
+
 	private final ScoredBakeryRepository scoredBakeryRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
+	private final StringRedisTemplate redisTemplate;
+	private final BakeryServiceImpl bakeryService;
 
 	@Transactional
-	public int registerBakeriesRank(final List<BakeryScores> bakeriesScores, final String weekOfMonthYear) {
-		final List<ScoredBakery> scoredBakeryList =
-			bakeriesScores.stream()
-				.map(ScoredBakery::from)
-				.toList();
+	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
+		return scoredBakeryRepository.bulkInsert(
+			rankTopScoredBakeries(bakeryScoreBaseList)
+		);
+	}
 
-		return scoredBakeryRepository.bulkInsert(scoredBakeryList, weekOfMonthYear);
+	private List<ScoredBakery> rankTopScoredBakeries(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
+		final List<ScoredBakery> sortedBakeryRank = sortBakeriesByScore(bakeryScoreBaseList);
+		final int rankLimit = Math.min(RANK_LIMIT, sortedBakeryRank.size());
+		final List<ScoredBakery> scoredBakeries = sortedBakeryRank.subList(0, rankLimit);
+
+		int rank = 1;
+		for (final ScoredBakery scoredBakery : scoredBakeries) {
+			scoredBakery.setRank(rank++);
+		}
+		return scoredBakeries;
+	}
+
+	private List<ScoredBakery> sortBakeriesByScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
+		return bakeryScoreBaseList
+			.stream()
+			.map(ScoredBakery::from)
+			.sorted(
+				Comparator.comparing(ScoredBakery::getTotalScore).reversed()
+					.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
+			)
+			.toList();
 	}
 
 	@Override
 	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
-		final List<ScoredBakery> scoredBakeries =
-			findScoredBakeryBy(CalenderUtil.getYearWeekOfMonth(LocalDate.now()), size);
-
+		final List<ScoredBakery> scoredBakeries = findScoredBakeryBy(LocalDate.now(), size);
 		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
 
 		return scoredBakeries.stream()
 			.map(bakeryScores -> from(userFlaggedBakeries, bakeryScores))
 			.limit(size)
 			.toList();
-
 	}
 
-	private List<ScoredBakery> findScoredBakeryBy(final String weekOfMonthYear, final int size) {
+	@Transactional
+	@Override
+	public void createBakeryRanking(final String EVENT_KEY, final LocalDate calculateDate) {
+		if (isFirstInstanceToCalculateRanks(EVENT_KEY)) {
+			log.info("This instance is first instance to calculate ranking");
+			calculateRankAndSave(calculateDate);
+			log.info("The calculation is done");
+		}
+	}
 
-		final List<ScoredBakery> cachedRank =
-			scoredBakeryRepository.findCachedScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
-		if (!cachedRank.isEmpty()) {
-			return cachedRank;
+	private void calculateRankAndSave(final LocalDate calculateDate) {
+		final List<BakeryScoreBaseWithSelectedDate> bakeriesScoreFactors =
+			bakeryService.getBakeriesScoreFactors(calculateDate);
+		log.info("bakeriesScoreFactors: {}", bakeriesScoreFactors.size());
+		calculateBakeryScore(bakeriesScoreFactors);
+	}
+
+	private boolean isFirstInstanceToCalculateRanks(final String EVENT_KEY) {
+		final Optional<Long> incrementedValue = Optional.ofNullable(
+			redisTemplate.opsForValue().increment(EVENT_KEY)
+		);
+		return incrementedValue.isPresent() && incrementedValue.get() == 2L;
+	}
+
+	private List<ScoredBakery> findScoredBakeryBy(final LocalDate calculatedDate, final int size) {
+		log.info("findScoredBakeryBy calculatedDate: {}, size: {}", calculatedDate, size);
+		final List<ScoredBakery> ranksFromDb = getRanksFromDb(calculatedDate, size);
+		log.info("findScoredBakeryBy ranksFromDb: {}", ranksFromDb.size());
+		if (!ranksFromDb.isEmpty()) {
+			return ranksFromDb;
 		}
 
-		final List<ScoredBakery> rankedBakeries =
-			scoredBakeryRepository.findScoredBakeryByWeekOfMonthYear(weekOfMonthYear, size);
-		if (!rankedBakeries.isEmpty()) {
-			scoredBakeryEventStream.publish(ScoredBakeryEvents.CACHE_RANKING, weekOfMonthYear);
-			return rankedBakeries;
+		scoredBakeryEventStream.publishCalculateRankingEvent(calculatedDate);
+
+		final List<ScoredBakery> lastCalculatedRank = getLastCalculatedRanks(calculatedDate, size);
+		log.info("findScoredBakeryBy getLastCalculatedRanks: {}", lastCalculatedRank.size());
+		if (!lastCalculatedRank.isEmpty()) {
+			return lastCalculatedRank;
 		}
 
-		scoredBakeryEventStream.publish(ScoredBakeryEvents.CALCULATE_RANKING, weekOfMonthYear);
 		throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
+	}
+
+	private List<ScoredBakery> getLastCalculatedRanks(final LocalDate calculatedDate, final int size) {
+		return scoredBakeryRepository.findScoredBakeryByCalculatedDate(calculatedDate.minusDays(1L), size);
+	}
+
+	private List<ScoredBakery> getRanksFromDb(final LocalDate calculatedDate, final int size) {
+		return scoredBakeryRepository.findScoredBakeryByCalculatedDate(calculatedDate, size);
 	}
 
 	private List<FlagBakery> findFlagBakeryBy(final Long userId, final List<ScoredBakery> bakeriesScores) {
@@ -89,10 +147,9 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.id(bakeryScores.getBakery().getId())
 			.name(bakeryScores.getBakery().getName())
 			.image(bakeryScores.getBakery().getImage())
-			.flagNum(bakeryScores.getFlagCount())
-			.rating(bakeryScores.getBakeryRating())
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
 			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
+			.calculatedDate(bakeryScores.getCalculatedDate())
 			.build();
 	}
 

@@ -1,19 +1,16 @@
 package com.depromeet.breadmapbackend.domain.bakery.dto;
 
+import java.util.List;
+
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -59,6 +56,8 @@ public class BakeryDto {
 		private String facebookURL;
 		private String blogURL;
 		private String phoneNumber;
+		private String checkPoint;
+		private String newBreadTime;
 
 		@Builder
 		public BakeryInfo(Bakery bakery, Integer flagNum, List<Review> reviewList) {
@@ -74,6 +73,8 @@ public class BakeryDto {
 			this.facebookURL = bakery.getBakeryURL().getFacebookURL();
 			this.blogURL = bakery.getBakeryURL().getBlogURL();
 			this.phoneNumber = bakery.getPhoneNumber();
+			this.checkPoint = bakery.getCheckPoint();
+			this.newBreadTime = bakery.getNewBreadTime();
 		}
 	}
 
