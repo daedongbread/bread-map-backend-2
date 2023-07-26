@@ -70,5 +70,5 @@ sgis:
 
 redis:
   poll-timeout:
-    bakery-view: 10
-    bakery-ranking-calculator: 10
+    bakery-view: 5
+    bakery-ranking-calculator: 5
