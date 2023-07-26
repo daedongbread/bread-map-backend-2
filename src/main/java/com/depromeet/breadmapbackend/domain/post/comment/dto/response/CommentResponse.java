@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.post.comment.dto.response;
 
 import java.time.LocalDate;
 
+import com.depromeet.breadmapbackend.domain.post.comment.CommentResponseStatus;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 
 /**
@@ -16,23 +17,27 @@ public record CommentResponse(
 	String content,
 	boolean isFirstDepth,
 	Long parentId,
+	String targetCommentUserNickname,
 	Long userId,
 	String nickname,
 	String profileImage,
 	Long likeCount,
-	LocalDate createdDate
+	LocalDate createdDate,
+	CommentResponseStatus status
 ) {
-	public CommentResponse(final CommentInfo info) {
+	public CommentResponse(final CommentInfo.Response response) {
 		this(
-			info.id(),
-			info.content(),
-			info.isFirstDepth(),
-			info.parentId(),
-			info.userId(),
-			info.nickname(),
-			info.profileImage(),
-			info.likeCount(),
-			info.createdDate()
+			response.id(),
+			response.content(),
+			response.isFirstDepth(),
+			response.parentId(),
+			response.targetCommentUserNickname(),
+			response.userId(),
+			response.nickname(),
+			response.profileImage(),
+			response.likeCount(),
+			response.createdDate(),
+			response.responseStatus()
 		);
 	}
 }

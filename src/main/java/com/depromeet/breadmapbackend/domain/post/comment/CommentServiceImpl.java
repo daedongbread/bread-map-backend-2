@@ -14,7 +14,6 @@ import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeReposit
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,11 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-	private static final String BLOCKED_USER_COMMENT = "차단된 유저의 댓글 입니다.";
-	private static final String BLOCKED_USER_NICKNAME = "차단된 유저 입니다.";
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
-	private final CustomAWSS3Properties customAWSS3Properties;
 	private final CommentLikeRepository commentLikeRepository;
 
 	@Transactional
@@ -49,33 +45,40 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Page<CommentInfo> findComment(final Long postId, final Long userId, final int page) {
+	public Page<CommentInfo.Response> findComment(final Long postId, final Long userId, final int page) {
 		return commentRepository.findComment(postId, userId, page)
-			.map(info -> new CommentInfo(
-				info.id(),
-				getContent(info.isBlocked(), info.status(), info.content()),
-				info.isFirstDepth(),
-				info.parentId(),
-				info.userId(),
-				info.isBlocked() ? BLOCKED_USER_NICKNAME : info.nickname(), // TODO : 차단된 사용자명, 이미지 확인
-				info.isBlocked() ? getDefaultImage() : info.nickname(),
-				info.likeCount(),
-				info.createdDate(),
-				info.status(),
-				info.isBlocked()
-			));
+			.map(info -> {
+				final CommentResponseStatus status = getStatus(info.isBlocked(), info.status());
+
+				return new CommentInfo.Response(
+					info.id(),
+					getContentToResponse(info, status),
+					info.isFirstDepth(),
+					info.parentId(),
+					info.targetCommentUserNickname(),
+					info.userId(),
+					info.nickname(),
+					info.nickname(),
+					info.likeCount(),
+					info.createdDate(),
+					status
+				);
+			});
 	}
 
-	private String getDefaultImage() {
-		return customAWSS3Properties.getCloudFront() + "/" +
-			customAWSS3Properties.getDefaultImage().getUser() + ".png";
+	private String getContentToResponse(final CommentInfo info, final CommentResponseStatus status) {
+		if (status != CommentResponseStatus.ACTIVE) {
+			return status.replaceContent(info.content());
+		}
+		return info.isFirstDepth() ?
+			info.content() :
+			String.format("@%s %s", info.targetCommentUserNickname(), info.content());
 	}
 
-	private String getContent(final boolean blocked, final CommentStatus status, final String content) {
-		return blocked ? BLOCKED_USER_COMMENT : status.replaceContent(content);
+	private CommentResponseStatus getStatus(final boolean blocked, final CommentStatus status) {
+		return blocked ? CommentResponseStatus.BLOCKED_BY_USER : status.getResponseStatus();
 	}
 
-	// TODO : 댓글 수장 필요 업는지??
 	@Override
 	@Transactional
 	public void updateComment(final UpdateCommand command, final Long userId) {

@@ -26,7 +26,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
  * @version 1.0.0
  * @since 2023/07/22
  */
-@DisplayName("Post(커뮤니티) controller 테스트")
+@DisplayName("Comment(커뮤니티 댓글) controller 테스트")
 class CommentControllerTest extends ControllerTest {
 
 	private String 사용자_토큰;
@@ -43,7 +43,7 @@ class CommentControllerTest extends ControllerTest {
 	@Test
 	void 댓글_등록() throws Exception {
 		// given
-		final var 댓글_데이터 = new CommentCreateRequest(222L, "내용", true, 0L);
+		final var 댓글_데이터 = new CommentCreateRequest(222L, "내용09090909", true, 0L, 0L);
 
 		// when
 		final var 결과 = 댓글_추가_요청(댓글_데이터, 사용자_토큰, mockMvc, objectMapper);

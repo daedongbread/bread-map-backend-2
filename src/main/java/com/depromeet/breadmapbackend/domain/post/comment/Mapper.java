@@ -24,7 +24,8 @@ public class Mapper {
 			request.postId(),
 			request.content(),
 			request.isFirstDepth(),
-			request.parentId()
+			request.parentId(),
+			request.targetCommentUserId()
 		);
 	}
 
@@ -35,7 +36,7 @@ public class Mapper {
 		);
 	}
 
-	public static PageResponseDto<CommentResponse> of(final Page<CommentInfo> comment) {
+	public static PageResponseDto<CommentResponse> of(final Page<CommentInfo.Response> comment) {
 		return PageResponseDto.of(comment, CommentResponse::new);
 
 	}

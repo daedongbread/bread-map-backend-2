@@ -14,7 +14,8 @@ public record Command(
 	Long postId,
 	String content,
 	boolean isFirstDepth,
-	Long parentId
+	Long parentId,
+	Long targetCommentUserId
 ) {
 
 	public Comment toEntity(final User user) {
@@ -23,7 +24,8 @@ public record Command(
 			postId,
 			content,
 			isFirstDepth,
-			parentId
+			parentId,
+			targetCommentUserId
 		);
 	}
 }

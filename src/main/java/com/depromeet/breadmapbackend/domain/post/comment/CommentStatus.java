@@ -19,15 +19,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum CommentStatus {
 
-	ACTIVE(null),
-	DELETED("삭제된 댓글입니다."),
-	BLOCKED("차단된 댓글입니다.");
+	ACTIVE(CommentResponseStatus.ACTIVE),
+	DELETED(CommentResponseStatus.DELETED),
+	BLOCKED(CommentResponseStatus.BLOCKED_BY_ADMIN),
+	;
 
-	private final String content;
-
-	public String replaceContent(final String content) {
-		return this.content == null ? content : this.content;
-	}
+	private final CommentResponseStatus responseStatus;
 
 	public static CommentStatus of(final String status) {
 		return Arrays.stream(CommentStatus.values())

@@ -34,6 +34,7 @@ public class CommentQueryRepository {
 		resultSet.getString("content"),
 		resultSet.getBoolean("is_first_depth"),
 		resultSet.getLong("parent_id"),
+		resultSet.getString("target_comment_user_nickname"),
 		resultSet.getLong("user_id"),
 		resultSet.getString("nick_name"),
 		resultSet.getString("image"),
@@ -59,13 +60,14 @@ public class CommentQueryRepository {
 
 	private String getSortedCommentBaseSql() {
 		return """
-			with recursive recursive_comments(id, created_at, user_id, content, post_id, parent_id, status, is_first_depth, depth, sort_key) as (
+			with recursive recursive_comments(id, created_at, user_id, content, post_id, parent_id, target_comment_user_id, status, is_first_depth, depth, sort_key) as (
 				select id
 					 , created_at
 					 , user_id
 					 , content
 					 , post_id
 					 , parent_id
+					 , target_comment_user_id
 					 , status
 					 , is_first_depth
 					 , 1 as depth
@@ -84,6 +86,7 @@ public class CommentQueryRepository {
 					 , c.content
 					 , c.post_id
 					 , c.parent_id
+					 , c.target_comment_user_id
 					 , c.status
 					 , c.is_first_depth
 					 , rc.depth + 1 as depth
@@ -96,6 +99,10 @@ public class CommentQueryRepository {
 			     , rc.content
 			     , rc.is_first_depth
 			     , rc.parent_id
+			     , (select nick_name
+			     	from user 
+			     	where id = rc.target_comment_user_id
+			     	) as target_comment_user_nickname
 			     , rc.user_id
 			     , u.nick_name
 			     , u.image

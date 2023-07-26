@@ -1,5 +1,8 @@
 package com.depromeet.breadmapbackend.domain.post.comment.dto.request;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * CommentRequest
  *
@@ -8,9 +11,11 @@ package com.depromeet.breadmapbackend.domain.post.comment.dto.request;
  * @since 2023/07/23
  */
 public record CommentCreateRequest(
-	Long postId,
-	String content,
-	boolean isFirstDepth,
-	Long parentId
+
+	@NotNull Long postId,
+	@NotNull @Size(min = 10, max = 200) String content,
+	@NotNull boolean isFirstDepth,
+	@NotNull Long parentId,
+	@NotNull Long targetCommentUserId
 ) {
 }

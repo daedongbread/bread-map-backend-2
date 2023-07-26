@@ -39,8 +39,9 @@ class CommentServiceImplTest extends CommentServiceTest {
 		final Long userId = 111L;
 		final Command command = new Command(
 			222L,
-			"댓글 내용",
+			"댓글 내용9090909",
 			true,
+			0L,
 			0L
 		);
 		//when
@@ -73,14 +74,16 @@ class CommentServiceImplTest extends CommentServiceTest {
 		final Long userId = 111L;
 		final Long postId = 222L;
 		//when
-		final Page<CommentInfo> result = sut.findComment(postId, userId, 0);
+		final Page<CommentInfo.Response> result = sut.findComment(postId, userId, 0);
 		//then
-		final List<CommentInfo> comments = result.getContent();
+		final List<CommentInfo.Response> comments = result.getContent();
 		assertThat(comments).hasSize(10);
-		assertThat(comments.get(0).content()).isEqualTo(CommentStatus.BLOCKED.getContent());
+		assertThat(comments.get(0).content()).isEqualTo(CommentResponseStatus.BLOCKED_BY_ADMIN.getContent());
 		assertThat(comments.get(0).id()).isEqualTo(122L);
-		assertThat(comments.get(1).status()).isEqualTo(CommentStatus.ACTIVE);
-		assertThat(comments.get(5).content()).isEqualTo(CommentStatus.DELETED.getContent());
+		assertThat(comments.get(1).responseStatus()).isEqualTo(CommentResponseStatus.ACTIVE);
+		assertThat(comments.get(1).content()).isEqualTo("content");
+		assertThat(comments.get(4).content()).isEqualTo("@nick_name content 2");
+		assertThat(comments.get(5).content()).isEqualTo(CommentResponseStatus.DELETED.getContent());
 
 	}
 

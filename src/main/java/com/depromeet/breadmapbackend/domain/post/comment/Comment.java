@@ -57,6 +57,9 @@ public class Comment extends BaseEntity {
 	private Long parentId;
 
 	@Column(nullable = false)
+	private Long targetCommentUserId;
+
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private CommentStatus status = CommentStatus.ACTIVE;
 
@@ -65,13 +68,15 @@ public class Comment extends BaseEntity {
 		final Long postId,
 		final String content,
 		final boolean isFirstDepth,
-		final Long parentId
+		final Long parentId,
+		final Long targetCommentUserId
 	) {
 		this.user = user;
 		this.content = content;
 		this.postId = postId;
 		this.isFirstDepth = isFirstDepth;
 		this.parentId = parentId;
+		this.targetCommentUserId = targetCommentUserId;
 	}
 
 	public void update(final String content) {

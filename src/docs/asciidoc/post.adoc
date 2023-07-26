@@ -69,3 +69,12 @@ operation::v1/comments/update[snippets='http-request,request-headers,request-fie
 === 커뮤니티 댓글 좋아요 토글 API [POST]
 
 operation::v1/comments/like[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+== 신고 APIs
+
+- 신고 등록 API
+
+=== 신고 등록 API [POST]
+
+operation::v1/reports/add[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+

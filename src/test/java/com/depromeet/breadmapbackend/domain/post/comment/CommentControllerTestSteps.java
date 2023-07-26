@@ -40,7 +40,8 @@ public class CommentControllerTestSteps {
 					fieldWithPath("postId").description("댓글 추가 할 커뮤니티글 id"),
 					fieldWithPath("content").description("댓글 내용"),
 					fieldWithPath("isFirstDepth").description("댓글 = true, 대댓글 = false"),
-					fieldWithPath("parentId").description("댓글일 경우 = 0 ,대댓글일 경우 부모 댓글 id")
+					fieldWithPath("parentId").description("댓글일 경우 = 0 ,대댓글일 경우 부모 댓글 id"),
+					fieldWithPath("targetCommentUserId").description("댓글일 경우 = 0 or post 작성자 id ,대댓글일 경우 부모 댓글 작성자 id")
 				)
 			));
 	}
@@ -67,14 +68,19 @@ public class CommentControllerTestSteps {
 					fieldWithPath("data.totalPages").description("전체 페이지 수"),
 					fieldWithPath("data.contents").description("커뮤니티 카드 리스트"),
 					fieldWithPath("data.contents.[].id").description("댓글 id"),
-					fieldWithPath("data.contents.[].content").description("댓글 내용"),
+					fieldWithPath("data.contents.[].content").description("댓글 내용 대댓글 경우 @nickName 포함"),
 					fieldWithPath("data.contents.[].isFirstDepth").description("댓글 여부, 댓글 = true, 대댓글 = false"),
 					fieldWithPath("data.contents.[].parentId").description("부모 댓글 ID, 댓글일 경우 = 0"),
+					fieldWithPath("data.contents.[].parentId").description("부모 댓글 ID, 댓글일 경우 = 0"),
+					fieldWithPath("data.contents.[].targetCommentUserNickname").optional()
+						.description("부모 댓글 작성자 닉네임 @nickName"),
 					fieldWithPath("data.contents.[].userId").description("댓글 작성자 id"),
 					fieldWithPath("data.contents.[].nickname").description("댓글 작성자 nickname"),
 					fieldWithPath("data.contents.[].profileImage").description("댓글 작성자 프로필 이미지"),
 					fieldWithPath("data.contents.[].likeCount").description("댓글 좋아요 개수"),
-					fieldWithPath("data.contents.[].createdDate").description("댓글 작성 일자")
+					fieldWithPath("data.contents.[].createdDate").description("댓글 작성 일자"),
+					fieldWithPath("data.contents.[].status").description(
+						"댓글 상태 (ACTIVE, DELETED, BLOCKED_BY_ADMIN, BLOCKED_BY_USER)")
 				)
 			));
 	}
