@@ -75,7 +75,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 		if (!lastCalculatedRank.isEmpty()) {
 			return lastCalculatedRank;
 		}
-		
+
 		throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
 	}
 

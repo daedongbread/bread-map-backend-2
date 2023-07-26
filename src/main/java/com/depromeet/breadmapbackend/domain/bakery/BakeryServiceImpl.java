@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,6 +83,7 @@ public class BakeryServiceImpl implements BakeryService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<BakeryScoreBaseWithSelectedDate> getBakeriesScoreFactors(final LocalDate calculateDate) {
+		log.info("getBakeriesScoreFactors: {}", calculateDate);
 		return bakeryQueryRepository.getBakeriesScoreFactors(calculateDate)
 			.stream()
 			.map(base -> new BakeryScoreBaseWithSelectedDate(base, calculateDate))

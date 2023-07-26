@@ -17,7 +17,9 @@ import com.depromeet.breadmapbackend.global.EventInfo;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BakeryRankingCalculationEventStreamListener
@@ -31,16 +33,20 @@ public class BakeryRankingCalculationEventStreamListener
 	@Transactional
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {
+		log.info("=============== Event Stream Listener calculate ranking ===============");
 		final List<String> keys = event.getEvenMessageKeys();
 		final Map<String, String> value = message.getValue();
 
 		final String EVENT_KEY = event.getEventName() + ":" + value.get(keys.get(0));
 
 		final LocalDate calculateDate = LocalDateParser.parse(value.get(keys.get(0)));
-
+		log.info("EVENT_KEY: {}", EVENT_KEY);
+		log.info("checking if this instance is first instance to calculate ranking");
 		if (isFirstInstanceToCalculateRanks(EVENT_KEY)) {
+			log.info("This instance is first instance to calculate ranking");
 			calculateRankAndSave(calculateDate);
 			// removeExpiredCacheData(EVENT_KEY);
+			log.info("The calculation is done");
 		}
 	}
 
@@ -53,6 +59,7 @@ public class BakeryRankingCalculationEventStreamListener
 	private void calculateRankAndSave(final LocalDate calculateDate) {
 		final List<BakeryScoreBaseWithSelectedDate> bakeriesScoreFactors =
 			bakeryService.getBakeriesScoreFactors(calculateDate);
+		log.info("bakeriesScoreFactors: {}", bakeriesScoreFactors.size());
 		scoredBakeryService.calculateBakeryScore(bakeriesScoreFactors);
 	}
 
