@@ -11,6 +11,8 @@ import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelect
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -73,7 +75,8 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 		if (!lastCalculatedRank.isEmpty()) {
 			return lastCalculatedRank;
 		}
-		return List.of();
+		
+		throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
 	}
 
 	private List<ScoredBakery> getLastCalculatedRanks(final LocalDate calculatedDate, final int size) {

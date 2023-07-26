@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -27,11 +28,22 @@ public class ScoredBakeryEventStreamRedisImpl implements ScoredBakeryEventStream
 	public void publishCalculateRankingEvent(final LocalDate calculatedDate) {
 		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
 		final HashMap<String, String> fieldMap = new HashMap<>();
-		fieldMap.put(calculateRankingEvent.getEvenMessageKeys().get(0),
-			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		final String calculateDate = calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		fieldMap.put(calculateRankingEvent.getEvenMessageKeys().get(0), calculateDate);
 
-		redisTemplate.opsForStream()
-			.add(calculateRankingEvent.getEventName(), fieldMap);
+		final String eventName = calculateRankingEvent.getEventName();
+
+		final String EVENT_KEY = eventName + ":" + calculateDate;
+
+		final String calculationStartFlag = redisTemplate.opsForValue().get(EVENT_KEY);
+		if (!isCalculationStarted(calculationStartFlag)) {
+			redisTemplate.opsForValue().set(EVENT_KEY, "0", Duration.ofSeconds(30L));
+			redisTemplate.opsForStream().add(eventName, fieldMap);
+		}
+	}
+
+	private static boolean isCalculationStarted(final String calculationStartFlag) {
+		return calculationStartFlag != null && Integer.parseInt(calculationStartFlag) > 0;
 	}
 
 }
