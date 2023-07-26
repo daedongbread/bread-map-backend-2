@@ -120,6 +120,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.image(bakeryScores.getBakery().getImage())
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
 			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
+			.calculatedDate(bakeryScores.getCalculatedDate())
 			.build();
 	}
 
