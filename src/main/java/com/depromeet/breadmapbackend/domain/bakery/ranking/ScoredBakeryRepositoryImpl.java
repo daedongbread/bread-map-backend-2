@@ -17,6 +17,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ScoredBakeryRepositoryImpl
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0.0
  * @since 2023/07/02
  */
+@Slf4j
 @Transactional(readOnly = true)
 @Repository
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 
 	@Transactional
 	public int bulkInsert(final List<ScoredBakery> scoredBakeryList) {
-
+		log.info("bulk insert scored bakery list: {}", scoredBakeryList.size());
 		String sql = String.format(
 			"""
 					INSERT INTO `%s` (bakery_id, total_score, view_count, flag_count, calculated_date, bakery_rank)
