@@ -34,27 +34,35 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 
 	@Transactional
 	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
-		final List<ScoredBakery> sortedBakeryRank =
-			bakeryScoreBaseList
-				.stream()
-				.map(ScoredBakery::from)
-				.sorted(
-					Comparator.comparing(ScoredBakery::getTotalScore).reversed()
-						.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
-				)
-				.toList();
+		return scoredBakeryRepository.bulkInsert(
+			rankBakeriesByScores(bakeryScoreBaseList)
+		);
+	}
 
+	private List<ScoredBakery> rankBakeriesByScores(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
+		final List<ScoredBakery> sortedBakeryRank = sortBakeriesByScore(bakeryScoreBaseList);
 		for (final ScoredBakery scoredBakery : sortedBakeryRank) {
+			if (sortedBakeryRank.indexOf(scoredBakery) > 40)
+				break;
 			scoredBakery.setRank(sortedBakeryRank.indexOf(scoredBakery) + 1);
 		}
+		return sortedBakeryRank;
+	}
 
-		return scoredBakeryRepository.bulkInsert(sortedBakeryRank);
+	private List<ScoredBakery> sortBakeriesByScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
+		return bakeryScoreBaseList
+			.stream()
+			.map(ScoredBakery::from)
+			.sorted(
+				Comparator.comparing(ScoredBakery::getTotalScore).reversed()
+					.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
+			)
+			.toList();
 	}
 
 	@Override
 	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
 		final List<ScoredBakery> scoredBakeries = findScoredBakeryBy(LocalDate.now(), size);
-
 		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
 
 		return scoredBakeries.stream()
