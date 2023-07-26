@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
-import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
@@ -37,10 +36,10 @@ public interface PostService {
 	);
 
 	// post 삭제
-	void remove(
-		final Long userId,
+	void delete(
+		final Long postId,
 		final PostTopic topic,
-		final Long postId
+		final Long userId
 	);
 
 	// post 수정
@@ -53,12 +52,6 @@ public interface PostService {
 	int toggle(
 		final Long postId,
 		final Long userId
-	);
-
-	// post 신고
-	void report(
-		final Long userId,
-		final PostReportCommand command
 	);
 }
 

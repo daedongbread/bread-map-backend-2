@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.depromeet.breadmapbackend.domain.post.dto.request.PostReportRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.request.PostRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
@@ -25,7 +23,6 @@ import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 import lombok.RequiredArgsConstructor;
@@ -92,7 +89,7 @@ public class PostController {
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
 		final PostTopic topic = PostTopic.of(postTopic);
-		postService.remove(currentUserInfo.getId(), topic, postId);
+		postService.delete(postId, topic, currentUserInfo.getId());
 	}
 
 	// post 수정
@@ -115,18 +112,6 @@ public class PostController {
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
 		return new ApiResponse<>(postService.toggle(postId, currentUserInfo.getId()));
-	}
-
-	// post 신고
-	// TODO : 신고 처리 admin 화면 어디서 하는지 확인
-	@PostMapping("/report/{postId}")
-	@ResponseStatus(HttpStatus.CREATED)
-	void report(
-		@PathVariable("postId") final Long postId,
-		@RequestBody @Validated(ValidationSequence.class) final PostReportRequest request,
-		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
-	) {
-		postService.report(currentUserInfo.getId(), Mapper.of(postId, request));
 	}
 
 	private void validatePostTopic(final PostTopic postTopic) {

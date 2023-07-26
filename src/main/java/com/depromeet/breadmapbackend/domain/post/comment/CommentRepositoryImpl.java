@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.post.comment;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -45,7 +46,14 @@ public class CommentRepositoryImpl implements CommentRepository {
 	}
 
 	@Override
-	public Optional<Comment> findById(final Long id) {
-		return commentJpaRepository.findById(id);
+	public void deleteAllByIdInBatch(final List<Long> commentIdList) {
+		commentJpaRepository.deleteAllByIdInBatch(commentIdList);
+
 	}
+
+	@Override
+	public List<Long> findCommentIdListByPostId(final Long postId) {
+		return commentJpaRepository.findCommentIdListByPostId(postId);
+	}
+
 }

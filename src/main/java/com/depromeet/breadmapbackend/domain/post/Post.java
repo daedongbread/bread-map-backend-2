@@ -39,8 +39,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// @SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
-// @Where(clause = "is_deleted = false")
 public class Post extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -69,7 +67,7 @@ public class Post extends BaseEntity {
 
 	@Column(nullable = false)
 	@Convert(converter = BooleanToYNConverter.class)
-	private Boolean isHide = Boolean.FALSE; // 관리자 신규 리뷰 숨김
+	private Boolean isHide = Boolean.FALSE;
 
 	@Column(nullable = false)
 	@Convert(converter = BooleanToYNConverter.class)

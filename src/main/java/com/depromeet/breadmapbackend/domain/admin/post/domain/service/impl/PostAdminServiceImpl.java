@@ -48,11 +48,10 @@ public class PostAdminServiceImpl implements PostAdminService {
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
 		final Post savePost =
-			command.toEventPost(adminUser)
-				.addImages(command.images());
+			command.toEventPost(adminUser);
 
 		final PostManagerMapper postManagerMapper = PostManagerMapper.builder()
-			.post(savePost)
+			.post(command.images() != null ? savePost.addImages(command.images()) : savePost)
 			.isPosted(command.isPosted())
 			.isCarousel(command.isCarousel())
 			.isFixed(command.isFixed())

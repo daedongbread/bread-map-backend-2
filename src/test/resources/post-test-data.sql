@@ -51,11 +51,11 @@ insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing
 (113,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_3333', 'nick_name2332', 'tes33t@apple.com' , 'MALE', 'image')
 ;
 
-insert into post(id ,created_at ,modified_at ,content ,is_block ,is_delete ,is_hide ,post_topic ,title ,user_id) values
-(222, '2023-01-01','2023-01-01','test 222 content',false,false,false,'BREAD_STORY','test title', 112),
-(223, '2023-01-02','2023-01-01','test 333 content',false,false,false,'BREAD_STORY','test title 223', 113),
-(224, '2023-01-03','2023-01-01','test 444 content',false,false,false,'EVENT','test title event', 112),
-(225, '2023-01-04','2023-01-01','test 555 content',false,false,false,'EVENT','test title event', 113)
+insert into post(id ,created_at ,modified_at ,content ,is_block  ,is_hide ,post_topic ,title ,user_id) values
+(222, '2023-01-01','2023-01-01','test 222 content',false,false ,'BREAD_STORY','test title', 112),
+(223, '2023-01-02','2023-01-01','test 333 content',false,false ,'BREAD_STORY','test title 223', 113),
+(224, '2023-01-03','2023-01-01','test 444 content',false,false ,'EVENT','test title event', 112),
+(225, '2023-01-04','2023-01-01','test 555 content',false,false ,'EVENT','test title event', 113)
 ;
 
 insert into post_image (id, created_at, modified_at, image, is_registered, post_id)values
@@ -75,10 +75,10 @@ INSERT INTO follow (id, created_at, modified_at, from_user_id, to_user_id) VALUE
 (3, '2023-05-02 12:16:30', '2023-05-02 12:16:30', 112, 111)
 ;
 
-insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,status) values
-(111, 111, 'content',  222, 0, true, 'ACTIVE'),
-(112, 112, 'content 1', 222, 111, false, 'ACTIVE' ),
-(113, 113, 'content 2',  222, 111, false, 'ACTIVE')
+insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,status, target_comment_user_id) values
+(111, 111, 'content',  222, 0, true, 'ACTIVE', 0),
+(112, 112, 'content 1', 222, 111, false, 'ACTIVE', 111 ),
+(113, 113, 'content 2',  222, 111, false, 'ACTIVE',111)
 ;
 
 insert into post_manager_mapper (id,created_at , modified_at ,is_carousel,is_fixed, is_posted,post_id ,banner_image)values

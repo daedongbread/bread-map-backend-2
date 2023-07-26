@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ReportServiceImpl implements ReportService {
 
-	private final ReportReporitory reportReporitory;
+	private final ReportRepository reportRepository;
 	private final PostRepository postRepository;
 	private final ReviewRepository reviewRepository;
 	private final CommentRepository commentRepository;
@@ -40,7 +40,7 @@ public class ReportServiceImpl implements ReportService {
 			.reportType(command.reportType())
 			.build();
 
-		reportReporitory.save(report);
+		reportRepository.save(report);
 	}
 
 	private Long getPostIdBy(final ReportCommand command, final Long reporterId) {

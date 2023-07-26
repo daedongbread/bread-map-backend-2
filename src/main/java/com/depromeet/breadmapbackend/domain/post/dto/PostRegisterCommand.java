@@ -20,12 +20,13 @@ public record PostRegisterCommand(
 	PostTopic postTopic
 ) {
 	public Post toEntity(final User user) {
-		return Post.builder()
+		final Post entity = Post.builder()
 			.title(this.title)
 			.content(this.content)
 			.postTopic(postTopic)
 			.user(user)
-			.build()
-			.addImages(this.images);
+			.build();
+		return images != null ? entity.addImages(this.images) : entity;
+
 	}
 }

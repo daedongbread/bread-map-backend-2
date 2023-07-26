@@ -14,8 +14,8 @@ public enum PostTopic {
 	ALL("all"),
 	REVIEW("review"),
 	EVENT("event"),
-	BREAD_STORY("bread-story"),
-	FREE_TALK("free-talk"),
+	BREAD_STORY("bread_story"),
+	FREE_TALK("free_talk"),
 	;
 
 	private final String topic;

@@ -7,14 +7,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.post.comment.CommentRepository;
+import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
-import com.depromeet.breadmapbackend.domain.post.dto.PostReportCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
 import com.depromeet.breadmapbackend.domain.post.like.PostLike;
 import com.depromeet.breadmapbackend.domain.post.like.PostLikeRepository;
+import com.depromeet.breadmapbackend.domain.report.ReportRepository;
+import com.depromeet.breadmapbackend.domain.report.ReportType;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
@@ -33,6 +36,9 @@ public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 	private final PostLikeRepository postLikeRepository;
+	private final CommentRepository commentRepository;
+	private final CommentLikeRepository commentLikeRepository;
+	private final ReportRepository reportRepository;
 
 	@Override
 	@Transactional
@@ -77,18 +83,20 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	@Transactional
-	public void remove(
-		final Long userId,
+	public void delete(
+		final Long postId,
 		final PostTopic topic,
-		final Long postId
+		final Long userId
 	) {
 		final Post post = postRepository.findByPostIdAndUserIdAndPostTopic(postId, userId, topic)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
-		// commentRepository.findByPostId(postId);
-		// commentLikeRepository.findByPostId(postId);
-		// postLikeRepository.findByPostId(postId);
-		// reportRepository.findByContentId();
 
+		final List<Long> commentIdListToDelete = commentRepository.findCommentIdListByPostId(postId);
+
+		commentRepository.deleteAllByIdInBatch(commentIdListToDelete);
+		commentLikeRepository.deleteAllByCommentIdList(commentIdListToDelete);
+		postLikeRepository.deleteByPostId(postId);
+		reportRepository.deleteByPostIdAndReportType(postId, ReportType.of(topic.getTopic()));
 		postRepository.deletePostById(postId, userId);
 	}
 
@@ -102,14 +110,9 @@ public class PostServiceImpl implements PostService {
 		postRepository.save(savedPost);
 	}
 
-	// TODO : 좋아요 5개 가능 관련 확인 프론트에서 디바운스해서 한번에 보내주실지 아니면 백에서 처리할지
 	@Transactional
 	@Override
 	public int toggle(final Long postId, final Long userId) {
-		// redis 조회 없으면 db 조회
-		// db도 없으면 redis,db 둘다 저장 후 1 반환 redis ttl 3분
-		// DB에 있으면 update후 리턴 redis 저장 x
-
 		final Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUserId(postId, userId);
 		if (postLike.isEmpty()) {
 			postLikeRepository.save(new PostLike(postId, userId));
@@ -118,11 +121,6 @@ public class PostServiceImpl implements PostService {
 			postLikeRepository.delete(postLike.get());
 			return 0;
 		}
-	}
-
-	@Override
-	public void report(final Long userId, final PostReportCommand command) {
-
 	}
 
 	private Long getSelectedPostCount(final Page<CommunityCardInfo> communityCards) {

@@ -13,11 +13,16 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Repository
-public class ReportRepositoryImpl implements ReportReporitory {
+public class ReportRepositoryImpl implements ReportRepository {
 	private final ReportJpaRepository reportJpaRepository;
 
 	@Override
 	public Report save(final Report report) {
 		return reportJpaRepository.save(report);
+	}
+
+	@Override
+	public void deleteByPostIdAndReportType(final Long postId, final ReportType reportType) {
+		reportJpaRepository.deleteByPostIdAndReportType(postId, reportType);
 	}
 }

@@ -39,7 +39,7 @@ public class PostControllerTestSteps {
 					fieldWithPath("title").description("빵 이야기 제목"),
 					fieldWithPath("content").description("빵 이야기 내용"),
 					fieldWithPath("images").optional().description("빵 이야기 첨부 이미지"),
-					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)")
+					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK)")
 				)
 			));
 	}

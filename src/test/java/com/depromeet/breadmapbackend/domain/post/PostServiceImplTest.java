@@ -312,4 +312,19 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(updatedPost.getPostTopic()).isEqualTo(postTopic);
 		assertThat(updatedPost.getImages().stream().map(PostImage::getImage).toList()).isEqualTo(images);
 	}
+
+	@Test
+	void 커뮤니티_삭제() throws Exception {
+		//given
+		final Long userId = 112L;
+		final Long postId = 222L;
+
+		// when
+		sut.delete(postId, PostTopic.BREAD_STORY, userId);
+
+		//then
+		final Post post = em.find(Post.class, postId);
+		System.out.println(post);
+
+	}
 }
