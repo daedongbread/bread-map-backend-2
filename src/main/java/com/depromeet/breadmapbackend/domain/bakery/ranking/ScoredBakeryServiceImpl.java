@@ -3,10 +3,13 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.bakery.BakeryServiceImpl;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
@@ -35,6 +38,8 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	private final ScoredBakeryRepository scoredBakeryRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
+	private final StringRedisTemplate redisTemplate;
+	private final BakeryServiceImpl bakeryService;
 
 	@Transactional
 	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
@@ -75,6 +80,30 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.map(bakeryScores -> from(userFlaggedBakeries, bakeryScores))
 			.limit(size)
 			.toList();
+	}
+
+	@Transactional
+	@Override
+	public void createBakeryRanking(final String EVENT_KEY, final LocalDate calculateDate) {
+		if (isFirstInstanceToCalculateRanks(EVENT_KEY)) {
+			log.info("This instance is first instance to calculate ranking");
+			calculateRankAndSave(calculateDate);
+			log.info("The calculation is done");
+		}
+	}
+
+	private void calculateRankAndSave(final LocalDate calculateDate) {
+		final List<BakeryScoreBaseWithSelectedDate> bakeriesScoreFactors =
+			bakeryService.getBakeriesScoreFactors(calculateDate);
+		log.info("bakeriesScoreFactors: {}", bakeriesScoreFactors.size());
+		calculateBakeryScore(bakeriesScoreFactors);
+	}
+
+	private boolean isFirstInstanceToCalculateRanks(final String EVENT_KEY) {
+		final Optional<Long> incrementedValue = Optional.ofNullable(
+			redisTemplate.opsForValue().increment(EVENT_KEY)
+		);
+		return incrementedValue.isPresent() && incrementedValue.get() == 2L;
 	}
 
 	private List<ScoredBakery> findScoredBakeryBy(final LocalDate calculatedDate, final int size) {

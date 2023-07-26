@@ -47,7 +47,13 @@ class ScoredBakeryServiceImplTest {
 		scoredBakeryRepository = new FakeScoredBakeryRepositoryImpl();
 		flagBakeryRepository = new FakeFlagBakeryRepositoryImpl();
 		scoredBakeryEventStream = new FakeScoredBakeryEventStreamImpl();
-		sut = new ScoredBakeryServiceImpl(scoredBakeryRepository, flagBakeryRepository, scoredBakeryEventStream);
+		sut = new ScoredBakeryServiceImpl(
+			scoredBakeryRepository,
+			flagBakeryRepository,
+			scoredBakeryEventStream,
+			null,
+			null
+		);
 		FakeScoredBakeryRepositoryImpl.clearData();
 		FakeScoredBakeryEventStreamImpl.clearData();
 	}
