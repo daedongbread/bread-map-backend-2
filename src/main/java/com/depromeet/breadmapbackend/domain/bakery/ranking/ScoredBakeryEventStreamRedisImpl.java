@@ -1,9 +1,9 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -39,18 +39,19 @@ public class ScoredBakeryEventStreamRedisImpl implements ScoredBakeryEventStream
 		final String EVENT_KEY = eventName + ":" + calculateDate;
 
 		log.info("EVENT_KEY: {}", EVENT_KEY);
-		final String calculationStartFlag = redisTemplate.opsForValue().get(EVENT_KEY);
-		if (!isCalculationStarted(calculationStartFlag)) {
+		if (isCalculationStarted(EVENT_KEY)) {
 			log.info("Calculation is not started yet. Start calculating ranking");
-			redisTemplate.opsForValue().set(EVENT_KEY, "0", Duration.ofSeconds(30L));
 			redisTemplate.opsForStream().add(eventName, fieldMap);
 		} else {
 			log.info("Calculation is already started. Skip calculating ranking");
 		}
 	}
 
-	private static boolean isCalculationStarted(final String calculationStartFlag) {
-		return calculationStartFlag != null && Integer.parseInt(calculationStartFlag) > 0;
+	private boolean isCalculationStarted(final String EVENT_KEY) {
+		final Optional<Long> incrementedValue = Optional.ofNullable(
+			redisTemplate.opsForValue().increment(EVENT_KEY)
+		);
+		return incrementedValue.isPresent() && incrementedValue.get() == 1L;
 	}
 
 }

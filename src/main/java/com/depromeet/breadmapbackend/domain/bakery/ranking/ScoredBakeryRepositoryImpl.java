@@ -107,4 +107,9 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 			.toArray(SqlParameterSource[]::new);
 		return namedParameterJdbcTemplate.batchUpdate(sql, params).length;
 	}
+
+	@Override
+	public void deleteByCalculatedDate(final LocalDate calculateDate) {
+		scoredBakeryJpaRepository.deleteByCalculatedDate(calculateDate);
+	}
 }

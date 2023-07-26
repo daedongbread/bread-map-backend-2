@@ -35,8 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminRankingController {
 
 	private final AdminRankingService adminRankingService;
-	private final BakeryRankingScheduler bakeryRankingScheduler;
-	private final StringRedisTemplate redisTemplate;
 
 	@GetMapping("/{startDate}")
 	ApiResponse<RankingResponse> getRanking(@PathVariable("startDate") String startDate) {
@@ -49,14 +47,8 @@ public class AdminRankingController {
 	}
 
 	@PatchMapping
-	void updateRanking() {
-		final String eventName = EventInfo.CALCULATE_RANKING_EVENT.getEventName();
-		final String calculateDate = LocalDateParser.parse(LocalDate.now());
-
-		redisTemplate.opsForValue()
-			.getAndDelete(eventName + ":" + calculateDate);
-		
-		bakeryRankingScheduler.publishBakeryRankingCalculationEvent();
+	void reCalculateRanking() {
+		adminRankingService.reCalculateRanking();
 	}
 
 }

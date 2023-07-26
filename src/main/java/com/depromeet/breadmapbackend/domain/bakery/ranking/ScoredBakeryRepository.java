@@ -21,4 +21,7 @@ public interface ScoredBakeryRepository {
 	RankingResponse findScoredBakeryByStartDate(final LocalDate startDate);
 
 	int updateRank(RankingUpdateRequest request);
+
+	void deleteByCalculatedDate(LocalDate calculateDate);
+
 }

@@ -67,6 +67,6 @@ public class BakeryRankingCalculationEventStreamListener
 		final Optional<Long> incrementedValue = Optional.ofNullable(
 			redisTemplate.opsForValue().increment(EVENT_KEY)
 		);
-		return incrementedValue.isPresent() && incrementedValue.get() == 1L;
+		return incrementedValue.isPresent() && incrementedValue.get() == 2L;
 	}
 }

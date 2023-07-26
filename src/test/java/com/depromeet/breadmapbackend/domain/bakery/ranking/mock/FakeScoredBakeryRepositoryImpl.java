@@ -66,6 +66,11 @@ public class FakeScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 		return 0;
 	}
 
+	@Override
+	public void deleteByCalculatedDate(final LocalDate calculateDate) {
+		
+	}
+
 	public static void prepareData(final List<ScoredBakery> scoredBakery) {
 		data.addAll(scoredBakery);
 	}
