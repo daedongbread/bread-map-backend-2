@@ -44,7 +44,7 @@ class ReportControllerTest extends ControllerTest {
 	void 커뮤니티_신고() throws Exception {
 		// given
 		final var 신고_요청_데이터 = new ReportRequest(IRRELEVANT_CONTENT, null);
-		final var 신고_대상_커뮤니티_타입 = "bread_story";
+		final var 신고_대상_커뮤니티_타입 = "BREAD_STORY";
 		final var 신고_대상_커뮤니티_고유_번호 = 222;
 
 		// when

@@ -11,18 +11,16 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PostTopic {
-	ALL("all"),
-	REVIEW("review"),
-	EVENT("event"),
-	BREAD_STORY("bread_story"),
-	FREE_TALK("free_talk"),
+	ALL,
+	REVIEW,
+	EVENT,
+	BREAD_STORY,
+	FREE_TALK,
 	;
-
-	private final String topic;
 
 	public static PostTopic of(final String topic) {
 		return Arrays.stream(PostTopic.values())
-			.filter(postTopic -> postTopic.getTopic().equals(topic))
+			.filter(postTopic -> postTopic.name().equals(topic))
 			.findFirst()
 			.orElseThrow(() -> new DaedongException(DaedongStatus.INVALID_POST_TOPIC));
 	}

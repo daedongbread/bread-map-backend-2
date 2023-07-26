@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import com.depromeet.breadmapbackend.domain.post.comment.Comment;
+import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLike;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
@@ -323,8 +325,27 @@ class PostServiceImplTest extends PostServiceTest {
 		sut.delete(postId, PostTopic.BREAD_STORY, userId);
 
 		//then
-		final Post post = em.find(Post.class, postId);
-		System.out.println(post);
+		final List<Post> postResult = em.createQuery("select p from Post p where p.id =:postId", Post.class)
+			.setParameter("postId", postId)
+			.getResultList();
+		final List<PostLike> postLikeResult = em.createQuery("select pl from PostLike pl where pl.postId =:postId",
+				PostLike.class)
+			.setParameter("postId", postId)
+			.getResultList();
+		final List<Comment> commentResult = em.createQuery("select c from Comment c where c.postId =:postId",
+				Comment.class)
+			.setParameter("postId", postId)
+			.getResultList();
+		final List<CommentLike> commentLikeResult = em.createQuery(
+				"select c from CommentLike c where c.commentId in (:postId)",
+				CommentLike.class)
+			.setParameter("postId", List.of(111L, 112L, 113L))
+			.getResultList();
+
+		assertThat(postResult).isEmpty();
+		assertThat(postLikeResult).isEmpty();
+		assertThat(commentResult).isEmpty();
+		assertThat(commentLikeResult).isEmpty();
 
 	}
 }

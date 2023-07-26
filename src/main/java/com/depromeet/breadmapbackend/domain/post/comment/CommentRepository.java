@@ -28,4 +28,6 @@ public interface CommentRepository {
 	void deleteAllByIdInBatch(List<Long> commentIdList);
 
 	List<Long> findCommentIdListByPostId(Long postId);
+
+	Optional<Comment> findById(Long id);
 }

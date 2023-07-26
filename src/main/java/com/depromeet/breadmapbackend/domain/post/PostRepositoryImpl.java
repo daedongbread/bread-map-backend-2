@@ -68,8 +68,8 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public void deletePostById(final Long postId, final Long userId) {
-		postJpaRepository.deleteById(postId);
+	public void delete(final Post post) {
+		postJpaRepository.delete(post);
 	}
 
 	@Override

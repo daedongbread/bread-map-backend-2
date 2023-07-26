@@ -31,6 +31,7 @@ import com.depromeet.breadmapbackend.utils.ControllerTest;
 class PostControllerTest extends ControllerTest {
 
 	private String 사용자_토큰;
+	private String 사용자_토큰2;
 
 	@Autowired
 	private DataSource dataSource;
@@ -39,12 +40,14 @@ class PostControllerTest extends ControllerTest {
 	void setUp() throws Exception {
 		setUpTestDate();
 		사용자_토큰 = jwtTokenProvider.createJwtToken("APPLE_111", RoleType.USER.getCode()).getAccessToken();
+		사용자_토큰2 = jwtTokenProvider.createJwtToken("APPLE_222", RoleType.USER.getCode()).getAccessToken();
 	}
 
 	@Test
 	void 빵_이야기_등록() throws Exception {
 		// given
-		final var 빵_이야기_작성_데이터 = new PostRequest("제목", "내용", List.of("image1", "image2"), PostTopic.BREAD_STORY);
+		final var 빵_이야기_작성_데이터 = new PostRequest("제목1234567890", "내용12345678910", List.of("image1", "image2"),
+			PostTopic.BREAD_STORY);
 
 		// when
 		final var 결과 = 빵_이야기_작성_요청(빵_이야기_작성_데이터, 사용자_토큰, mockMvc, objectMapper);
@@ -114,6 +117,17 @@ class PostControllerTest extends ControllerTest {
 
 		// then
 		커뮤니티_글_수정_요청_결과_검증(결과);
+	}
+
+	@Test
+	void 커뮤니티_글_삭제() throws Exception {
+		// given
+		final var 삭제_대상_커뮤니티_글 = 222L;
+		// when
+		final var 결과 = 커뮤니티_글_삭제_요청(삭제_대상_커뮤니티_글, PostTopic.BREAD_STORY, 사용자_토큰2, mockMvc);
+
+		// then
+		커뮤니티_글_삭제_요청_결과_검증(결과);
 	}
 
 	private void setUpTestDate() throws Exception {

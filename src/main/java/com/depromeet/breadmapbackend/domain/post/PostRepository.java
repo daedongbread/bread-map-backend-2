@@ -29,7 +29,7 @@ public interface PostRepository {
 
 	PostDetailInfo findPostDetailBy(final Long postId, final Long userId, final PostTopic postTopic);
 
-	void deletePostById(Long postId, Long userId);
+	void delete(final Post post);
 
 	List<CommunityCardInfo> findHotPosts(Long userId);
 

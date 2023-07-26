@@ -82,12 +82,15 @@ public class PostControllerTestSteps {
 			));
 	}
 
-	public static ResultActions 커뮤니티_전체_카테고리_조회_요청(final CommunityPage 커뮤니티_조회_페이지_데이터, final String 사용자_토큰,
-		final MockMvc mockMvc) throws
+	public static ResultActions 커뮤니티_전체_카테고리_조회_요청(
+		final CommunityPage 커뮤니티_조회_페이지_데이터,
+		final String 사용자_토큰,
+		final MockMvc mockMvc
+	) throws
 		Exception {
 		return mockMvc.perform(
 				get("/v1/posts/cards/{all}?reviewOffset={reviewOffset}&postOffset={postOffset}&page={page}",
-					"all", 커뮤니티_조회_페이지_데이터.reviewOffset(), 커뮤니티_조회_페이지_데이터.postOffset(), 커뮤니티_조회_페이지_데이터.page())
+					"ALL", 커뮤니티_조회_페이지_데이터.reviewOffset(), 커뮤니티_조회_페이지_데이터.postOffset(), 커뮤니티_조회_페이지_데이터.page())
 					.header("Authorization", "Bearer " + 사용자_토큰))
 			.andDo(print())
 			.andDo(document("v1/posts/get/all",
@@ -95,7 +98,7 @@ public class PostControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
-					parameterWithName("all").description("커뮤니티 토픽 종류 (all, review, bread-story, event, free-talk)")),
+					parameterWithName("all").description("커뮤니티 토픽 종류 (ALL, REVIEW, BREAD_STORY, EVENT, FREE_TALK)")),
 				requestParameters(
 					parameterWithName("reviewOffset").description("마지막 조회 리뷰 고유 번호"),
 					parameterWithName("postOffset").description("리뷰 제외 모든 커뮤니티글의 마지 고유 번호"),
@@ -141,7 +144,7 @@ public class PostControllerTestSteps {
 	public static ResultActions 빵_이야기_상세_조회_요청(final int 빵_이야기_고유_번호, final PostTopic postTopic, final String 사용자_토큰,
 		final MockMvc mockMvc) throws
 		Exception {
-		return mockMvc.perform(get("/v1/posts/{postId}/{postTopic}", 빵_이야기_고유_번호, postTopic.getTopic())
+		return mockMvc.perform(get("/v1/posts/{postId}/{postTopic}", 빵_이야기_고유_번호, postTopic.name())
 				.header("Authorization", "Bearer " + 사용자_토큰))
 			.andDo(print())
 			.andDo(document("v1/posts/get",
@@ -151,7 +154,7 @@ public class PostControllerTestSteps {
 				pathParameters(
 					parameterWithName("postId").description("빵 이야기 고유 번호"),
 					parameterWithName("postTopic").description(
-						"커뮤니티 토픽 종류 (all, review, bread-story, event, free-talk)")),
+						"커뮤니티 토픽 종류 (ALL, REVIEW, BREAD-STORY, EVENT, FREE-TALK)")),
 				responseFields(
 					fieldWithPath("data.postId").description("빵 이야기 고유 번호"),
 					fieldWithPath("data.postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
@@ -218,6 +221,26 @@ public class PostControllerTestSteps {
 					fieldWithPath("content").description("커뮤니티 글 내용"),
 					fieldWithPath("images").optional().description("커뮤니티 글 첨부 이미지"),
 					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK)")
+				)
+			));
+	}
+
+	public static ResultActions 커뮤니티_글_삭제_요청(
+		final Long 삭제_대상_커뮤니티_글,
+		final PostTopic 삭제_대상_커뮤니티_글_타입,
+		final String 사용자_토큰,
+		final MockMvc mockMvc
+	) throws Exception {
+		return mockMvc.perform(delete("/v1/posts/{postTopic}/{postId}", 삭제_대상_커뮤니티_글_타입, 삭제_대상_커뮤니티_글)
+				.header("Authorization", "Bearer " + 사용자_토큰))
+			.andDo(print())
+			.andDo(document("v1/posts/delete",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+				pathParameters(
+					parameterWithName("postTopic").description("삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK)"),
+					parameterWithName("postId").description("삭제 대상 커뮤니티글 id")
 				)
 			));
 	}

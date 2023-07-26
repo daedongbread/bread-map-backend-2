@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
 
 			case BREAD_STORY, FREE_TALK -> {
 				final Post post = postRepository.findByPostIdAndPostTopic(command.contentId(),
-						command.reportType().getReportType())
+						command.reportType().name())
 					.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 				validateUser(post.getUser().getId(), reporterId);
 				yield post.getId();

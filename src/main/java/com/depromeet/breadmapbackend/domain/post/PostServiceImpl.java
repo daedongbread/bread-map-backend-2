@@ -96,8 +96,8 @@ public class PostServiceImpl implements PostService {
 		commentRepository.deleteAllByIdInBatch(commentIdListToDelete);
 		commentLikeRepository.deleteAllByCommentIdList(commentIdListToDelete);
 		postLikeRepository.deleteByPostId(postId);
-		reportRepository.deleteByPostIdAndReportType(postId, ReportType.of(topic.getTopic()));
-		postRepository.deletePostById(postId, userId);
+		reportRepository.deleteByPostIdAndReportType(postId, ReportType.of(topic.name()));
+		postRepository.delete(post);
 	}
 
 	@Override

@@ -82,13 +82,14 @@ public class PostController {
 
 	// post 삭제
 	@DeleteMapping("/{postTopic}/{postId}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	void remove(
 		@PathVariable("postId") final Long postId,
 		@PathVariable("postTopic") final String postTopic,
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
 		final PostTopic topic = PostTopic.of(postTopic);
+		validatePostTopic(topic);
 		postService.delete(postId, topic, currentUserInfo.getId());
 	}
 

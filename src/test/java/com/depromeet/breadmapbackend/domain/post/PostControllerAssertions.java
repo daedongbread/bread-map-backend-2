@@ -37,4 +37,8 @@ public class PostControllerAssertions {
 		결과.andExpect(status().isOk());
 	}
 
+	public static void 커뮤니티_글_삭제_요청_결과_검증(final ResultActions 결과) throws Exception {
+		결과.andExpect(status().isOk());
+	}
+
 }
