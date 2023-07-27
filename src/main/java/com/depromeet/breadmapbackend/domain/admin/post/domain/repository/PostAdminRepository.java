@@ -24,4 +24,6 @@ public interface PostAdminRepository {
 	Optional<PostManagerMapper> findFixedPost();
 
 	List<PostManagerMapper> findCarouselPosts();
+
+	Optional<PostManagerMapper> findPostManagerMapperById(Long managerId);
 }

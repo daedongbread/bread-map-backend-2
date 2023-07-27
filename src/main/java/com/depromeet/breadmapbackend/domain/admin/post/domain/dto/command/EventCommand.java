@@ -13,7 +13,7 @@ import com.depromeet.breadmapbackend.domain.user.User;
  * @version 1.0.0
  * @since 2023/07/24
  */
-public record CreateEventCommand(
+public record EventCommand(
 	boolean isPosted,
 	boolean isFixed,
 	boolean isCarousel,

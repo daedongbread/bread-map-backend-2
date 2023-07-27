@@ -392,6 +392,7 @@ public class PostQueryRepository {
 			   from post t1
 			   inner join user t2 on t1.user_id = t2.id
 			   left join post_manager_mapper t4 on t1.id = t4.post_id 
+			   									and t4.is_posted is true
 			   									and t4.is_fixed is true
 			   left join (select to_user_id 
 			   			  from block_user
@@ -481,7 +482,9 @@ public class PostQueryRepository {
 				   from post t1
 				   left join (select to_user_id 
 							  from block_user
-							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
+							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id	
+					left join post_manager_mapper t3 on t1.id = t3.post_id 
+			   									and t3.is_posted is true 
 				   where t2.to_user_id is null
 			   ) total
 			""";
@@ -496,7 +499,9 @@ public class PostQueryRepository {
 			from post t1
 			left join (select to_user_id 
 			 			  from block_user
-			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
+			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id		
+			left join post_manager_mapper t3 on t1.id = t3.post_id 
+			   									and t3.is_posted is true	
 			where post_topic = :postTopic
 			and t2.to_user_id is null
 			""";

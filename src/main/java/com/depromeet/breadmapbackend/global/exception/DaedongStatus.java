@@ -52,6 +52,7 @@ public enum DaedongStatus {
 	CANNOT_REPORT_OWN_POST(BAD_REQUEST, 40106, "cannot report own content"),
 
 	INVALID_EVENT_STATUS(BAD_REQUEST, 40107, "invalid event status"),
+	CAROUSEL_POST_COUNT_EXCEEDED(BAD_REQUEST, 40108, "carousel post count exceeded"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외

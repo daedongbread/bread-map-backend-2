@@ -100,6 +100,8 @@ public class Post extends BaseEntity {
 		this.content = content;
 		this.title = title;
 		this.images.clear();
-		this.addImages(images);
+		if (images != null) {
+			this.addImages(images);
+		}
 	}
 }

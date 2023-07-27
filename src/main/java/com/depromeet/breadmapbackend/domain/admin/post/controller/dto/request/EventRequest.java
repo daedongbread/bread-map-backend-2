@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * @version 1.0.0
  * @since 2023/07/24
  */
-public record CreateEventRequest(
+public record EventRequest(
 	boolean isPosted,
 	boolean isFixed,
 	boolean isCarousel,

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
 
@@ -18,6 +19,13 @@ import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
  * @since 2023/07/24
  */
 public interface PostManagerMapperJpaRepository extends JpaRepository<PostManagerMapper, Long> {
+
+	@Query("select pmm "
+		+ "from PostManagerMapper pmm "
+		+ "join fetch pmm.post p "
+		+ "where pmm.id =:managerId "
+		+ "and pmm.post.postTopic = 'EVENT' ")
+	Optional<PostManagerMapper> findPostManagerMapperById(@Param("managerId") Long managerId);
 
 	@Query(value = "select pmm "
 		+ "from PostManagerMapper pmm "

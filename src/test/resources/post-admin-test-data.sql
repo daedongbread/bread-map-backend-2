@@ -45,6 +45,15 @@ TRUNCATE TABLE comment;
 ALTER TABLE comment
     ALTER COLUMN ID RESTART WITH 1;
 
+
+TRUNCATE TABLE admin;
+ALTER TABLE admin
+    ALTER COLUMN ID RESTART WITH 1;
+
+insert into admin (id,created_at,modified_at,email,password,role_type) values
+    (111,  '2023-01-01', '2023-01-01', 'admin@email.com', 'test-password', 'ADMIN' )
+;
+
 insert into USER (id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
 (999,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_111', 'nick_name', 'test@apple.com' , 'MALE', 'image'),
 (112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'image'),
@@ -78,22 +87,22 @@ insert into post_image (id, created_at, modified_at, image, is_registered, post_
 (223, '2023-01-01', '2023-01-01', 'iamge 222 2', true, 227)
 ;
 
-insert into post_manager_mapper (id,created_at , modified_at ,is_carousel,is_fixed, is_posted,post_id,banner_image)values
-(111, '2023-01-01','2023-01-01',false, true, true, 224 , 'bannerImage24'),
-(112, '2023-01-01','2023-01-01',true, false, true, 225 , 'bannerImage25'),
-(113, '2023-01-01','2023-01-01',true, false, true, 226 , 'bannerImage26'),
-(114, '2023-01-01','2023-01-01',true, false, true, 227 , 'bannerImage27'),
-(115, '2023-01-01','2023-01-01',true, false, true, 228 , 'bannerImage28'),
-(116, '2023-01-01','2023-01-01',true, false, true, 229 , 'bannerImage29'),
-(117, '2023-01-01','2023-01-01',true, false, true, 230 , 'bannerImage30'),
-(118, '2023-01-01','2023-01-01',true, false, true, 231 , 'bannerImage31'),
-(119, '2023-01-01','2023-01-01',true, false, true, 232 , 'bannerImage32'),
-(120, '2023-01-01','2023-01-01',true, false, true, 233 , 'bannerImage33'),
-(121, '2023-01-01','2023-01-01',true, false, true, 234 , 'bannerImage34'),
-(122, '2023-01-01','2023-01-01',true, false, true, 235 , 'bannerImage35'),
-(123, '2023-01-01','2023-01-01',true, false, true, 236 , 'bannerImage36'),
-(124, '2023-01-01','2023-01-01',true, false, true, 237 , 'bannerImage37'),
-(125, '2023-01-01','2023-01-01',true, false, true, 238 , 'bannerImage38'),
-(126, '2023-01-01','2023-01-01',true, false, true, 239 , 'bannerImage39'),
-(127, '2023-01-01','2023-01-01',true, false, true, 240 , 'bannerImage40')
+insert into post_manager_mapper (id,created_at , modified_at ,is_carousel,is_fixed, is_posted,post_id,banner_image, carousel_order)values
+(111, '2023-01-01','2023-01-01',false, true, true, 224 , 'bannerImage24', null),
+(112, '2023-01-01','2023-01-01',true, false, true, 225 , 'bannerImage25', 2),
+(113, '2023-01-01','2023-01-01',true, false, true, 226 , 'bannerImage26', 1),
+(114, '2023-01-01','2023-01-01',true, false, true, 227 , 'bannerImage27', 4),
+(115, '2023-01-01','2023-01-01',true, false, true, 228 , 'bannerImage28', 5),
+(116, '2023-01-01','2023-01-01',true, false, true, 229 , 'bannerImage29', 6),
+(117, '2023-01-01','2023-01-01',true, false, true, 230 , 'bannerImage30', 7),
+(118, '2023-01-01','2023-01-01',true, false, true, 231 , 'bannerImage31', 8),
+(119, '2023-01-01','2023-01-01',true, false, true, 232 , 'bannerImage32', 9),
+(120, '2023-01-01','2023-01-01',true, false, true, 233 , 'bannerImage33', 10),
+(121, '2023-01-01','2023-01-01',true, false, true, 234 , 'bannerImage34', 13),
+(122, '2023-01-01','2023-01-01',true, false, true, 235 , 'bannerImage35', 12),
+(123, '2023-01-01','2023-01-01',true, false, true, 236 , 'bannerImage36', 11),
+(124, '2023-01-01','2023-01-01',true, false, true, 237 , 'bannerImage37', 14),
+(125, '2023-01-01','2023-01-01',true, false, true, 238 , 'bannerImage38', 15),
+(126, '2023-01-01','2023-01-01',true, false, true, 239 , 'bannerImage39', 16),
+(127, '2023-01-01','2023-01-01',true, false, true, 240 , 'bannerImage40', 3)
 ;

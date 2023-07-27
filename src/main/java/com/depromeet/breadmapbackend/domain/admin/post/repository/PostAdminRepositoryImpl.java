@@ -52,4 +52,9 @@ public class PostAdminRepositoryImpl implements PostAdminRepository {
 		return postManagerMapperJpaRepository.findCarouselPosts();
 	}
 
+	@Override
+	public Optional<PostManagerMapper> findPostManagerMapperById(final Long managerId) {
+		return postManagerMapperJpaRepository.findPostManagerMapperById(managerId);
+	}
+
 }

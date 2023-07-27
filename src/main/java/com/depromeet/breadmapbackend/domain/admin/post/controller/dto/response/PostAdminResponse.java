@@ -1,7 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response;
 
-import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
-import com.depromeet.breadmapbackend.domain.post.Post;
+import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.PostManagerMapperInfo;
 
 /**
  * PostAdminResponse
@@ -11,7 +10,7 @@ import com.depromeet.breadmapbackend.domain.post.Post;
  * @since 2023/07/24
  */
 public record PostAdminResponse(
-	Long id,
+	Long managerId,
 	String nickname,
 	Long userId,
 	String title,
@@ -21,19 +20,18 @@ public record PostAdminResponse(
 	String createdAt
 
 ) {
-	public PostAdminResponse(final PostManagerMapper postManagerMapper) {
+
+	public PostAdminResponse(final PostManagerMapperInfo info) {
 		this(
-			getPost(postManagerMapper).getId(),
-			getPost(postManagerMapper).getUser().getUserInfo().getNickName(),
-			getPost(postManagerMapper).getUser().getId(),
-			getPost(postManagerMapper).getTitle(),
-			postManagerMapper.isFixed(),
-			postManagerMapper.isCarousel(),
-			postManagerMapper.isPosted(),
-			getPost(postManagerMapper).getCreatedAt().toString());
+			info.managerId(),
+			info.nickname(),
+			info.userId(),
+			info.title(),
+			info.isFixed(),
+			info.isCarousel(),
+			info.isPosted(),
+			info.createdAt()
+		);
 	}
 
-	private static Post getPost(final PostManagerMapper postManagerMapper) {
-		return postManagerMapper.getPost();
-	}
 }

@@ -110,7 +110,6 @@ public class PostServiceImpl implements PostService {
 			postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId, command.postTopic())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 		savedPost.update(command.content(), command.title(), command.images());
-		// postRepository.save(savedPost);
 	}
 
 	@Transactional
