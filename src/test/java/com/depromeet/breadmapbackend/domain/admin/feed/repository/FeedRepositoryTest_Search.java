@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
@@ -78,7 +79,7 @@ public class FeedRepositoryTest_Search {
         //when
         Page<Feed> content = feedRepository.findAllFeedBySearch(PageRequest.of(0, 10), searchRequest);
 
-        List<FeedResponseForAdmin> actual = FeedAssembler.toDtoForAdmin(content.getContent());
+        FeedResponseForAdmin actual = FeedAssembler.toDtoForAdmin(content.getTotalPages(), content.getTotalElements(), content.getContent());
 
         //then
         assertThat(actual)
@@ -284,12 +285,14 @@ public class FeedRepositoryTest_Search {
                 .mapToObj(idx -> feeds[idx])
                 .toList();
 
+        PageImpl<Feed> page = new PageImpl<>(expected);
+
         return Arguments.of(
                 keyword,
                 List.of(admin1, admin2),
                 List.of(category1, category2),
                 List.of(feeds[0],feeds[1],feeds[2],feeds[3],feeds[4],feeds[5]),
-                FeedAssembler.toDtoForAdmin(expected)
+                FeedAssembler.toDtoForAdmin(page.getTotalPages(), page.getTotalElements(), expected)
         );
     }
 

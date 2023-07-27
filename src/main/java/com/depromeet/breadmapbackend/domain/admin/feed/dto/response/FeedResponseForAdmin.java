@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.dto.response;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
@@ -13,29 +14,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FeedResponseForAdmin {
 
-	private Long feedId;
-	private String feedTitle;
-	private String authorName;
-	private LocalDateTime activeTime;
-	private String isActive;
+	private int totalPages;
+	private long totalElements;
+	private List<FeedContentInfo> contents;
+
 
 	@Builder
-	private FeedResponseForAdmin(Long feedId, String feedTitle, String authorName, LocalDateTime activeTime,
-		String isActive) {
-		this.feedId = feedId;
-		this.feedTitle = feedTitle;
-		this.authorName = authorName;
-		this.activeTime = activeTime;
-		this.isActive = isActive;
+	private FeedResponseForAdmin(int totalPages, long totalElements, List<Feed> feeds) {
+		this.totalPages = totalPages;
+		this.totalElements = totalElements;
+		this.contents = feeds.stream()
+					.map(FeedContentInfo::of)
+					.collect(Collectors.toList());
 	}
 
-	public static FeedResponseForAdmin of(Feed feed) {
+	public static FeedResponseForAdmin of(int totalPages, long totalElements, List<Feed> feeds) {
 		return FeedResponseForAdmin.builder()
-			.feedId(feed.getId())
-			.feedTitle(feed.getSubTitle())
-			.authorName(feed.getAdmin().getEmail())
-			.activeTime(feed.getActiveTime())
-			.isActive(feed.getActivated() == FeedStatus.POSTING ? "게시중" : "미게시")
+			.totalPages(totalPages)
+			.totalElements(totalElements)
+			.feeds(feeds)
 			.build();
 	}
 }

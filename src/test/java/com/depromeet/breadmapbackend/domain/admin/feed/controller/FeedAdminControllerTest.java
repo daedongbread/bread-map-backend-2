@@ -19,6 +19,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -420,9 +421,11 @@ public class FeedAdminControllerTest extends ControllerTest {
 		//given
 		List<Feed> feedList = List.of(landing, curation);
 
-		List<FeedResponseForAdmin> content = FeedAssembler.toDtoForAdmin(feedList);
+		PageImpl<Feed> page = new PageImpl<>(feedList);
 
-		ApiResponse<List<FeedResponseForAdmin>> res = new ApiResponse<>(content);
+		FeedResponseForAdmin content = FeedAssembler.toDtoForAdmin(page.getTotalPages(), page.getTotalElements(), feedList);
+
+		ApiResponse<FeedResponseForAdmin> res = new ApiResponse<>(content);
 
 		String response = objectMapper.writeValueAsString(res);
 
@@ -454,11 +457,13 @@ public class FeedAdminControllerTest extends ControllerTest {
 						parameterWithName("page").optional().description("페이지(0부터시작)"),
 						parameterWithName("size").optional().description("한 페이지에 출력할 개수(default 20)")),
 					responseFields(
-						fieldWithPath("data.[].feedId").description("피드 번호"),
-						fieldWithPath("data.[].feedTitle").description("피드 제목"),
-						fieldWithPath("data.[].authorName").description("피드 작성자 이메일"),
-						fieldWithPath("data.[].activeTime").description("피드 게시 예약 일자 ( 해당 날짜 이후부터 조회됩니다)"),
-						fieldWithPath("data.[].isActive").description("피드 활성화 여부")
+						fieldWithPath("data.totalPages").description("전체 페이지 수"),
+						fieldWithPath("data.totalElements").description("전체 데이터 개수"),
+						fieldWithPath("data.contents.[].feedId").description("피드 번호"),
+						fieldWithPath("data.contents.[].feedTitle").description("피드 제목"),
+						fieldWithPath("data.contents.[].authorName").description("피드 작성자 이메일"),
+						fieldWithPath("data.contents.[].activeTime").description("피드 게시 예약 일자 ( 해당 날짜 이후부터 조회됩니다)"),
+						fieldWithPath("data.contents.[].isActive").description("피드 활성화 여부")
 					)
 				)
 			);

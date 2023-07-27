@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.admin.feed.domain;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ public class CurationFeedTest {
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
 			.category(new Category("테스트 카테고리"))
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
 		FeedRequestDto request = new FeedRequestDto(
@@ -78,7 +79,7 @@ public class CurationFeedTest {
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
 			.category(new Category("테스트 카테고리"))
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
 		FeedRequestDto request = new FeedRequestDto(
@@ -132,7 +133,7 @@ public class CurationFeedTest {
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
 			.category(new Category("테스트 카테고리"))
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
 		FeedRequestDto request = new FeedRequestDto(
@@ -226,7 +227,7 @@ public class CurationFeedTest {
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
 			.category(new Category("테스트 카테고리"))
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
 		FeedRequestDto request = new FeedRequestDto(
@@ -290,7 +291,7 @@ public class CurationFeedTest {
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
 			.category(new Category("테스트 카테고리"))
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
 		FeedRequestDto request = new FeedRequestDto(
@@ -346,7 +347,7 @@ public class CurationFeedTest {
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
 			.category(new Category("테스트 카테고리"))
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
 		FeedRequestDto request = new FeedRequestDto(
@@ -431,4 +432,83 @@ public class CurationFeedTest {
 		assertThat(curationFeed.getBakeries().getBakeries().get(0).getBakery().getId()).isEqualTo(3);
 	}
 
+	@DisplayName("피드에 좋아요 된 총 카운트를 계산한다")
+	@Test
+	void 피드_좋아요_총_카운트_계산_테스트() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("한 사람이 피드에 좋아요 한 카운트를 계산한다")
+	@Test
+	void 피드_좋아요_유저_개별_카운트_계산_테스트() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("피드에 좋아요를 할 수 있다")
+	@Test
+	void 피드_좋아요_테스트() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("피드에 좋아요를 할 수 있다 - 좋아요 개수가 5개 이상이라면 실패")
+	@Test
+	void 피드_좋아요_테스트_5개_이상_실패() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("피드에 좋아요를 취소할 수 있다")
+	@Test
+	void 피드_좋아요_취소_테스트() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("피드에 좋아요를 취소할 수 있다 - 좋아요 한 이력이 없다면 실패")
+	@Test
+	void 피드_좋아요_취소_테스트_좋아요_이력_없으면_실패() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("피드에 좋아요를 취소할 수 있다 - 좋아요가 0개라면 실패")
+	@Test
+	void 피드_좋아요_취소_테스트_좋아요_0개면_실패() {
+		//given
+
+		//when
+
+		//then
+	}
+
+	@DisplayName("유저가 피드에 좋아요한 이력을 찾는다")
+	@Test
+	void 피드_좋아요_이력_찾기() {
+		//given
+
+		//when
+
+		//then
+	}
 }

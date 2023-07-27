@@ -1,19 +1,18 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForAdmin;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForUser;
 import com.depromeet.breadmapbackend.global.converter.DateTimeParser;
+import org.springframework.data.domain.Page;
 
 public class FeedAssembler {
 
@@ -58,7 +57,7 @@ public class FeedAssembler {
 			.conclusion(requestDto.getCommon().getConclusion())
 			.thumbnailUrl(requestDto.getCommon().getThumbnailUrl())
 			.feedType(requestDto.getCommon().getFeedType().toString())
-			.like(0)
+			.likes(new FeedLikes(new ArrayList<>()))
 			.activated(requestDto.getCommon().getActivated())
 			.activeTime(DateTimeParser.parse(requestDto.getCommon().getActiveTime()))
 			.build();
@@ -79,12 +78,8 @@ public class FeedAssembler {
 			.build();
 	}
 
-	public static List<FeedResponseForAdmin> toDtoForAdmin(List<Feed> feeds) {
-		return feeds.stream().map(FeedAssembler::toDtoForAdmin).collect(Collectors.toList());
-	}
-
-	public static FeedResponseForAdmin toDtoForAdmin(Feed feed) {
-		return FeedResponseForAdmin.of(feed);
+	public static FeedResponseForAdmin toDtoForAdmin(int totalPage, long totalElement, List<Feed> feeds) {
+		return FeedResponseForAdmin.of(totalPage, totalElement, feeds);
 	}
 
 	public static FeedResponseForUser curationToDto(Feed feed) {

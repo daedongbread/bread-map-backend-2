@@ -1,8 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.domain;
 
-import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -18,7 +15,7 @@ public class FeedLikes {
     private final int UNLIKE_STATUS_COUNT = 0;
 
     @OneToMany(
-            mappedBy = "curation",
+            mappedBy = "curationFeed",
             fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,
             orphanRemoval = true

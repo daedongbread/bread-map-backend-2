@@ -30,11 +30,11 @@ public class CommonFeedService {
 	private final UserRepository userRepository;
 	private final FeedRepository repository;
 
-	public List<FeedResponseForAdmin> getAllFeedForAdmin(Pageable pageable, FeedSearchRequest searchRequest) {
+	public FeedResponseForAdmin getAllFeedForAdmin(Pageable pageable, FeedSearchRequest searchRequest) {
 
 		Page<Feed> feeds = repository.findAllFeedBySearch(pageable, searchRequest);
 
-		return FeedAssembler.toDtoForAdmin(feeds.getContent());
+		return FeedAssembler.toDtoForAdmin(feeds.getTotalPages(), feeds.getTotalElements(), feeds.getContent());
 	}
 
 	public List<FeedResponseForUser> getAllFeedForUser() {
