@@ -5,6 +5,9 @@ import java.util.Optional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.depromeet.breadmapbackend.domain.post.Post;
+import com.depromeet.breadmapbackend.domain.post.PostJpaRepository;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -20,6 +23,7 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 	private static final String TABLE = "post_like";
 	private final PostLikeJpaRepository repository;
 	private final NamedParameterJdbcTemplate jdbcTemplate;
+	private final PostJpaRepository postJpaRepository;
 
 	@Override
 	public Optional<PostLike> findByPostIdAndUserId(final Long postId, final Long userId) {
@@ -39,5 +43,10 @@ public class PostLikeRepositoryImpl implements PostLikeRepository {
 	@Override
 	public void deleteByPostId(final Long postId) {
 		repository.deleteByPostId(postId);
+	}
+
+	@Override
+	public Optional<Post> findById(final Long postId) {
+		return postJpaRepository.findById(postId);
 	}
 }

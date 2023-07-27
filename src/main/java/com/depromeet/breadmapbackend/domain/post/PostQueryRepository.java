@@ -95,7 +95,7 @@ public class PostQueryRepository {
 						.otherwise(false),
 					new CaseBuilder().when(JPAExpressions.select(postLike.count())
 							.from(postLike)
-							.where(postLike.postId.eq(post.id)
+							.where(postLike.post.id.eq(post.id)
 								.and(postLike.userId.eq(userId))).goe(1L)).then(true)
 						.otherwise(false),
 					new CaseBuilder().when(JPAExpressions.select(comment.count())
@@ -189,7 +189,7 @@ public class PostQueryRepository {
 	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
-			.addValue("limit", communityPage.reviewOffset() == 0 ? PAGE_SIZE - 1 : PAGE_SIZE)
+			.addValue("limit", communityPage.reviewOffset() == 0 ? PAGE_SIZE : PAGE_SIZE - 1)
 			.addValue("reviewOffset", communityPage.reviewOffset() != 0 ? communityPage.reviewOffset() - 1 : 0)
 			.addValue("userId", userId);
 
@@ -201,7 +201,8 @@ public class PostQueryRepository {
 			);
 
 		if (communityPage.reviewOffset() == 0) {
-			reviewCards.add(0, getFixedEvent(userId));
+			getFixedEvent(userId)
+				.ifPresent(fixedEvent -> reviewCards.add(0, fixedEvent));
 		}
 
 		return new PageImpl<>(
@@ -213,7 +214,7 @@ public class PostQueryRepository {
 
 	public List<CommunityCardInfo> findHotPosts(final Long userId) {
 		List<CommunityCardInfo> hotPostsWithEvent = new ArrayList<>();
-		hotPostsWithEvent.add(getFixedEvent(userId));
+		getFixedEvent(userId).ifPresent(hotPostsWithEvent::add);
 
 		final List<HotCommunityRank> communityTopScoresWithIds = getCommunityTopScoresWithId(userId);
 
@@ -343,14 +344,16 @@ public class PostQueryRepository {
 
 	}
 
-	private CommunityCardInfo getFixedEvent(final Long userId) {
+	private Optional<CommunityCardInfo> getFixedEvent(final Long userId) {
 		final MapSqlParameterSource fixedEventParams = new MapSqlParameterSource()
 			.addValue("limit", 1)
 			.addValue("postOffset", 0)
 			.addValue("userId", userId);
 		final String fixedEventSql = getPostBaseSqlWithWhereClaus(
 			"(t1.post_topic = 'EVENT')");
-		return jdbcTemplate.query(fixedEventSql, fixedEventParams, COMMUNITY_CARD_INFO_ROW_MAPPER).get(0);
+		final List<CommunityCardInfo> result =
+			jdbcTemplate.query(fixedEventSql, fixedEventParams, COMMUNITY_CARD_INFO_ROW_MAPPER);
+		return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
 	}
 
 	private String getPostBaseSqlWithWhereClaus(final String whereClause) {
@@ -469,7 +472,7 @@ public class PostQueryRepository {
 		final String sql = """
 			select sum(total_count)
 			from (
-				   select count(t1.*) AS total_count
+				   select count(t1.id) AS total_count
 				   from review t1
 				   left join (select to_user_id 
 							  from block_user
@@ -478,7 +481,7 @@ public class PostQueryRepository {
 				   
 				   union all
 			   
-				   select count(t1.*) AS total_count
+				   select count(t1.id) AS total_count
 				   from post t1
 				   left join (select to_user_id 
 							  from block_user
@@ -495,7 +498,7 @@ public class PostQueryRepository {
 
 	private Long getPostsCardsCount(final PostTopic postTopic, final int postOffset, final Long userId) {
 		final String sql = """
-			select count(t1.*) + :postOffset
+			select count(t1.id) + :postOffset
 			from post t1
 			left join (select to_user_id 
 			 			  from block_user
@@ -514,7 +517,7 @@ public class PostQueryRepository {
 
 	private Long getReviewCardsCount(final Long userId) {
 		final String sql = """
-			select count(t1.*) + 1
+			select count(t1.id) + 1
 			from review t1
 			   left join (select to_user_id 
 			 			  from block_user

@@ -47,7 +47,7 @@ public class PostController {
 	}
 
 	// post 상세 조회
-	@GetMapping("/{postId}/{postTopic}")
+	@GetMapping("/{postTopic}/{postId}")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PostResponse> getPost(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,

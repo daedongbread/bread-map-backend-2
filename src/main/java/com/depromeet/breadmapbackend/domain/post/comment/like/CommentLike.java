@@ -27,11 +27,8 @@ public class CommentLike extends BaseEntity {
 	private Long id;
 
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "comment_id", updatable = false, insertable = false)
+	@JoinColumn(name = "comment_id")
 	private Comment comment;
-
-	@Column(name = "comment_id")
-	private Long commentId;
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id", updatable = false, insertable = false)
@@ -40,8 +37,8 @@ public class CommentLike extends BaseEntity {
 	@Column(name = "user_id")
 	private Long userId;
 
-	public CommentLike(final Long commentId, final Long userId) {
-		this.commentId = commentId;
+	public CommentLike(final Comment comment, final Long userId) {
+		this.comment = comment;
 		this.userId = userId;
 	}
 }

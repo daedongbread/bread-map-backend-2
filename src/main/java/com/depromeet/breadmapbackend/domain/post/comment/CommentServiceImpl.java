@@ -87,6 +87,7 @@ public class CommentServiceImpl implements CommentService {
 			.update(command.content());
 	}
 
+	@Transactional
 	@Override
 	public void deleteComment(final Long commentId, final Long userId) {
 		commentRepository.findByIdAndUserId(commentId, userId)
@@ -94,11 +95,15 @@ public class CommentServiceImpl implements CommentService {
 			.delete();
 	}
 
+	@Transactional
 	@Override
 	public int toggleLike(final Long commentId, final Long userId) {
+		final Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
+
 		final Optional<CommentLike> commentLike = commentLikeRepository.findByCommentIdAndUserId(commentId, userId);
 		if (commentLike.isEmpty()) {
-			commentLikeRepository.save(new CommentLike(commentId, userId));
+			commentLikeRepository.save(new CommentLike(comment, userId));
 			return 1;
 		} else {
 			commentLikeRepository.delete(commentLike.get());

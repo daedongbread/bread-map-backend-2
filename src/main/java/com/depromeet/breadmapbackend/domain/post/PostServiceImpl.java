@@ -115,9 +115,11 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	@Override
 	public int toggle(final Long postId, final Long userId) {
+		final Post post = postLikeRepository.findById(postId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 		final Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUserId(postId, userId);
 		if (postLike.isEmpty()) {
-			postLikeRepository.save(new PostLike(postId, userId));
+			postLikeRepository.save(new PostLike(post, userId));
 			return 1;
 		} else {
 			postLikeRepository.delete(postLike.get());
