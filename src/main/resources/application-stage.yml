@@ -68,6 +68,12 @@ sgis:
   secret: ${SGIS_SECRET}
 
 
+admin:
+  event:
+    post:
+      user-id: ${EVENT_POST_ADMIN_USER_ID}
+
+
 redis:
   poll-timeout:
     bakery-view: 5

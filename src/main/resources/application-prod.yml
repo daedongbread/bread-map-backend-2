@@ -71,3 +71,8 @@ redis:
   poll-timeout:
     bakery-view: 5
     bakery-ranking-calculator: 5
+
+admin:
+  event:
+    post:
+      user-id: ${EVENT_POST_ADMIN_USER_ID}

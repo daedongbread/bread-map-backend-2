@@ -1,0 +1,85 @@
+= 커뮤니티 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:site-url: /build/asciidoc/html5/
+:operation-http-request-title: Example Request
+:operation-http-response-title: Example Response
+
+== 커뮤니티 APIs
+
+- 커뮤니티 등록 API
+- 커뮤니티 상세 조회 API
+- 커뮤니티 카드 리스트 조회 API
+- 커뮤니티 추천 카드 리스트 조회 API
+- 커뮤니티 좋아요 토글 API
+- 커뮤니티 수정 API
+- 커뮤니티 이벤트 캐러셀 조회 API
+
+=== 커뮤니티 등록 API [POST]
+
+operation::v1/posts/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 커뮤니티 상세 조회 API [GET]
+
+operation::v1/posts/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== 커뮤니티 카드 리스트 조회 API [GET]
+
+operation::v1/posts/get/all[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+
+=== 커뮤니티 추천 카드 리스트 조회 API [GET]
+
+operation::v1/posts/get/hot[snippets='http-request,request-headers,http-response,response-fields']
+
+=== 커뮤니티 좋아요 토글 API [POST]
+
+operation::v1/posts/like[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== 커뮤니티 수정 API [POST]
+
+operation::v1/posts/update[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+
+=== 커뮤니티 이벤트 캐러셀 조회 API [GET]
+
+operation::v1/posts/carousels[snippets='http-request,request-headers,http-response,response-fields']
+
+== 댓글 APIs
+
+- 댓글 등록 API
+- 댓글 리스트 조회 API
+- 댓글 삭제 API
+- 댓글 수정 API
+- 커뮤니티 댓글 좋아요 토글 API
+
+=== 댓글 등록 API [POST]
+
+operation::v1/comments/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 댓글 리스트 조회 API [GET]
+
+operation::v1/comments/get[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+=== 댓글 삭제 API [DELETE]
+
+operation::v1/comments/delete[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 댓글 수정 API [PUT]
+
+operation::v1/comments/update[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 커뮤니티 댓글 좋아요 토글 API [POST]
+
+operation::v1/comments/like[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+== 신고 APIs
+
+- 신고 등록 API
+
+=== 신고 등록 API [POST]
+
+operation::v1/reports/add[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+

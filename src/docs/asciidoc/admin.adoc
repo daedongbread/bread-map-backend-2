@@ -18,6 +18,7 @@
 - 임시 이미지 업로드 API
 - 토큰 test API
 
+
 === 관리자 로그인 API [POST]
 
 operation::v1/admin/login[snippets='http-request,request-fields,http-response,response-fields']
@@ -247,3 +248,37 @@ operation::find-detail-curation-feed-admin[snippets='http-request,request-header
 === 랜딩 피드 상세 조회 API [GET]
 
 operation::find-detail-landing-feed-admin[snippets='http-request,request-headers,path-parameters,request-parameters,response-fields,http-response']
+
+== Admin Event API
+
+- 이벤트 조회 API [GET]
+- 이벤트 등록 API [POST]
+- 이벤트 수정 API [PATCH]
+- 이벤트 고정 가능 여부 API [GET]
+- 이벤트 순서 수정 API [PATCH]
+- 이벤트 캐러셀 조회 API [GET]
+
+=== 이벤트 조회 API [GET]
+
+operation::v1/admin/posts[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
+
+=== 이벤트 등록 API [POST]
+
+operation::v1/admin/posts/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 이벤트 수정 API [PATCH]
+
+operation::v1/admin/posts/update[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 이벤트 고정 가능 여부 API [GET]
+
+operation::v1/admin/posts/can-fix[snippets='http-request,request-headers,response-fields,http-response']
+
+=== 이벤트 순서 수정 API [PATCH]
+
+operation::v1/admin/posts/order/update[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 이벤트 캐러셀 조회 API [GET]
+
+operation::v1/admin/posts/carousels[snippets='http-request,request-headers,response-fields,http-response']
+
