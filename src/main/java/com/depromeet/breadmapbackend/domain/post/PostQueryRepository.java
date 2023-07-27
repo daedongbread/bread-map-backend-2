@@ -95,7 +95,7 @@ public class PostQueryRepository {
 						.otherwise(false),
 					new CaseBuilder().when(JPAExpressions.select(postLike.count())
 							.from(postLike)
-							.where(postLike.postId.eq(post.id)
+							.where(postLike.post.id.eq(post.id)
 								.and(postLike.userId.eq(userId))).goe(1L)).then(true)
 						.otherwise(false),
 					new CaseBuilder().when(JPAExpressions.select(comment.count())
