@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.post.dto.request.PostRequest;
 import com.depromeet.breadmapbackend.domain.post.dto.response.CommunityCardResponse;
+import com.depromeet.breadmapbackend.domain.post.dto.response.EventCarouselResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.dto.PageCommunityResponseDto;
@@ -113,6 +114,11 @@ public class PostController {
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
 		return new ApiResponse<>(postService.toggle(postId, currentUserInfo.getId()));
+	}
+
+	@GetMapping("/carousels")
+	ApiResponse<List<EventCarouselResponse>> getEventCarousels() {
+		return new ApiResponse<>(postService.getEventCarousels().stream().map(Mapper::of).toList());
 	}
 
 	private void validatePostTopic(final PostTopic postTopic) {

@@ -41,4 +41,8 @@ public class PostControllerAssertions {
 		결과.andExpect(status().isOk());
 	}
 
+	public static void 이벤트_캐러셀_조회_요청_결과_검증(final ResultActions 결과) throws Exception {
+		결과.andExpect(status().isOk());
+	}
+
 }

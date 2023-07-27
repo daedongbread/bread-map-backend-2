@@ -1,9 +1,11 @@
 package com.depromeet.breadmapbackend.domain.post;
 
+import com.depromeet.breadmapbackend.domain.post.dto.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.request.PostRequest;
+import com.depromeet.breadmapbackend.domain.post.dto.response.EventCarouselResponse;
 import com.depromeet.breadmapbackend.domain.post.dto.response.PostResponse;
 
 /**
@@ -55,6 +57,14 @@ public class Mapper {
 			request.content(),
 			request.postTopic(),
 			request.images()
+		);
+	}
+
+	public static EventCarouselResponse of(final EventCarouselInfo info) {
+		return new EventCarouselResponse(
+			info.order(),
+			info.title(),
+			info.image()
 		);
 	}
 }

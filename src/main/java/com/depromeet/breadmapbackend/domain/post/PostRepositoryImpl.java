@@ -95,5 +95,4 @@ public class PostRepositoryImpl implements PostRepository {
 	public Optional<Post> findByPostIdAndPostTopic(final Long postId, final String postTopic) {
 		return postJpaRepository.findByIdAndPostTopic(postId, PostTopic.of(postTopic));
 	}
-
 }

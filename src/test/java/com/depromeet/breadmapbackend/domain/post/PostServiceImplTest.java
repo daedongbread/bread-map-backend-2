@@ -19,6 +19,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import com.depromeet.breadmapbackend.domain.post.comment.Comment;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLike;
+import com.depromeet.breadmapbackend.domain.post.dto.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
@@ -346,6 +347,16 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(postLikeResult).isEmpty();
 		assertThat(commentResult).isEmpty();
 		assertThat(commentLikeResult).isEmpty();
+	}
+
+	@Test
+	void 이벤트_캐러셀_조회() throws Exception {
+		//given
+		//when
+		final List<EventCarouselInfo> results = sut.getEventCarousels();
+		//then
+		assertThat(results).hasSize(1);
 
 	}
+
 }

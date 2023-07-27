@@ -2,6 +2,9 @@ package com.depromeet.breadmapbackend.domain.admin.post.controller.dto.request;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * CreateEventRequest
  *
@@ -13,9 +16,9 @@ public record CreateEventRequest(
 	boolean isPosted,
 	boolean isFixed,
 	boolean isCarousel,
-	String title,
-	String content,
+	@NotNull @Size(min = 10, max = 40) String title,
+	@NotNull @Size(min = 10, max = 400) String content,
 	String bannerImage,
-	List<String> images
+	@Size(max = 10) List<String> images
 ) {
 }

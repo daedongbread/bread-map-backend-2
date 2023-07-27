@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.post.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -44,6 +45,11 @@ public class PostAdminRepositoryImpl implements PostAdminRepository {
 	@Override
 	public Optional<PostManagerMapper> findFixedPost() {
 		return postManagerMapperJpaRepository.findFixedPost();
+	}
+
+	@Override
+	public List<PostManagerMapper> findCarouselPosts() {
+		return postManagerMapperJpaRepository.findCarouselPosts();
 	}
 
 }

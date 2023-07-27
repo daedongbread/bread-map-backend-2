@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.post;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.post.dto.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
@@ -53,5 +54,8 @@ public interface PostService {
 		final Long postId,
 		final Long userId
 	);
+
+	List<EventCarouselInfo> getEventCarousels();
+
 }
 

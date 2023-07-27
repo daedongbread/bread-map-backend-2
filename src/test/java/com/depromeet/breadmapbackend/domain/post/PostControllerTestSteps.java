@@ -245,4 +245,22 @@ public class PostControllerTestSteps {
 			));
 	}
 
+	public static ResultActions 이벤트_캐러셀_조회_요청(
+		final String 사용자_토큰,
+		final MockMvc mockMvc
+	) throws Exception {
+		return mockMvc.perform(get("/v1/posts/carousels")
+				.header("Authorization", "Bearer " + 사용자_토큰))
+			.andDo(print())
+			.andDo(document("v1/posts/carousels",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
+				responseFields(
+					fieldWithPath("data.[].order").description("이벤트 캐러셀 순서"),
+					fieldWithPath("data.[].title").description("이밴트 캐러셀 타이틀"),
+					fieldWithPath("data.[].images").description("이밴트 캐러셀 배너 이미지")
+				)
+			));
+	}
 }

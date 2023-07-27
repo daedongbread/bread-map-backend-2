@@ -130,6 +130,16 @@ class PostControllerTest extends ControllerTest {
 		커뮤니티_글_삭제_요청_결과_검증(결과);
 	}
 
+	@Test
+	void 이벤트_캐러셀_조회() throws Exception {
+		// given
+		// when
+		final var 결과 = 이벤트_캐러셀_조회_요청(사용자_토큰, mockMvc);
+
+		// then
+		이벤트_캐러셀_조회_요청_결과_검증(결과);
+	}
+
 	private void setUpTestDate() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("post-test-data.sql"));

@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.post;
 
 import org.springframework.context.annotation.Import;
 
+import com.depromeet.breadmapbackend.domain.admin.post.repository.PostAdminRepositoryImpl;
 import com.depromeet.breadmapbackend.domain.notice.FcmService;
 import com.depromeet.breadmapbackend.domain.post.comment.CommentQueryRepository;
 import com.depromeet.breadmapbackend.domain.post.comment.CommentRepositoryImpl;
@@ -30,7 +31,8 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	CommentRepositoryImpl.class,
 	CommentLikeRepositoryImpl.class,
 	CommentQueryRepository.class,
-	ReportRepositoryImpl.class
+	ReportRepositoryImpl.class,
+	PostAdminRepositoryImpl.class
 })
 public abstract class PostServiceTest extends ServiceTest {
 

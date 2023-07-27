@@ -39,6 +39,7 @@ public class PostManagerMapper extends BaseEntity {
 	private boolean isPosted;
 	private boolean isCarousel;
 	private String bannerImage;
+	private Integer carouselOrder;
 
 	@Builder
 	public PostManagerMapper(final Post post, final boolean isFixed, final boolean isPosted, final boolean isCarousel,

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.post.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -38,4 +39,13 @@ public interface PostManagerMapperJpaRepository extends JpaRepository<PostManage
 		+ "from PostManagerMapper pmm "
 		+ "where pmm.isFixed = true ")
 	Optional<PostManagerMapper> findFixedPost();
+
+	@Query("select pm "
+		+ "from PostManagerMapper pm "
+		+ "join fetch pm.post p "
+		+ "where pm.isCarousel = true "
+		+ "and pm.isPosted = true "
+		+ "and p.postTopic = 'EVENT' "
+		+ "order by pm.carouselOrder asc")
+	List<PostManagerMapper> findCarouselPosts();
 }

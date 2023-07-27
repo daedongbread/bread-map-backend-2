@@ -42,13 +42,13 @@ public class PostAdminServiceImpl implements PostAdminService {
 	@Transactional
 	@Override
 	public PostManagerMapper createEventPost(final CreateEventCommand command) {
-		// TODO : user 테이블 관리자. 임시 저장 // 처리상태 미게시 = 임시저장????
-		postAdminRepository.findFixedPost().ifPresent(PostManagerMapper::unFix);
+		validateEventStatus(command);
+
 		final User adminUser = userRepository.findById(adminUserId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+		postAdminRepository.findFixedPost().ifPresent(PostManagerMapper::unFix);
 
-		final Post savePost =
-			command.toEventPost(adminUser);
+		final Post savePost = command.toEventPost(adminUser);
 
 		final PostManagerMapper postManagerMapper = PostManagerMapper.builder()
 			.post(command.images() != null ? savePost.addImages(command.images()) : savePost)
@@ -59,6 +59,15 @@ public class PostAdminServiceImpl implements PostAdminService {
 			.build();
 
 		return postAdminRepository.savePostManagerMapper(postManagerMapper);
+	}
+
+	private void validateEventStatus(final CreateEventCommand command) {
+		if (!command.isPosted()) {
+			if (command.isCarousel() || command.isFixed()) {
+				throw new DaedongException(DaedongStatus.INVALID_EVENT_STATUS);
+			}
+		}
+
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class Comment extends BaseEntity {
 	@JoinColumn(name = "post_id", insertable = false, updatable = false)
 	private Post post;
 
-	@Column(name = "post_id", insertable = false, updatable = false)
+	@Column(name = "post_id")
 	private Long postId;
 
 	@Column(nullable = false)

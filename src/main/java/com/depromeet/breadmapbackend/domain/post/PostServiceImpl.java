@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.admin.post.domain.repository.PostAdminRepository;
 import com.depromeet.breadmapbackend.domain.post.comment.CommentRepository;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
+import com.depromeet.breadmapbackend.domain.post.dto.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
@@ -39,6 +41,7 @@ public class PostServiceImpl implements PostService {
 	private final CommentRepository commentRepository;
 	private final CommentLikeRepository commentLikeRepository;
 	private final ReportRepository reportRepository;
+	private final PostAdminRepository postAdminRepository;
 
 	@Override
 	@Transactional
@@ -107,7 +110,7 @@ public class PostServiceImpl implements PostService {
 			postRepository.findByPostIdAndUserIdAndPostTopic(command.postId(), userId, command.postTopic())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 		savedPost.update(command.content(), command.title(), command.images());
-		postRepository.save(savedPost);
+		// postRepository.save(savedPost);
 	}
 
 	@Transactional
@@ -121,6 +124,14 @@ public class PostServiceImpl implements PostService {
 			postLikeRepository.delete(postLike.get());
 			return 0;
 		}
+	}
+
+	@Override
+	public List<EventCarouselInfo> getEventCarousels() {
+		return postAdminRepository.findCarouselPosts().stream()
+			.map(EventCarouselInfo::of)
+			.toList();
+
 	}
 
 	private Long getSelectedPostCount(final Page<CommunityCardInfo> communityCards) {
