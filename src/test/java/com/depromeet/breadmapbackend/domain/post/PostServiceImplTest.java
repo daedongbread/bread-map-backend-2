@@ -267,13 +267,13 @@ class PostServiceImplTest extends PostServiceTest {
 		//then
 		assertThat(reuslt).isEqualTo(1);
 		final PostLike postLike = em.createQuery(
-				"select pl from PostLike pl where pl.userId =:userId and pl.postId =:postId", PostLike.class)
+				"select pl from PostLike pl where pl.userId =:userId and pl.post.id =:postId", PostLike.class)
 			.setParameter("userId", userId)
 			.setParameter("postId", postId)
 			.getSingleResult();
 
 		assertThat(postLike.getUserId()).isEqualTo(userId);
-		assertThat(postLike.getPostId()).isEqualTo(postId);
+		assertThat(postLike.getPost().getId()).isEqualTo(postId);
 
 		//when
 		final int reuslt2 = sut.toggle(postId, userId);
@@ -281,7 +281,7 @@ class PostServiceImplTest extends PostServiceTest {
 		//then
 		assertThat(reuslt2).isEqualTo(0);
 		assertThatThrownBy(() -> em.createQuery(
-				"select pl from PostLike pl where pl.userId =:userId and pl.postId =:postId", PostLike.class)
+				"select pl from PostLike pl where pl.userId =:userId and pl.post.id =:postId", PostLike.class)
 			.setParameter("userId", userId)
 			.setParameter("postId", postId)
 			.getSingleResult()
@@ -329,7 +329,7 @@ class PostServiceImplTest extends PostServiceTest {
 		final List<Post> postResult = em.createQuery("select p from Post p where p.id =:postId", Post.class)
 			.setParameter("postId", postId)
 			.getResultList();
-		final List<PostLike> postLikeResult = em.createQuery("select pl from PostLike pl where pl.postId =:postId",
+		final List<PostLike> postLikeResult = em.createQuery("select pl from PostLike pl where pl.post.id =:postId",
 				PostLike.class)
 			.setParameter("postId", postId)
 			.getResultList();
@@ -338,7 +338,7 @@ class PostServiceImplTest extends PostServiceTest {
 			.setParameter("postId", postId)
 			.getResultList();
 		final List<CommentLike> commentLikeResult = em.createQuery(
-				"select c from CommentLike c where c.commentId in (:postId)",
+				"select c from CommentLike c where c.comment.id in (:postId)",
 				CommentLike.class)
 			.setParameter("postId", List.of(111L, 112L, 113L))
 			.getResultList();
