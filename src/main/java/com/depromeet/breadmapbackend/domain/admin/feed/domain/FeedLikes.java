@@ -7,12 +7,10 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Embeddable
 public class FeedLikes {
-
-    private final int MAXIMUM_FEED_LIKE_COUNT = 5;
-    private final int UNLIKE_STATUS_COUNT = 0;
 
     @OneToMany(
             mappedBy = "curationFeed",
@@ -47,22 +45,33 @@ public class FeedLikes {
                 .anyMatch(like::equals);
     }
 
-    public FeedLike find(FeedLike like) {
+    public Optional<FeedLike> find(FeedLike like) {
         return likes.stream()
-                .filter(e -> Objects.equals(e.getId(), like.getId()))
-                .findAny()
-                .orElseThrow(() -> new DaedongException(DaedongStatus.CANNOT_UNLIKE_UNDER_ZERO));
+                .filter(feedLike -> feedLike.equals(like))
+                .findAny();
+    }
+
+    public FeedLike add(FeedLike feedLike) {
+
+        likes.add(feedLike);
+
+        return feedLike;
+    }
+
+    public List<FeedLike> getFeedLikes() {
+        return this.likes;
     }
 
     private boolean validateLike(FeedLike like) {
-        return like.getCount() >= MAXIMUM_FEED_LIKE_COUNT;
+        return like.getCount() >= 5;
     }
 
     private boolean validateUnlike(FeedLike like) {
-        return like.getCount() <= UNLIKE_STATUS_COUNT;
+        return like.getCount() <= 0;
     }
 
     public void like(FeedLike like) {
+
         if (validateLike(like)) {
             throw new DaedongException(DaedongStatus.CANNOT_LIKE_MORE_THAN_COUNT);
         }
@@ -71,7 +80,8 @@ public class FeedLikes {
     }
 
     public void unLike(FeedLike like) {
-        if (!this.contains(like) || validateUnlike(like)) {
+
+        if (validateUnlike(like)) {
             throw new DaedongException(DaedongStatus.CANNOT_UNLIKE_UNDER_ZERO);
         }
 

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.persistence.*;
 
@@ -13,6 +14,8 @@ import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDt
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,17 +67,17 @@ public class CurationFeed extends Feed {
 	}
 
 	public void like(User user) {
-		FeedLike like = new FeedLike(user, this);
-		FeedLike feedLike = likes.find(like);
+		FeedLike feedLike = new FeedLike(user, this);
 
-		likes.like(feedLike);
+		FeedLike findFeedLike = this.likes.find(feedLike).orElseGet(() -> this.likes.add(feedLike));
+		likes.like(findFeedLike);
 	}
 
 	public void unLike(User user) {
-		FeedLike like = new FeedLike(user, this);
-		FeedLike feedLike = likes.find(like);
+		FeedLike feedLike = new FeedLike(user, this);
 
-		likes.unLike(feedLike);
+		FeedLike findFeedLike = this.likes.find(feedLike).orElseThrow(() -> new DaedongException(DaedongStatus.CANNOT_FIND_FEED_LIKE));
+		likes.unLike(findFeedLike);
 	}
 
 	@Override

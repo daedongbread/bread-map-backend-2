@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.user.Gender;
+import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -436,60 +439,161 @@ public class CurationFeedTest {
 	@Test
 	void 피드_좋아요_총_카운트_계산_테스트() {
 		//given
+		CurationFeed feed = CurationFeed.builder()
+				.category(new Category("테스트 카테고리"))
+				.likes(new FeedLikes(new ArrayList<>()))
+				.build();
+
+		User user = User.builder()
+				.id(1L)
+				.userInfo(new UserInfo("test user", "test@test.com", Gender.MALE, "test image"))
+				.build();
+
+		User user2 = User.builder()
+				.id(2L)
+				.userInfo(new UserInfo("test user 2", "test2@test.com", Gender.FEMALE, "test image 2"))
+				.build();
 
 		//when
+		feed.like(user);
+		feed.like(user);
+		feed.like(user2);
 
 		//then
+		assertThat(feed.getLikeCount()).isEqualTo(3);
 	}
 
 	@DisplayName("한 사람이 피드에 좋아요 한 카운트를 계산한다")
 	@Test
 	void 피드_좋아요_유저_개별_카운트_계산_테스트() {
 		//given
+		CurationFeed feed = CurationFeed.builder()
+				.category(new Category("테스트 카테고리"))
+				.likes(new FeedLikes(new ArrayList<>()))
+				.build();
+
+		User user = User.builder()
+				.id(1L)
+				.userInfo(new UserInfo("test user", "test@test.com", Gender.MALE, "test image"))
+				.build();
+
+		User user2 = User.builder()
+				.id(2L)
+				.userInfo(new UserInfo("test user 2", "test2@test.com", Gender.FEMALE, "test image 2"))
+				.build();
 
 		//when
+		feed.like(user);
+		feed.like(user);
+		feed.like(user2);
+		feed.like(user2);
+		feed.like(user2);
 
 		//then
+		assertThat(feed.getLikeCountByUser(1L)).isEqualTo(2);
+		assertThat(feed.getLikeCountByUser(2L)).isEqualTo(3);
 	}
 
 	@DisplayName("피드에 좋아요를 할 수 있다")
 	@Test
 	void 피드_좋아요_테스트() {
 		//given
+		CurationFeed feed = CurationFeed.builder()
+				.category(new Category("테스트 카테고리"))
+				.likes(new FeedLikes(new ArrayList<>()))
+				.build();
+
+		User user = User.builder()
+				.id(1L)
+				.userInfo(new UserInfo("test user", "test@test.com", Gender.MALE, "test image"))
+				.build();
+
+		assertThat(feed.getLikes().getFeedLikes().size()).isEqualTo(0);
 
 		//when
+		feed.like(user);
 
 		//then
+		assertThat(feed.getLikes()).isNotNull();
+		assertThat(feed.getLikes().getFeedLikes().get(0)).isNotNull();
+		assertThat(feed.getLikes().getFeedLikes().size()).isEqualTo(1);
+		assertThat(feed.getLikeCount()).isEqualTo(1);
 	}
 
 	@DisplayName("피드에 좋아요를 할 수 있다 - 좋아요 개수가 5개 이상이라면 실패")
 	@Test
 	void 피드_좋아요_테스트_5개_이상_실패() {
 		//given
+		CurationFeed feed = CurationFeed.builder()
+				.category(new Category("테스트 카테고리"))
+				.likes(new FeedLikes(new ArrayList<>()))
+				.build();
+
+		User user = User.builder()
+				.id(1L)
+				.userInfo(new UserInfo("test user", "test@test.com", Gender.MALE, "test image"))
+				.build();
 
 		//when
+		for(int idx = 1 ; idx <= 5; idx++) {
+			feed.like(user);
+		}
 
 		//then
+		assertThatCode(() -> feed.like(user))
+				.isInstanceOf(DaedongException.class)
+				.extracting("daedongStatus.code")
+				.isEqualTo(50002);
 	}
 
 	@DisplayName("피드에 좋아요를 취소할 수 있다")
 	@Test
 	void 피드_좋아요_취소_테스트() {
 		//given
+		CurationFeed feed = CurationFeed.builder()
+				.category(new Category("테스트 카테고리"))
+				.likes(new FeedLikes(new ArrayList<>()))
+				.build();
 
+		User user = User.builder()
+				.id(1L)
+				.userInfo(new UserInfo("test user", "test@test.com", Gender.MALE, "test image"))
+				.build();
+
+		feed.like(user);
+		feed.like(user);
+
+		assertThat(feed.getLikes().getFeedLikes().get(0).getCount()).isEqualTo(2);
+		assertThat(feed.getLikeCountByUser(1L)).isEqualTo(2);
+		
 		//when
+		feed.unLike(user);
 
 		//then
+		assertThat(feed.getLikes().getFeedLikes().get(0).getCount()).isEqualTo(1);
+		assertThat(feed.getLikeCountByUser(1L)).isEqualTo(1);
 	}
 
 	@DisplayName("피드에 좋아요를 취소할 수 있다 - 좋아요 한 이력이 없다면 실패")
 	@Test
 	void 피드_좋아요_취소_테스트_좋아요_이력_없으면_실패() {
-		//given
 
 		//when
+		CurationFeed feed = CurationFeed.builder()
+				.category(new Category("테스트 카테고리"))
+				.likes(new FeedLikes(new ArrayList<>()))
+				.build();
+
+		User user = User.builder()
+				.id(1L)
+				.userInfo(new UserInfo("test user", "test@test.com", Gender.MALE, "test image"))
+				.build();
 
 		//then
+		assertThatCode(() -> feed.unLike(user))
+				.isInstanceOf(DaedongException.class)
+				.extracting("daedongStatus.code")
+				.isEqualTo(50003);
 	}
 
 	@DisplayName("피드에 좋아요를 취소할 수 있다 - 좋아요가 0개라면 실패")
