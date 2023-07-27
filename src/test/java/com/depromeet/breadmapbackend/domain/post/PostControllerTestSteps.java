@@ -144,7 +144,7 @@ public class PostControllerTestSteps {
 	public static ResultActions 빵_이야기_상세_조회_요청(final int 빵_이야기_고유_번호, final PostTopic postTopic, final String 사용자_토큰,
 		final MockMvc mockMvc) throws
 		Exception {
-		return mockMvc.perform(get("/v1/posts/{postId}/{postTopic}", 빵_이야기_고유_번호, postTopic.name())
+		return mockMvc.perform(get("/v1/posts/{postTopic}/{postId}", postTopic.name(), 빵_이야기_고유_번호)
 				.header("Authorization", "Bearer " + 사용자_토큰))
 			.andDo(print())
 			.andDo(document("v1/posts/get",

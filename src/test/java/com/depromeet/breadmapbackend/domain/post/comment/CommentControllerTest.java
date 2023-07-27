@@ -68,7 +68,7 @@ class CommentControllerTest extends ControllerTest {
 	@Test
 	void 댓글_수정() throws Exception {
 		// given
-		final var 댓글_수정_요청_데이터 = new CommentUpdateRequest(111L, "수정된 내용");
+		final var 댓글_수정_요청_데이터 = new CommentUpdateRequest(111L, "수정된 내용2212343533333");
 
 		// when
 		final var 결과 = 댓글_수정_요청(댓글_수정_요청_데이터, 사용자_토큰, mockMvc, objectMapper);

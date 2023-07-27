@@ -114,14 +114,14 @@ class CommentServiceImplTest extends CommentServiceTest {
 
 		//then
 		final CommentLike result = em.createQuery(
-				"select cl from CommentLike cl where userId =:userId and commentId =:commentId",
+				"select cl from CommentLike cl where userId =:userId and comment.id =:commentId",
 				CommentLike.class)
 			.setParameter("userId", userId)
 			.setParameter("commentId", commentId)
 			.getSingleResult();
 
 		assertThat(result.getUserId()).isEqualTo(userId);
-		assertThat(result.getCommentId()).isEqualTo(commentId);
+		assertThat(result.getComment().getId()).isEqualTo(commentId);
 
 		//when
 		final int reuslt2 = sut.toggleLike(commentId, userId);
@@ -129,7 +129,7 @@ class CommentServiceImplTest extends CommentServiceTest {
 		//then
 		assertThat(reuslt2).isEqualTo(0);
 		assertThatThrownBy(() -> em.createQuery(
-				"select cl from CommentLike cl where userId =:userId and commentId =:commentId",
+				"select cl from CommentLike cl where userId =:userId and comment.id =:commentId",
 				CommentLike.class)
 			.setParameter("userId", userId)
 			.setParameter("commentId", commentId)
