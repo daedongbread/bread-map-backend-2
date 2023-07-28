@@ -1,6 +1,8 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.dto.response;
 
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
@@ -8,9 +10,6 @@ import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -40,8 +39,9 @@ public class CurationFeedResponseDto {
 	@Builder
 	public CurationFeedResponseDto(long bakeryId, String bakeryName, String bakeryAddress, String openingHours,
 		String bakeryImageUrl, String checkPoint, String newBreadTime, String address, String detailedAddress,
-	    String websiteURL, String instagramURL, String facebookURL, String blogURL, List<String> facilityInfo, String phoneNumber,
-	    long productId, String productName, String productPrice, String productImageUrl) {
+		String websiteURL, String instagramURL, String facebookURL, String blogURL, List<String> facilityInfo,
+		String phoneNumber,
+		long productId, String productName, String productPrice, String productImageUrl) {
 		this.bakeryId = bakeryId;
 		this.bakeryName = bakeryName;
 		this.bakeryAddress = bakeryAddress;
@@ -63,10 +63,7 @@ public class CurationFeedResponseDto {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public static CurationFeedResponseDto of(CurationBakery curationBakery) {
-
-		Bakery bakery = curationBakery.getBakery();
-		Product product = curationBakery.getBakery().getProduct(curationBakery.getProductId());
+	public static CurationFeedResponseDto of(Bakery bakery, Product product) {
 
 		return CurationFeedResponseDto.builder()
 			.bakeryId(bakery.getId())

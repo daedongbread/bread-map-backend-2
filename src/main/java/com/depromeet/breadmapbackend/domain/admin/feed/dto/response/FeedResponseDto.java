@@ -2,10 +2,6 @@ package com.depromeet.breadmapbackend.domain.admin.feed.dto.response;
 
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,28 +24,5 @@ public class FeedResponseDto {
 		this.curation = curation;
 		this.landing = landing;
 		this.likeCounts = likeCounts;
-	}
-
-	public static FeedResponseDto ofLanding(Feed feed) {
-		return FeedResponseDto.builder()
-			.common(CommonFeedResponseDto.of(feed))
-			.landing(LandingFeedResponseDto.of(feed))
-			.build();
-	}
-
-	public static FeedResponseDto ofCuration(Feed feed) {
-
-		CurationFeed curationFeed = (CurationFeed)feed;
-		List<CurationBakery> bakeries = curationFeed.getBakeries().getBakeries();
-
-		List<CurationFeedResponseDto> curationFeedResponseDtos = bakeries.stream()
-			.map(CurationFeedResponseDto::of)
-			.toList();
-
-		return FeedResponseDto.builder()
-			.common(CommonFeedResponseDto.of(feed))
-			.curation(curationFeedResponseDtos)
-			.likeCounts(curationFeed.getLikeCount())
-			.build();
 	}
 }

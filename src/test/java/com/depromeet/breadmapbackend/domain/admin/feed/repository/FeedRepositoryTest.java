@@ -172,7 +172,7 @@ public class FeedRepositoryTest {
 		CurationFeed actual = curationFeedRepository.findById(curationFeed.getId()).orElse(null);
 
 		assertThat(actual).isNotNull();
-		assertThat(actual.getBakeries().getBakeries().size()).isEqualTo(1);
+		assertThat(actual.getBakeries().getCurationBakeries().size()).isEqualTo(1);
 	}
 
 	private void flushAndClear() {

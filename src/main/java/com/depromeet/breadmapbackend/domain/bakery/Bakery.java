@@ -81,7 +81,7 @@ public class Bakery extends BaseEntity {
 	@Convert(converter = FacilityInfoListConverter.class)
 	private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_id")
 	private BakeryAddReport bakeryAddReport;
 

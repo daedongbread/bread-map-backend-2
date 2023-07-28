@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +16,11 @@ import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.repository.CurationFeedRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.repository.FeedRepository;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -27,10 +31,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CurationFeedService implements FeedService {
 
+	private final FeedRepository feedRepository;
 	private final CurationFeedRepository repository;
 	private final BakeryRepository bakeryRepository;
 	private final AdminRepository adminRepository;
 	private final CategoryRepository categoryRepository;
+	private final ProductRepository productRepository;
 
 	@Transactional
 	@Override
@@ -65,9 +71,16 @@ public class CurationFeedService implements FeedService {
 	@Override
 	public FeedResponseDto getFeed(Long feedId) {
 
-		CurationFeed curationFeed = findCurationFeedById(feedId);
+		CurationFeed curationFeed = findCurationFeedFetchCategory(feedId);
 
-		return FeedAssembler.toDto(curationFeed);
+		List<Product> products = productRepository.findByIdIn(curationFeed.getBakeries().getProductIdList());
+		List<Bakery> bakeries = products.stream().map(Product::getBakery).collect(Collectors.toList());
+
+		return FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(curationFeed))
+			.curation(FeedAssembler.toCurationDto(bakeries, products))
+			.likeCounts(curationFeed.getLikeCount())
+			.build();
 	}
 
 	@Override
@@ -77,6 +90,11 @@ public class CurationFeedService implements FeedService {
 
 	private CurationFeed findCurationFeedById(Long feedId) {
 		return repository.findById(feedId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.FEED_NOT_FOUND));
+	}
+
+	private CurationFeed findCurationFeedFetchCategory(Long feedId) {
+		return (CurationFeed)feedRepository.findByIdFetchCategory(feedId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.FEED_NOT_FOUND));
 	}
 

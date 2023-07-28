@@ -2,7 +2,15 @@ package com.depromeet.breadmapbackend.domain.admin.feed.domain;
 
 import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.BatchSize;
 
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
@@ -24,6 +32,7 @@ public class CurationBakery {
 	@JoinColumn(name = "curation_id")
 	private CurationFeed curation;
 
+	@BatchSize(size = 5)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "bakery_id")
 	private Bakery bakery;

@@ -72,7 +72,7 @@ public class CurationFeedTest {
 		curationFeed.addAll(bakeries, request);
 
 		//then
-		assertThat(curationFeed.getBakeries().getBakeries().size()).isEqualTo(2);
+		assertThat(curationFeed.getBakeries().getCurationBakeries().size()).isEqualTo(2);
 	}
 
 	@Test
@@ -340,7 +340,7 @@ public class CurationFeedTest {
 		curationFeed.removeAllBakeries();
 
 		//then
-		assertThat(curationFeed.getBakeries().getBakeries().size()).isEqualTo(0);
+		assertThat(curationFeed.getBakeries().getCurationBakeries().size()).isEqualTo(0);
 	}
 
 	@Test
@@ -431,8 +431,8 @@ public class CurationFeedTest {
 				"업데이트된 8월 추천 빵집", "업데이트된 안녕하세요", "업데이트된 다음에 또 만나요"
 			);
 
-		assertThat(curationFeed.getBakeries().getBakeries().size()).isEqualTo(1);
-		assertThat(curationFeed.getBakeries().getBakeries().get(0).getBakery().getId()).isEqualTo(3);
+		assertThat(curationFeed.getBakeries().getCurationBakeries().size()).isEqualTo(1);
+		assertThat(curationFeed.getBakeries().getCurationBakeries().get(0).getBakery().getId()).isEqualTo(3);
 	}
 
 	@DisplayName("피드에 좋아요 된 총 카운트를 계산한다")

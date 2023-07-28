@@ -6,13 +6,20 @@ import java.util.stream.Collectors;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedLikes;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
-import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseDto;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.CommonFeedResponseDto;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.CurationFeedResponseDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForAdmin;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForUser;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.LandingFeedResponseDto;
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.global.converter.DateTimeParser;
-import org.springframework.data.domain.Page;
 
 public class FeedAssembler {
 
@@ -27,25 +34,30 @@ public class FeedAssembler {
 		};
 	}
 
-	public static FeedResponseDto toDto(Feed feed) {
-		return switch (FeedType.findByCode(feed.getFeedType())) {
-			case LANDING -> toLandingDto(feed);
-			case CURATION -> toCurationDto(feed);
-		};
+	public static CommonFeedResponseDto toCommonDto(Feed feed) {
+		return CommonFeedResponseDto.of(feed);
 	}
 
-	public static List<FeedResponseDto> toDto(List<Feed> feeds) {
-		return feeds.stream()
-			.map(FeedAssembler::toDto)
+	public static CurationFeedResponseDto toCurationDto(Bakery bakery, Product product) {
+		return CurationFeedResponseDto.of(bakery, product);
+	}
+
+	public static List<CurationFeedResponseDto> toCurationDto(List<Bakery> bakeries, List<Product> products) {
+		return bakeries.stream()
+			.flatMap(bakery -> products.stream()
+				.filter(product ->
+					bakery.getId().equals(product.getBakery().getId())) // != bakery.equals(product.getBakery())
+				.map(product -> toCurationDto(bakery, product))
+			)
 			.collect(Collectors.toList());
 	}
 
-	private static FeedResponseDto toCurationDto(Feed feed) {
-		return FeedResponseDto.ofCuration(feed);
+	public static LandingFeedResponseDto toLandingDto(Feed feed) {
+		return LandingFeedResponseDto.of(feed);
 	}
 
-	private static FeedResponseDto toLandingDto(Feed feed) {
-		return FeedResponseDto.ofLanding(feed);
+	public static List<LandingFeedResponseDto> toLandingDto(List<Feed> feeds) {
+		return feeds.stream().map(FeedAssembler::toLandingDto).collect(Collectors.toList());
 	}
 
 	private static CurationFeed toCuration(Admin admin, Category category, FeedRequestDto requestDto) {

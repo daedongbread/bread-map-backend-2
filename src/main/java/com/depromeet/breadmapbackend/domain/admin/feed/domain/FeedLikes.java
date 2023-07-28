@@ -1,90 +1,95 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.domain;
 
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+
 @Embeddable
 public class FeedLikes {
 
-    @OneToMany(
-            mappedBy = "curationFeed",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true
-    )
-    private List<FeedLike> likes;
+	@OneToMany(
+		mappedBy = "curationFeed",
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.PERSIST,
+		orphanRemoval = true
+	)
+	private List<FeedLike> likes;
 
-    public FeedLikes() {
-        this(new ArrayList<>());
-    }
-    public FeedLikes(List<FeedLike> likes) {
-        this.likes = likes;
-    }
+	public FeedLikes() {
+		this(new ArrayList<>());
+	}
 
-    public int getCounts() {
-        return likes.stream()
-                .mapToInt(FeedLike::getCount)
-                .sum();
-    }
+	public FeedLikes(List<FeedLike> likes) {
+		this.likes = likes;
+	}
 
-    public int getCountsByUser(Long userId) {
-        return likes.stream()
-                .filter(like -> Objects.equals(like.getUser().getId(), userId))
-                .mapToInt(FeedLike::getCount)
-                .sum();
-    }
+	public int getCounts() {
+		return likes.stream()
+			.mapToInt(FeedLike::getCount)
+			.sum();
+	}
 
-    public boolean contains(FeedLike like) {
-        return likes.stream()
-                .anyMatch(like::equals);
-    }
+	public int getCountsByUser(Long userId) {
+		return likes.stream()
+			.filter(like -> Objects.equals(like.getUser().getId(), userId))
+			.mapToInt(FeedLike::getCount)
+			.sum();
+	}
 
-    public Optional<FeedLike> find(FeedLike like) {
-        return likes.stream()
-                .filter(feedLike -> feedLike.equals(like))
-                .findAny();
-    }
+	public boolean contains(FeedLike like) {
+		return likes.stream()
+			.anyMatch(like::equals);
+	}
 
-    public FeedLike add(FeedLike feedLike) {
+	public Optional<FeedLike> find(FeedLike like) {
+		return likes.stream()
+			.filter(feedLike -> feedLike.equals(like))
+			.findAny();
+	}
 
-        likes.add(feedLike);
+	public FeedLike add(FeedLike feedLike) {
 
-        return feedLike;
-    }
+		likes.add(feedLike);
 
-    public List<FeedLike> getFeedLikes() {
-        return this.likes;
-    }
+		return feedLike;
+	}
 
-    private boolean validateLike(FeedLike like) {
-        return like.getCount() >= 5;
-    }
+	public List<FeedLike> getFeedLikes() {
+		return this.likes;
+	}
 
-    private boolean validateUnlike(FeedLike like) {
-        return like.getCount() <= 0;
-    }
+	private boolean validateLike(FeedLike like) {
+		return like.getCount() >= 5;
+	}
 
-    public void like(FeedLike like) {
+	private boolean validateUnlike(FeedLike like) {
+		return like.getCount() <= 0;
+	}
 
-        if (validateLike(like)) {
-            throw new DaedongException(DaedongStatus.CANNOT_LIKE_MORE_THAN_COUNT);
-        }
+	public void like(FeedLike like) {
 
-        like.increase();
-    }
+		if (validateLike(like)) {
+			throw new DaedongException(DaedongStatus.CANNOT_LIKE_MORE_THAN_COUNT);
+		}
 
-    public void unLike(FeedLike like) {
+		like.increase();
+	}
 
-        if (validateUnlike(like)) {
-            throw new DaedongException(DaedongStatus.CANNOT_UNLIKE_UNDER_ZERO);
-        }
+	public void unLike(FeedLike like) {
 
-        like.decrease();
-    }
+		if (validateUnlike(like)) {
+			throw new DaedongException(DaedongStatus.CANNOT_UNLIKE_UNDER_ZERO);
+		}
+
+		like.decrease();
+	}
 }

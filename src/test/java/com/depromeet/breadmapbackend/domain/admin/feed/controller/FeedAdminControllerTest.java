@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
 import static com.google.protobuf.FieldType.*;
-import static org.springframework.asm.Type.ARRAY;
+import static org.springframework.asm.Type.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -381,7 +382,7 @@ public class FeedAdminControllerTest extends ControllerTest {
 		String content = objectMapper.writeValueAsString(updateRequest);
 
 		//when
-		ResultActions perform = mockMvc.perform(patch("/v1/admin/feed/{feedId}", 2L)
+		ResultActions perform = mockMvc.perform(patch("/v1/admin/feed/{feedId}", curation.getId())
 			.header("Authorization", "Bearer " + token.getAccessToken())
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -423,7 +424,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 
 		PageImpl<Feed> page = new PageImpl<>(feedList);
 
-		FeedResponseForAdmin content = FeedAssembler.toDtoForAdmin(page.getTotalPages(), page.getTotalElements(), feedList);
+		FeedResponseForAdmin content = FeedAssembler.toDtoForAdmin(page.getTotalPages(), page.getTotalElements(),
+			feedList);
 
 		ApiResponse<FeedResponseForAdmin> res = new ApiResponse<>(content);
 
@@ -474,7 +476,11 @@ public class FeedAdminControllerTest extends ControllerTest {
 	void 랜딩_피드_상세_조회_관리자() throws Exception {
 
 		//given
-		FeedResponseDto response = FeedAssembler.toDto(landing);
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(landing))
+			.landing(FeedAssembler.toLandingDto(landing))
+			.build();
+
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -511,7 +517,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
 						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
 						fieldWithPath("data.curation").optional().description("null"),
-						fieldWithPath("data.landing.redirectUrl").description("redirectURl"))
+						fieldWithPath("data.landing.redirectUrl").description("redirectURl"),
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
 				)
 			);
 	}
@@ -521,7 +528,15 @@ public class FeedAdminControllerTest extends ControllerTest {
 	void 큐레이션_피드_상세_조회_관리자() throws Exception {
 
 		//given
-		FeedResponseDto response = FeedAssembler.toDto(curation);
+		List<Product> products = productRepository.findByIdIn(curation.getBakeries().getProductIdList());
+		List<Bakery> bakeries = products.stream().map(Product::getBakery).collect(Collectors.toList());
+
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(curation))
+			.curation(FeedAssembler.toCurationDto(bakeries, products))
+			.likeCounts(curation.getLikeCount())
+			.build();
+
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -576,7 +591,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
 						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
 						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
-						fieldWithPath("data.landing").optional().description("null"))
+						fieldWithPath("data.landing").optional().description("null"),
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
 				)
 			);
 	}

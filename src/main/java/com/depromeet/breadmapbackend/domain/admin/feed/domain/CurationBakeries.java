@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.admin.feed.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -34,8 +35,16 @@ public class CurationBakeries {
 		this.bakeries = bakeries;
 	}
 
-	public List<CurationBakery> getBakeries() {
+	public List<CurationBakery> getCurationBakeries() {
 		return this.bakeries;
+	}
+
+	public List<Long> getProductIdList() {
+		return bakeries.stream().map(CurationBakery::getProductId).collect(Collectors.toList());
+	}
+
+	public List<Bakery> getBakeries() {
+		return bakeries.stream().map(CurationBakery::getBakery).collect(Collectors.toList());
 	}
 
 	public void clear() {

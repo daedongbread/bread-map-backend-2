@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -238,7 +239,10 @@ public class FeedControllerTest extends ControllerTest {
 	void 랜딩_피드_상세_조회_유저() throws Exception {
 
 		//given
-		FeedResponseDto response = FeedAssembler.toDto(landing);
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(landing))
+			.landing(FeedAssembler.toLandingDto(landing))
+			.build();
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -275,7 +279,8 @@ public class FeedControllerTest extends ControllerTest {
 						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
 						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
 						fieldWithPath("data.curation").optional().description("null"),
-						fieldWithPath("data.landing.redirectUrl").description("redirectURl"))
+						fieldWithPath("data.landing.redirectUrl").description("redirectURl"),
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
 				)
 			);
 	}
@@ -285,7 +290,15 @@ public class FeedControllerTest extends ControllerTest {
 	void 큐레이션_피드_상세_조회_유저() throws Exception {
 
 		//given
-		FeedResponseDto response = FeedAssembler.toDto(curation);
+		List<Product> products = productRepository.findByIdIn(curation.getBakeries().getProductIdList());
+		List<Bakery> bakeries = products.stream().map(Product::getBakery).collect(Collectors.toList());
+
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(curation))
+			.curation(FeedAssembler.toCurationDto(bakeries, products))
+			.likeCounts(curation.getLikeCount())
+			.build();
+
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -328,11 +341,20 @@ public class FeedControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
 						fieldWithPath("data.curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
 						fieldWithPath("data.curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].address").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].detailedAddress").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].websiteURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].instagramURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].facebookURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].blogURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].facilityInfo").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].phoneNumber").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
 						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
 						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
 						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
 						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
-						fieldWithPath("data.landing").optional().description("null"))
+						fieldWithPath("data.landing").optional().description("null"),
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
 				)
 			);
 	}

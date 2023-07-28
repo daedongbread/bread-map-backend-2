@@ -55,7 +55,10 @@ public class LandingFeedService implements FeedService {
 
 		LandingFeed landingFeed = findLandingFeedById(feedId);
 
-		return FeedAssembler.toDto(landingFeed);
+		return FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(landingFeed))
+			.landing(FeedAssembler.toLandingDto(landingFeed))
+			.build();
 	}
 
 	@Override
