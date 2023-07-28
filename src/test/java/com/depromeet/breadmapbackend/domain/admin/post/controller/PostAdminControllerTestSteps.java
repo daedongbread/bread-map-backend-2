@@ -73,9 +73,9 @@ public class PostAdminControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
 				requestFields(
-					fieldWithPath("isPosted").description("게시 여부"),
-					fieldWithPath("isFixed").description("고정 여부"),
-					fieldWithPath("isCarousel").description("캐러셀 여부"),
+					fieldWithPath("isPosted").optional().description("게시 여부 default = false"),
+					fieldWithPath("isFixed").optional().description("고정 여부 default = false"),
+					fieldWithPath("isCarousel").optional().description("캐러셀 여부 default = false"),
 					fieldWithPath("title").description("이벤트 제목"),
 					fieldWithPath("content").description("이벤트 내용"),
 					fieldWithPath("bannerImage").description("이벤트 베너 이미지"),

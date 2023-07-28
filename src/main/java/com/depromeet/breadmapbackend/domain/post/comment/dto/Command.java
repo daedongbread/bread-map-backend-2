@@ -24,8 +24,8 @@ public record Command(
 			postId,
 			content,
 			isFirstDepth,
-			parentId,
-			targetCommentUserId
+			isFirstDepth ? 0 : parentId,
+			isFirstDepth ? 0 : targetCommentUserId
 		);
 	}
 }

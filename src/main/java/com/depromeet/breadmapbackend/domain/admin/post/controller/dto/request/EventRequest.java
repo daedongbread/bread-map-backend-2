@@ -13,9 +13,9 @@ import javax.validation.constraints.Size;
  * @since 2023/07/24
  */
 public record EventRequest(
-	boolean isPosted,
-	boolean isFixed,
-	boolean isCarousel,
+	@NotNull boolean isPosted,
+	@NotNull boolean isFixed,
+	@NotNull boolean isCarousel,
 	@NotNull @Size(min = 10, max = 40) String title,
 	@NotNull @Size(min = 10, max = 400) String content,
 	String bannerImage,

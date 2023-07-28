@@ -4,6 +4,7 @@ import static com.depromeet.breadmapbackend.domain.post.comment.CommentControlle
 import static com.depromeet.breadmapbackend.domain.post.comment.CommentControllerTestSteps.*;
 
 import java.sql.Connection;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -43,7 +44,7 @@ class CommentControllerTest extends ControllerTest {
 	@Test
 	void 댓글_등록() throws Exception {
 		// given
-		final var 댓글_데이터 = new CommentCreateRequest(222L, "내용09090909", true, 0L, 0L);
+		final var 댓글_데이터 = new CommentCreateRequest(222L, "내용09090909", true, Optional.of(0L), Optional.of(0L));
 
 		// when
 		final var 결과 = 댓글_추가_요청(댓글_데이터, 사용자_토큰, mockMvc, objectMapper);

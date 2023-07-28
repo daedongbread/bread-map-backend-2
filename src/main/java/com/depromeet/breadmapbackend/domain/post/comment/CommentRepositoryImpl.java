@@ -60,4 +60,9 @@ public class CommentRepositoryImpl implements CommentRepository {
 	public Optional<Comment> findById(final Long id) {
 		return commentJpaRepository.findById(id);
 	}
+
+	@Override
+	public Optional<Comment> findByIdAndPostId(final Long commentId, final Long postId) {
+		return commentJpaRepository.findByIdAndPostId(commentId, postId);
+	}
 }

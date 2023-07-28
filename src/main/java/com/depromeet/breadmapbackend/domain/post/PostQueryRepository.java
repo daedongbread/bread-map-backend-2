@@ -68,7 +68,8 @@ public class PostQueryRepository {
 		resultSet.getString("address"),
 		resultSet.getString("bakeryThumbnail"),
 		resultSet.getBoolean("isUserLiked"),
-		resultSet.getBoolean("isUserCommented")
+		resultSet.getBoolean("isUserCommented"),
+		resultSet.getInt("sortOrder")
 	);
 
 	public Optional<PostDetailQuery> findPostDetailById(final Long postId, final Long userId, final PostTopic topic) {
@@ -131,6 +132,7 @@ public class PostQueryRepository {
 			 	select community.*
 			 	from (select * from post_base union all select * from review_base ) community
 				order by community.sortOrder asc, community.createdDate desc, community.postId desc
+				limit :limit  
 			""", postBaseSql, reviewBaseSql);
 		return new PageImpl<>(
 			jdbcTemplate.query(sql, params, COMMUNITY_CARD_INFO_ROW_MAPPER),
@@ -139,10 +141,9 @@ public class PostQueryRepository {
 		);
 	}
 
-	public Page<CommunityCardInfo> findBreadStoryCards(
+	public Page<CommunityCardInfo> findUserBoardCards(
 		final CommunityPage communityPage,
-		final Long userId,
-		final PostTopic postTopic
+		final Long userId
 	) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
@@ -150,7 +151,8 @@ public class PostQueryRepository {
 			.addValue("postOffset", communityPage.postOffset())
 			.addValue("userId", userId);
 
-		final String whereClaus = String.format("(t4.is_fixed is true or t1.post_topic = '%s')", postTopic.name());
+		final String whereClaus = String.format("(t4.is_fixed is true or t1.post_topic = '%s')",
+			communityPage.topic().name());
 		final List<CommunityCardInfo> cards =
 			jdbcTemplate.query(
 				getPostBaseSqlWithWhereClaus(whereClaus),
@@ -161,7 +163,7 @@ public class PostQueryRepository {
 		return new PageImpl<>(
 			cards,
 			PageRequest.of(communityPage.page(), PAGE_SIZE),
-			getPostsCardsCount(PostTopic.BREAD_STORY, 1, userId)
+			getUserBoardCardsCount(communityPage.topic(), userId)
 		);
 	}
 
@@ -182,28 +184,29 @@ public class PostQueryRepository {
 		return new PageImpl<>(
 			cards,
 			PageRequest.of(communityPage.page(), PAGE_SIZE),
-			getPostsCardsCount(PostTopic.EVENT, 0, userId)
+			getEventCardsCount()
 		);
 	}
 
 	public Page<CommunityCardInfo> findReviewCards(final CommunityPage communityPage, final Long userId) {
-
-		final MapSqlParameterSource params = new MapSqlParameterSource()
-			.addValue("limit", communityPage.reviewOffset() == 0 ? PAGE_SIZE : PAGE_SIZE - 1)
-			.addValue("reviewOffset", communityPage.reviewOffset() != 0 ? communityPage.reviewOffset() - 1 : 0)
-			.addValue("userId", userId);
-
-		final List<CommunityCardInfo> reviewCards =
-			jdbcTemplate.query(
-				getReviewBaseSql(""),
-				params,
-				COMMUNITY_CARD_INFO_ROW_MAPPER
-			);
+		List<CommunityCardInfo> reviewCards = new ArrayList<>();
 
 		if (communityPage.reviewOffset() == 0) {
 			getFixedEvent(userId)
-				.ifPresent(fixedEvent -> reviewCards.add(0, fixedEvent));
+				.ifPresent(reviewCards::add);
 		}
+
+		final MapSqlParameterSource params = new MapSqlParameterSource()
+			.addValue("limit", reviewCards.isEmpty() ? PAGE_SIZE : PAGE_SIZE - 1)
+			.addValue("reviewOffset", communityPage.reviewOffset())
+			.addValue("userId", userId);
+
+		reviewCards.addAll(
+			jdbcTemplate.query(
+				getReviewBaseSql(""),
+				params,
+				COMMUNITY_CARD_INFO_ROW_MAPPER)
+		);
 
 		return new PageImpl<>(
 			reviewCards,
@@ -213,9 +216,6 @@ public class PostQueryRepository {
 	}
 
 	public List<CommunityCardInfo> findHotPosts(final Long userId) {
-		List<CommunityCardInfo> hotPostsWithEvent = new ArrayList<>();
-		getFixedEvent(userId).ifPresent(hotPostsWithEvent::add);
-
 		final List<HotCommunityRank> communityTopScoresWithIds = getCommunityTopScoresWithId(userId);
 
 		List<Long> topReviewIds = new ArrayList<>();
@@ -229,6 +229,9 @@ public class PostQueryRepository {
 				topPostIds.add(rank.id);
 			}
 		}
+
+		List<CommunityCardInfo> hotPostsWithEvent = new ArrayList<>();
+		getFixedEvent(userId).ifPresent(hotPostsWithEvent::add);
 
 		if (!topReviewIds.isEmpty()) {
 			hotPostsWithEvent.addAll(fetchTopReviews(userId, topReviewIds));
@@ -394,9 +397,12 @@ public class PostQueryRepository {
 				
 			   from post t1
 			   inner join user t2 on t1.user_id = t2.id
-			   left join post_manager_mapper t4 on t1.id = t4.post_id 
-			   									and t4.is_posted is true
-			   									and t4.is_fixed is true
+			   left join (select case when is_fixed is true then true
+			                     end as is_fixed
+							  , is_posted
+							  , id
+							  , post_id
+					   from post_manager_mapper ) t4 on t1.id = t4.post_id
 			   left join (select to_user_id 
 			   			  from block_user
 			   			  where from_user_id = :userId) t3 on t1.user_id = t3.to_user_id	
@@ -410,6 +416,10 @@ public class PostQueryRepository {
 							group by post_id ) t6 on t1.id = t6.post_id							
 			   where %s
 			   and t3.to_user_id is null
+			   and true = case when t4.is_posted is true then true 
+			       	     	   when t4.id is null then true
+			   				   else false
+			   			  end
 			   order by t4.is_fixed desc, t1.created_at desc, t1.id desc
 			   limit :limit offset :postOffset 
 			""", whereClause);
@@ -486,9 +496,13 @@ public class PostQueryRepository {
 				   left join (select to_user_id 
 							  from block_user
 							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id	
+							  									and t1.post_topic = 'EVENT'
 					left join post_manager_mapper t3 on t1.id = t3.post_id 
-			   									and t3.is_posted is true 
 				   where t2.to_user_id is null
+				   and true = case when t3.is_posted is true then true
+			                         	   when t3.id is null then true
+			                         	   else false
+			            				  end
 			   ) total
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource()
@@ -496,28 +510,47 @@ public class PostQueryRepository {
 		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
 
-	private Long getPostsCardsCount(final PostTopic postTopic, final int postOffset, final Long userId) {
+	private Long getUserBoardCardsCount(final PostTopic postTopic, final Long userId) {
 		final String sql = """
-			select count(t1.id) + :postOffset
+			select count(t1.id) 
 			from post t1
 			left join (select to_user_id 
 			 			  from block_user
 			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id		
-			left join post_manager_mapper t3 on t1.id = t3.post_id 
-			   									and t3.is_posted is true	
-			where post_topic = :postTopic
+			left join post_manager_mapper t3 on t1.id = t3.post_id	
+			where (post_topic = :postTopic or post_topic ='EVENT')
+			  and true = case when t3.is_posted is true
+									 and t3.is_fixed is true then true
+							   when t3.id is null then true
+							   else false
+						  end
 			and t2.to_user_id is null
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("postTopic", postTopic.name())
-			.addValue("postOffset", postOffset)
 			.addValue("userId", userId);
+		return jdbcTemplate.queryForObject(sql, param, Long.class);
+	}
+
+	private Long getEventCardsCount() {
+		final String sql = """
+			select count(t1.id)
+			from post t1
+			inner join post_manager_mapper t3 on t1.id = t3.post_id
+			where  post_topic ='EVENT'
+			  and t3.is_posted is true
+			""";
+		final MapSqlParameterSource param = new MapSqlParameterSource();
 		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
 
 	private Long getReviewCardsCount(final Long userId) {
 		final String sql = """
-			select count(t1.id) + 1
+			select count(t1.id) + 
+			(select count(id)
+			 from post_manager_mapper
+			 where post_manager_mapper.is_fixed is true
+			 and post_manager_mapper.is_posted is true )	
 			from review t1
 			   left join (select to_user_id 
 			 			  from block_user

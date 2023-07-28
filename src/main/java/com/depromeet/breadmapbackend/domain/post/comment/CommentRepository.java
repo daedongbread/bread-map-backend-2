@@ -30,4 +30,6 @@ public interface CommentRepository {
 	List<Long> findCommentIdListByPostId(Long postId);
 
 	Optional<Comment> findById(Long id);
+
+	Optional<Comment> findByIdAndPostId(Long commentId, Long postId);
 }

@@ -100,9 +100,9 @@ public class PostControllerTestSteps {
 				pathParameters(
 					parameterWithName("all").description("커뮤니티 토픽 종류 (ALL, REVIEW, BREAD_STORY, EVENT, FREE_TALK)")),
 				requestParameters(
-					parameterWithName("reviewOffset").description("마지막 조회 리뷰 고유 번호"),
-					parameterWithName("postOffset").description("리뷰 제외 모든 커뮤니티글의 마지 고유 번호"),
-					parameterWithName("page").description("페이지 번호")),
+					parameterWithName("reviewOffset").optional().description("마지막 조회 리뷰 고유 번호 default = 0"),
+					parameterWithName("postOffset").optional().description("리뷰 제외 모든 커뮤니티글의 마지 고유 번호 default = 0"),
+					parameterWithName("page").optional().description("페이지 번호 default = 0")),
 				responseFields(
 					fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
 					fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 수"),

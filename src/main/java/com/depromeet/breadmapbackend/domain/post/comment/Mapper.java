@@ -24,8 +24,8 @@ public class Mapper {
 			request.postId(),
 			request.content(),
 			request.isFirstDepth(),
-			request.parentId(),
-			request.targetCommentUserId()
+			request.parentId().isPresent() ? request.parentId().get() : 0,
+			request.targetCommentUserId().isPresent() ? request.targetCommentUserId().get() : 0
 		);
 	}
 
