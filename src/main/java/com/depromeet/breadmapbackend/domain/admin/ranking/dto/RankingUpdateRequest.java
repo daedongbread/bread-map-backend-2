@@ -2,6 +2,9 @@ package com.depromeet.breadmapbackend.domain.admin.ranking.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * RankingUpdateRequest
  *
@@ -10,11 +13,11 @@ import java.util.List;
  * @since 2023/07/18
  */
 public record RankingUpdateRequest(
-	List<BakeryRankInfo> bakeryRankInfoList
+	@Size(min = 2) List<BakeryRankInfo> bakeryRankInfoList
 ) {
 	public record BakeryRankInfo(
-		Long id,
-		int rank
+		@NotNull Long id,
+		@NotNull int rank
 	) {
 	}
 }
