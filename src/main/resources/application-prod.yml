@@ -1,4 +1,6 @@
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 40s
   jwt:
     secret: ${JWT_KEY}
     admin: ${JWT_ADMIN_KEY}
@@ -76,3 +78,5 @@ admin:
   event:
     post:
       user-id: ${EVENT_POST_ADMIN_USER_ID}
+server:
+  shutdown: graceful
