@@ -20,7 +20,7 @@ public interface PostRepository {
 
 	Page<CommunityCardInfo> findAllCommunityCards(final CommunityPage communityPage, final Long userId);
 
-	Page<CommunityCardInfo> findBreadStoryCards(final CommunityPage communityPage, final Long userId,
+	Page<CommunityCardInfo> findUserBoardCards(final CommunityPage communityPage, final Long userId,
 		final PostTopic postTopic);
 
 	Page<CommunityCardInfo> findEventCards(final CommunityPage communityPage, final Long userId);

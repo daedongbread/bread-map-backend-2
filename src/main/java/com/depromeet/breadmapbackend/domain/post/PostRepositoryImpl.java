@@ -38,12 +38,12 @@ public class PostRepositoryImpl implements PostRepository {
 	}
 
 	@Override
-	public Page<CommunityCardInfo> findBreadStoryCards(
+	public Page<CommunityCardInfo> findUserBoardCards(
 		final CommunityPage communityPage,
 		final Long userId,
 		final PostTopic postTopic
 	) {
-		return postQueryRepository.findBreadStoryCards(communityPage, userId, postTopic);
+		return postQueryRepository.findUserBoardCards(communityPage, userId, postTopic);
 	}
 
 	@Override

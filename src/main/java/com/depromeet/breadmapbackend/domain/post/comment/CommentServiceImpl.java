@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	@Override
 	public Comment register(final Command command, final Long userId) {
-
+		validateCommentCommand(command);
 		final Comment comment = command.toEntity(
 			userRepository.findById(userId)
 				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
@@ -64,19 +64,6 @@ public class CommentServiceImpl implements CommentService {
 					status
 				);
 			});
-	}
-
-	private String getContentToResponse(final CommentInfo info, final CommentResponseStatus status) {
-		if (status != CommentResponseStatus.ACTIVE) {
-			return status.replaceContent(info.content());
-		}
-		return info.isFirstDepth() ?
-			info.content() :
-			String.format("@%s %s", info.targetCommentUserNickname(), info.content());
-	}
-
-	private CommentResponseStatus getStatus(final boolean blocked, final CommentStatus status) {
-		return blocked ? CommentResponseStatus.BLOCKED_BY_USER : status.getResponseStatus();
 	}
 
 	@Override
@@ -108,6 +95,28 @@ public class CommentServiceImpl implements CommentService {
 		} else {
 			commentLikeRepository.delete(commentLike.get());
 			return 0;
+		}
+	}
+
+	private CommentResponseStatus getStatus(final boolean blocked, final CommentStatus status) {
+		return blocked ? CommentResponseStatus.BLOCKED_BY_USER : status.getResponseStatus();
+	}
+
+	private String getContentToResponse(final CommentInfo info, final CommentResponseStatus status) {
+		if (status != CommentResponseStatus.ACTIVE) {
+			return status.replaceContent(info.content());
+		}
+		return info.isFirstDepth() ?
+			info.content() :
+			String.format("@%s %s", info.targetCommentUserNickname(), info.content());
+	}
+
+	private void validateCommentCommand(final Command command) {
+		if (!command.isFirstDepth() && command.parentId() == 0) {
+			throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID);
+		}
+		if (!command.isFirstDepth() && command.targetCommentUserId() == 0) {
+			throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID);
 		}
 	}
 }

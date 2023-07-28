@@ -54,6 +54,10 @@ public enum DaedongStatus {
 	INVALID_EVENT_STATUS(BAD_REQUEST, 40107, "invalid event status"),
 	CAROUSEL_POST_COUNT_EXCEEDED(BAD_REQUEST, 40108, "carousel post count exceeded"),
 
+	SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID(BAD_REQUEST, 40109,
+		"second depth comment should have target user id"),
+	SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID(BAD_REQUEST, 40110, "second depth comment should have parent id"),
+
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
 	TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"), // access or refresh token이 유효하지 않을 때

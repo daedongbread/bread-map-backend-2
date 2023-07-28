@@ -161,7 +161,7 @@ public class PostServiceImpl implements PostService {
 	) {
 		return switch (postTopic) {
 			case ALL -> postRepository.findAllCommunityCards(page, userId);
-			case BREAD_STORY, FREE_TALK -> postRepository.findBreadStoryCards(page, userId, postTopic);
+			case BREAD_STORY, FREE_TALK -> postRepository.findUserBoardCards(page, userId, postTopic);
 			case REVIEW -> postRepository.findReviewCards(page, userId);
 			case EVENT -> postRepository.findEventCards(page, userId);
 		};
