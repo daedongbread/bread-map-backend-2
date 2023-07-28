@@ -13,9 +13,11 @@ endif::[]
 :operation-http-response-title: Example Response
 
 == 소개
+
 대동빵지도 API
 
 === Domain
+
 |===
 | 환경 | Domain
 
@@ -24,32 +26,47 @@ endif::[]
 |===
 
 == APIs
+
 === Auth API
+
 - xref:auth.adoc[Auth APIs]
 
 === User API
+
 - xref:user.adoc[User APIs]
 
 === Bakery API
+
 - xref:bakery.adoc[Bakery APIs]
 
 === Flag API
+
 - xref:flag.adoc[Flag APIs]
 
 === Review API
+
 - xref:review.adoc[Review APIs]
 
 === Search API
+
 - xref:search.adoc[Search APIs]
 
 === Notice API
+
 - xref:notice.adoc[Notice APIs]
 
 === Admin API
+
 - xref:admin.adoc[Admin APIs]
 
 === Image API
+
 - xref:image.adoc[Image APIs]
 
 === Feed API
+
 - xref:feed.adoc[Feed APIs]
+
+=== Post API
+
+- xref:post.adoc[Post APIs]
