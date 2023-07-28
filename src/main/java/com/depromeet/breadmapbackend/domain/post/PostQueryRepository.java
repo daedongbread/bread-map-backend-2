@@ -48,7 +48,7 @@ import lombok.RequiredArgsConstructor;
 public class PostQueryRepository {
 	private final JPAQueryFactory queryFactory;
 	private final NamedParameterJdbcTemplate jdbcTemplate;
-	private static final Integer PAGE_SIZE = 2;
+	private static final Integer PAGE_SIZE = 10;
 
 	private static final RowMapper<CommunityCardInfo> COMMUNITY_CARD_INFO_ROW_MAPPER = (ResultSet resultSet, int rowNum)
 		-> new CommunityCardInfo(
@@ -68,7 +68,8 @@ public class PostQueryRepository {
 		resultSet.getString("address"),
 		resultSet.getString("bakeryThumbnail"),
 		resultSet.getBoolean("isUserLiked"),
-		resultSet.getBoolean("isUserCommented")
+		resultSet.getBoolean("isUserCommented"),
+		resultSet.getInt("sortOrder")
 	);
 
 	public Optional<PostDetailQuery> findPostDetailById(final Long postId, final Long userId, final PostTopic topic) {
@@ -131,7 +132,7 @@ public class PostQueryRepository {
 			 	select community.*
 			 	from (select * from post_base union all select * from review_base ) community
 				order by community.sortOrder asc, community.createdDate desc, community.postId desc
-				limit :limit offset :postOffset
+				limit :limit  
 			""", postBaseSql, reviewBaseSql);
 		return new PageImpl<>(
 			jdbcTemplate.query(sql, params, COMMUNITY_CARD_INFO_ROW_MAPPER),
@@ -142,8 +143,7 @@ public class PostQueryRepository {
 
 	public Page<CommunityCardInfo> findUserBoardCards(
 		final CommunityPage communityPage,
-		final Long userId,
-		final PostTopic postTopic
+		final Long userId
 	) {
 
 		final MapSqlParameterSource params = new MapSqlParameterSource()
@@ -151,7 +151,8 @@ public class PostQueryRepository {
 			.addValue("postOffset", communityPage.postOffset())
 			.addValue("userId", userId);
 
-		final String whereClaus = String.format("(t4.is_fixed is true or t1.post_topic = '%s')", postTopic.name());
+		final String whereClaus = String.format("(t4.is_fixed is true or t1.post_topic = '%s')",
+			communityPage.topic().name());
 		final List<CommunityCardInfo> cards =
 			jdbcTemplate.query(
 				getPostBaseSqlWithWhereClaus(whereClaus),
@@ -162,7 +163,7 @@ public class PostQueryRepository {
 		return new PageImpl<>(
 			cards,
 			PageRequest.of(communityPage.page(), PAGE_SIZE),
-			getUserBoardCardsCount(postTopic, userId)
+			getUserBoardCardsCount(communityPage.topic(), userId)
 		);
 	}
 
@@ -401,8 +402,7 @@ public class PostQueryRepository {
 							  , is_posted
 							  , id
 							  , post_id
-					   from post_manager_mapper
-					   where is_posted is true ) t4 on t1.id = t4.post_id
+					   from post_manager_mapper ) t4 on t1.id = t4.post_id
 			   left join (select to_user_id 
 			   			  from block_user
 			   			  where from_user_id = :userId) t3 on t1.user_id = t3.to_user_id	
@@ -536,7 +536,7 @@ public class PostQueryRepository {
 		final String sql = """
 			select count(t1.id)
 			from post t1
-			inner join post_manager_mapper t3 on t1.id = t3.post_i
+			inner join post_manager_mapper t3 on t1.id = t3.post_id
 			where  post_topic ='EVENT'
 			  and t3.is_posted is true
 			""";
@@ -548,9 +548,9 @@ public class PostQueryRepository {
 		final String sql = """
 			select count(t1.id) + 
 			(select count(id)
-			 from post 
-			 where post.is_fixed is true
-			 and post.is_posted is ture )	
+			 from post_manager_mapper
+			 where post_manager_mapper.is_fixed is true
+			 and post_manager_mapper.is_posted is true )	
 			from review t1
 			   left join (select to_user_id 
 			 			  from block_user

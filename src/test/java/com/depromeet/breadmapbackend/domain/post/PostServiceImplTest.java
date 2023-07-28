@@ -117,10 +117,9 @@ class PostServiceImplTest extends PostServiceTest {
 	void 커뮤니티_전체_조회() throws Exception {
 		//given
 		final Long userId = 111L;
-		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+		final CommunityPage page = new CommunityPage(0L, 0L, PostTopic.ALL, 0);
 		//when
-		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
-			PostTopic.ALL);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId);
 		//then
 		assertThat(result.getContents().size()).isEqualTo(4);
 		assertThat(result.getContents().get(0).writerInfo().userId()).isEqualTo(112L);
@@ -132,11 +131,10 @@ class PostServiceImplTest extends PostServiceTest {
 
 		//given
 		final Long secondUserId = 113L;
-		final CommunityPage pageOne = new CommunityPage(1L, 1L, 1);
+		final CommunityPage pageOne = new CommunityPage(1L, 1L, PostTopic.ALL, 1);
 		//when
 		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne,
-			secondUserId,
-			PostTopic.ALL);
+			secondUserId);
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(5);
 		assertThat(secondResult.getContents().get(0).writerInfo().userId()).isEqualTo(113L);
@@ -152,11 +150,10 @@ class PostServiceImplTest extends PostServiceTest {
 	void 커뮤니티_빵이야기_조회() throws Exception {
 		//given
 		final Long userId = 113L;
-		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+		final CommunityPage page = new CommunityPage(0L, 0L, PostTopic.BREAD_STORY, 0);
 
 		//when
-		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
-			PostTopic.BREAD_STORY);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(3);
@@ -167,11 +164,10 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(result.getContents().get(2).postTopic().name()).isEqualTo("BREAD_STORY");
 
 		//given
-		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
+		final CommunityPage pageOne = new CommunityPage(0L, 2L, PostTopic.BREAD_STORY, 1);
 
 		//when
-		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
-			PostTopic.BREAD_STORY);
+		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId);
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(1);
@@ -182,11 +178,10 @@ class PostServiceImplTest extends PostServiceTest {
 	void 커뮤니티_이벤트_조회() throws Exception {
 		//given
 		final Long userId = 113L;
-		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+		final CommunityPage page = new CommunityPage(0L, 0L, PostTopic.EVENT, 0);
 
 		//when
-		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
-			PostTopic.EVENT);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(2);
@@ -196,11 +191,10 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("EVENT");
 
 		//given
-		final CommunityPage pageOne = new CommunityPage(0L, 2L, 1);
+		final CommunityPage pageOne = new CommunityPage(0L, 2L, PostTopic.EVENT, 1);
 
 		//when
-		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId,
-			PostTopic.EVENT);
+		final PageCommunityResponseDto<CommunityCardResponse> secondResult = sut.getCommunityCards(pageOne, userId);
 
 		//then
 		assertThat(secondResult.getContents().size()).isEqualTo(0);
@@ -210,11 +204,10 @@ class PostServiceImplTest extends PostServiceTest {
 	void 커뮤니티_리뷰_조회() throws Exception {
 		//given
 		final Long userId = 113L;
-		final CommunityPage page = new CommunityPage(0L, 0L, 0);
+		final CommunityPage page = new CommunityPage(0L, 0L, PostTopic.REVIEW, 0);
 
 		//when
-		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId,
-			PostTopic.REVIEW);
+		final PageCommunityResponseDto<CommunityCardResponse> result = sut.getCommunityCards(page, userId);
 
 		//then
 		assertThat(result.getContents().size()).isEqualTo(4);
@@ -224,15 +217,15 @@ class PostServiceImplTest extends PostServiceTest {
 		assertThat(result.getContents().get(1).postTopic().name()).isEqualTo("REVIEW");
 
 		//given
-		final CommunityPage pageOne = new CommunityPage(2L, 0L, 1);
+		final CommunityPage pageOne = new CommunityPage(2L, 0L, PostTopic.REVIEW, 1);
 
 		//when
 		final PageCommunityResponseDto<CommunityCardResponse> secondResult
-			= sut.getCommunityCards(pageOne, userId, PostTopic.REVIEW);
+			= sut.getCommunityCards(pageOne, userId);
 
 		//then
-		assertThat(secondResult.getContents().size()).isEqualTo(2);
-		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(113L);
+		assertThat(secondResult.getContents().size()).isEqualTo(1);
+		assertThat(secondResult.getContents().get(0).postId()).isEqualTo(112L);
 	}
 
 	@Test

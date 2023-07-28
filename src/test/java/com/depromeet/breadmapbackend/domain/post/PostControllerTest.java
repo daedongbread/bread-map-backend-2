@@ -73,7 +73,7 @@ class PostControllerTest extends ControllerTest {
 	@Test
 	void 커뮤니티_전체_카테고리_카드_조회() throws Exception {
 		// given
-		final var 커뮤니티_조회_페이지_데이터 = new CommunityPage(0L, 0L, 0);
+		final var 커뮤니티_조회_페이지_데이터 = new CommunityPage(0L, 0L, PostTopic.ALL, 0);
 
 		// when
 		final var 결과 = 커뮤니티_전체_카테고리_조회_요청(커뮤니티_조회_페이지_데이터, 사용자_토큰, mockMvc);

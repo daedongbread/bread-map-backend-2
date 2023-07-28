@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,11 +66,15 @@ public class PostController {
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PageCommunityResponseDto<CommunityCardResponse>> getCommunityCards(
 		@PathVariable("postTopic") final String postTopic,
-		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
-		@Valid final CommunityPage page
+		@RequestParam(value = "reviewOffset", required = false, defaultValue = "0") long reviewOffset,
+		@RequestParam(value = "postOffset", required = false, defaultValue = "0") long postOffset,
+		@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo
 	) {
 		final PostTopic topic = PostTopic.of(postTopic);
-		return new ApiResponse<>(postService.getCommunityCards(page, currentUserInfo.getId(), topic));
+		return new ApiResponse<>(
+			postService.getCommunityCards(new CommunityPage(reviewOffset, postOffset, topic, page),
+				currentUserInfo.getId()));
 	}
 
 	// post 추천글 조회

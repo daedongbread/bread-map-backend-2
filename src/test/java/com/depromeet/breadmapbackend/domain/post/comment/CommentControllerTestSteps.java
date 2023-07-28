@@ -40,8 +40,9 @@ public class CommentControllerTestSteps {
 					fieldWithPath("postId").description("댓글 추가 할 커뮤니티글 id"),
 					fieldWithPath("content").description("댓글 내용"),
 					fieldWithPath("isFirstDepth").description("댓글 = true, 대댓글 = false"),
-					fieldWithPath("parentId").description("댓글일 경우 = 0 ,대댓글일 경우 부모 댓글 id"),
-					fieldWithPath("targetCommentUserId").description("댓글일 경우 = 0 or post 작성자 id ,대댓글일 경우 부모 댓글 작성자 id")
+					fieldWithPath("parentId").optional().description("댓글일 경우 = 0 or null, 대댓글일 경우 부모 댓글 id"),
+					fieldWithPath("targetCommentUserId").optional()
+						.description("댓글일 경우 = 0 or null, 대댓글일 경우 부모 댓글 작성자 id")
 				)
 			));
 	}

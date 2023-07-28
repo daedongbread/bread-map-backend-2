@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
 					info.targetCommentUserNickname(),
 					info.userId(),
 					info.nickname(),
-					info.nickname(),
+					info.profileImage(),
 					info.likeCount(),
 					info.createdDate(),
 					status
@@ -112,11 +112,17 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	private void validateCommentCommand(final Command command) {
-		if (!command.isFirstDepth() && command.parentId() == 0) {
-			throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID);
-		}
-		if (!command.isFirstDepth() && command.targetCommentUserId() == 0) {
-			throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID);
+		if (!command.isFirstDepth()) {
+			if (command.parentId() == 0)
+				throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID);
+			if (command.targetCommentUserId() == 0)
+				throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID);
+
+			commentRepository.findByIdAndPostId(command.parentId(), command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
+
+			userRepository.findById(command.targetCommentUserId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 		}
 	}
 }

@@ -19,9 +19,7 @@ public interface PostService {
 
 	PageCommunityResponseDto<CommunityCardResponse> getCommunityCards(
 		final CommunityPage page,
-		final Long userId,
-		final PostTopic postTopic
-
+		final Long userId
 	);
 
 	// post 상세 조회

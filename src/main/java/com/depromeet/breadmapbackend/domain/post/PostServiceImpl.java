@@ -58,16 +58,15 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PageCommunityResponseDto<CommunityCardResponse> getCommunityCards(
 		final CommunityPage page,
-		final Long userId,
-		final PostTopic postTopic
+		final Long userId
 	) {
-		final Page<CommunityCardInfo> communityCards = getCommunityCardsBy(page, userId, postTopic);
+		final Page<CommunityCardInfo> communityCards = getCommunityCardsBy(page, userId);
 
 		return PageCommunityResponseDto.of(
 			communityCards,
 			CommunityCardInfo::toResponse,
 			getSelectedPostCount(communityCards) + page.postOffset(),
-			getSelectedReviewCount(communityCards) + page.postOffset()
+			getSelectedReviewCount(communityCards) + page.reviewOffset()
 		);
 	}
 
@@ -137,8 +136,13 @@ public class PostServiceImpl implements PostService {
 
 	private Long getSelectedPostCount(final Page<CommunityCardInfo> communityCards) {
 		return communityCards.stream()
+			// .skip(isThereFixedEvent(communityCards))
 			.filter(PostServiceImpl::isPost)
 			.count();
+	}
+
+	private int isThereFixedEvent(final Page<CommunityCardInfo> communityCards) {
+		return communityCards.getContent().get(0).isFixed() == 1 ? 1 : 0;
 	}
 
 	private Long getSelectedReviewCount(final Page<CommunityCardInfo> communityCards) {
@@ -156,12 +160,11 @@ public class PostServiceImpl implements PostService {
 
 	private Page<CommunityCardInfo> getCommunityCardsBy(
 		final CommunityPage page,
-		final Long userId,
-		final PostTopic postTopic
+		final Long userId
 	) {
-		return switch (postTopic) {
+		return switch (page.topic()) {
 			case ALL -> postRepository.findAllCommunityCards(page, userId);
-			case BREAD_STORY, FREE_TALK -> postRepository.findUserBoardCards(page, userId, postTopic);
+			case BREAD_STORY, FREE_TALK -> postRepository.findUserBoardCards(page, userId);
 			case REVIEW -> postRepository.findReviewCards(page, userId);
 			case EVENT -> postRepository.findEventCards(page, userId);
 		};

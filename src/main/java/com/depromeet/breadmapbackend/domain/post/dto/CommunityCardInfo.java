@@ -29,7 +29,8 @@ public record CommunityCardInfo(
 	String address,
 	String bakeryThumbnail,
 	boolean isUserLiked,
-	boolean isUserCommented
+	boolean isUserCommented,
+	int isFixed
 ) {
 	public CommunityCardResponse toResponse() {
 
