@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventCommand;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.UpdateEventOrderCommand;
@@ -29,4 +30,6 @@ public interface PostAdminService {
 	void updateEventOrder(List<UpdateEventOrderCommand> list);
 
 	List<EventCarouselInfo> getCarousels();
+
+	EventResponse getEventPost(Long managerId);
 }

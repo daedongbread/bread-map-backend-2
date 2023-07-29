@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.request.EventRequest;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.request.UpdateEventOrderRequest;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventCarouselResponse;
+import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.PostAdminResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.service.PostAdminService;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
@@ -59,6 +59,14 @@ public class PostAdminController {
 		@RequestBody @Valid final EventRequest request
 	) {
 		postAdminService.createEventPost(Mapper.of(request));
+	}
+
+	@GetMapping("{managerId}")
+	@ResponseStatus(HttpStatus.OK)
+	EventResponse getEventPost(
+		@PathVariable("managerId") Long managerId
+	) {
+		return postAdminService.getEventPost(managerId);
 	}
 
 	// 이벤트 수정
