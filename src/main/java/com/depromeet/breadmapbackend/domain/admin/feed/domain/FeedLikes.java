@@ -19,7 +19,7 @@ public class FeedLikes {
 	@OneToMany(
 		mappedBy = "curationFeed",
 		fetch = FetchType.LAZY,
-		cascade = CascadeType.PERSIST,
+		cascade = CascadeType.ALL,
 		orphanRemoval = true
 	)
 	private List<FeedLike> likes;

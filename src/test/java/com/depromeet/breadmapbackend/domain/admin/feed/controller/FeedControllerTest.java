@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
+import com.depromeet.breadmapbackend.domain.admin.dto.FeedLikeResponse;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
@@ -56,6 +57,7 @@ public class FeedControllerTest extends ControllerTest {
 	private Category category;
 	private JwtToken token;
 	private Admin admin;
+	private User user;
 	private CurationFeed curation;
 	private LandingFeed landing;
 
@@ -65,7 +67,7 @@ public class FeedControllerTest extends ControllerTest {
 		adminRepository.save(admin);
 		token = jwtTokenProvider.createJwtToken(admin.getEmail(), admin.getRoleType().getCode());
 
-		User user = User.builder()
+		user = User.builder()
 			.oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
 			.userInfo(UserInfo.builder().nickName("nickname1").build())
 			.build();
@@ -174,7 +176,14 @@ public class FeedControllerTest extends ControllerTest {
 
 		curationEntity.addAll(bakeries, curationRequest);
 
-		curation = feedRepository.save(curationEntity);
+		curation = feedRepository.saveAndFlush(curationEntity);
+
+		commonFeedService.likeFeed(user.getId(), curation.getId());
+		commonFeedService.likeFeed(user.getId(), curation.getId());
+		commonFeedService.likeFeed(user.getId(), curation.getId());
+
+		curationFeedRepository.flush();
+		feedRepository.flush();
 	}
 
 	@AfterEach
@@ -296,7 +305,7 @@ public class FeedControllerTest extends ControllerTest {
 		FeedResponseDto response = FeedResponseDto.builder()
 			.common(FeedAssembler.toCommonDto(curation))
 			.curation(FeedAssembler.toCurationDto(bakeries, products))
-			.likeCounts(curation.getLikeCount())
+			.likeCounts(3)
 			.build();
 
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
@@ -355,6 +364,90 @@ public class FeedControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
 						fieldWithPath("data.landing").optional().description("null"),
 						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
+				)
+			);
+	}
+
+	@Test
+	@DisplayName("피드 좋아요 테스트")
+	void 유저는_피드_좋아요를_할수있다() throws Exception {
+
+		//given
+		FeedLikeResponse response = commonFeedService.likeFeed(user.getId(), curation.getId());
+
+		FeedLikeResponse expected = FeedLikeResponse.builder()
+			.userId(user.getId())
+			.likeStatus("LIKE")
+			.likeCounts(response.getLikeCounts() + 1)
+			.build();
+
+		ApiResponse<FeedLikeResponse> expectedResponse = new ApiResponse<>(expected);
+		String expectedToString = objectMapper.writeValueAsString(expectedResponse);
+
+		//when
+		ResultActions perform = mockMvc.perform(post("/v1/feed/{feedId}/like", curation.getId())
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE));
+
+		perform.andExpect(status().isOk())
+			.andExpect(content().string(expectedToString));
+
+		//then
+		perform.andDo(print()).
+			andDo(document("like-curation-feed-user",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+					pathParameters(
+						parameterWithName("feedId").description("피드 아이디")
+					),
+					responseFields(
+						fieldWithPath("data.userId").description("유저 아이디"),
+						fieldWithPath("data.likeStatus").description("유저 좋아요 상태(좋아요 체크)"),
+						fieldWithPath("data.likeCounts").description("현재 피드에 좋아요 찍은 횟수"))
+				)
+			);
+	}
+
+	@Test
+	@DisplayName("피드 좋아요 취소 테스트")
+	void 유저는_피드_좋아요_취소를_할수있다() throws Exception {
+
+		//given
+		FeedLikeResponse response = commonFeedService.unLikeFeed(user.getId(), curation.getId());
+
+		FeedLikeResponse expected = FeedLikeResponse.builder()
+			.userId(user.getId())
+			.likeStatus("LIKE")
+			.likeCounts(response.getLikeCounts() - 1)
+			.build();
+
+		ApiResponse<FeedLikeResponse> expectedResponse = new ApiResponse<>(expected);
+		String expectedToString = objectMapper.writeValueAsString(expectedResponse);
+
+		//when
+		ResultActions perform = mockMvc.perform(post("/v1/feed/{feedId}/unlike", curation.getId())
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE));
+
+		perform.andExpect(status().isOk())
+			.andExpect(content().string(expectedToString));
+
+		//then
+		perform.andDo(print()).
+			andDo(document("unlike-curation-feed-user",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+					pathParameters(
+						parameterWithName("feedId").description("피드 아이디")
+					),
+					responseFields(
+						fieldWithPath("data.userId").description("유저 아이디"),
+						fieldWithPath("data.likeStatus").description("유저 좋아요 상태(좋아요 체크)"),
+						fieldWithPath("data.likeCounts").description("현재 피드에 좋아요 찍은 횟수"))
 				)
 			);
 	}

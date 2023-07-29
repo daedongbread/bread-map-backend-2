@@ -248,8 +248,10 @@ operation::find-detail-curation-feed-admin[snippets='http-request,request-header
 
 operation::find-detail-landing-feed-admin[snippets='http-request,request-headers,path-parameters,request-parameters,response-fields,http-response']
 
-== Admin Feed APIs
+== Admin Category APIs
 
 - 카테고리 조회 API
+
+=== 카테고리 전체 조회 API [GET]
 
 operation::find-all-category[snippets='http-request,request-headers,response-fields,http-response']
