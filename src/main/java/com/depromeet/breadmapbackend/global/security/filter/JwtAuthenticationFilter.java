@@ -14,8 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.depromeet.breadmapbackend.global.dto.ErrorResponse;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static final String TOKEN_PREFIX = "Bearer ";
 	private final JwtTokenProvider jwtTokenProvider;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	protected void doFilterInternal(
@@ -43,7 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				} else {
 					response.setStatus(HttpStatus.UNAUTHORIZED.value());
 					response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-					response.getWriter().write(DaedongStatus.TOKEN_INVALID_EXCEPTION.getDescription());
+					response.getWriter()
+						.write(objectMapper.writeValueAsString(
+							new ErrorResponse(DaedongStatus.TOKEN_INVALID_EXCEPTION.getCode(),
+								DaedongStatus.TOKEN_INVALID_EXCEPTION.getDescription())));
 					return;
 				}
 			}

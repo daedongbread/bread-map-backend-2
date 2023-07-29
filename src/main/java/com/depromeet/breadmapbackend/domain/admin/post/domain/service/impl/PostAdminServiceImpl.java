@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventCommand;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.UpdateEventOrderCommand;
@@ -116,6 +117,13 @@ public class PostAdminServiceImpl implements PostAdminService {
 			.stream()
 			.map(EventCarouselInfo::of)
 			.toList();
+	}
+
+	@Override
+	public EventResponse getEventPost(final Long managerId) {
+		return postAdminRepository.findPostManagerMapperById(managerId)
+			.map(EventResponse::of)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 	}
 
 	private void validateEventStatus(final EventCommand command) {

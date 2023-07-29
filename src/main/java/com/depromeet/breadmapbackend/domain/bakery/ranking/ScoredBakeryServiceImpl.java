@@ -60,7 +60,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.stream()
 			.map(ScoredBakery::from)
 			.sorted(
-				Comparator.comparing(ScoredBakery::getTotalScore).reversed()
+				Comparator.comparing(ScoredBakery::getTotalScore)
 					.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
 			)
 			.toList();

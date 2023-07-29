@@ -128,7 +128,7 @@ public class PostAdminControllerTestSteps {
 					fieldWithPath("title").description("이벤트 제목"),
 					fieldWithPath("content").description("이벤트 내용"),
 					fieldWithPath("bannerImage").description("이벤트 베너 이미지"),
-					fieldWithPath("images").description("이벤트 컨텐츠 이미지 리스")
+					fieldWithPath("images").description("이벤트 컨텐츠 이미지 리스트")
 				)
 			));
 	}
@@ -173,5 +173,33 @@ public class PostAdminControllerTestSteps {
 					fieldWithPath("data.[].bannerImage").description("이밴트 캐러셀 배너 이미지")
 				)
 			));
+	}
+
+	public static ResultActions 이벤트_상세_조회_요청(
+		final Long 이벤트_고유_번호,
+		final String 관리자_토큰,
+		final MockMvc mockMvc
+	) throws Exception {
+		return mockMvc.perform(get("/v1/admin/posts/detail/{managerId}", 이벤트_고유_번호)
+				.header("Authorization", "Bearer " + 관리자_토큰))
+			.andDo(print())
+			.andDo(document("v1/admin/posts/get",
+				preprocessRequest(prettyPrint()),
+				preprocessResponse(prettyPrint()),
+				requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
+				pathParameters(
+					parameterWithName("managerId").description("조회 요청 이벤트 id")
+				),
+				responseFields(
+					fieldWithPath("managerId").description("이밴트 포스트 관리 id"),
+					fieldWithPath("isPosted").description("게시 여부"),
+					fieldWithPath("isFixed").description("고정 여부"),
+					fieldWithPath("isCarousel").description("캐러셀 여부"),
+					fieldWithPath("title").description("이벤트 제목"),
+					fieldWithPath("content").description("이벤트 내용"),
+					fieldWithPath("bannerImage").description("이벤트 베너 이미지"),
+					fieldWithPath("images").description("이벤트 컨텐츠 이미지 리스트")
+				)));
+
 	}
 }

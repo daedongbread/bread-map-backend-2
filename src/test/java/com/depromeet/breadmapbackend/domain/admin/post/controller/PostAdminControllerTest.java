@@ -106,6 +106,16 @@ class PostAdminControllerTest extends ControllerTest {
 		이벤트_캐러셀_조회_결과_검증(결과);
 	}
 
+	@Test
+	void 이벤트_상세_조회() throws Exception {
+		// given
+		final var 이벤트_조회_고유번호 = 112L;
+		// when
+		final var 결과 = 이벤트_상세_조회_요청(이벤트_조회_고유번호, 관리자_토큰, mockMvc);
+		// then
+		이벤트_상세_조회_결과_검증(결과);
+	}
+
 	private void setUpTestDate() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("post-admin-test-data.sql"));
