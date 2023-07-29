@@ -21,6 +21,7 @@ import com.depromeet.breadmapbackend.global.security.CustomAuthenticationEntryPo
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.filter.JwtAuthenticationFilter;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 	private final LoggingFilter loggingFilter;
+	private final ObjectMapper objectMapper;
 
 	@Bean
 	@Override
@@ -67,7 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.accessDeniedHandler(customAccessDeniedHandler)
 			.and()
 			.addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, objectMapper),
+				UsernamePasswordAuthenticationFilter.class);
 
 	}
 
