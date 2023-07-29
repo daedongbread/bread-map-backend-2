@@ -61,7 +61,7 @@ public class PostAdminController {
 		postAdminService.createEventPost(Mapper.of(request));
 	}
 
-	@GetMapping("{managerId}")
+	@GetMapping("/detail/{managerId}")
 	@ResponseStatus(HttpStatus.OK)
 	EventResponse getEventPost(
 		@PathVariable("managerId") Long managerId
