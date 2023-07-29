@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.dto;
 
+import java.time.LocalDate;
+
 import lombok.Builder;
 
 /**
@@ -18,6 +20,7 @@ public record BakeryRankingCard(
 	Long flagNum,
 	double rating,
 	String shortAddress,
-	boolean isFlagged
+	boolean isFlagged,
+	LocalDate calculatedDate
 ) {
 }

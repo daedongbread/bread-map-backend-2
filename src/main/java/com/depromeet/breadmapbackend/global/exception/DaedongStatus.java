@@ -41,6 +41,23 @@ public enum DaedongStatus {
 	BAKERY_NOT_POSTING(BAD_REQUEST, 40096, "bakery status is not posting"),
 	CALCULATING_BAKERY_RANKING(BAD_REQUEST, 40097, "re-calculating bakery rank"), // 랭킹 계산 중
 	BAKERY_RANKING_NOT_FOUND(BAD_REQUEST, 40098, "bakery ranking not found"), // 랭킹이 존재하지 않을 때
+
+	INVALID_POST_TOPIC(BAD_REQUEST, 40099, "invalid post topic"),
+	COMMENT_NOT_FOUND(BAD_REQUEST, 40100, "comment not found"),
+	INVALID_COMMENT_STATUS(BAD_REQUEST, 40101, "comment status not valid"),
+	INVALID_POST(BAD_REQUEST, 40102, "invalid post"),
+	REPORT_CONTENT_EXCEPTION(BAD_REQUEST, 40103, "report conent exception"),
+	INVALID_REPORT_TYPE(BAD_REQUEST, 40104, "invalid report type"),
+	INVALID_REPORT_TARGET(BAD_REQUEST, 40105, "invalid report target"),
+	CANNOT_REPORT_OWN_POST(BAD_REQUEST, 40106, "cannot report own content"),
+
+	INVALID_EVENT_STATUS(BAD_REQUEST, 40107, "invalid event status"),
+	CAROUSEL_POST_COUNT_EXCEEDED(BAD_REQUEST, 40108, "carousel post count exceeded"),
+
+	SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID(BAD_REQUEST, 40109,
+		"second depth comment should have target user id"),
+	SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID(BAD_REQUEST, 40110, "second depth comment should have parent id"),
+
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
 	TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"), // access or refresh token이 유효하지 않을 때
@@ -75,6 +92,7 @@ public enum DaedongStatus {
 	PRODUCT_ADD_REPORT_NOT_FOUND(NOT_FOUND, 40494, "product add report not found"), // 상품 추가 제보가 존재하지 않을 때
 	PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40495,
 		"product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
+	POST_NOT_FOUND(NOT_FOUND, 40495, "Post not found"),
 
 	// 409 CONFLICT
 	ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때

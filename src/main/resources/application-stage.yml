@@ -1,4 +1,6 @@
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 40s
   jwt:
     secret: ${JWT_KEY}
     admin: ${JWT_ADMIN_KEY}
@@ -68,7 +70,16 @@ sgis:
   secret: ${SGIS_SECRET}
 
 
+admin:
+  event:
+    post:
+      user-id: ${EVENT_POST_ADMIN_USER_ID}
+
+
 redis:
   poll-timeout:
     bakery-view: 5
-    bakery-ranking-calculator: 5
+    bakery-ranking-calculator: 20
+
+server:
+  shutdown: graceful
