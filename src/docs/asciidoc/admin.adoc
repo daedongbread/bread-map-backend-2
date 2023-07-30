@@ -261,10 +261,12 @@ operation::find-all-category[snippets='http-request,request-headers,response-fie
 
 - 이벤트 조회 API [GET]
 - 이벤트 등록 API [POST]
+- 이벤트 상세 조회 API [GET]
 - 이벤트 수정 API [PATCH]
 - 이벤트 고정 가능 여부 API [GET]
 - 이벤트 순서 수정 API [PATCH]
 - 이벤트 캐러셀 조회 API [GET]
+
 
 === 이벤트 조회 API [GET]
 
@@ -273,6 +275,10 @@ operation::v1/admin/posts[snippets='http-request,request-headers,path-parameters
 === 이벤트 등록 API [POST]
 
 operation::v1/admin/posts/add[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 이벤트 상세 조회 API [GET]
+
+operation::v1/admin/posts/get[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
 
 === 이벤트 수정 API [PATCH]
 
