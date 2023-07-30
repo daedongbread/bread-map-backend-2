@@ -55,10 +55,13 @@ public class PostAdminController {
 	// 이벤트 등록 기능 ( 배너이미지 추가, 사용자 계정 하드코딩 ) 이미지 최대 10개
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	void createEventPost(
+	ApiResponse<Long> createEventPost(
 		@RequestBody @Valid final EventRequest request
 	) {
-		postAdminService.createEventPost(Mapper.of(request));
+		return new ApiResponse<>(
+			postAdminService.createEventPost(Mapper.of(request))
+				.getId()
+		);
 	}
 
 	@GetMapping("/detail/{managerId}")
