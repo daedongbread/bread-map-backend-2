@@ -72,7 +72,7 @@ public class FeedAdminController {
 
 	@GetMapping("/all")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<List<FeedResponseForAdmin>> readAllFeed(
+	public ApiResponse<FeedResponseForAdmin> readAllFeed(
 		@RequestParam(required = false) String activeAt,
 		@RequestParam(required = false) String createBy,
 		@RequestParam(required = false) FeedStatus activated,
@@ -81,7 +81,7 @@ public class FeedAdminController {
 	) {
 		FeedSearchRequest searchRequest = new FeedSearchRequest(activeAt, createBy, activated, categoryName);
 
-		List<FeedResponseForAdmin> feedResponse = commonFeedService.getAllFeedForAdmin(pageable, searchRequest);
+		FeedResponseForAdmin feedResponse = commonFeedService.getAllFeedForAdmin(pageable, searchRequest);
 
 		return new ApiResponse<>(feedResponse);
 	}

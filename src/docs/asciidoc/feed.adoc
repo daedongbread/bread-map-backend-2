@@ -27,3 +27,11 @@ operation::find-detail-curation-feed-user[snippets='http-request,request-headers
 
 operation::find-detail-landing-feed-user[snippets='http-request,request-headers,path-parameters,request-parameters,response-fields,http-response']
 
+=== 큐레이션 피드 좋아요 API [POST]
+
+operation::like-curation-feed-user[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
+
+=== 큐레이션 피드 좋아요 취소 API [POST]
+
+operation::unlike-curation-feed-user[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
+

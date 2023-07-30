@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.AdminService;
 import com.depromeet.breadmapbackend.domain.admin.category.repository.CategoryRepository;
+import com.depromeet.breadmapbackend.domain.admin.category.service.CategoryService;
 import com.depromeet.breadmapbackend.domain.admin.feed.repository.CurationBakeryRepository;
 import com.depromeet.breadmapbackend.domain.admin.feed.repository.CurationFeedRepository;
 import com.depromeet.breadmapbackend.domain.admin.feed.repository.FeedRepository;
@@ -203,6 +204,9 @@ public abstract class ControllerTest {
 
 	@Autowired
 	protected CurationBakeryRepository curationBakeryRepository;
+
+	@Autowired
+	protected CategoryService categoryService;
 
 	@Autowired
 	protected CurationFeedService curationFeedService;

@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
 import static com.google.protobuf.FieldType.*;
+import static org.springframework.asm.Type.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -13,11 +14,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -379,7 +382,7 @@ public class FeedAdminControllerTest extends ControllerTest {
 		String content = objectMapper.writeValueAsString(updateRequest);
 
 		//when
-		ResultActions perform = mockMvc.perform(patch("/v1/admin/feed/{feedId}", 2L)
+		ResultActions perform = mockMvc.perform(patch("/v1/admin/feed/{feedId}", curation.getId())
 			.header("Authorization", "Bearer " + token.getAccessToken())
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -419,9 +422,12 @@ public class FeedAdminControllerTest extends ControllerTest {
 		//given
 		List<Feed> feedList = List.of(landing, curation);
 
-		List<FeedResponseForAdmin> content = FeedAssembler.toDtoForAdmin(feedList);
+		PageImpl<Feed> page = new PageImpl<>(feedList);
 
-		ApiResponse<List<FeedResponseForAdmin>> res = new ApiResponse<>(content);
+		FeedResponseForAdmin content = FeedAssembler.toDtoForAdmin(page.getTotalPages(), page.getTotalElements(),
+			feedList);
+
+		ApiResponse<FeedResponseForAdmin> res = new ApiResponse<>(content);
 
 		String response = objectMapper.writeValueAsString(res);
 
@@ -453,11 +459,13 @@ public class FeedAdminControllerTest extends ControllerTest {
 						parameterWithName("page").optional().description("페이지(0부터시작)"),
 						parameterWithName("size").optional().description("한 페이지에 출력할 개수(default 20)")),
 					responseFields(
-						fieldWithPath("data.[].feedId").description("피드 번호"),
-						fieldWithPath("data.[].feedTitle").description("피드 제목"),
-						fieldWithPath("data.[].authorName").description("피드 작성자 이메일"),
-						fieldWithPath("data.[].activeTime").description("피드 게시 예약 일자 ( 해당 날짜 이후부터 조회됩니다)"),
-						fieldWithPath("data.[].isActive").description("피드 활성화 여부")
+						fieldWithPath("data.totalPages").description("전체 페이지 수"),
+						fieldWithPath("data.totalElements").description("전체 데이터 개수"),
+						fieldWithPath("data.contents.[].feedId").description("피드 번호"),
+						fieldWithPath("data.contents.[].feedTitle").description("피드 제목"),
+						fieldWithPath("data.contents.[].authorName").description("피드 작성자 이메일"),
+						fieldWithPath("data.contents.[].activeTime").description("피드 게시 예약 일자 ( 해당 날짜 이후부터 조회됩니다)"),
+						fieldWithPath("data.contents.[].isActive").description("피드 활성화 여부")
 					)
 				)
 			);
@@ -468,7 +476,11 @@ public class FeedAdminControllerTest extends ControllerTest {
 	void 랜딩_피드_상세_조회_관리자() throws Exception {
 
 		//given
-		FeedResponseDto response = FeedAssembler.toDto(landing);
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(landing))
+			.landing(FeedAssembler.toLandingDto(landing))
+			.build();
+
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -505,7 +517,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
 						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
 						fieldWithPath("data.curation").optional().description("null"),
-						fieldWithPath("data.landing.redirectUrl").description("redirectURl"))
+						fieldWithPath("data.landing.redirectUrl").description("redirectURl"),
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
 				)
 			);
 	}
@@ -515,7 +528,15 @@ public class FeedAdminControllerTest extends ControllerTest {
 	void 큐레이션_피드_상세_조회_관리자() throws Exception {
 
 		//given
-		FeedResponseDto response = FeedAssembler.toDto(curation);
+		List<Product> products = productRepository.findByIdIn(curation.getBakeries().getProductIdList());
+		List<Bakery> bakeries = products.stream().map(Product::getBakery).collect(Collectors.toList());
+
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(curation))
+			.curation(FeedAssembler.toCurationDto(bakeries, products))
+			.likeCounts(curation.getLikeCount())
+			.build();
+
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -558,11 +579,20 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
 						fieldWithPath("data.curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
 						fieldWithPath("data.curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].address").description("큐레이션 피드 빵집 주소"),
+						fieldWithPath("data.curation.[].detailedAddress").description("큐레이션 피드 빵집 상세주소"),
+						fieldWithPath("data.curation.[].websiteURL").description("큐레이션 피드 빵집 웹사이트 Url"),
+						fieldWithPath("data.curation.[].instagramURL").description("큐레이션 피드 빵집 인스타 Url"),
+						fieldWithPath("data.curation.[].facebookURL").description("큐레이션 피드 빵집 페이스북 Url"),
+						fieldWithPath("data.curation.[].blogURL").description("큐레이션 피드 빵집 상품 블로그 Url"),
+						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY).description("큐레이션 피드 빵집 태그 리스트"),
+						fieldWithPath("data.curation.[].phoneNumber").description("큐레이션 피드 빵집 전하번호"),
 						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
 						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
 						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
 						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
-						fieldWithPath("data.landing").optional().description("null"))
+						fieldWithPath("data.landing").optional().description("null"),
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
 				)
 			);
 	}
