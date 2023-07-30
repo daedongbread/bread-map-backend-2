@@ -206,6 +206,8 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("data.contents").description("빵집 리스트"),
 					fieldWithPath("data.contents.[].bakeryId").description("빵집 고유 번호"),
 					fieldWithPath("data.contents.[].name").description("빵집 이름"),
+					fieldWithPath("data.contents.[].address").description("빵집 도로명 주소"),
+					fieldWithPath("data.contents.[].detailedAddress").description("빵집 도로명 상세 주소"),
 					fieldWithPath("data.contents.[].bakeryReportImageNum").description("미확인 대표 이미지 갯수"),
 					fieldWithPath("data.contents.[].productAddReportNum").description("미확인 메뉴 제보 갯수"),
 					fieldWithPath("data.contents.[].bakeryUpdateReportNum").description("미확인 정보 수정 갯수"),
