@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FeedSearchRequest {
 
-	private String activeAt;
+	private String createdAt;
 	private String createBy;
 	private FeedStatus activated;
 	private String categoryName;
 
-	public FeedSearchRequest(String activeAt, String createBy, FeedStatus activated, String categoryName) {
-		this.activeAt = activeAt;
+	public FeedSearchRequest(String createdAt, String createBy, FeedStatus activated, String categoryName) {
+		this.createdAt = createdAt;
 		this.createBy = createBy;
 		this.activated = activated;
 		this.categoryName = categoryName;

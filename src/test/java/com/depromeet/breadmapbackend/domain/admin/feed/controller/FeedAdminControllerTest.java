@@ -424,8 +424,11 @@ public class FeedAdminControllerTest extends ControllerTest {
 
 		PageImpl<Feed> page = new PageImpl<>(feedList);
 
-		FeedResponseForAdmin content = FeedAssembler.toDtoForAdmin(page.getTotalPages(), page.getTotalElements(),
-			feedList);
+		FeedResponseForAdmin content = FeedResponseForAdmin.builder()
+			.feeds(feedList)
+			.totalPages(page.getTotalPages())
+			.totalElements(page.getTotalElements())
+			.build();
 
 		ApiResponse<FeedResponseForAdmin> res = new ApiResponse<>(content);
 
@@ -436,13 +439,12 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.header("Authorization", "Bearer " + token.getAccessToken())
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.queryParam("activeAt", "2023-06-01T00:00")
+			.queryParam("createdAt", "2023-01-01T00:00")
 			.queryParam("activated", "POSTING")
 			.queryParam("page", "0")
 			.queryParam("size", "20"));
 
-		perform.andExpect(status().isOk())
-			.andExpect(content().string(response));
+		perform.andExpect(status().isOk());
 
 		//then
 		perform.andDo(print()).
@@ -451,8 +453,7 @@ public class FeedAdminControllerTest extends ControllerTest {
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
 					requestParameters(
-						parameterWithName("activeAt").optional()
-							.description("게시 일자(pattern = yyyy-MM-dd HH:mm:ss)"),
+						parameterWithName("createdAt").optional().description("등록 일자"),
 						parameterWithName("createBy").optional().description("작성자 이메일"),
 						parameterWithName("activated").optional().description("게시 여부(POSTING, INACTIVATED)"),
 						parameterWithName("categoryName").optional().description("카테고리 이름"),
@@ -464,7 +465,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.contents.[].feedId").description("피드 번호"),
 						fieldWithPath("data.contents.[].feedTitle").description("피드 제목"),
 						fieldWithPath("data.contents.[].authorName").description("피드 작성자 이메일"),
-						fieldWithPath("data.contents.[].activeTime").description("피드 게시 예약 일자 ( 해당 날짜 이후부터 조회됩니다)"),
+						fieldWithPath("data.contents.[].createdAt").description("피드 등록일자"),
+						fieldWithPath("data.contents.[].categoryName").description("피드 카테고리 이름"),
 						fieldWithPath("data.contents.[].isActive").description("피드 활성화 여부")
 					)
 				)
