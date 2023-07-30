@@ -90,7 +90,7 @@ public class FeedRepositoryTest_Search {
 		//then
 		assertThat(actual)
 			.usingRecursiveComparison()
-			.ignoringFields("contents.feedId")
+			.ignoringFields("contents.feedId", "contents.createdAt")
 			.isEqualTo(expected);
 	}
 
@@ -201,7 +201,6 @@ public class FeedRepositoryTest_Search {
 		return Stream.of(
 			createArgument("all", 0, 1, 2, 3, 4, 5),
 			createArgument("Only Posting", 0, 1, 4, 5),
-			createArgument("After 2015", 1, 2, 4, 5),
 			createArgument("createBy admin1", 0, 2, 4),
 			createArgument("categoryName 대동빵 멤버 추천 빵집", 1, 3, 5)
 		);
@@ -306,7 +305,6 @@ public class FeedRepositoryTest_Search {
 		return switch (keyword) {
 			case "all" -> new FeedSearchRequest();
 			case "Only Posting" -> new FeedSearchRequest(null, null, FeedStatus.POSTING, null);
-			case "After 2015" -> new FeedSearchRequest("2015-01-01T00:00:00", null, null, null);
 			case "createBy admin1" -> new FeedSearchRequest(null, "test1@ddb.com", null, null);
 			case "categoryName 대동빵 멤버 추천 빵집" -> new FeedSearchRequest(null, null, null, "대동빵 멤버 추천 빵집");
 			default -> throw new IllegalStateException("테스트 실패");

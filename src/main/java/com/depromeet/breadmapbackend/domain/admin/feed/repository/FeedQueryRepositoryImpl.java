@@ -30,7 +30,7 @@ public class FeedQueryRepositoryImpl implements FeedQueryRepository {
 		List<Feed> feeds = queryFactory.selectFrom(feed)
 			.join(feed.admin).fetchJoin()
 			.join(feed.category).fetchJoin()
-			.where(afterCreateAt(feedSearchRequest.getActiveAt()),
+			.where(afterCreateAt(feedSearchRequest.getCreatedAt()),
 				containsCreateBy(feedSearchRequest.getCreateBy()),
 				containsCategoryName(feedSearchRequest.getCategoryName()),
 				eqActivated(feedSearchRequest.getActivated()))
@@ -39,7 +39,7 @@ public class FeedQueryRepositoryImpl implements FeedQueryRepository {
 			.fetch();
 
 		Long count = queryFactory.select(feed.count()).from(feed)
-			.where(afterCreateAt(feedSearchRequest.getActiveAt()),
+			.where(afterCreateAt(feedSearchRequest.getCreatedAt()),
 				containsCreateBy(feedSearchRequest.getCreateBy()),
 				containsCategoryName(feedSearchRequest.getCategoryName()),
 				eqActivated(feedSearchRequest.getActivated()))
@@ -66,8 +66,8 @@ public class FeedQueryRepositoryImpl implements FeedQueryRepository {
 		return nullSafeBuilder(() -> feed.category.categoryName.contains(categoryName));
 	}
 
-	private BooleanBuilder afterCreateAt(String activeAt) {
-		return nullSafeBuilder(() -> feed.activeTime.goe(DateTimeParser.parse(activeAt)));
+	private BooleanBuilder afterCreateAt(String createdAt) {
+		return nullSafeBuilder(() -> feed.createdAt.goe(DateTimeParser.parse(createdAt)));
 	}
 
 	// 어드민이 이름이 없어서 수정해야함

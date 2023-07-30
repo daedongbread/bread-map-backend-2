@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -73,13 +71,13 @@ public class FeedAdminController {
 	@GetMapping("/all")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<FeedResponseForAdmin> readAllFeed(
-		@RequestParam(required = false) String activeAt,
+		@RequestParam(required = false) String createdAt,
 		@RequestParam(required = false) String createBy,
 		@RequestParam(required = false) FeedStatus activated,
 		@RequestParam(required = false) String categoryName,
 		@PageableDefault(size = 20, sort = "activeTime", direction = Sort.Direction.DESC) Pageable pageable
 	) {
-		FeedSearchRequest searchRequest = new FeedSearchRequest(activeAt, createBy, activated, categoryName);
+		FeedSearchRequest searchRequest = new FeedSearchRequest(createdAt, createBy, activated, categoryName);
 
 		FeedResponseForAdmin feedResponse = commonFeedService.getAllFeedForAdmin(pageable, searchRequest);
 
