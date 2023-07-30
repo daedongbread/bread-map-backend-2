@@ -80,6 +80,9 @@ public class PostAdminControllerTestSteps {
 					fieldWithPath("content").description("이벤트 내용"),
 					fieldWithPath("bannerImage").description("이벤트 베너 이미지"),
 					fieldWithPath("images").description("이벤트 컨텐츠 이미지 리스")
+				),
+				responseFields(
+					fieldWithPath("data").description("등록된 이벤트 id")
 				)
 			));
 	}
