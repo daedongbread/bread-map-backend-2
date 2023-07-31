@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
@@ -31,6 +32,8 @@ class BakeryControllerTest extends ControllerTest {
 	private User user;
 	private Bakery bakery1;
 	private Bakery bakery2;
+	private BakeryAddReport report1;
+	private BakeryAddReport report2;
 	private JwtToken token;
 
 	@BeforeEach
@@ -38,15 +41,33 @@ class BakeryControllerTest extends ControllerTest {
 		user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId").build())
 			.userInfo(UserInfo.builder().nickName("nickname").build()).build();
 		userRepository.save(user);
+		report1 = new BakeryAddReport("test title", "testLocation", "test content", user);
+		report2 = new BakeryAddReport("test title2", "testLocation2", "test content2", user);
+		bakeryAddReportRepository.save(report1);
+		bakeryAddReportRepository.save(report2);
 		token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
 
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-		bakery1 = Bakery.builder().address("address1").latitude(37.5596080725671).longitude(127.044235133983)
-			.facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
+		bakery1 = Bakery.builder()
+			.address("address1")
+			.latitude(37.5596080725671)
+			.longitude(127.044235133983)
+			.facilityInfoList(facilityInfo)
+			.name("bakery1")
+			.status(BakeryStatus.POSTING)
+			.bakeryAddReport(report1)
+			.build();
 		bakeryRepository.save(bakery1);
 		// bakeryViewRepository.save(BakeryView.builder().bakery(bakery1).build());
-		bakery2 = Bakery.builder().address("address2").latitude(37.55950448505721).longitude(127.04416263787213)
-			.facilityInfoList(facilityInfo).name("bakery2").status(BakeryStatus.POSTING).build();
+		bakery2 = Bakery.builder()
+			.address("address2")
+			.latitude(37.55950448505721)
+			.longitude(127.04416263787213)
+			.facilityInfoList(facilityInfo)
+			.name("bakery2")
+			.status(BakeryStatus.POSTING)
+			.bakeryAddReport(report2)
+			.build();
 		bakeryRepository.save(bakery2);
 
 		Product product1 = Product.builder()
