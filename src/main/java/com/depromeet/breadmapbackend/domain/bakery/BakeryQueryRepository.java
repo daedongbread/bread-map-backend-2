@@ -49,7 +49,8 @@ public class BakeryQueryRepository {
 			.select(bakery)
 			.from(bakery)
 			.where(bakery.latitude.between(coordinateRange.leftLatitude(), coordinateRange.rightLatitude())
-				.and(bakery.longitude.between(coordinateRange.downLongitude(), coordinateRange.upLongitude())))
+				.and(bakery.longitude.between(coordinateRange.downLongitude(), coordinateRange.upLongitude()))
+				.and(bakery.status.eq(BakeryStatus.POSTING)))
 			.limit(BAKERY_SIZE)
 			.fetch();
 	}
@@ -130,6 +131,7 @@ public class BakeryQueryRepository {
 			.leftJoin(bakeryView)
 			.on(bakery.id.eq(bakeryView.bakeryId))
 			.on(bakeryView.viewDate.between(date.minusDays(7), date))
+			.where(bakery.status.eq(BakeryStatus.POSTING))
 			.groupBy(bakery.id)
 			.fetch();
 
@@ -153,6 +155,8 @@ public class BakeryQueryRepository {
 				.and(follow.toUser.id.eq(bakery.bakeryAddReport.user.id)))
 			.leftJoin(flagBakery).on(flagBakery.bakery.eq(bakery)
 				.and(flagBakery.user.id.eq(userId)))
+			.where(bakery.status.eq(BakeryStatus.POSTING)
+				.and(bakery.bakeryAddReport.isNotNull()))
 			.groupBy(bakery.id, bakery.createdAt)
 			.orderBy(bakery.createdAt.desc())
 			.limit(newBakeryListSize)

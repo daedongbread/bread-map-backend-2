@@ -158,9 +158,9 @@ class BakeryServiceImplTest {
 		final List<NewBakeryCardDto> newBakeryList = sut.getNewBakeryList(userId);
 		//then
 		assertThat(newBakeryList).isNotNull();
-		assertThat(newBakeryList.size()).isEqualTo(10);
+		assertThat(newBakeryList.size()).isEqualTo(4);
 		assertThat(newBakeryList.stream().map(NewBakeryCardDto::id))
-			.containsExactly(900L, 800L, 300L, 600L, 200L, 1100L, 1200L, 500L, 700L, 100L);
+			.containsExactly(300L, 200L, 500L, 100L);
 		final NewBakeryCardDto bakery200 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(200L))
 			.findFirst().get();
 		assertThat(bakery200.isFlagged()).isTrue();
@@ -169,10 +169,6 @@ class BakeryServiceImplTest {
 			.findFirst().get();
 		assertThat(bakery300.isFlagged()).isFalse();
 		assertThat(bakery300.isFollowed()).isTrue();
-		final NewBakeryCardDto bakery600 = newBakeryList.stream().filter(newBakery -> newBakery.id().equals(600L))
-			.findFirst().get();
-		assertThat(bakery600.isFlagged()).isTrue();
-		assertThat(bakery600.isFollowed()).isFalse();
 	}
 
 	private void insertBakeryViewTestData(final Connection connection) throws SQLException {
