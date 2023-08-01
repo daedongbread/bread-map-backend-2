@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.post.comment.dto;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.Comment;
 import com.depromeet.breadmapbackend.domain.user.User;
 
@@ -14,6 +15,7 @@ public record Command(
 	Long postId,
 	String content,
 	boolean isFirstDepth,
+	PostTopic postTopic,
 	Long parentId,
 	Long targetCommentUserId
 ) {
@@ -25,7 +27,8 @@ public record Command(
 			content,
 			isFirstDepth,
 			isFirstDepth ? 0 : parentId,
-			isFirstDepth ? 0 : targetCommentUserId
+			isFirstDepth ? 0 : targetCommentUserId,
+			postTopic
 		);
 	}
 }

@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.depromeet.breadmapbackend.domain.post.Post;
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 
@@ -43,12 +43,16 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false, length = 500)
 	private String content;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "post_id", insertable = false, updatable = false)
-	private Post post;
+	// @ManyToOne(fetch = LAZY)
+	// @JoinColumn(name = "post_id", insertable = false, updatable = false)
+	// private Post post;
 
 	@Column(name = "post_id")
 	private Long postId;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private PostTopic postTopic;
 
 	@Column(nullable = false)
 	private boolean isFirstDepth;
@@ -69,7 +73,8 @@ public class Comment extends BaseEntity {
 		final String content,
 		final boolean isFirstDepth,
 		final Long parentId,
-		final Long targetCommentUserId
+		final Long targetCommentUserId,
+		final PostTopic postTopic
 	) {
 		this.user = user;
 		this.content = content;
@@ -77,6 +82,7 @@ public class Comment extends BaseEntity {
 		this.isFirstDepth = isFirstDepth;
 		this.parentId = parentId;
 		this.targetCommentUserId = targetCommentUserId;
+		this.postTopic = postTopic;
 	}
 
 	public void update(final String content) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.request.CommentCreateRequest;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.request.CommentUpdateRequest;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.response.CommentResponse;
@@ -49,14 +50,16 @@ public class CommentController {
 	}
 
 	// 댓글 조회
-	@GetMapping("/{postId}/{page}")
+	@GetMapping("/{postTopic}/{postId}/{page}")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<PageResponseDto<CommentResponse>> findComment(
 		@AuthenticationPrincipal final CurrentUserInfo currentUserInfo,
+		@PathVariable("postTopic") final String postTopic,
 		@PathVariable("page") final int page,
 		@PathVariable("postId") final Long postId
 	) {
-		return new ApiResponse<>(Mapper.of(commentService.findComment(postId, currentUserInfo.getId(), page)));
+		final PostTopic topic = PostTopic.of(postTopic);
+		return new ApiResponse<>(Mapper.of(commentService.findComment(postId, topic, currentUserInfo.getId(), page)));
 	}
 
 	//댓글 수정

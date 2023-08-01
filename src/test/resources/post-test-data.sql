@@ -81,10 +81,10 @@ INSERT INTO follow (id, created_at, modified_at, from_user_id, to_user_id) VALUE
 (3, '2023-05-02 12:16:30', '2023-05-02 12:16:30', 112, 111)
 ;
 
-insert into comment( id, user_id, content,  post_id, parent_id, is_first_depth,status, target_comment_user_id) values
-(111, 111, 'content',  222, 0, true, 'ACTIVE', 0),
-(112, 112, 'content 1', 222, 111, false, 'ACTIVE', 111 ),
-(113, 113, 'content 2',  222, 111, false, 'ACTIVE',111)
+insert into comment( id, post_topic, user_id, content,  post_id, parent_id, is_first_depth,status, target_comment_user_id) values
+(111,'BREAD_STORY', 111, 'content',  222, 0, true, 'ACTIVE', 0),
+(112,'BREAD_STORY', 112, 'content 1', 222, 111, false, 'ACTIVE', 111 ),
+(113,'BREAD_STORY', 113, 'content 2',  222, 111, false, 'ACTIVE',111)
 ;
 
 insert into comment_like( id, created_at, modified_at,  comment_id, user_id ) values

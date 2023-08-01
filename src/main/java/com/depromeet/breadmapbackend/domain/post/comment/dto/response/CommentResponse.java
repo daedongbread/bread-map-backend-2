@@ -22,6 +22,7 @@ public record CommentResponse(
 	String nickname,
 	String profileImage,
 	Long likeCount,
+	boolean isUserLiked,
 	LocalDate createdDate,
 	CommentResponseStatus status
 ) {
@@ -36,6 +37,7 @@ public record CommentResponse(
 			response.nickname(),
 			response.profileImage(),
 			response.likeCount(),
+			response.isUserLiked(),
 			response.createdDate(),
 			response.responseStatus()
 		);

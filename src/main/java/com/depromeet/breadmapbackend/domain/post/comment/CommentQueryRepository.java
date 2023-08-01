@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentQuery;
 
 import lombok.RequiredArgsConstructor;
@@ -41,14 +42,22 @@ public class CommentQueryRepository {
 		resultSet.getLong("like_count"),
 		resultSet.getObject("created_at", LocalDate.class),
 		CommentStatus.valueOf(resultSet.getString("status")),
-		resultSet.getBoolean("isBlocked")
+		resultSet.getBoolean("isBlocked"),
+		resultSet.getBoolean("isUserLiked")
+
 	);
 
-	public Page<CommentQuery> findComment(final Long postId, final Long userId, final int page) {
+	public Page<CommentQuery> findComment(
+		final Long postId,
+		final PostTopic postTopic,
+		final Long userId,
+		final int page
+	) {
 		final MapSqlParameterSource params = new MapSqlParameterSource()
 			.addValue("limit", PAGE_SIZE)
 			.addValue("offset", PAGE_SIZE * page)
 			.addValue("postId", postId)
+			.addValue("postTopic", postTopic.name())
 			.addValue("userId", userId);
 
 		return new PageImpl<>(
@@ -60,7 +69,7 @@ public class CommentQueryRepository {
 
 	private String getSortedCommentBaseSql() {
 		return """
-			with recursive recursive_comments(id, created_at, user_id, content, post_id, parent_id, target_comment_user_id, status, is_first_depth, depth, sort_key) as (
+			with recursive recursive_comments(id, created_at, user_id, content, post_id, parent_id, target_comment_user_id, status, is_first_depth, depth, sort_key, post_topic) as (
 				select id
 					 , created_at
 					 , user_id
@@ -72,11 +81,13 @@ public class CommentQueryRepository {
 					 , is_first_depth
 					 , 1 as depth
 					 , created_at as sort_key
+					 , post_topic
 				from
 					comment
 				where
 					parent_id = 0
 				and post_id = :postId
+				and post_topic = :postTopic
 					
 				union all
 					
@@ -91,6 +102,7 @@ public class CommentQueryRepository {
 					 , c.is_first_depth
 					 , rc.depth + 1 as depth
 					 , rc.sort_key
+					 , c.post_topic
 				from
 					comment c
 					join recursive_comments rc on c.parent_id = rc.id
@@ -115,8 +127,18 @@ public class CommentQueryRepository {
 			     , case when bu.id is null then false 
 			     		else true 
 			     	end as isBlocked 
+			     , case when cl.count >=0 then true 
+			     		else false 
+			     	end as isUserLiked
+			     , rc.post_topic
 			from recursive_comments rc
 			join user u on rc.user_id = u.id
+			left join (select comment_id
+							, count(comment_id) as count 
+						from comment_like 
+						 where user_id = :userId
+						 group by comment_id )cl on rc.id = cl.comment_id
+												 
 			left join block_user bu on u.id = bu.to_user_id
 									and bu.from_user_id = :userId
 						
@@ -181,3 +203,15 @@ public class CommentQueryRepository {
 	//
 	// }
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -24,7 +24,8 @@ public record CommentInfo(
 	Long likeCount,
 	LocalDate createdDate,
 	CommentStatus status,
-	boolean isBlocked
+	boolean isBlocked,
+	boolean isUserLiked
 ) {
 
 	public record Response(
@@ -37,6 +38,7 @@ public record CommentInfo(
 		String nickname,
 		String profileImage,
 		Long likeCount,
+		boolean isUserLiked,
 		LocalDate createdDate,
 		CommentResponseStatus responseStatus
 	) {

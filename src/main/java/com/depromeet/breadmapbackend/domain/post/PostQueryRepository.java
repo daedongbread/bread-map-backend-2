@@ -4,7 +4,6 @@ import static com.depromeet.breadmapbackend.domain.post.QPost.*;
 import static com.depromeet.breadmapbackend.domain.post.comment.QComment.*;
 import static com.depromeet.breadmapbackend.domain.post.like.QPostLike.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
-import static com.depromeet.breadmapbackend.domain.review.comment.QReviewComment.*;
 import static com.depromeet.breadmapbackend.domain.review.like.QReviewLike.*;
 import static com.depromeet.breadmapbackend.domain.user.QUser.*;
 import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.*;
@@ -82,7 +81,7 @@ public class PostQueryRepository {
 						.where(postLike.post.id.eq(post.id)),
 					JPAExpressions.select(comment.count().coalesce(0L))
 						.from(comment)
-						.where(comment.post.id.eq(post.id)),
+						.where(comment.postId.eq(post.id)),
 					JPAExpressions.select(review.count().coalesce(0L))
 						.from(review)
 						.where(review.user.id.eq(post.user.id)),
@@ -296,8 +295,9 @@ public class PostQueryRepository {
 			.on(post.id.eq(postLike.post.id)
 				.and(postLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
 			.leftJoin(comment)
-			.on(post.id.eq(comment.post.id)
-				.and(comment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.on(post.id.eq(comment.postId)
+				.and(comment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now()))
+				.and(comment.postTopic.eq(post.postTopic)))
 			.leftJoin(blockUser).on(blockUser.toUser.id.eq(post.user.id).and(blockUser.fromUser.id.eq(userId)))
 			.where(post.postTopic.ne(PostTopic.EVENT).and(blockUser.isNull()))
 			.groupBy(post)
@@ -308,19 +308,20 @@ public class PostQueryRepository {
 
 	private List<Tuple> getTopThreeReviewScoresWithId(final Long userId) {
 		return queryFactory.select(review.id,
-				reviewLike.count().add(reviewComment.count()).as("score"),
+				reviewLike.count().add(comment.count()).as("score"),
 				review.createdAt)
 			.from(review)
 			.leftJoin(reviewLike)
 			.on(review.id.eq(reviewLike.review.id)
 				.and(reviewLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
-			.leftJoin(reviewComment)
-			.on(review.id.eq(reviewComment.review.id)
-				.and(reviewComment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
+			.leftJoin(comment)
+			.on(review.id.eq(comment.postId)
+				.and(comment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now()))
+				.and(comment.postTopic.eq(PostTopic.REVIEW)))
 			.leftJoin(blockUser).on(blockUser.toUser.id.eq(review.user.id).and(blockUser.fromUser.id.eq(userId)))
 			.where(blockUser.isNull())
 			.groupBy(review)
-			.orderBy(reviewLike.count().add(reviewComment.count()).desc(), review.createdAt.desc())
+			.orderBy(reviewLike.count().add(comment.count()).desc(), review.createdAt.desc())
 			.limit(3)
 			.fetch();
 	}
@@ -379,7 +380,8 @@ public class PostQueryRepository {
 				   	  where pl.post_id = t1.id)   as likeCount
 				 , (select count(cmmt.id) 
 				      from comment cmmt 
-				      where cmmt.post_id = t1.id) as commentCount
+				      where cmmt.post_id = t1.id
+				      and cmmt.post_topic = t1.post_topic) as commentCount
 				 , null                           as bakeryId
 				 , null                           as name
 				 , null                           as address
@@ -406,10 +408,11 @@ public class PostQueryRepository {
 			   left join (select to_user_id 
 			   			  from block_user
 			   			  where from_user_id = :userId) t3 on t1.user_id = t3.to_user_id	
-			   left join (select post_id, count(post_id) as count
+			   left join (select post_id, post_topic, count(post_id) as count
 							from comment
 							where user_id = :userId 
-							group by post_id ) t5 on t1.id = t5.post_id
+							group by post_id , post_topic) t5 on t1.id = t5.post_id
+												and t1.post_topic = t5.post_topic
 			   left join (select post_id, count(post_id)  as count
 							from post_like
 							where user_id = :userId 
@@ -444,8 +447,9 @@ public class PostQueryRepository {
 						  from review_like rl
 						  where rl.review_id = t1.id)        as likeCount
 				     , (select count(cmmt.id) 
-						  from review_comment cmmt
-						  where cmmt.review_id = t1.id) as commentCount
+						  from comment cmmt
+						  where cmmt.post_id = t1.id
+						  	and cmmt.post_topic = 'REVIEW' ) as commentCount
 				     , t3.id                                    as bakeryId
 				     , t3.name                                  as name
 				     , t3.address                               as address
@@ -467,10 +471,11 @@ public class PostQueryRepository {
 							from review_like
 							where user_id = :userId 
 							group by review_id ) t5 on t1.id = t5.review_id
-				left join (select review_id, count(review_id) as count
-							from review_comment
+				left join (select post_id, count(post_id) as count ,post_topic
+							from comment
 							where user_id = :userId 
-							group by review_id ) t6 on t1.id = t6.review_id								
+							group by post_id, post_topic ) t6 on t1.id = t6.post_id		
+											and t6.post_topic = 'REVIEW'						
 			   where t4.to_user_id is null
 			   %s
 				order by t1.created_at desc , t1.id desc

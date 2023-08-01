@@ -5,6 +5,10 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
+import com.depromeet.breadmapbackend.global.annotation.EnumCheck;
+import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
+
 /**
  * CommentRequest
  *
@@ -18,6 +22,8 @@ public record CommentCreateRequest(
 	@NotNull @Size(min = 10, max = 200) String content,
 	@NotNull boolean isFirstDepth,
 	Optional<Long> parentId,
-	Optional<Long> targetCommentUserId
+	Optional<Long> targetCommentUserId,
+	@EnumCheck(groups = ValidationGroups.PatternCheckGroup.class)
+	PostTopic postTopic
 ) {
 }
