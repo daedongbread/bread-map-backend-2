@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
@@ -45,8 +46,9 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Page<CommentInfo.Response> findComment(final Long postId, final Long userId, final int page) {
-		return commentRepository.findComment(postId, userId, page)
+	public Page<CommentInfo.Response> findComment(final Long postId, final PostTopic postTopic, final Long userId,
+		final int page) {
+		return commentRepository.findComment(postId, postTopic, userId, page)
 			.map(info -> {
 				final CommentResponseStatus status = getStatus(info.isBlocked(), info.status());
 
@@ -60,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
 					info.nickname(),
 					info.profileImage(),
 					info.likeCount(),
+					info.isUserLiked(),
 					info.createdDate(),
 					status
 				);
@@ -106,9 +109,7 @@ public class CommentServiceImpl implements CommentService {
 		if (status != CommentResponseStatus.ACTIVE) {
 			return status.replaceContent(info.content());
 		}
-		return info.isFirstDepth() ?
-			info.content() :
-			String.format("@%s %s", info.targetCommentUserNickname(), info.content());
+		return info.content();
 	}
 
 	private void validateCommentCommand(final Command command) {

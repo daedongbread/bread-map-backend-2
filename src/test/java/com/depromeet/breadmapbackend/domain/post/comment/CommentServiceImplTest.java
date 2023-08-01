@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
@@ -41,6 +42,7 @@ class CommentServiceImplTest extends CommentServiceTest {
 			222L,
 			"댓글 내용9090909",
 			true,
+			PostTopic.FREE_TALK,
 			0L,
 			0L
 		);
@@ -73,8 +75,9 @@ class CommentServiceImplTest extends CommentServiceTest {
 		//given
 		final Long userId = 111L;
 		final Long postId = 222L;
+		final PostTopic topic = PostTopic.BREAD_STORY;
 		//when
-		final Page<CommentInfo.Response> result = sut.findComment(postId, userId, 0);
+		final Page<CommentInfo.Response> result = sut.findComment(postId, topic, userId, 0);
 		//then
 		final List<CommentInfo.Response> comments = result.getContent();
 		assertThat(comments).hasSize(10);
@@ -82,7 +85,7 @@ class CommentServiceImplTest extends CommentServiceTest {
 		assertThat(comments.get(0).id()).isEqualTo(122L);
 		assertThat(comments.get(1).responseStatus()).isEqualTo(CommentResponseStatus.ACTIVE);
 		assertThat(comments.get(1).content()).isEqualTo("content");
-		assertThat(comments.get(4).content()).isEqualTo("@nick_name content 2");
+		assertThat(comments.get(4).content()).isEqualTo("content 2");
 		assertThat(comments.get(5).content()).isEqualTo(CommentResponseStatus.DELETED.getContent());
 
 	}

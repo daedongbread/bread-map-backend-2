@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.request.CommentCreateRequest;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.request.CommentUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +43,9 @@ public class CommentControllerTestSteps {
 					fieldWithPath("isFirstDepth").description("댓글 = true, 대댓글 = false"),
 					fieldWithPath("parentId").optional().description("댓글일 경우 = 0 or null, 대댓글일 경우 부모 댓글 id"),
 					fieldWithPath("targetCommentUserId").optional()
-						.description("댓글일 경우 = 0 or null, 대댓글일 경우 부모 댓글 작성자 id")
+						.description("댓글일 경우 = 0 or null, 대댓글일 경우 부모 댓글 작성자 id"),
+					fieldWithPath("postTopic").description("댓글이 달린 커뮤니티글의 토픽")
+
 				)
 			));
 	}
@@ -51,7 +54,7 @@ public class CommentControllerTestSteps {
 		final MockMvc mockMvc) throws
 		Exception {
 		return mockMvc.perform(
-				get("/v1/comments/{postId}/{page}", 빵_이야기_고유_번호, page)
+				get("/v1/comments/{postTopic}/{postId}/{page}", PostTopic.BREAD_STORY.name(), 빵_이야기_고유_번호, page)
 					.header("Authorization", "Bearer " + 사용자_토큰))
 			.andDo(print())
 			.andDo(document("v1/comments/get",
@@ -59,6 +62,8 @@ public class CommentControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
+					parameterWithName("postTopic").description(
+						"댓글 조회할 커뮤니티글 토픽 (BREAD_STORY, REVIEW, EVENT, FREE_TALK)"),
 					parameterWithName("postId").description("댓글 조회할 커뮤니티글 id"),
 					parameterWithName("page").description("페이지 번호")),
 				responseFields(
@@ -81,7 +86,8 @@ public class CommentControllerTestSteps {
 					fieldWithPath("data.contents.[].likeCount").description("댓글 좋아요 개수"),
 					fieldWithPath("data.contents.[].createdDate").description("댓글 작성 일자"),
 					fieldWithPath("data.contents.[].status").description(
-						"댓글 상태 (ACTIVE, DELETED, BLOCKED_BY_ADMIN, BLOCKED_BY_USER)")
+						"댓글 상태 (ACTIVE, DELETED, BLOCKED_BY_ADMIN, BLOCKED_BY_USER)"),
+					fieldWithPath("data.contents.[].isUserLiked").description("조회 요청자 댓글 좋아요 여부")
 				)
 			));
 	}

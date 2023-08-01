@@ -19,10 +19,10 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
 	Optional<Comment> findByIdAndUserId(Long commentId, Long userId);
 
 	@Modifying
-	@Query("delete from Comment c where c.post.id = :postId")
+	@Query("delete from Comment c where c.postId = :postId")
 	void deleteByPostId(@Param("postId") Long postId);
 
-	@Query("select c.id from Comment c where c.post.id = :postId")
+	@Query("select c.id from Comment c where c.postId = :postId")
 	List<Long> findCommentIdListByPostId(@Param("postId") Long postId);
 
 	Optional<Comment> findByIdAndPostId(Long commentId, Long postId);

@@ -23,7 +23,8 @@ public record CommentQuery(
 	Long likeCount,
 	LocalDate createdDate,
 	CommentStatus commentStatus,
-	boolean isBlocked
+	boolean isBlocked,
+	boolean isUserLiked
 ) {
 
 	public CommentInfo toInfo() {
@@ -39,7 +40,8 @@ public record CommentQuery(
 			likeCount,
 			createdDate,
 			commentStatus,
-			isBlocked
+			isBlocked,
+			isUserLiked
 		);
 	}
 }

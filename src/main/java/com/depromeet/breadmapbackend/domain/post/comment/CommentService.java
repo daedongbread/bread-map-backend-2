@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.post.comment;
 
 import org.springframework.data.domain.Page;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
@@ -18,6 +19,7 @@ public interface CommentService {
 
 	Page<CommentInfo.Response> findComment(
 		Long postId,
+		PostTopic topic,
 		Long userId,
 		int page
 	);

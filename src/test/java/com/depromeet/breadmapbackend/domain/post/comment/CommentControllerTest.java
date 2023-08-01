@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.request.CommentCreateRequest;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.request.CommentUpdateRequest;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
@@ -44,7 +45,8 @@ class CommentControllerTest extends ControllerTest {
 	@Test
 	void 댓글_등록() throws Exception {
 		// given
-		final var 댓글_데이터 = new CommentCreateRequest(222L, "내용09090909", true, Optional.of(0L), Optional.of(0L));
+		final var 댓글_데이터 = new CommentCreateRequest(222L, "내용09090909", true, Optional.of(0L), Optional.of(0L),
+			PostTopic.FREE_TALK);
 
 		// when
 		final var 결과 = 댓글_추가_요청(댓글_데이터, 사용자_토큰, mockMvc, objectMapper);
