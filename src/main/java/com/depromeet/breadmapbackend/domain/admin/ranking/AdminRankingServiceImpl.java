@@ -42,6 +42,7 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 	@Override
 	public int updateRanking(final RankingUpdateRequest request) {
 		return scoredBakeryRepository.updateRank(request);
+		// TODO : rank view 변경 이벤트 발행 -> ( 랭킹뷰 재생성  기본적인 빵집 정보만 저장 )
 	}
 
 	@Transactional
