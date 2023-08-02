@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryFlagCount;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryRank;
+import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.BakeryRanksCachingPublisher;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.QueryBakeryRankRepository;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.usecase.QueryBakeryRankUseCase;
@@ -27,20 +28,20 @@ public class QueryBakeryRankService implements QueryBakeryRankUseCase {
 
 	private final QueryBakeryRankRepository queryBakeryRankRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
+	private final BakeryRanksCachingPublisher bakeryRanksCachingPublisher;
 
 	@Override
 	public List<Query> query(final Long userId, final int size) {
-		final List<QueryBakeryRank> bakeryRanks =
-			queryBakeryRankRepository.findByCalculatedDate(
-				LocalDate.now(),
-				Pageable.ofSize(size)
-			);
+		final LocalDate currentDate = LocalDate.now();
+		final Pageable page = Pageable.ofSize(size);
 
-		return toQuery(
-			userId,
-			bakeryRanks,
-			getBakeryIdsFrom(bakeryRanks)
-		);
+		final List<QueryBakeryRank> bakeryRanksView = queryBakeryRankRepository.findByCalculatedDate(currentDate, page);
+		if (!bakeryRanksView.isEmpty()) {
+			return toQuery(userId, bakeryRanksView);
+		}
+
+		bakeryRanksCachingPublisher.publish();
+		return toQuery(userId, queryBakeryRankRepository.findByCalculatedDateFromDb(currentDate, page));
 	}
 
 	private List<Long> getBakeryIdsFrom(final List<QueryBakeryRank> bakeryRanks) {
@@ -51,9 +52,9 @@ public class QueryBakeryRankService implements QueryBakeryRankUseCase {
 
 	private List<Query> toQuery(
 		final Long userId,
-		final List<QueryBakeryRank> bakeryRanks,
-		final List<Long> bakeryIds
+		final List<QueryBakeryRank> bakeryRanks
 	) {
+		final List<Long> bakeryIds = getBakeryIdsFrom(bakeryRanks);
 		return bakeryRanks.stream()
 			.map(br -> new Query(
 				br.bakeryId(),

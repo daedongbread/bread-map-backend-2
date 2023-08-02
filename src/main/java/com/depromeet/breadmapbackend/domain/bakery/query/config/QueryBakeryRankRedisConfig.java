@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.query;
+package com.depromeet.breadmapbackend.domain.bakery.query.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

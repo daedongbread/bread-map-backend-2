@@ -16,5 +16,7 @@ import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryRank;
  */
 public interface QueryBakeryRankRepository {
 
-	List<QueryBakeryRank> findByCalculatedDate(LocalDate now, Pageable pageable);
+	List<QueryBakeryRank> findByCalculatedDate(LocalDate calculatedDate, Pageable pageable);
+
+	List<QueryBakeryRank> findByCalculatedDateFromDb(LocalDate calculatedDate, Pageable pageable);
 }

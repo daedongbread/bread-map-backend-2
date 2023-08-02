@@ -1,8 +1,9 @@
 package com.depromeet.breadmapbackend.domain.bakery.query.infrastructure;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
@@ -34,15 +35,14 @@ public class QueryBakeryRankRepositoryImpl implements QueryBakeryRankRepository 
 		final String redisKey = getRedisKey(calculatedDate);
 		final Set<QueryBakeryRank> bakeryRanks = redisTemplate.opsForZSet().range(redisKey, 0, pageable.getPageSize());
 
-		if (bakeryRanks != null && !bakeryRanks.isEmpty()) {
-			return new ArrayList<>(bakeryRanks);
-		}
-
-		return getQueryBakeryRankListFromDb(calculatedDate, pageable);
+		return Optional.ofNullable(bakeryRanks)
+			.stream()
+			.flatMap(Collection::stream)
+			.toList();
 	}
 
-	private List<QueryBakeryRank> getQueryBakeryRankListFromDb(final LocalDate calculatedDate,
-		final Pageable pageable) {
+	@Override
+	public List<QueryBakeryRank> findByCalculatedDateFromDb(final LocalDate calculatedDate, final Pageable pageable) {
 		return queryBakeryRankJpaRepository.findByCalculatedDate(calculatedDate, pageable)
 			.stream()
 			.map(QueryBakeryRankJpaEntity::toDomain)
