@@ -11,7 +11,6 @@ import java.time.LocalDate;
  */
 
 public record QueryBakeryRank(
-	Long id,
 	Long bakeryId,
 	LocalDate calculatedDate,
 	String name,

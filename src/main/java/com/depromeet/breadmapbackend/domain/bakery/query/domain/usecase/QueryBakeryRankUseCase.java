@@ -11,7 +11,7 @@ import java.util.List;
  * @since 2023/08/02
  */
 public interface QueryBakeryRankUseCase {
-	List<Query> query(int size);
+	List<Query> query(Long userId, int size);
 
 	record Query(
 		Long id,
