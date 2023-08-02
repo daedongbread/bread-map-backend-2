@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryFlagCount;
-import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.QueryFlagBakeryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class FlagBakeryRepositoryImpl implements FlagBakeryRepository {
+public class QueryFlagBakeryRepositoryImpl implements QueryFlagBakeryRepository {
 
 	private final com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository flagBakeryRepository;
 

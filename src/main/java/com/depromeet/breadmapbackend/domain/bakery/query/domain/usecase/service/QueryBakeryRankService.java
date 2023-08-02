@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryFlagCount;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryRank;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.BakeryRanksCachingPublisher;
-import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.QueryBakeryRankRepository;
+import com.depromeet.breadmapbackend.domain.bakery.query.domain.repository.QueryFlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.query.domain.usecase.QueryBakeryRankUseCase;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class QueryBakeryRankService implements QueryBakeryRankUseCase {
 
 	private final QueryBakeryRankRepository queryBakeryRankRepository;
-	private final FlagBakeryRepository flagBakeryRepository;
+	private final QueryFlagBakeryRepository QueryFlagBakeryRepository;
 	private final BakeryRanksCachingPublisher bakeryRanksCachingPublisher;
 
 	@Override
@@ -69,14 +69,14 @@ public class QueryBakeryRankService implements QueryBakeryRankUseCase {
 	}
 
 	private boolean isUserFlaggedBakery(final Long userId, final List<Long> bakeryIds, final QueryBakeryRank br) {
-		return flagBakeryRepository.findByUserIdAndBakeryIdIn(
+		return QueryFlagBakeryRepository.findByUserIdAndBakeryIdIn(
 			userId,
 			bakeryIds
 		).stream().anyMatch(fb -> fb.equals(br.bakeryId()));
 	}
 
 	private Long getBakeryFlaggedCount(final List<Long> bakeryIds, final QueryBakeryRank br) {
-		return flagBakeryRepository.countFlagBakeryByBakeryIdIn(bakeryIds).stream()
+		return QueryFlagBakeryRepository.countFlagBakeryByBakeryIdIn(bakeryIds).stream()
 			.filter(fc -> fc.bakeryId().equals(br.bakeryId()))
 			.findFirst()
 			.map(QueryBakeryFlagCount::flagCount).orElse(0L);
