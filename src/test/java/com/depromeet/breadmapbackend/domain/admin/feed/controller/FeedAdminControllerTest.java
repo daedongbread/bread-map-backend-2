@@ -520,7 +520,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
 						fieldWithPath("data.curation").optional().description("null"),
 						fieldWithPath("data.landing.redirectUrl").description("redirectURl"),
-						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"),
+						fieldWithPath("data.likeStatus").description("현재 조회하고 있는 유저의 피드 좋아요 상태(관리자는 null"))
 				)
 			);
 	}
@@ -594,7 +595,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
 						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
 						fieldWithPath("data.landing").optional().description("null"),
-						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"),
+						fieldWithPath("data.likeStatus").description("현재 조회하고 있는 유저의 피드 좋아요 상태(관리자는 null"))
 				)
 			);
 	}

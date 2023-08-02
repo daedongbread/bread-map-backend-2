@@ -289,7 +289,8 @@ public class FeedControllerTest extends ControllerTest {
 						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
 						fieldWithPath("data.curation").optional().description("null"),
 						fieldWithPath("data.landing.redirectUrl").description("redirectURl"),
-						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"))
+						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"),
+						fieldWithPath("data.likeStatus").description("현재 조회하고 있는 유저의 피드 좋아요 상태"))
 				)
 			);
 	}
@@ -396,48 +397,6 @@ public class FeedControllerTest extends ControllerTest {
 		//then
 		perform.andDo(print()).
 			andDo(document("like-curation-feed-user",
-					preprocessRequest(prettyPrint()),
-					preprocessResponse(prettyPrint()),
-					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
-					pathParameters(
-						parameterWithName("feedId").description("피드 아이디")
-					),
-					responseFields(
-						fieldWithPath("data.userId").description("유저 아이디"),
-						fieldWithPath("data.likeStatus").description("유저 좋아요 상태(좋아요 체크)"),
-						fieldWithPath("data.likeCounts").description("현재 피드에 좋아요 찍은 횟수"))
-				)
-			);
-	}
-
-	@Test
-	@DisplayName("피드 좋아요 취소 테스트")
-	void 유저는_피드_좋아요_취소를_할수있다() throws Exception {
-
-		//given
-		FeedLikeResponse response = commonFeedService.unLikeFeed(user.getId(), curation.getId());
-
-		FeedLikeResponse expected = FeedLikeResponse.builder()
-			.userId(user.getId())
-			.likeStatus("LIKE")
-			.likeCounts(response.getLikeCounts() - 1)
-			.build();
-
-		ApiResponse<FeedLikeResponse> expectedResponse = new ApiResponse<>(expected);
-		String expectedToString = objectMapper.writeValueAsString(expectedResponse);
-
-		//when
-		ResultActions perform = mockMvc.perform(post("/v1/feed/{feedId}/unlike", curation.getId())
-			.header("Authorization", "Bearer " + token.getAccessToken())
-			.accept(MediaType.APPLICATION_JSON_VALUE)
-			.contentType(MediaType.APPLICATION_JSON_VALUE));
-
-		perform.andExpect(status().isOk())
-			.andExpect(content().string(expectedToString));
-
-		//then
-		perform.andDo(print()).
-			andDo(document("unlike-curation-feed-user",
 					preprocessRequest(prettyPrint()),
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),

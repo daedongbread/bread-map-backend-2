@@ -73,13 +73,6 @@ public class CurationFeed extends Feed {
 		likes.like(findFeedLike);
 	}
 
-	public void unLike(User user) {
-		FeedLike feedLike = new FeedLike(user, this);
-
-		FeedLike findFeedLike = this.likes.find(feedLike).orElseThrow(() -> new DaedongException(DaedongStatus.CANNOT_FIND_FEED_LIKE));
-		likes.unLike(findFeedLike);
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

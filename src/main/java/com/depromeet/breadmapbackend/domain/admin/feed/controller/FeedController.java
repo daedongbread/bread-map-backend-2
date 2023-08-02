@@ -2,6 +2,9 @@ package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.admin.dto.FeedLikeResponse;
+import com.depromeet.breadmapbackend.domain.admin.feed.service.CurationFeedService;
+import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/v1/feed")
 public class FeedController {
 
-	private final FeedServiceFactory serviceFactory;
+	private final CurationFeedService curationFeedService;
 	private final CommonFeedService commonFeedService;
 
 	@GetMapping("/all")
@@ -45,11 +48,9 @@ public class FeedController {
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<FeedResponseDto> readFeed(
 		@PathVariable Long feedId,
-		@RequestParam FeedType feedType
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo
 	) {
-		FeedService feedService = serviceFactory.getService(feedType);
-
-		FeedResponseDto feed = feedService.getFeed(feedId);
+		FeedResponseDto feed = curationFeedService.getFeedForUser(feedId, currentUserInfo.getId());
 
 		return new ApiResponse<>(feed);
 	}
@@ -61,17 +62,6 @@ public class FeedController {
 		@AuthenticationPrincipal CurrentUserInfo currentUserInfo
 	) {
 		FeedLikeResponse response = commonFeedService.likeFeed(currentUserInfo.getId(), feedId);
-
-		return new ApiResponse<>(response);
-	}
-
-	@PostMapping("/{feedId}/unlike")
-	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<FeedLikeResponse> unLike(
-		@PathVariable Long feedId,
-		@AuthenticationPrincipal CurrentUserInfo currentUserInfo
-	) {
-		FeedLikeResponse response = commonFeedService.unLikeFeed(currentUserInfo.getId(), feedId);
 
 		return new ApiResponse<>(response);
 	}

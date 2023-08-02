@@ -7,6 +7,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class CurationFeedResponseDto {
 	private String blogURL;
 	private List<String> facilityInfo;
 	private String phoneNumber;
+	private boolean isFlagged;
 
 	private long productId;
 	private String productName;
@@ -39,9 +41,8 @@ public class CurationFeedResponseDto {
 	@Builder
 	public CurationFeedResponseDto(long bakeryId, String bakeryName, String bakeryAddress, String openingHours,
 		String bakeryImageUrl, String checkPoint, String newBreadTime, String address, String detailedAddress,
-		String websiteURL, String instagramURL, String facebookURL, String blogURL, List<String> facilityInfo,
-		String phoneNumber,
-		long productId, String productName, String productPrice, String productImageUrl) {
+	    String websiteURL, String instagramURL, String facebookURL, String blogURL, List<String> facilityInfo, String phoneNumber,
+	    boolean isFlagged, long productId, String productName, String productPrice, String productImageUrl) {
 		this.bakeryId = bakeryId;
 		this.bakeryName = bakeryName;
 		this.bakeryAddress = bakeryAddress;
@@ -61,6 +62,7 @@ public class CurationFeedResponseDto {
 		this.blogURL = blogURL;
 		this.facilityInfo = facilityInfo;
 		this.phoneNumber = phoneNumber;
+		this.isFlagged = isFlagged;
 	}
 
 	public static CurationFeedResponseDto of(Bakery bakery, Product product) {
@@ -86,5 +88,11 @@ public class CurationFeedResponseDto {
 			.productPrice(product.getPrice())
 			.productImageUrl(product.getImage())
 			.build();
+	}
+
+	public void setIsFlagged(FlagBakery flagBakery) {
+		if(flagBakery.getBakery().getId() == this.bakeryId) {
+			this.isFlagged = true;
+		}
 	}
 }
