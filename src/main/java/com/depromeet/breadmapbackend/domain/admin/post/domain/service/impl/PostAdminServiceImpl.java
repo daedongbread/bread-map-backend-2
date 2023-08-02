@@ -70,6 +70,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 			.build();
 
 		return postAdminRepository.savePostManagerMapper(postManagerMapper);
+		// TODO : 케러샐 여부 변경시 일단 캐러셀 query 데이터 생성 redis
 	}
 
 	@Override
@@ -98,6 +99,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 			command.isCarousel(),
 			command.bannerImage()
 		);
+		// TODO : 케러샐 여부 변경시 일단 캐러셀 query 데이터 생성 redis
 	}
 
 	@Transactional
@@ -109,6 +111,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 				.filter(command -> command.managerId().equals(post.getId()))
 				.findFirst()
 				.ifPresent(command -> post.updateCarouselOrder(command.order())));
+		// TODO : 케러샐 여부 변경시 일단 캐러셀 query 데이터 생성 redis
 	}
 
 	@Override

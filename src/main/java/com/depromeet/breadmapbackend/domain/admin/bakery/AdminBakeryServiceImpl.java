@@ -226,6 +226,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					.noticeType(NoticeType.ADD_BAKERY)
 					.build()
 			);
+		// TODO : 빵집 제보 있으면 신규빵집 이벤트 발행 -> 신규빵집 Query redis
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
 	}
 

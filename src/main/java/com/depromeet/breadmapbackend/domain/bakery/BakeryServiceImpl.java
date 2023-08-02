@@ -93,6 +93,7 @@ public class BakeryServiceImpl implements BakeryService {
 
 	@Override
 	public List<NewBakeryCardDto> getNewBakeryList(final Long userId) {
+		// TODO : query 테이블 분리 조회 redis 적용
 		return bakeryQueryRepository.findBakeryWithPioneerByCreatedAtDesc(userId, NEW_BAKERY_LIST_SIZE)
 			.stream()
 			.map(NewBakeryCardDto::new)
