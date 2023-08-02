@@ -1,5 +1,9 @@
 package com.depromeet.breadmapbackend.domain.bakery.query.infrastructure;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -10,4 +14,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 2023/08/02
  */
 public interface QueryBakeryRankJpaRepository extends JpaRepository<QueryBakeryRankJpaEntity, Long> {
+
+	List<QueryBakeryRankJpaEntity> findByCalculatedDate(final LocalDate calculatedDate, Pageable pageable);
 }

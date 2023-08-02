@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.depromeet.breadmapbackend.domain.bakery.query.domain.QueryBakeryRank;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +34,16 @@ public class QueryBakeryRankJpaEntity {
 	private String image;
 	private double rating;
 	private String shortAddress;
+
+	public QueryBakeryRank toDomain() {
+		return new QueryBakeryRank(
+			bakeryId,
+			calculatedDate,
+			name,
+			image,
+			rating,
+			shortAddress
+		);
+	}
 
 }
