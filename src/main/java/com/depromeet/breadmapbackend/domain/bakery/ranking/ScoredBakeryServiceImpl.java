@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import static com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository.*;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -36,11 +38,27 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 	private final FlagBakeryRepository flagBakeryRepository;
 	private final ScoredBakeryEventStream scoredBakeryEventStream;
 
+	@Override
 	@Transactional
 	public int calculateBakeryScore(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
 		return scoredBakeryRepository.bulkInsert(
 			rankTopScoredBakeries(bakeryScoreBaseList)
 		);
+		// TODO : rank view 변경 이벤트 발행 -> ( 랭킹뷰 재생성  기본적인 빵집 정보만 저장 )
+		// TODO : 빵집 깃발 카운트 평정 출력해야하는데.....사용자 깃발 추가 여부, 평점 이벤트 발행해 말아??? 평점은... 안해도???
+	}
+
+	@Override
+	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
+		// TODO : rank view 조회 ( 빵집 데이터 + 나머지 필요 데이터는 entity 조회)
+		final List<ScoredBakery> scoredBakeries = findScoredBakeryBy(LocalDate.now(), size);
+		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
+		final List<FlagBakeryCount> flagBakeryCounts = countFlagBakeryBy(scoredBakeries);
+
+		return scoredBakeries.stream()
+			.map(bakeryScores -> from(userFlaggedBakeries, bakeryScores, flagBakeryCounts))
+			.limit(size)
+			.toList();
 	}
 
 	private List<ScoredBakery> rankTopScoredBakeries(final List<BakeryScoreBaseWithSelectedDate> bakeryScoreBaseList) {
@@ -63,17 +81,6 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 				Comparator.comparing(ScoredBakery::getTotalScore)
 					.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
 			)
-			.toList();
-	}
-
-	@Override
-	public List<BakeryRankingCard> findBakeriesRankTop(final Long userId, final int size) {
-		final List<ScoredBakery> scoredBakeries = findScoredBakeryBy(LocalDate.now(), size);
-		final List<FlagBakery> userFlaggedBakeries = findFlagBakeryBy(userId, scoredBakeries);
-
-		return scoredBakeries.stream()
-			.map(bakeryScores -> from(userFlaggedBakeries, bakeryScores))
-			.limit(size)
 			.toList();
 	}
 
@@ -113,15 +120,35 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 		);
 	}
 
-	private BakeryRankingCard from(final List<FlagBakery> flagBakeryList, final ScoredBakery bakeryScores) {
+	private List<FlagBakeryCount> countFlagBakeryBy(final List<ScoredBakery> bakeriesScores) {
+		return flagBakeryRepository.countFlagBakeryByBakeryIdIn(
+			bakeriesScores.stream()
+				.map(scoredBakery -> scoredBakery.getBakery().getId())
+				.toList()
+		);
+	}
+
+	private BakeryRankingCard from(
+		final List<FlagBakery> flagBakeryList,
+		final ScoredBakery bakeryScores,
+		final List<FlagBakeryCount> flagBakeryCounts
+	) {
 		return BakeryRankingCard.builder()
 			.id(bakeryScores.getBakery().getId())
+			.flagNum(getFlagCount(bakeryScores, flagBakeryCounts))
 			.name(bakeryScores.getBakery().getName())
 			.image(bakeryScores.getBakery().getImage())
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
 			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
 			.calculatedDate(bakeryScores.getCalculatedDate())
 			.build();
+	}
+
+	private static Long getFlagCount(final ScoredBakery bakeryScores, final List<FlagBakeryCount> flagBakeryCounts) {
+		return flagBakeryCounts.stream()
+			.filter(f -> f.getBakeryId().equals(bakeryScores.getBakery().getId()))
+			.findFirst()
+			.map(FlagBakeryCount::getCount).orElse(0L);
 	}
 
 	private boolean isUserFlaggedBakery(
