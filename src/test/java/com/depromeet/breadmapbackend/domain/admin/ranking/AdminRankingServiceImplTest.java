@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
 
 /**
  * AdminRankingServiceImplTest

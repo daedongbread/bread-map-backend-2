@@ -18,7 +18,7 @@ import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.data.redis.stream.Subscription;
 
-import com.depromeet.breadmapbackend.domain.bakery.BakeryRankingCalculationEventStreamListener;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.interfaces.BakeryRankingCalculationEventStreamListener;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewEventStreamListener;
 import com.depromeet.breadmapbackend.global.EventInfo;
 

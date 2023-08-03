@@ -11,8 +11,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.ScoredBakeryRepository;
 
 /**
  * ScoredBakeryRepositoryImpl

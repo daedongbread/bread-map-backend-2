@@ -10,7 +10,7 @@ import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryView;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -90,7 +90,7 @@ public class FixtureFactory {
 			.and(inClass(BakeryView.class));
 
 		EasyRandomParameters param = new EasyRandomParameters()
-			.randomize(bakeryPredicate, () -> bakeryId )
+			.randomize(bakeryPredicate, () -> bakeryId)
 			.dateRange(LocalDate.now().minusDays(6), LocalDate.now());
 
 		return new EasyRandom(param);

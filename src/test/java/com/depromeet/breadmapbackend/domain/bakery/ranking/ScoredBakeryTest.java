@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
 
 /**
  * ScoredBakeryTest

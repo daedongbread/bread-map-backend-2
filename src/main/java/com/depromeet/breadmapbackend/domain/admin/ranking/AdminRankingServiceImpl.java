@@ -8,8 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.BakeryRankingScheduler;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.ScoredBakeryRepository;
 import com.depromeet.breadmapbackend.global.EventInfo;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
 

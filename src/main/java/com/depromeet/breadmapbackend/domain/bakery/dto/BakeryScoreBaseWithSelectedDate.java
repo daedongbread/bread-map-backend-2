@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery.dto;
 import java.time.LocalDate;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.BakeryScoreBase;
 
 /**
  * BakeryRanking

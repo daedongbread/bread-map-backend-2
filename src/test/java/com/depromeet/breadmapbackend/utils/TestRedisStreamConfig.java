@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryEventStreamImpl;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.BakeryRankingCalculationEvent;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeBakeryRankingCalculationEventImpl;
 
 /**
  * TestRedisConfig
@@ -18,7 +18,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakery
 public class TestRedisStreamConfig {
 	@Bean
 	@Primary
-	public ScoredBakeryEventStream scoredBakeryEventStream() {
-		return new FakeScoredBakeryEventStreamImpl();
+	public BakeryRankingCalculationEvent scoredBakeryEventStream() {
+		return new FakeBakeryRankingCalculationEventImpl();
 	}
 }

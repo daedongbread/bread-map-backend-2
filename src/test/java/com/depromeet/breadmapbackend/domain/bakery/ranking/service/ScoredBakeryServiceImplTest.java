@@ -15,15 +15,13 @@ import org.junit.jupiter.api.Test;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryEventStream;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryService;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakeryServiceImpl;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.BakeryRankingCalculationEvent;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.ScoredBakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeBakeryRankingCalculationEventImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeFlagBakeryRepositoryImpl;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryEventStreamImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryRepositoryImpl;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.query.interfaces.BakeryRankingCardResponse;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.util.FixtureFactory;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 
@@ -38,7 +36,7 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 class ScoredBakeryServiceImplTest {
 
 	private ScoredBakeryService sut;
-	private ScoredBakeryEventStream scoredBakeryEventStream;
+	private BakeryRankingCalculationEvent bakeryRankingCalculationEvent;
 	private ScoredBakeryRepository scoredBakeryRepository;
 	private FlagBakeryRepository flagBakeryRepository;
 
@@ -46,14 +44,14 @@ class ScoredBakeryServiceImplTest {
 	void setUp() {
 		scoredBakeryRepository = new FakeScoredBakeryRepositoryImpl();
 		flagBakeryRepository = new FakeFlagBakeryRepositoryImpl();
-		scoredBakeryEventStream = new FakeScoredBakeryEventStreamImpl();
+		bakeryRankingCalculationEvent = new FakeBakeryRankingCalculationEventImpl();
 		sut = new ScoredBakeryServiceImpl(
 			scoredBakeryRepository,
 			flagBakeryRepository,
-			scoredBakeryEventStream
+			bakeryRankingCalculationEvent
 		);
 		FakeScoredBakeryRepositoryImpl.clearData();
-		FakeScoredBakeryEventStreamImpl.clearData();
+		FakeBakeryRankingCalculationEventImpl.clearData();
 	}
 
 	@Test
@@ -88,7 +86,7 @@ class ScoredBakeryServiceImplTest {
 		final int count = 3;
 		final Long userId = 1L;
 		//when
-		final List<BakeryRankingCard> result = sut.findBakeriesRankTop(userId, count);
+		final List<BakeryRankingCardResponse> result = sut.findBakeriesRankTop(userId, count);
 
 		//then
 		assertThat(result).hasSize(3);
@@ -122,7 +120,7 @@ class ScoredBakeryServiceImplTest {
 		final int count = 3;
 		final Long userId = 1L;
 		//when
-		final List<BakeryRankingCard> result = sut.findBakeriesRankTop(userId, count);
+		final List<BakeryRankingCardResponse> result = sut.findBakeriesRankTop(userId, count);
 
 		//then
 		assertThat(result).hasSize(3);
@@ -130,7 +128,7 @@ class ScoredBakeryServiceImplTest {
 		assertThat(result.get(0).isFlagged()).isTrue();
 		assertThat(result.get(1).isFlagged()).isFalse();
 
-		final HashMap<String, String> fieldMap = FakeScoredBakeryEventStreamImpl.getFieldMap();
+		final HashMap<String, String> fieldMap = FakeBakeryRankingCalculationEventImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
 		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
 	}
