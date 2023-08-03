@@ -22,7 +22,9 @@ import lombok.Getter;
 public enum EventInfo {
 
 	BAKERY_VIEW_EVENT("bakery-view-event", List.of("bakeryId", "viewDate"), List.of(BAKERY_VIEW_COUNT)),
-	CALCULATE_RANKING_EVENT("calculate_raking_event", List.of("calculatedDate"), List.of(CALCULATE_RANKING)),
+	CALCULATE_BAKERY_RANKING_EVENT("calculate_raking_event", List.of("calculatedDate"), List.of(CALCULATE_RANKING)),
+	BAKERY_RANKING_CALCULATION_DONE_EVENT("calculate_raking_done_event", List.of("calculatedDate"),
+		List.of(BAKERY_RANKING_VIEW)),
 	;
 
 	final String eventName;

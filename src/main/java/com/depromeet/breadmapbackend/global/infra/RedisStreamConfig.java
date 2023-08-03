@@ -61,7 +61,7 @@ public class RedisStreamConfig {
 
 	@Bean
 	public Subscription bakeryRankingCalculationSubscription(RedisConnectionFactory factory) {
-		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
+		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_BAKERY_RANKING_EVENT;
 		final String eventName = calculateRankingEvent.getEventName();
 		final String consumerGroupName = calculateRankingEvent.getConsumerGroupName(CALCULATE_RANKING);
 

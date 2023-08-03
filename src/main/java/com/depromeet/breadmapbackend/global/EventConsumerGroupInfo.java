@@ -16,7 +16,7 @@ public enum EventConsumerGroupInfo {
 
 	BAKERY_VIEW_COUNT("count-group"),
 	CALCULATE_RANKING("calculate-group"),
-	CACHE_RANKING("cache-group"),
+	BAKERY_RANKING_VIEW("bakery-ranking-view-group"),
 	;
 	final String groupName;
 

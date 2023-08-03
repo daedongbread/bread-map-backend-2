@@ -28,7 +28,7 @@ public class FakeBakeryRankingCalculationEventImpl implements BakeryRankingCalcu
 
 	@Override
 	public void publish(final LocalDate calculatedDate) {
-		fieldMap.put(EventInfo.CALCULATE_RANKING_EVENT.name(),
+		fieldMap.put(EventInfo.CALCULATE_BAKERY_RANKING_EVENT.name(),
 			calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 	}
 }

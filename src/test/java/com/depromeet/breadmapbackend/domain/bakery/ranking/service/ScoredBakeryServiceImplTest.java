@@ -130,7 +130,7 @@ class ScoredBakeryServiceImplTest {
 
 		final HashMap<String, String> fieldMap = FakeBakeryRankingCalculationEventImpl.getFieldMap();
 		assertThat(fieldMap).hasSize(1);
-		assertThat(fieldMap.get(CALCULATE_RANKING_EVENT.name())).isNotNull();
+		assertThat(fieldMap.get(CALCULATE_BAKERY_RANKING_EVENT.name())).isNotNull();
 	}
 
 	private List<ScoredBakery> prepareCacheData() {

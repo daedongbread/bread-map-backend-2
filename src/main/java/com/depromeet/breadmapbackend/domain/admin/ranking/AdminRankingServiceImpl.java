@@ -47,7 +47,7 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 	@Transactional
 	@Override
 	public void reCalculateRanking() {
-		final String eventName = EventInfo.CALCULATE_RANKING_EVENT.getEventName();
+		final String eventName = EventInfo.CALCULATE_BAKERY_RANKING_EVENT.getEventName();
 		final LocalDate now = LocalDate.now();
 		final String calculateDate = LocalDateParser.parse(now);
 
