@@ -1,9 +1,14 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.command.infrastructure;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.BakeryRankingCalculationDoneEvent;
+import com.depromeet.breadmapbackend.global.EventInfo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +28,20 @@ public class BakeryRankingCalculationDoneEventRedisImpl implements BakeryRanking
 	private final StringRedisTemplate redisTemplate;
 
 	@Override
-	public void publish() {
+	public void publish(final LocalDate calculatedDate) {
 
+		log.info("========================= Publish Bakery Ranking Calculation Done  Event =========================");
+		final EventInfo calculateRankingDoneEvent = EventInfo.BAKERY_RANKING_CALCULATION_DONE_EVENT;
+		final HashMap<String, String> fieldMap = new HashMap<>();
+		final String calculateDate = calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		fieldMap.put(calculateRankingDoneEvent.getEvenMessageKeys().get(0), calculateDate);
+
+		final String eventName = calculateRankingDoneEvent.getEventName();
+
+		final String EVENT_KEY = eventName + ":" + calculateDate;
+
+		log.info("EVENT_KEY: {}", EVENT_KEY);
+
+		redisTemplate.opsForStream().add(eventName, fieldMap);
 	}
 }

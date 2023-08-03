@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure;
 
+import java.time.LocalDate;
+
 /**
  * BakeryRankingCalculationDoneEvent
  *
@@ -8,5 +10,5 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infra
  * @since 2023/08/03
  */
 public interface BakeryRankingCalculationDoneEvent {
-	void publish();
+	void publish(final LocalDate calculatedDate);
 }

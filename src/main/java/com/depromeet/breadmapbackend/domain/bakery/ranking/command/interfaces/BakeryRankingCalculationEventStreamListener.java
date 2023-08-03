@@ -22,7 +22,7 @@ public class BakeryRankingCalculationEventStreamListener
 	implements StreamListener<String, MapRecord<String, String, String>> {
 
 	private final BakeryRankingCalculationUseCaseImpl bakeryRankingCalculationUseCaseImpl;
-	private static final EventInfo event = EventInfo.CALCULATE_RANKING_EVENT;
+	private static final EventInfo event = EventInfo.CALCULATE_BAKERY_RANKING_EVENT;
 
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {

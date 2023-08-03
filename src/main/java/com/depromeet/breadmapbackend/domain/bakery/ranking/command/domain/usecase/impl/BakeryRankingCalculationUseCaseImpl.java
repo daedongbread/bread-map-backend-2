@@ -5,12 +5,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.BakeryBaseScoreRepository;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.BakeryRankingCalculationDoneEvent;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.RedisRepository;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.ScoredBakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.usecase.BakeryRankingCalculationUseCase;
 
@@ -33,7 +34,8 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 
 	private final ScoredBakeryRepository scoredBakeryRepository;
 	private final BakeryBaseScoreRepository bakeryBaseScoreRepository;
-	private final StringRedisTemplate redisTemplate;
+	private final RedisRepository redisRepository;
+	private final BakeryRankingCalculationDoneEvent bakeryRankingCalculationDoneEvent;
 
 	@Override
 	public void command(
@@ -53,6 +55,7 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 
 			log.info("The calculation is done");
 			saveTopRankBakeryList(topRankBakeryList);
+			bakeryRankingCalculationDoneEvent.publish(calculateDate);
 		}
 	}
 
@@ -71,9 +74,8 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 	}
 
 	private boolean isFirstInstanceToCalculateRanks(final String EVENT_KEY) {
-		final Optional<Long> incrementedValue = Optional.ofNullable(
-			redisTemplate.opsForValue().increment(EVENT_KEY)
-		);
+
+		final Optional<Long> incrementedValue = redisRepository.increment(EVENT_KEY);
 		return incrementedValue.isPresent() && incrementedValue.get() == 1L;
 	}
 

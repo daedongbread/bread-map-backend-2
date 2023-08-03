@@ -29,7 +29,7 @@ public class BakeryRankingCalculationEventRedisImpl implements BakeryRankingCalc
 
 	public void publish(final LocalDate calculatedDate) {
 		log.info("========================= Publish Calculating Bakery Ranking Event =========================");
-		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_RANKING_EVENT;
+		final EventInfo calculateRankingEvent = EventInfo.CALCULATE_BAKERY_RANKING_EVENT;
 		final HashMap<String, String> fieldMap = new HashMap<>();
 		final String calculateDate = calculatedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		fieldMap.put(calculateRankingEvent.getEvenMessageKeys().get(0), calculateDate);
