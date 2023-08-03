@@ -1,0 +1,16 @@
+package com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure;
+
+import java.time.LocalDate;
+
+/**
+ * ScoredBakeryEventStream
+ *
+ * @author jaypark
+ * @version 1.0.0
+ * @since 2023/07/03
+ */
+public interface BakeryRankingCalculationEvent {
+
+	void publish(final LocalDate calculatedDate);
+
+}
