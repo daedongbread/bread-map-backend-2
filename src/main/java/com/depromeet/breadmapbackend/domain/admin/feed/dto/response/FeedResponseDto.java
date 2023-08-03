@@ -2,7 +2,9 @@ package com.depromeet.breadmapbackend.domain.admin.feed.dto.response;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +29,18 @@ public class FeedResponseDto {
 		this.likeStatus = likeStatus;
 	}
 
+	/**
+	 * 리팩토링 대상
+	 */
 	public void setIsFlagged(List<FlagBakery> flagBakeryList) {
 		for (CurationFeedResponseDto cur : curation) {
 			flagBakeryList.forEach(cur::setIsFlagged);
+		}
+	}
+
+	public void setRecommendReason(List<CurationBakery> curationBakeries) {
+		for (CurationFeedResponseDto cur : curation) {
+			curationBakeries.forEach(cur::setRecommendReason);
 		}
 	}
 }

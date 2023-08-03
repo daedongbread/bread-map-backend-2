@@ -4,18 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

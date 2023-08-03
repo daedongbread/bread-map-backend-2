@@ -3,11 +3,12 @@ package com.depromeet.breadmapbackend.domain.admin.feed.dto.response;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
-
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class CurationFeedResponseDto {
 	private List<String> facilityInfo;
 	private String phoneNumber;
 	private boolean isFlagged;
+	private String reason;
 
 	private long productId;
 	private String productName;
@@ -41,8 +43,9 @@ public class CurationFeedResponseDto {
 	@Builder
 	public CurationFeedResponseDto(long bakeryId, String bakeryName, String bakeryAddress, String openingHours,
 		String bakeryImageUrl, String checkPoint, String newBreadTime, String address, String detailedAddress,
-	    String websiteURL, String instagramURL, String facebookURL, String blogURL, List<String> facilityInfo, String phoneNumber,
-	    boolean isFlagged, long productId, String productName, String productPrice, String productImageUrl) {
+		String websiteURL, String instagramURL, String facebookURL, String blogURL, List<String> facilityInfo,
+		String phoneNumber, String reason, boolean isFlagged, long productId, String productName, String productPrice,
+		String productImageUrl) {
 		this.bakeryId = bakeryId;
 		this.bakeryName = bakeryName;
 		this.bakeryAddress = bakeryAddress;
@@ -63,6 +66,7 @@ public class CurationFeedResponseDto {
 		this.facilityInfo = facilityInfo;
 		this.phoneNumber = phoneNumber;
 		this.isFlagged = isFlagged;
+		this.reason = reason;
 	}
 
 	public static CurationFeedResponseDto of(Bakery bakery, Product product) {
@@ -91,8 +95,14 @@ public class CurationFeedResponseDto {
 	}
 
 	public void setIsFlagged(FlagBakery flagBakery) {
-		if(flagBakery.getBakery().getId() == this.bakeryId) {
+		if (flagBakery.getBakery().getId() == this.bakeryId) {
 			this.isFlagged = true;
+		}
+	}
+
+	public void setRecommendReason(CurationBakery curationBakery) {
+		if (curationBakery.getBakery().getId() == this.bakeryId) {
+			this.reason = curationBakery.getReason();
 		}
 	}
 }

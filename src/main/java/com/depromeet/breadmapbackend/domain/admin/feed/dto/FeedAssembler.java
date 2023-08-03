@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +7,6 @@ import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedLikes;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
@@ -69,7 +67,6 @@ public class FeedAssembler {
 			.conclusion(requestDto.getCommon().getConclusion())
 			.thumbnailUrl(requestDto.getCommon().getThumbnailUrl())
 			.feedType(requestDto.getCommon().getFeedType().toString())
-			.likes(new FeedLikes(new ArrayList<>()))
 			.activated(requestDto.getCommon().getActivated())
 			.activeTime(DateTimeParser.parse(requestDto.getCommon().getActiveTime()))
 			.build();

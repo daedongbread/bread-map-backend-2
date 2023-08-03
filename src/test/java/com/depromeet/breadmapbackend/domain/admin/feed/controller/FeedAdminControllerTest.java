@@ -155,12 +155,12 @@ public class FeedAdminControllerTest extends ControllerTest {
 			CurationFeedRequestDto.builder()
 				.bakeryId(firstBakery.getId())
 				.productId(firstProduct.getId())
-				.reason("test reason")
+				.reason("test reason for first bakery")
 				.build(),
 			CurationFeedRequestDto.builder()
 				.bakeryId(secondBakery.getId())
 				.productId(secondProduct.getId())
-				.reason("test reason")
+				.reason("test reason for second bakery")
 				.build()
 		);
 
@@ -540,6 +540,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.likeCounts(curation.getLikeCount())
 			.build();
 
+		response.setRecommendReason(curation.getBakeries().getCurationBakeries());
+
 		ApiResponse<FeedResponseDto> res = new ApiResponse<>(response);
 		String content = objectMapper.writeValueAsString(res);
 
@@ -590,6 +592,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].blogURL").description("큐레이션 피드 빵집 상품 블로그 Url"),
 						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY).description("큐레이션 피드 빵집 태그 리스트"),
 						fieldWithPath("data.curation.[].phoneNumber").description("큐레이션 피드 빵집 전하번호"),
+						fieldWithPath("data.curation.[].reason").description("큐레이션 피드 빵집 추천 이유"),
+						fieldWithPath("data.curation.[].flagged").description("false. 어드민은 무시하셔도 됩니다"),
 						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
 						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
 						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
