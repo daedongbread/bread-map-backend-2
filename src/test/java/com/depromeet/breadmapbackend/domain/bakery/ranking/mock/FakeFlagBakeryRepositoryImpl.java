@@ -87,6 +87,11 @@ public class FakeFlagBakeryRepositoryImpl implements FlagBakeryRepository {
 	}
 
 	@Override
+	public List<FlagBakeryCount> countFlagBakeryByBakeryIdIn(final List<Long> bakeryIdList) {
+		return List.of();
+	}
+
+	@Override
 	public List<FlagBakery> findAll() {
 		return null;
 	}
