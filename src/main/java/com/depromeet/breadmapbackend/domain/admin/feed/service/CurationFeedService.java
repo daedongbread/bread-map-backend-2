@@ -21,6 +21,8 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
@@ -37,6 +39,7 @@ public class CurationFeedService implements FeedService {
 	private final AdminRepository adminRepository;
 	private final CategoryRepository categoryRepository;
 	private final ProductRepository productRepository;
+	private final FlagBakeryRepository flagBakeryRepository;
 
 	@Transactional
 	@Override
@@ -71,16 +74,44 @@ public class CurationFeedService implements FeedService {
 	@Override
 	public FeedResponseDto getFeed(Long feedId) {
 
-		CurationFeed curationFeed = findCurationFeedFetchCategory(feedId);
+		CurationFeed curationFeed = findCurationFeedById(feedId);
 
 		List<Product> products = productRepository.findByIdIn(curationFeed.getBakeries().getProductIdList());
 		List<Bakery> bakeries = products.stream().map(Product::getBakery).collect(Collectors.toList());
 
-		return FeedResponseDto.builder()
+		FeedResponseDto response = FeedResponseDto.builder()
 			.common(FeedAssembler.toCommonDto(curationFeed))
 			.curation(FeedAssembler.toCurationDto(bakeries, products))
 			.likeCounts(curationFeed.getLikeCount())
 			.build();
+
+		response.setRecommendReason(curationFeed.getBakeries().getCurationBakeries());
+
+		return response;
+	}
+
+	public FeedResponseDto getFeedForUser(Long feedId, Long userId) {
+
+		CurationFeed curationFeed = findCurationFeedFetchCategory(feedId);
+
+		List<Product> products = productRepository.findByIdIn(curationFeed.getBakeries().getProductIdList());
+		List<Bakery> bakeries = products.stream().map(Product::getBakery).collect(Collectors.toList());
+		List<FlagBakery> isFlagged = flagBakeryRepository.findByUserIdAndBakeryIdIn(userId,
+			bakeries.stream().map(Bakery::getId).collect(Collectors.toList()));
+
+		int likeCountByUser = curationFeed.getLikeCountByUser(userId);
+
+		FeedResponseDto response = FeedResponseDto.builder()
+			.common(FeedAssembler.toCommonDto(curationFeed))
+			.curation(FeedAssembler.toCurationDto(bakeries, products))
+			.likeCounts(curationFeed.getLikeCount())
+			.likeStatus(likeCountByUser > 0 ? "LIKE" : "NONE")
+			.build();
+
+		response.setIsFlagged(isFlagged);
+		response.setRecommendReason(curationFeed.getBakeries().getCurationBakeries());
+
+		return response;
 	}
 
 	@Override

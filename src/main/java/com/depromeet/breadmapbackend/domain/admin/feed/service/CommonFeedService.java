@@ -60,23 +60,6 @@ public class CommonFeedService {
 			.build();
 	}
 
-	@Transactional
-	public FeedLikeResponse unLikeFeed(Long userId, Long feedId) {
-
-		User user = findUserById(userId);
-		CurationFeed feed = (CurationFeed)findFeedById(feedId);
-
-		feed.unLike(user);
-
-		int likeCountByUser = feed.getLikeCountByUser(userId);
-
-		return FeedLikeResponse.builder()
-			.userId(userId)
-			.likeCounts(likeCountByUser)
-			.likeStatus(likeCountByUser > 0 ? "LIKE" : "NONE")
-			.build();
-	}
-
 	private User findUserById(Long userId) {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));

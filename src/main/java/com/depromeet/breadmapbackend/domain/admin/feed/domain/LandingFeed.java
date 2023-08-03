@@ -25,10 +25,10 @@ public class LandingFeed extends Feed {
 	private String redirectUrl;
 
 	@Builder
-	public LandingFeed(Admin admin, Category category,
+	public LandingFeed(Long id, Admin admin, Category category,
 		String subTitle, String introduction, String conclusion, String thumbnailUrl, String feedType,
 		LocalDateTime activeTime, FeedStatus activated, String redirectUrl) {
-		super(admin, category, subTitle, introduction, conclusion, thumbnailUrl, feedType, activeTime, activated);
+		super(id, admin, category, subTitle, introduction, conclusion, thumbnailUrl, feedType, activeTime, activated);
 		this.redirectUrl = redirectUrl;
 	}
 
