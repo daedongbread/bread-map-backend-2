@@ -35,10 +35,10 @@ public class CurationFeed extends Feed {
 	private FeedLikes likes;
 
 	@Builder
-	public CurationFeed(Admin admin, Category category,
+	public CurationFeed(Long id, Admin admin, Category category,
 		String subTitle, String introduction, String conclusion, String thumbnailUrl, String feedType,
 		LocalDateTime activeTime, FeedStatus activated, CurationBakeries bakeries, FeedLikes likes) {
-		super(admin, category, subTitle, introduction, conclusion, thumbnailUrl, feedType, activeTime, activated);
+		super(id, admin, category, subTitle, introduction, conclusion, thumbnailUrl, feedType, activeTime, activated);
 		this.bakeries = new CurationBakeries(new ArrayList<>());
 		this.likes = new FeedLikes(new ArrayList<>());
 	}

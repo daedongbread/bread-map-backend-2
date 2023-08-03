@@ -75,8 +75,9 @@ public abstract class Feed extends BaseEntity {
 		this.activated = FeedStatus.INACTIVATED;
 	}
 
-	public Feed(Admin admin, Category category, String subTitle, String introduction, String conclusion,
+	public Feed(Long id, Admin admin, Category category, String subTitle, String introduction, String conclusion,
 		String thumbnailUrl, String feedType, LocalDateTime activeTime, FeedStatus activated) {
+		this.id = id;
 		this.admin = admin;
 		this.category = category;
 		this.subTitle = subTitle;
