@@ -8,6 +8,7 @@ import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateRe
 import static com.depromeet.breadmapbackend.domain.bakery.view.QBakeryView.*;
 import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.*;
 import static com.depromeet.breadmapbackend.domain.review.QReview.*;
+import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
 import static com.depromeet.breadmapbackend.domain.user.QUser.*;
 import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.*;
 
@@ -122,7 +123,7 @@ public class BakeryQueryRepository {
 			.select(Projections.constructor(
 					BakeryScoreBase.class
 					, bakery.as("bakery")
-					// , avgRatingSubQuery(date)
+					, avgRatingSubQuery(date)
 					, countFlagBakerySubQuery(date)
 					, bakeryView.viewCount.sum().coalesce(0L)
 				)
@@ -172,13 +173,13 @@ public class BakeryQueryRepository {
 					startDate.atTime(LocalTime.MAX))));
 	}
 
-	// private JPQLQuery<Double> avgRatingSubQuery(LocalDate startDate) {
-	// 	return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
-	// 		.from(reviewProductRating)
-	// 		.where(bakery.id.eq(reviewProductRating.bakery.id)
-	// 			.and(reviewProductRating.createdAt.between(
-	// 				startDate.minusDays(7).atStartOfDay(),
-	// 				startDate.atTime(LocalTime.MAX))));
-	// }
+	private JPQLQuery<Double> avgRatingSubQuery(LocalDate startDate) {
+		return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
+			.from(reviewProductRating)
+			.where(bakery.id.eq(reviewProductRating.bakery.id)
+				.and(reviewProductRating.createdAt.between(
+					startDate.minusDays(7).atStartOfDay(),
+					startDate.atTime(LocalTime.MAX))));
+	}
 
 }

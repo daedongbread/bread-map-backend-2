@@ -17,8 +17,6 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.Scored
 public interface ScoredBakeryRepository {
 	int bulkInsert(final List<ScoredBakery> scoredBakeryList);
 
-	List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size);
-
 	RankingResponse findScoredBakeryByStartDate(final LocalDate startDate);
 
 	int updateRank(RankingUpdateRequest request);

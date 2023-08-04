@@ -2,22 +2,11 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import org.springframework.util.Assert;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * ScoredBakery
@@ -26,46 +15,34 @@ import lombok.NoArgsConstructor;
  * @version 1.0.0
  * @since 2023/07/02
  */
-@Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ScoredBakery {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@OneToOne
-	@JoinColumn(name = "bakery_id")
-	private Bakery bakery;
-	private long viewCount;
-	private long flagCount;
-	// private double rating;
-	private double totalScore;
-	private LocalDate calculatedDate;
-	@Column(name = "bakery_rank")
-	private int rank;
-
+public record ScoredBakery(
+	Long id,
+	Bakery bakery,
+	long viewCount,
+	long flagCount,
+	double rating,
+	double totalScore,
+	LocalDate calculatedDate,
+	int rank
+) {
 	@Builder
+	public ScoredBakery {
+		Assert.notNull(bakery, "bakery must not be null");
+		Assert.notNull(calculatedDate, "calculatedDate must not be null");
+	}
+
 	private ScoredBakery(
 		final Bakery bakery,
 		final long viewCount,
 		final long flagCount,
+		final double rating,
 		final LocalDate calculatedDate
 	) {
-
-		Assert.notNull(bakery, "bakery must not be null");
-		Assert.notNull(calculatedDate, "calculatedDate must not be null");
-
-		this.bakery = bakery;
-		this.viewCount = viewCount;
-		this.flagCount = flagCount;
-		// this.rating = rating;
-		this.totalScore = calculateTotalScore(flagCount, viewCount);
-		this.calculatedDate = calculatedDate;
+		this(null, bakery, viewCount, flagCount, rating, calculateTotalScore(flagCount, viewCount), calculatedDate, 0);
 	}
 
-	public void setRank(final int rank) {
-		this.rank = rank;
+	public ScoredBakery setRank(final int rank) {
+		return new ScoredBakery(id, bakery, viewCount, flagCount, rating, totalScore, calculatedDate, rank);
 	}
 
 	private static double calculateTotalScore(

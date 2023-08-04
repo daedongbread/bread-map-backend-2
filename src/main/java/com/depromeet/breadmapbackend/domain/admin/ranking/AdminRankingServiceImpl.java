@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.ScoredBakeryRepository;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.usecase.BakeryRankingCalculationUseCase;
 import com.depromeet.breadmapbackend.global.EventInfo;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
 
@@ -26,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminRankingServiceImpl implements AdminRankingService {
 
 	private final ScoredBakeryRepository scoredBakeryRepository;
-	private final BakeryRankingScheduler bakeryRankingScheduler;
+	private final BakeryRankingCalculationUseCase bakeryRankingCalculationUseCase;
 	private final StringRedisTemplate redisTemplate;
 
 	@Transactional(readOnly = true)
@@ -53,6 +54,6 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 
 		redisTemplate.opsForValue().getAndDelete(eventName + ":" + calculateDate);
 		scoredBakeryRepository.deleteByCalculatedDate(now);
-		bakeryRankingScheduler.publishBakeryRankingCalculationEvent();
+		bakeryRankingCalculationUseCase.command(eventName + ":" + calculateDate, now);
 	}
 }

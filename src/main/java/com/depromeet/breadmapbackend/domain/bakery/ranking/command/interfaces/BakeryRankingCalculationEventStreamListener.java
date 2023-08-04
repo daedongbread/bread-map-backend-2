@@ -8,7 +8,7 @@ import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
 
-import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.usecase.impl.BakeryRankingCalculationUseCaseImpl;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.usecase.BakeryRankingCalculationUseCase;
 import com.depromeet.breadmapbackend.global.EventInfo;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
 
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BakeryRankingCalculationEventStreamListener
 	implements StreamListener<String, MapRecord<String, String, String>> {
 
-	private final BakeryRankingCalculationUseCaseImpl bakeryRankingCalculationUseCaseImpl;
+	private final BakeryRankingCalculationUseCase bakeryRankingCalculationUseCase;
 	private static final EventInfo event = EventInfo.CALCULATE_BAKERY_RANKING_EVENT;
 
 	@Override
@@ -35,7 +35,7 @@ public class BakeryRankingCalculationEventStreamListener
 		final LocalDate calculateDate = LocalDateParser.parse(value.get(keys.get(0)));
 		log.info("EVENT_KEY: {}", EVENT_KEY);
 		log.info("checking if this instance is first instance to calculate ranking");
-		bakeryRankingCalculationUseCaseImpl.command(EVENT_KEY, calculateDate);
+		bakeryRankingCalculationUseCase.command(EVENT_KEY, calculateDate);
 	}
 
 }

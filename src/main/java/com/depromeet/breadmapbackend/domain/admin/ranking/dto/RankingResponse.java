@@ -3,7 +3,7 @@ package com.depromeet.breadmapbackend.domain.admin.ranking.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.infrastructure.ScoredBakeryJpaEntity;
 
 /**
  * RankingResponse
@@ -29,7 +29,7 @@ public record RankingResponse(
 		LocalDate calculatedDate
 	) {
 
-		public SimpleBakeryResponse(final ScoredBakery scoredBakery) {
+		public SimpleBakeryResponse(final ScoredBakeryJpaEntity scoredBakery) {
 			this(scoredBakery.getRank(),
 				scoredBakery.getBakery().getId(),
 				scoredBakery.getBakery().getName(),

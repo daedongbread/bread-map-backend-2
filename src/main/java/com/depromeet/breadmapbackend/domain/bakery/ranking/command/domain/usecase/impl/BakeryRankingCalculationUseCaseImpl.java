@@ -67,8 +67,8 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 			.stream()
 			.map(bakeryScoreBase -> bakeryScoreBase.toDomain(localDate))
 			.sorted(
-				Comparator.comparing(ScoredBakery::getTotalScore)
-					.thenComparing(scoredBakery -> scoredBakery.getBakery().getId()).reversed()
+				Comparator.comparing(ScoredBakery::totalScore)
+					.thenComparing(scoredBakery -> scoredBakery.bakery().getId()).reversed()
 			)
 			.toList();
 	}

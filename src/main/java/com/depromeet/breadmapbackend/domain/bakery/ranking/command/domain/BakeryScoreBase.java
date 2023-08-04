@@ -13,7 +13,7 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
  */
 public record BakeryScoreBase(
 	Bakery bakery,
-	// double bakeryRating,
+	double bakeryRating,
 	Long flagCount,
 	Long viewCount
 ) {
@@ -25,6 +25,7 @@ public record BakeryScoreBase(
 			.bakery(this.bakery)
 			.viewCount(this.viewCount)
 			.flagCount(this.flagCount)
+			.rating(this.bakeryRating)
 			.calculatedDate(calculatedDate)
 			.build();
 	}

@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
-
 /**
  * ScoredBakeryJpaRepository
  *
@@ -17,23 +15,32 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.Scored
  * @version 1.0.0
  * @since 2023/07/02
  */
-public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, Long> {
+public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakeryJpaEntity, Long> {
 
 	@Query("select sb "
-		+ "from ScoredBakery sb "
+		+ "from ScoredBakeryJpaEntity sb "
 		+ "join fetch sb.bakery b "
 		+ "where sb.calculatedDate = :calculatedDate "
 		+ "order by sb.rank asc ")
-	List<ScoredBakery> findScoredBakeryByCalculatedDate(
+	List<ScoredBakeryJpaEntity> findScoredBakeryByCalculatedDate(
 		@Param("calculatedDate") final LocalDate calculatedDate,
 		final Pageable pageable
 	);
 
 	@Query("select sb "
-		+ "from ScoredBakery sb "
+		+ "from ScoredBakeryJpaEntity sb "
+		+ "join fetch sb.bakery b "
+		+ "where sb.calculatedDate = :calculatedDate "
+		+ "order by sb.rank asc ")
+	List<ScoredBakeryJpaEntity> findScoredBakeryByCalculatedDate(
+		@Param("calculatedDate") final LocalDate calculatedDate
+	);
+
+	@Query("select sb "
+		+ "from ScoredBakeryJpaEntity sb "
 		+ "join fetch sb.bakery b "
 		+ "where sb.calculatedDate between :startDate and :endDate")
-	List<ScoredBakery> findScoredBakeryWithStartDate(
+	List<ScoredBakeryJpaEntity> findScoredBakeryWithStartDate(
 		@Param("startDate") final LocalDate startDate,
 		@Param("endDate") final LocalDate endDate
 	);

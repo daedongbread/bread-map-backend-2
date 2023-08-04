@@ -3,7 +3,6 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.command.infrastructu
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -43,37 +42,33 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 		log.info("bulk insert scored bakery list: {}", scoredBakeryList.size());
 		String sql = String.format(
 			"""
-					INSERT INTO `%s` (bakery_id, total_score, view_count, flag_count, calculated_date, bakery_rank)
-					VALUES (:bakery, :totalScore, :viewCount, :flagCount, :calculatedDate, :bakery_rank)
+					INSERT INTO `%s` (bakery_id, total_score, view_count, rating, flag_count, calculated_date, bakery_rank)
+					VALUES (:bakery, :totalScore, :viewCount, :rating, :flagCount, :calculatedDate, :bakery_rank)
 				""", TABLE);
 
 		SqlParameterSource[] params = scoredBakeryList.stream()
 			.map(scoredBakery -> new MapSqlParameterSource()
-				.addValue("bakery", scoredBakery.getBakery().getId())
-				.addValue("totalScore", scoredBakery.getTotalScore())
-				.addValue("viewCount", scoredBakery.getViewCount())
-				.addValue("flagCount", scoredBakery.getFlagCount())
-				.addValue("calculatedDate", scoredBakery.getCalculatedDate())
-				.addValue("bakery_rank", scoredBakery.getRank())
+				.addValue("bakery", scoredBakery.bakery().getId())
+				.addValue("totalScore", scoredBakery.totalScore())
+				.addValue("viewCount", scoredBakery.viewCount())
+				.addValue("flagCount", scoredBakery.flagCount())
+				.addValue("rating", scoredBakery.rating())
+				.addValue("calculatedDate", scoredBakery.calculatedDate())
+				.addValue("bakery_rank", scoredBakery.rank())
 			)
 			.toArray(SqlParameterSource[]::new);
 		return namedParameterJdbcTemplate.batchUpdate(sql, params).length;
 	}
 
 	@Override
-	public List<ScoredBakery> findScoredBakeryByCalculatedDate(final LocalDate calculatedDate, final int size) {
-		return scoredBakeryJpaRepository.findScoredBakeryByCalculatedDate(calculatedDate, Pageable.ofSize(size));
-	}
-
-	@Override
 	public RankingResponse findScoredBakeryByStartDate(final LocalDate startDate) {
 		final LocalDate endDate = startDate.plusDays(6);
-		final List<ScoredBakery> bakeryRanking = scoredBakeryJpaRepository.findScoredBakeryWithStartDate(
-			startDate, endDate);
+		final List<ScoredBakeryJpaEntity> bakeryRanking =
+			scoredBakeryJpaRepository.findScoredBakeryWithStartDate(startDate, endDate);
 
 		if (!bakeryRanking.isEmpty()) {
 			final List<String> dateList = bakeryRanking.stream()
-				.map(ScoredBakery::getCalculatedDate)
+				.map(ScoredBakeryJpaEntity::getCalculatedDate)
 				.distinct()
 				.sorted()
 				.map(LocalDate::toString)
