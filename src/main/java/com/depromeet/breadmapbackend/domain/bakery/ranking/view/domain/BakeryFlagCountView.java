@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking.query.domain;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain;
 
 /**
  * QueryBakeryFlagCount
@@ -7,7 +7,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.query.domain;
  * @version 1.0.0
  * @since 2023/08/02
  */
-public record QueryBakeryFlagCount(
+public record BakeryFlagCountView(
 	Long bakeryId,
 	Long flagCount
 ) {

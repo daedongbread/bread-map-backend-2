@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking.query.interfaces;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces;
 
 import java.time.LocalDate;
 

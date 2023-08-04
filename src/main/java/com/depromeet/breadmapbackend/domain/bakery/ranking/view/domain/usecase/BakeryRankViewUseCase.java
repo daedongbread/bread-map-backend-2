@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking.query.domain.usecase;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023/08/02
  */
-public interface QueryBakeryRankUseCase {
+public interface BakeryRankViewUseCase {
 	List<Query> query(Long userId, int size);
 
 	record Query(

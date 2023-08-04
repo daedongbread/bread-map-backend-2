@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.bakery.ranking.query.interfaces;
+package com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase.BakeryRankViewUseCase;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
@@ -28,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ScoredBakeryController {
 
-	private final ScoredBakeryService scoredBakeryService;
+	private final BakeryRankViewUseCase bakeryRankViewUseCase;
 
 	@GetMapping("/{count}")
 	@ResponseStatus(HttpStatus.OK)
@@ -37,7 +38,7 @@ public class ScoredBakeryController {
 		@PathVariable("count") final int count
 	) {
 		return new ApiResponse<>(
-			scoredBakeryService.findBakeriesRankTop(currentUserInfo.getId(), count)
+			Mapper.of(bakeryRankViewUseCase.query(currentUserInfo.getId(), count))
 		);
 	}
 }
