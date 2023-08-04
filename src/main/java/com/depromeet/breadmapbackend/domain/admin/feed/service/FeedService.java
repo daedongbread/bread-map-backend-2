@@ -7,7 +7,7 @@ import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponse
 public interface FeedService {
 	FeedType getServiceType();
 
-	void updateFeed(Long feedId, FeedRequestDto updateDto);
+	void updateFeed(Long userId, Long feedId, FeedRequestDto updateDto);
 
 	Long addFeed(Long adminId, FeedRequestDto requestDto);
 

@@ -32,9 +32,12 @@ public class LandingFeed extends Feed {
 		this.redirectUrl = redirectUrl;
 	}
 
-	public void update(Category category, FeedRequestDto updateDto) {
-		super.update(category, updateDto.getCommon());
+	public void update(Feed feed) {
 
-		this.redirectUrl = updateDto.getLanding().getRedirectUrl();
+		LandingFeed landingFeed = (LandingFeed) feed;
+
+		super.update(feed);
+
+		this.redirectUrl = landingFeed.getRedirectUrl();
 	}
 }

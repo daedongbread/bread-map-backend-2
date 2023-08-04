@@ -60,12 +60,13 @@ public class FeedAdminController {
 	@PatchMapping("/{feedId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateFeed(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@PathVariable Long feedId,
 		@Valid @RequestBody FeedRequestDto updateDto
 	) {
 		FeedService feedService = serviceFactory.getService(updateDto.getCommon().getFeedType());
 
-		feedService.updateFeed(feedId, updateDto);
+		feedService.updateFeed(currentUserInfo.getId(), feedId, updateDto);
 	}
 
 	@GetMapping("/all")

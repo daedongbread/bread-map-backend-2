@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,11 +26,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.dto.FeedLikeResponse;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CommonFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedRequestDto;
@@ -78,7 +74,7 @@ public class FeedControllerTest extends ControllerTest {
 
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 
-		Category cate = new Category("test category");
+		Category cate = Category.builder().categoryName("test category").build();
 		category = categoryRepository.save(cate);
 
 		Bakery firstBakery = Bakery.builder()
@@ -189,7 +185,9 @@ public class FeedControllerTest extends ControllerTest {
 
 		CurationFeed curationEntity = (CurationFeed)FeedAssembler.toEntity(admin, category, curationRequest);
 
-		curationEntity.addAll(bakeries, curationRequest);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationEntity, bakeries, curationRequest);
+
+		curationEntity.addAll(bakeries, curationBakeries);
 
 		curation = feedRepository.saveAndFlush(curationEntity);
 

@@ -3,6 +3,8 @@ package com.depromeet.breadmapbackend.domain.admin.feed.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +53,9 @@ public class CurationFeedService implements FeedService {
 		CurationFeed feed = (CurationFeed)FeedAssembler.toEntity(admin, category, requestDto);
 
 		List<Bakery> bakeries = bakeryRepository.findBakeriesInIds(requestDto.getBakeryIds());
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(feed, bakeries, requestDto);
 
-		feed.addAll(bakeries, requestDto);
+		feed.addAll(bakeries, curationBakeries);
 
 		CurationFeed newFeed = repository.save(feed);
 
@@ -61,14 +64,17 @@ public class CurationFeedService implements FeedService {
 
 	@Transactional
 	@Override
-	public void updateFeed(Long feedId, FeedRequestDto updateDto) {
+	public void updateFeed(Long adminId, Long feedId, FeedRequestDto updateDto) {
 
+		Admin admin = findAdminById(adminId);
 		CurationFeed feed = findCurationFeedById(feedId);
 		Category category = findCategoryById(updateDto.getCommon().getCategoryId());
 
 		List<Bakery> bakeries = bakeryRepository.findBakeriesInIds(updateDto.getBakeryIds());
+		Feed updateFeed = FeedAssembler.toEntity(admin, category, updateDto);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(feed, bakeries, updateDto);
 
-		feed.update(bakeries, category, updateDto);
+		feed.update(updateFeed, bakeries, curationBakeries);
 	}
 
 	@Override

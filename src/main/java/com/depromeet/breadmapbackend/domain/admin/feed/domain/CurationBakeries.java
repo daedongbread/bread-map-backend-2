@@ -51,15 +51,13 @@ public class CurationBakeries {
 		this.bakeries.clear();
 	}
 
-	public void addAll(CurationFeed curation, List<Bakery> bakeries, FeedRequestDto request) {
+	public void addAll(List<Bakery> bakeries, List<CurationBakery> curationBakeries) {
 
 		validateDuplicateBakery(bakeries);
 		validatedMaximumSizeBakeries(bakeries);
 		validatedBakeryStatus(bakeries);
 
-		bakeries.stream()
-			.map(bakery -> new CurationBakery(curation, bakery, request.findCuration(bakery.getId())))
-			.forEach(this.bakeries::add);
+		this.bakeries.addAll(curationBakeries);
 	}
 
 	private void validatedBakeryStatus(List<Bakery> bakeries) {
@@ -85,9 +83,5 @@ public class CurationBakeries {
 		if (bakeries.size() > CURATION_MAXIMUM_BAKERY_SIZE) {
 			throw new DaedongException(DaedongStatus.CURATION_BAKERY_SIZE_EXCEPTION);
 		}
-	}
-
-	public void add(CurationFeed curation, Bakery bakery, FeedRequestDto request) {
-		this.addAll(curation, List.of(bakery), request);
 	}
 }

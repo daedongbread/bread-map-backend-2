@@ -105,6 +105,8 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.17.2'
 
     testImplementation 'org.testcontainers:junit-jupiter:1.17.2'
+
+    testImplementation 'org.mockito:mockito-inline:3.6.0'
 }
 
 tasks.named('test') {

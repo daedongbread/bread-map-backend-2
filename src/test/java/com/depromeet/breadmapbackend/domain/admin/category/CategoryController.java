@@ -49,8 +49,8 @@ public class CategoryController extends ControllerTest {
 
 		//given
 		List<Category> categories = List.of(
-			new Category("추천 빵집"),
-			new Category("월별 트렌드 빵집")
+				Category.builder().categoryName("추천 빵집").build(),
+				Category.builder().categoryName("월별 트렌드 빵집").build()
 		);
 
 		List<Category> categoryList = categoryRepository.saveAll(categories);

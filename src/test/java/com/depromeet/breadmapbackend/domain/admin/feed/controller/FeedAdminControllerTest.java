@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,11 +29,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CommonFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedRequestDto;
@@ -76,7 +72,7 @@ public class FeedAdminControllerTest extends ControllerTest {
 
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 
-		Category cate = new Category("test category");
+		Category cate = Category.builder().categoryName("test category").build();
 		category = categoryRepository.save(cate);
 
 		Bakery firstBakery = Bakery.builder()
@@ -99,8 +95,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
 			.build();
 
-		bakeryRepository.save(firstBakery);
-		bakeryRepository.save(secondBakery);
+		Bakery saveFirstBakery = bakeryRepository.save(firstBakery);
+		Bakery saveSecondBakery = bakeryRepository.save(secondBakery);
 
 		s3Uploader.upload(
 			new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
@@ -174,8 +170,9 @@ public class FeedAdminControllerTest extends ControllerTest {
 		List<Bakery> bakeries = List.of(firstBakery, secondBakery);
 
 		CurationFeed curationEntity = (CurationFeed)FeedAssembler.toEntity(admin, category, curationRequest);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationEntity, List.of(saveFirstBakery, saveSecondBakery), curationRequest);
 
-		curationEntity.addAll(bakeries, curationRequest);
+		curationEntity.addAll(bakeries, curationBakeries);
 
 		curation = feedRepository.save(curationEntity);
 	}
