@@ -34,8 +34,7 @@ public class BakeryFlagCountChangeEventListener implements
 		final List<String> keys = event.getEvenMessageKeys();
 		final Map<String, String> value = message.getValue();
 		final Long bakeryId = Long.parseLong(value.get(keys.get(0)));
-		final Long flagCount = Long.parseLong(value.get(keys.get(1)));
 
-		bakeryRankViewFlagCountChangeUseCase.command(bakeryId, flagCount);
+		bakeryRankViewFlagCountChangeUseCase.command(bakeryId);
 	}
 }

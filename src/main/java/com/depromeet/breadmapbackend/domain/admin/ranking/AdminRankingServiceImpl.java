@@ -12,6 +12,8 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infras
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.usecase.BakeryRankingCalculationUseCase;
 import com.depromeet.breadmapbackend.global.EventInfo;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +31,8 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 	private final ScoredBakeryRepository scoredBakeryRepository;
 	private final BakeryRankingCalculationUseCase bakeryRankingCalculationUseCase;
 	private final StringRedisTemplate redisTemplate;
+	private final ObjectMapper objectMapper;
+	private final BakeryRankViewRankChangeEvent bakeryRankViewRankChangeEvent;
 
 	@Transactional(readOnly = true)
 	@Override
@@ -41,8 +45,18 @@ public class AdminRankingServiceImpl implements AdminRankingService {
 	@Transactional
 	@Override
 	public int updateRanking(final RankingUpdateRequest request) {
-		return scoredBakeryRepository.updateRank(request);
-		// TODO : rank view 변경 이벤트 발행 -> ( 랭킹뷰 재생성  기본적인 빵집 정보만 저장 )
+		final int updateCount = scoredBakeryRepository.updateRank(request);
+		try {
+			bakeryRankViewRankChangeEvent.publish(
+				EventInfo.BAKERY_RANK_CHANGE_EVENT,
+				objectMapper.writeValueAsString(request.bakeryRankInfoList())
+			);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+		return updateCount;
+
 	}
 
 	@Transactional

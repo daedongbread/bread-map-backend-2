@@ -35,6 +35,7 @@ public class FlagServiceImpl implements FlagService {
 	private final UserRepository userRepository;
 	private final BakeryRepository bakeryRepository;
 	private final ReviewRepository reviewRepository;
+	private final BakeryRankViewFlagCountChangeEvent bakeryRankViewFlagCountChangeEvent;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<FlagDto> getFlags(Long userId) {
@@ -152,7 +153,7 @@ public class FlagServiceImpl implements FlagService {
 				.user(user)
 				.build()
 		);
-
+		bakeryRankViewFlagCountChangeEvent.publish(bakeryId);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -161,6 +162,7 @@ public class FlagServiceImpl implements FlagService {
 			flagBakeryRepository.findByBakeryIdAndFlagIdAndUserId(bakeryId, flagId, userId)
 				.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND))
 		);
+		bakeryRankViewFlagCountChangeEvent.publish(bakeryId);
 	}
 
 	private List<MapSimpleReviewDto> getSimpleReviewListFromReview(final List<Review> filteredReview) {

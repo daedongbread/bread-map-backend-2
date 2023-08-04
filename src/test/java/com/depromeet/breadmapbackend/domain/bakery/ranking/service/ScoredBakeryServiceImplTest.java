@@ -21,7 +21,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infras
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeBakeryRankingCalculationEventImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeFlagBakeryRepositoryImpl;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.mock.FakeScoredBakeryRepositoryImpl;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.query.interfaces.BakeryRankingCardResponse;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces.BakeryRankingCardResponse;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.util.FixtureFactory;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 

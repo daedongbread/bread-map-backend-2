@@ -31,13 +31,13 @@ public enum EventInfo {
 		"calculate_raking_done_event", List.of(), List.of(BAKERY_RANKING_VIEW)
 	),
 	BAKERY_RATING_CHANGE_EVENT(
-		"bakery-rating-change-event", List.of("bakeryId", "rating"), List.of(BAKERY_RANKING_VIEW)
+		"bakery-rating-change-event", List.of("bakeryId"), List.of(BAKERY_RANKING_VIEW)
 	),
 	BAKERY_FLAG_COUNT_CHANGE_EVENT(
-		"bakery-flag-count-change-event", List.of("bakeryId", "flagCount"), List.of(BAKERY_RANKING_VIEW)
+		"bakery-flag-count-change-event", List.of("bakeryId"), List.of(BAKERY_RANKING_VIEW)
 	),
 	BAKERY_RANK_CHANGE_EVENT(
-		"bakery-rank-change-event", List.of("calculatedDate"), List.of(BAKERY_RANKING_VIEW)
+		"bakery-rank-change-event", List.of(), List.of(BAKERY_RANKING_VIEW)
 	),
 	;
 

@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class BakeryRatingCountChangeEventListener implements
+public class BakeryRatingChangeEventListener implements
 	StreamListener<String, MapRecord<String, String, String>> {
 
 	private final BakeryRankViewRatingCountChangeUseCase bakeryRankViewFlagCountChangeUseCase;
@@ -34,8 +34,6 @@ public class BakeryRatingCountChangeEventListener implements
 		final List<String> keys = event.getEvenMessageKeys();
 		final Map<String, String> value = message.getValue();
 		final Long bakeryId = Long.parseLong(value.get(keys.get(0)));
-		final double rating = Long.parseLong(value.get(keys.get(1)));
-
-		bakeryRankViewFlagCountChangeUseCase.command(bakeryId, rating);
+		bakeryRankViewFlagCountChangeUseCase.command(bakeryId);
 	}
 }

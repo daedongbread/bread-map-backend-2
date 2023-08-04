@@ -8,6 +8,6 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase;
  * @since 2023/08/04
  */
 public interface BakeryRankViewFlagCountChangeUseCase {
-	void command(Long bakeryId, Long flagCount);
+	void command(Long bakeryId);
 
 }

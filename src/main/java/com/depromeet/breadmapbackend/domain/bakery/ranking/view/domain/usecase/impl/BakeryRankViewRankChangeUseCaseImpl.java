@@ -31,7 +31,7 @@ public class BakeryRankViewRankChangeUseCaseImpl implements BakeryRankViewRankCh
 	private final BakeryRankViewCreateUseCase bakeryRankViewCreateUseCase;
 
 	@Override
-	public void command(final List<Command> command) {
+	public void command() {
 		final LocalDate now = LocalDate.now();
 		final List<Long> bakeryIdList = command.stream()
 			.map(Command::bakeryId)

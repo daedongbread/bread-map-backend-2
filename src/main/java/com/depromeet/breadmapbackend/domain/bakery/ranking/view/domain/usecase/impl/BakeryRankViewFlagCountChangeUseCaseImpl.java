@@ -33,7 +33,7 @@ public class BakeryRankViewFlagCountChangeUseCaseImpl implements BakeryRankViewF
 	private final BakeryRankViewCreateUseCase bakeryRankViewCreateUseCase;
 
 	@Override
-	public void command(final Long bakeryId, final Long flagCount) {
+	public void command(final Long bakeryId) {
 		final LocalDate now = LocalDate.now();
 		final BakeryRankView bakeryRankView =
 			bakeryRankViewRepository.findByBakeryIdAndCalculatedDate(bakeryId, now)
