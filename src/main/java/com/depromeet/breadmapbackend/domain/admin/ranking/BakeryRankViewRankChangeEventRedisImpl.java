@@ -24,7 +24,12 @@ public class BakeryRankViewRankChangeEventRedisImpl implements BakeryRankViewRan
 	private final StringRedisTemplate redisTemplate;
 
 	@Override
-	public void publish() {
-		redisTemplate.opsForStream().add(EVENT.getEventName(), new HashMap<String, String>());
+	public void publish(
+		final EventInfo eventInfo,
+		final String value
+	) {
+		final HashMap<String, String> fieldMap = new HashMap<>();
+		fieldMap.put(EVENT.getEvenMessageKeys().get(0), value);
+		redisTemplate.opsForStream().add(EVENT.getEventName(), fieldMap);
 	}
 }

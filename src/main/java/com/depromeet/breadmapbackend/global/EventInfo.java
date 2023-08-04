@@ -37,7 +37,7 @@ public enum EventInfo {
 		"bakery-flag-count-change-event", List.of("bakeryId"), List.of(BAKERY_RANKING_VIEW)
 	),
 	BAKERY_RANK_CHANGE_EVENT(
-		"bakery-rank-change-event", List.of(), List.of(BAKERY_RANKING_VIEW)
+		"bakery-rank-change-event", List.of("changedRankInfo"), List.of(BAKERY_RANKING_VIEW)
 	),
 	;
 

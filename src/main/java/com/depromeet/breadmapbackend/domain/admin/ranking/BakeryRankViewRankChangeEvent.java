@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.ranking;
 
+import com.depromeet.breadmapbackend.global.EventInfo;
+
 /**
  * BakeryRankViewChangeEvent
  *
@@ -8,5 +10,5 @@ package com.depromeet.breadmapbackend.domain.admin.ranking;
  * @since 2023/08/04
  */
 public interface BakeryRankViewRankChangeEvent {
-	void publish();
+	void publish(EventInfo eventInfo, String value);
 }

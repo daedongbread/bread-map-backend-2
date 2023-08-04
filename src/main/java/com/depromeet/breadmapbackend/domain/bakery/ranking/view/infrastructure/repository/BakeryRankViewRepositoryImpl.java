@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.BakeryRankView;
@@ -23,13 +22,12 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class BakeryRankViewRepositoryImpl implements BakeryRankViewRepository {
-	private static final String TABLE = "scored_bakery";
-	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 	private final BakeryRankViewJpaRepository bakeryRankViewJpaRepository;
 
 	@Override
 	public List<BakeryRankView> findBakeryRankViewBy(final LocalDate calculatedDate, final Pageable pageable) {
-		return bakeryRankViewJpaRepository.findByCalculatedDateOrderByRankAsc(calculatedDate, pageable)
+		return bakeryRankViewJpaRepository.findByCalculatedDateOrderByBakeryRankAsc(calculatedDate, pageable)
 			.stream()
 			.map(BakeryRankViewJpaEntity::toDomain)
 			.toList();

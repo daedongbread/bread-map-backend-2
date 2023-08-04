@@ -1,11 +1,16 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase.BakeryRankViewRankChangeUseCase;
 import com.depromeet.breadmapbackend.global.EventInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -30,8 +35,17 @@ public class BakeryRankChangeEventListener implements
 
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {
+		final List<String> keys = event.getEvenMessageKeys();
+		final Map<String, String> value = message.getValue();
+		try {
 
-		bakeryRankViewRankChangeUseCase.command();
-
+			final List<BakeryRankViewRankChangeUseCase.Command> commands =
+				Arrays.asList(
+					objectMapper.readValue(value.get(keys.get(0)), BakeryRankViewRankChangeUseCase.Command[].class)
+				);
+			bakeryRankViewRankChangeUseCase.command(commands);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

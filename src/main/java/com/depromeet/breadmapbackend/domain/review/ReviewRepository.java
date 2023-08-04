@@ -45,4 +45,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 			+ "where r.bakery in :bakeryList "
 	)
 	List<Review> findByBakeryIn(@Param("bakeryList") List<Bakery> bakeryList);
+
 }

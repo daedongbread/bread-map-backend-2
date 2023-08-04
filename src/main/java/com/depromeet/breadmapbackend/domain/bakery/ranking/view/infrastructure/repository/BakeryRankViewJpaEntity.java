@@ -32,12 +32,12 @@ public class BakeryRankViewJpaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private int rank;
+	private int bakeryRank;
 	private Long bakeryId;
 	private LocalDate calculatedDate;
 	private String name;
 	private String image;
-	private double rating;
+	private double bakeryRating;
 	private long flagCount;
 	private String shortAddress;
 	private Integer version;
@@ -45,12 +45,12 @@ public class BakeryRankViewJpaEntity {
 	public static BakeryRankViewJpaEntity fromDomain(BakeryRankView bakeryRankView) {
 		return BakeryRankViewJpaEntity.builder()
 			.id(bakeryRankView.id())
-			.rank(bakeryRankView.rank())
+			.bakeryRank(bakeryRankView.rank())
 			.bakeryId(bakeryRankView.bakeryId())
 			.calculatedDate(bakeryRankView.calculatedDate())
 			.name(bakeryRankView.name())
 			.image(bakeryRankView.image())
-			.rating(bakeryRankView.rating())
+			.bakeryRating(bakeryRankView.rating())
 			.flagCount(bakeryRankView.flagCount())
 			.shortAddress(bakeryRankView.shortAddress())
 			.version(bakeryRankView.version())
@@ -60,12 +60,12 @@ public class BakeryRankViewJpaEntity {
 	public BakeryRankView toDomain() {
 		return new BakeryRankView(
 			this.id,
-			this.rank,
+			this.bakeryRank,
 			this.bakeryId,
 			this.calculatedDate,
 			this.name,
 			this.image,
-			this.rating,
+			this.bakeryRating,
 			this.flagCount,
 			this.shortAddress,
 			this.version

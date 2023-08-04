@@ -1,15 +1,14 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase.impl;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.BakeryRankView;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.infrastructure.BakeryRankViewRepository;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase.BakeryRankViewCreateUseCase;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.infrastructure.ReviewExternalRepository;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase.BakeryRankViewRatingCountChangeUseCase;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,19 +27,17 @@ import lombok.extern.slf4j.Slf4j;
 public class BakeryRankViewRatingCountChangeUseCaseImpl implements BakeryRankViewRatingCountChangeUseCase {
 
 	private final BakeryRankViewRepository bakeryRankViewRepository;
-	private final BakeryRankViewCreateUseCase bakeryRankViewCreateUseCase;
+	private final ReviewExternalRepository reviewExternalRepository;
 
 	@Override
 	public void command(final Long bakeryId) {
 		final LocalDate now = LocalDate.now();
-		final BakeryRankView bakeryRankView =
-			bakeryRankViewRepository.findByBakeryIdAndCalculatedDate(bakeryId, now)
-				.orElseThrow(() -> {
-					bakeryRankViewCreateUseCase.command();
-					return new DaedongException(DaedongStatus.BAKERY_RANKING_NOT_FOUND);
-				});
+		final Optional<BakeryRankView> bakeryRankView =
+			bakeryRankViewRepository.findByBakeryIdAndCalculatedDate(bakeryId, now);
 
-		final BakeryRankView updatedBakeryRankView = bakeryRankView.updateRating(rating);
-		bakeryRankViewRepository.save(updatedBakeryRankView);
+		if (bakeryRankView.isPresent()) {
+			final double rating = reviewExternalRepository.findAvgRatingByBakeryId(bakeryId);
+			bakeryRankViewRepository.save(bakeryRankView.get().updateRating(rating));
+		}
 	}
 }

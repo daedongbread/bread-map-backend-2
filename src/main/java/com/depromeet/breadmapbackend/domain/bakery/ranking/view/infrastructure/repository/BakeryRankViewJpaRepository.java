@@ -20,8 +20,10 @@ import org.springframework.data.jpa.repository.Lock;
 public interface BakeryRankViewJpaRepository extends JpaRepository<BakeryRankViewJpaEntity, Long> {
 
 	@Lock(LockModeType.OPTIMISTIC)
-	Optional<BakeryRankViewJpaEntity> findByBakeryIdAndCalculatedDate(final Long bakeryId,
-		final LocalDate calculatedDate);
+	Optional<BakeryRankViewJpaEntity> findByBakeryIdAndCalculatedDate(
+		final Long bakeryId,
+		final LocalDate calculatedDate
+	);
 
 	// findByBakeryIdInOrderByCalculatedDateDesc
 	List<BakeryRankViewJpaEntity> findByBakeryIdInAndCalculatedDate(
@@ -30,5 +32,6 @@ public interface BakeryRankViewJpaRepository extends JpaRepository<BakeryRankVie
 		Pageable pageable
 	);
 
-	List<BakeryRankViewJpaEntity> findByCalculatedDateOrderByRankAsc(final LocalDate calculatedDate, Pageable pageable);
+	List<BakeryRankViewJpaEntity> findByCalculatedDateOrderByBakeryRankAsc(final LocalDate calculatedDate,
+		Pageable pageable);
 }
