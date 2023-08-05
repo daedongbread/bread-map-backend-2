@@ -28,7 +28,7 @@ public enum EventInfo {
 		"calculate_raking_event", List.of("calculatedDate"), List.of(CALCULATE_RANKING)
 	),
 	BAKERY_RANKING_CALCULATION_DONE_EVENT(
-		"calculate_raking_done_event", List.of(), List.of(BAKERY_RANKING_VIEW)
+		"calculate_raking_done_event", List.of("calculatedDate"), List.of(BAKERY_RANKING_VIEW)
 	),
 	BAKERY_RATING_CHANGE_EVENT(
 		"bakery-rating-change-event", List.of("bakeryId"), List.of(BAKERY_RANKING_VIEW)
