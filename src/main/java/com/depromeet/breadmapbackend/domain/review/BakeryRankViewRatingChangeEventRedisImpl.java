@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BakeryRankViewRatingChangeEventRedisImpl implements BakeryRankViewRatingChangeEvent {
 
-	private static final EventInfo EVENT = EventInfo.BAKERY_RANK_CHANGE_EVENT;
+	private static final EventInfo EVENT = EventInfo.BAKERY_RATING_CHANGE_EVENT;
 	private final StringRedisTemplate redisTemplate;
 
 	@Override

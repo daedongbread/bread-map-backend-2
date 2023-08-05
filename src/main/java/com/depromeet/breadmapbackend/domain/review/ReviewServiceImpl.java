@@ -47,6 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewLikeRepository reviewLikeRepository;
 	private final FollowRepository followRepository;
 	private final ProductAddReportRepository productAddReportRepository;
+	private final BakeryRankViewRatingChangeEvent bakeryRankViewRatingChangeEvent;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Review> getReviewList(User me, Bakery bakery) {
@@ -223,6 +224,7 @@ public class ReviewServiceImpl implements ReviewService {
 				ReviewImage.builder().review(review).bakery(bakery).image(image).build();
 			}
 		}
+		bakeryRankViewRatingChangeEvent.publish(bakeryId);
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -238,6 +240,7 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewViewRepository.findByReview(review).ifPresent(reviewViewRepository::delete);
 		reviewRepository.delete(review);
 		//        review.useChange();
+		bakeryRankViewRatingChangeEvent.publish(review.getBakery().getId());
 	}
 
 }

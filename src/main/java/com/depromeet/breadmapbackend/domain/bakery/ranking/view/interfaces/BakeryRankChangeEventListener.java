@@ -31,7 +31,7 @@ public class BakeryRankChangeEventListener implements
 
 	private final ObjectMapper objectMapper;
 	private final BakeryRankViewRankChangeUseCase bakeryRankViewRankChangeUseCase;
-	private static final EventInfo event = EventInfo.BAKERY_FLAG_COUNT_CHANGE_EVENT;
+	private static final EventInfo event = EventInfo.BAKERY_RANK_CHANGE_EVENT;
 
 	@Override
 	public void onMessage(final MapRecord<String, String, String> message) {

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.BakeryRankView;
 
@@ -42,6 +43,7 @@ public class BakeryRankViewJpaEntity {
 	private double bakeryRating;
 	private long flagCount;
 	private String shortAddress;
+	@Version
 	private Integer version;
 
 	public static BakeryRankViewJpaEntity fromDomain(BakeryRankView bakeryRankView) {

@@ -13,6 +13,7 @@ import org.springframework.data.redis.stream.Subscription;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.BakeryRankView;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces.BakeryFlagCountChangeEventListener;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces.BakeryRankChangeEventListener;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces.BakeryRankingCalculationDoneEventListener;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.interfaces.BakeryRatingChangeEventListener;
 import com.depromeet.breadmapbackend.global.EventInfo;
@@ -41,6 +42,7 @@ public class QueryBakeryRankRedisConfig {
 	private final BakeryRankingCalculationDoneEventListener bakeryRankingCalculationDoneEventListener;
 	private final BakeryFlagCountChangeEventListener bakeryFlagCountChangeEventListener;
 	private final BakeryRatingChangeEventListener bakeryRatingChangeEventListener;
+	private final BakeryRankChangeEventListener bakeryRankChangeEventListener;
 
 	private final EventSubscriptionHelper eventSubscriptionHelper;
 
@@ -107,7 +109,7 @@ public class QueryBakeryRankRedisConfig {
 			factory,
 			eventName,
 			consumerGroupName,
-			bakeryRatingChangeEventListener,
+			bakeryRankChangeEventListener,
 			bakeryRankingCalculatorPollTimeOut
 		);
 	}

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.bakery.ranking.view.domain.usecase.BakeryRankViewRatingCountChangeUseCase;
 import com.depromeet.breadmapbackend.global.EventInfo;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class BakeryRatingChangeEventListener implements
 	StreamListener<String, MapRecord<String, String, String>> {

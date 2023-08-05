@@ -1,0 +1,102 @@
+### 랭킹 계산
+PATCH {{admin-bakery-rank-api}}
+Authorization: Bearer {{admin-token}}
+
+### 깃발 추가
+POST {{flag-api}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "testFlag",
+  "color": "GREEN"
+}
+
+> {%
+    client.test("Status should be 201", function () {
+        client.assert(response.status === 201);
+    });
+%}
+
+### 깃발에 빵집 추가
+POST {{flag-api}}/1/bakeries/713
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+> {%
+    client.test("Status should be 201", function () {
+        client.assert(response.status === 201);
+    });
+%}
+
+### 리뷰 추가
+POST {{review-api}}/bakeries/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productRatingList": [
+  ],
+  "noExistProductRatingRequestList": [
+    {
+      "productType": "BREAD",
+      "productName": "fakeBread1",
+      "price": "3000",
+      "rating": 5
+    },
+    {
+      "productType": "BREAD",
+      "productName": "fakeBread2",
+      "price": "4000",
+      "rating": 4
+    }
+  ],
+  "content": "review add test",
+  "images": [
+    "image1",
+    "image2"
+  ]
+}
+
+### 리뷰 추가
+POST {{review-api}}/bakeries/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productRatingList": [
+    {
+      "productId": 1,
+      "rating": 0
+    },
+    {
+      "productId": 2,
+      "rating": 1
+    }
+  ],
+  "noExistProductRatingRequestList": [
+  ],
+  "content": "review add test",
+  "images": [
+    "image1",
+    "image2"
+  ]
+}
+
+### 랭킹 수정
+POST {{admin-bakery-rank-api}}
+Content-Type: application/json
+Authorization: Bearer {{admin-token}}
+
+{
+  "bakeryRankInfoList": [
+    {
+      "id": 734,
+      "rank": 1
+    },
+    {
+      "id": 1,
+      "rank": 2
+    }
+  ]
+}
