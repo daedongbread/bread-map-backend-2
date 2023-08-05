@@ -25,12 +25,13 @@ public record ScoredBakery(
 	LocalDate calculatedDate,
 	int rank
 ) {
-	@Builder
+
 	public ScoredBakery {
 		Assert.notNull(bakery, "bakery must not be null");
 		Assert.notNull(calculatedDate, "calculatedDate must not be null");
 	}
 
+	@Builder
 	private ScoredBakery(
 		final Bakery bakery,
 		final long viewCount,
@@ -49,7 +50,8 @@ public record ScoredBakery(
 		final Long flagCount,
 		final Long viewCount
 	) {
-		return (flagCount.doubleValue() * RankWeight.FLAG_COUNT_WEIGHT.getWeight()) +
+		final double v = (flagCount.doubleValue() * RankWeight.FLAG_COUNT_WEIGHT.getWeight()) +
 			(viewCount.doubleValue() * RankWeight.VIEW_COUNT_WEIGHT.getWeight());
+		return v;
 	}
 }

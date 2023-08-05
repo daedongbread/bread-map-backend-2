@@ -42,6 +42,7 @@ public class BakeryRankViewCreateUseCaseImpl implements BakeryRankViewCreateUseC
 			bakeryRankViewCreateEvent.publish();
 			throw new DaedongException(DaedongStatus.CALCULATING_BAKERY_RANKING);
 		}
+		bakeryRankViewRepository.deleteAllByCalculatedDate(now);
 
 		final List<BakeryRankView> bakeryRankViewList = scoredBakeryList.stream()
 			.map(sb -> BakeryRankView.builder()

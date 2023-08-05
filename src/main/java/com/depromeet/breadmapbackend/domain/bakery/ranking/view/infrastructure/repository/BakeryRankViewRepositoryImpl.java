@@ -65,4 +65,9 @@ public class BakeryRankViewRepositoryImpl implements BakeryRankViewRepository {
 			.map(BakeryRankViewJpaEntity::fromDomain)
 			.toList());
 	}
+
+	@Override
+	public void deleteAllByCalculatedDate(final LocalDate calculatedDate) {
+		bakeryRankViewJpaRepository.deleteAllByCalculatedDate(calculatedDate);
+	}
 }

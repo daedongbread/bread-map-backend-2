@@ -21,12 +21,13 @@ public record BakeryScoreBase(
 	public ScoredBakery toDomain(
 		final LocalDate calculatedDate
 	) {
-		return ScoredBakery.builder()
+		final ScoredBakery build = ScoredBakery.builder()
 			.bakery(this.bakery)
 			.viewCount(this.viewCount)
 			.flagCount(this.flagCount)
 			.rating(this.bakeryRating)
 			.calculatedDate(calculatedDate)
 			.build();
+		return build;
 	}
 }

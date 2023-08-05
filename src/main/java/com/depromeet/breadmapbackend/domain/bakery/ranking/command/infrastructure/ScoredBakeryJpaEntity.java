@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Getter
+@Table(name = "scored_bakery")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ScoredBakeryJpaEntity {
 

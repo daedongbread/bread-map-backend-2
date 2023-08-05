@@ -26,5 +26,6 @@ public interface BakeryRankViewRepository {
 	List<BakeryRankView> findByBakeryIdInAndCalculatedDate(List<Long> bakeryIdList, LocalDate now, Pageable page);
 
 	void saveAll(List<BakeryRankView> updatedBakeryRankView);
- 
+
+	void deleteAllByCalculatedDate(LocalDate now);
 }

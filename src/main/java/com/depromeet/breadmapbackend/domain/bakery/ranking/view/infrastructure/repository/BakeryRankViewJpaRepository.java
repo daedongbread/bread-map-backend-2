@@ -9,6 +9,9 @@ import javax.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * QueryBakeryRankJpaRepository
@@ -34,4 +37,9 @@ public interface BakeryRankViewJpaRepository extends JpaRepository<BakeryRankVie
 
 	List<BakeryRankViewJpaEntity> findByCalculatedDateOrderByBakeryRankAsc(final LocalDate calculatedDate,
 		Pageable pageable);
+
+	@Modifying
+	@Query("delete from BakeryRankViewJpaEntity brv where brv.calculatedDate = :calculatedDate")
+	void deleteAllByCalculatedDate(@Param("calculatedDate") LocalDate calculatedDate);
+ 
 }

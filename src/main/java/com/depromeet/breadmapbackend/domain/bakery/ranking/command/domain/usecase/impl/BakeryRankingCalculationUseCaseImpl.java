@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.usecase.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -94,10 +95,11 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 		final List<ScoredBakery> scoredBakeries = scoredBakeryList.subList(0, rankLimit);
 
 		int rank = 1;
+		final ArrayList<ScoredBakery> finalScoredBakeries = new ArrayList<>();
 		for (final ScoredBakery scoredBakery : scoredBakeries) {
-			scoredBakery.setRank(rank++);
+			finalScoredBakeries.add(scoredBakery.setRank(rank++));
 		}
-		return scoredBakeries;
+		return finalScoredBakeries;
 	}
 
 }
