@@ -1,0 +1,123 @@
+### 포스트(FREE_TALK) 작성
+POST {{post-api}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "포스트 FREE_TALK 작성",
+  "content": "포스트 FREE_TALK 작성 내용이드아ㅏㅏㅏㅏㅏㅏ",
+  "postTopic": "FREE_TALK",
+  "images": [
+    "image1",
+    "image2"
+  ]
+}
+
+> {%
+    client.test("Status should be 201", function () {
+        client.assert(response.status === 201);
+    });
+%}
+
+### 포스트(BREAD_STORY) 작성
+POST {{post-api}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "포스트 BREAD_STORY 작성",
+  "content": "포스트 BREAD_STORY 작성 내용이드아ㅏㅏㅏㅏㅏㅏ",
+  "postTopic": "BREAD_STORY",
+  "images": [
+    "image1",
+    "image2"
+  ]
+}
+
+> {%
+    client.test("Status should be 201", function () {
+        client.assert(response.status === 201);
+    });
+%}
+
+### 어드민 포스트(EVENT) 작성
+POST {{admin-post-api}}
+Content-Type: application/json
+Authorization: Bearer {{admin-token}}
+
+{
+  "isPosted": true,
+  "isFixed": true,
+  "isCarousel": true,
+  "title": "포스트 BREAD_STORY 작성",
+  "content": "포스트 BREAD_STORY 작성 내용이드아ㅏㅏㅏㅏㅏㅏ",
+  "postTopic": "BREAD_STORY",
+  "images": [
+    "image1",
+    "image2"
+  ],
+  "bannerImage": "bannerImage"
+}
+
+> {%
+    client.test("Status should be 201", function () {
+        client.assert(response.status === 201);
+    });
+%}
+
+###
+GET https://localhost:8080/v1/posts/cards/{{postTopic}}
+
+###
+GET https://localhost:8080/v1/posts/carousels
+
+###
+GET https://localhost:8080/v1/posts/hot
+
+###
+POST https://localhost:8080/v1/posts/like/{{postId}}
+
+###
+PUT https://localhost:8080/v1/posts/{{postId}}
+
+###
+GET https://localhost:8080/v1/posts/{{postTopic}}/{{postId}}
+
+###
+DELETE https://localhost:8080/v1/posts/{{postTopic}}/{{postId}}
+
+###
+PUT http://localhost:8080/v1/comments
+
+###
+POST http://localhost:8080/v1/comments
+
+###
+POST http://localhost:8080/v1/comments/like/{{commentId}}
+
+###
+DELETE http://localhost:8080/v1/comments/{{commentId}}
+
+###
+GET http://localhost:8080/v1/comments/{{postTopic}}/{{postId}}/{{page}}
+
+###
+POST http://localhost:8080/v1/admin/posts
+
+###
+GET http://localhost:8080/v1/admin/posts/can-fix
+
+###
+GET http://localhost:8080/v1/admin/posts/carousels
+
+###
+GET http://localhost:8080/v1/admin/posts/detail/{{managerId}}
+
+###
+PATCH http://localhost:8080/v1/admin/posts/order
+
+###
+PATCH http://localhost:8080/v1/admin/posts/{{managerId}}
+
+###
+GET http://localhost:8080/v1/admin/posts/{{page}}
