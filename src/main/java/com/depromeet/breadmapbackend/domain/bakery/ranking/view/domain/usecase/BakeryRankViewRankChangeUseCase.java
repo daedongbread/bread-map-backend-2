@@ -13,7 +13,7 @@ public interface BakeryRankViewRankChangeUseCase {
 	void command(final List<Command> command);
 
 	record Command(
-		Long bakeryId,
+		Long id,
 		int rank
 	) {
 	}

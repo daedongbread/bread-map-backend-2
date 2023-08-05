@@ -34,7 +34,7 @@ public class BakeryRankViewRankChangeUseCaseImpl implements BakeryRankViewRankCh
 	public void command(final List<Command> command) {
 		final LocalDate now = LocalDate.now();
 		final List<Long> bakeryIdList = command.stream()
-			.map(Command::bakeryId)
+			.map(Command::id)
 			.toList();
 		final Pageable page = Pageable.ofSize(bakeryIdList.size());
 
@@ -54,7 +54,7 @@ public class BakeryRankViewRankChangeUseCaseImpl implements BakeryRankViewRankCh
 		return bakeryRankViewList.stream()
 			.map(br -> {
 				final Command commandBy = command.stream()
-					.filter(c -> c.bakeryId().equals(br.bakeryId()))
+					.filter(c -> c.id().equals(br.bakeryId()))
 					.findFirst()
 					.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_RANKING_NOT_FOUND));
 				return br.updateRank(commandBy.rank());
