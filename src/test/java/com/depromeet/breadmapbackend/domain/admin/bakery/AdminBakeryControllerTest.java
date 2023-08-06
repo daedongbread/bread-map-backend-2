@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
+import static com.fasterxml.jackson.databind.node.JsonNodeType.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -16,13 +17,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminImageRegisterRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
+import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryProductsDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
@@ -45,6 +49,7 @@ import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -779,4 +784,43 @@ class AdminBakeryControllerTest extends ControllerTest {
 			.andExpect(status().isNoContent());
 	}
 
+	@Test
+	@DisplayName("빵집의 상품 전체 조회 테스트")
+	void test() throws Exception {
+
+		//given
+		List<BakeryProductsDto> content = productRepository.findByBakeryId(bakery.getId())
+			.stream()
+			.map(BakeryProductsDto::of)
+			.toList();
+
+		String response = objectMapper.writeValueAsString(new ApiResponse<>(content));
+		
+		//when
+		ResultActions perform = mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/products", bakery.getId())
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE));
+
+		perform.andExpect(status().isOk())
+			.andExpect(content().string(response));
+
+		//then
+		perform.andDo(print()).
+			andDo(document("find-bakery-products-admin",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+					pathParameters(
+						parameterWithName("bakeryId").description("빵집 아이디")
+					),
+					responseFields(
+						fieldWithPath("data.[].productId").type(NUMBER).description("상품 아이디"),
+						fieldWithPath("data.[].productType").type(STRING).description("상품 타입"),
+						fieldWithPath("data.[].productName").type(STRING).description("상품 이름"),
+						fieldWithPath("data.[].productPrice").type(STRING).description("상품 가격")
+					)
+				)
+			);
+	}
 }
