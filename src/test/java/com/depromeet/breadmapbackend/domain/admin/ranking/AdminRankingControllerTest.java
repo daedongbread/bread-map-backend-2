@@ -107,6 +107,7 @@ public class AdminRankingControllerTest extends ControllerTest {
 					fieldWithPath("data.simpleBakeryInfoList.[].rank").description("빵집 랭킹"),
 					fieldWithPath("data.simpleBakeryInfoList.[].bakeryId").description("빵집 고유 번호"),
 					fieldWithPath("data.simpleBakeryInfoList.[].bakeryName").description("빵집 이름"),
+					fieldWithPath("data.simpleBakeryInfoList.[].address").description("빵집 주소"),
 					fieldWithPath("data.simpleBakeryInfoList.[].viewCount").description("빵집 조회수"),
 					fieldWithPath("data.simpleBakeryInfoList.[].flagCount").description("빵집 깃발 추가 건수"),
 					fieldWithPath("data.simpleBakeryInfoList.[].score").description("빵집 총 점수"),
