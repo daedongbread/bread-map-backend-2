@@ -26,6 +26,7 @@ import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminSimpleBakeryDt
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryLocationDto;
+import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryProductsDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateReportDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.NewReviewDto;
@@ -505,6 +506,15 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		Review review = reviewRepository.findByIdAndBakery(reviewId, bakery)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 		review.delete();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<BakeryProductsDto> getBakeryProducts(Long bakeryId) {
+
+		return productRepository.findByBakeryId(bakeryId).stream()
+			.map(BakeryProductsDto::of)
+			.toList();
 	}
 
 	//    @Transactional(rollbackFor = Exception.class)
