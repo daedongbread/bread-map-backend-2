@@ -14,8 +14,6 @@ import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateReque
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.infrastructure.ScoredBakeryRepository;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +79,12 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 				bakeryRanking.stream().map(RankingResponse.SimpleBakeryResponse::new).toList()
 			);
 		}
-		throw new DaedongException(DaedongStatus.BAKERY_RANKING_NOT_FOUND);
+		return new RankingResponse(
+			LocalDateParser.parse(startDate),
+			LocalDateParser.parse(endDate),
+			List.of(),
+			List.of()
+		);
 	}
 
 	@Transactional

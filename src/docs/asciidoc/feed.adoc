@@ -13,7 +13,7 @@
 
 - 피드 전체 조회 API
 - 큐레이션 피드 조회 API
-- 랜딩 피드 조회 API
+- 큐레이션 피드 좋아요 API
 
 === 피드 전체 조회 API [GET]
 
@@ -23,15 +23,6 @@ operation::findall-feed-user[snippets='http-request,request-headers,response-fie
 
 operation::find-detail-curation-feed-user[snippets='http-request,request-headers,path-parameters,request-parameters,response-fields,http-response']
 
-=== 랜딩 피드 상세 조회 API [GET]
-
-operation::find-detail-landing-feed-user[snippets='http-request,request-headers,path-parameters,request-parameters,response-fields,http-response']
-
 === 큐레이션 피드 좋아요 API [POST]
 
 operation::like-curation-feed-user[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
-
-=== 큐레이션 피드 좋아요 취소 API [POST]
-
-operation::unlike-curation-feed-user[snippets='http-request,request-headers,path-parameters,response-fields,http-response']
-

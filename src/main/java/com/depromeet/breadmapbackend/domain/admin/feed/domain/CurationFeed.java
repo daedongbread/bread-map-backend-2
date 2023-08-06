@@ -4,18 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-
 import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +35,10 @@ public class CurationFeed extends Feed {
 	private FeedLikes likes;
 
 	@Builder
-	public CurationFeed(Admin admin, Category category,
+	public CurationFeed(Long id, Admin admin, Category category,
 		String subTitle, String introduction, String conclusion, String thumbnailUrl, String feedType,
 		LocalDateTime activeTime, FeedStatus activated, CurationBakeries bakeries, FeedLikes likes) {
-		super(admin, category, subTitle, introduction, conclusion, thumbnailUrl, feedType, activeTime, activated);
+		super(id, admin, category, subTitle, introduction, conclusion, thumbnailUrl, feedType, activeTime, activated);
 		this.bakeries = new CurationBakeries(new ArrayList<>());
 		this.likes = new FeedLikes(new ArrayList<>());
 	}
@@ -71,13 +71,6 @@ public class CurationFeed extends Feed {
 
 		FeedLike findFeedLike = this.likes.find(feedLike).orElseGet(() -> this.likes.add(feedLike));
 		likes.like(findFeedLike);
-	}
-
-	public void unLike(User user) {
-		FeedLike feedLike = new FeedLike(user, this);
-
-		FeedLike findFeedLike = this.likes.find(feedLike).orElseThrow(() -> new DaedongException(DaedongStatus.CANNOT_FIND_FEED_LIKE));
-		likes.unLike(findFeedLike);
 	}
 
 	@Override

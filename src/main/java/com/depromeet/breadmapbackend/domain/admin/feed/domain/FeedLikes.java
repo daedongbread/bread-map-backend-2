@@ -83,13 +83,4 @@ public class FeedLikes {
 
 		like.increase();
 	}
-
-	public void unLike(FeedLike like) {
-
-		if (validateUnlike(like)) {
-			throw new DaedongException(DaedongStatus.CANNOT_UNLIKE_UNDER_ZERO);
-		}
-
-		like.decrease();
-	}
 }
