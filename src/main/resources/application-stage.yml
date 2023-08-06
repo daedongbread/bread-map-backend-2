@@ -69,6 +69,22 @@ sgis:
   key: ${SGIS_KEY}
   secret: ${SGIS_SECRET}
 
+management:
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      enabled: true
+      show-details: always
+  endpoints:
+    enabled-by-default: false
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      exposure:
+        include: health, prometheus
+      base-path: /v1/actuator # default
 
 admin:
   event:
@@ -83,3 +99,6 @@ redis:
 
 server:
   shutdown: graceful
+  tomcat:
+    mbeanregistry:
+      enabled: true
