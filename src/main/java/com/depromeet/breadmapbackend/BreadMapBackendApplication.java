@@ -13,30 +13,14 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.depromeet.breadmapbackend.global.security.token.JwtToken;
-import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
-
 import lombok.RequiredArgsConstructor;
 
 @EnableAsync
 @EnableFeignClients
 @ConfigurationPropertiesScan
 @SpringBootApplication
-
 @RequiredArgsConstructor
 public class BreadMapBackendApplication {
-
-	private final JwtTokenProvider jwtTokenProvider;
-
-	@PostConstruct
-	void init() {
-		JwtToken jwtToken = jwtTokenProvider.createJwtToken("GOOGLE_115696112574904205385", "ROLE_USER");
-		final JwtToken jwtToken1 = jwtTokenProvider.createJwtToken("Deadong01", "ROLE_ADMIN");
-
-		System.out.println("jwtToken.getAccessToken() ============================== " + jwtToken.getAccessToken());
-		System.out.println("jwtToken.getAccessToken1() ============================== " + jwtToken1.getAccessToken());
-
-	}
 
 	@PostConstruct
 	public void started() {
