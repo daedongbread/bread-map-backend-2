@@ -15,7 +15,8 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	TestConfig.class,
 	AsyncConfig.class,
 	ReviewServiceImpl.class,
-	ReviewQueryRepository.class
+	ReviewQueryRepository.class,
+	BakeryRankViewFlagCountChangeEventRedisImpl.class
 })
 public abstract class FlagServiceTest extends ServiceTest {
 }

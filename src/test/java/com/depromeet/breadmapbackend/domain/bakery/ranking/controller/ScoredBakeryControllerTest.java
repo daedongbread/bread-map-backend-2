@@ -94,16 +94,17 @@ public class ScoredBakeryControllerTest extends ControllerTest {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("scoredBakery-test-data.sql"));
 			final String sql = """
-						insert into scored_bakery (id , flag_count, view_count, total_score,bakery_id, calculated_date, bakery_rank) values
-						(100, 50, 50 ,  100, 100, '%s', 3),
-						(101, 10, 10,   20, 200, '%s', 4),
-						(102, 10, 5,    15, 300, '%s', 5),
-						(103, 31, 1500, 1531, 500, '%s', 2),
-						(104, 31, 1500, 1531, 600, '%s', 1),
-						(105,  0, 0,       0, 700, '%s', 6)
+						insert into bakery_rank_view (id, image, name, short_address, version , flag_count, bakery_rating,    bakery_id, calculated_date, bakery_rank) values
+						(100, 'image', 'bakeryName','short address', 0, 50, 3.7,   100, '%s', 3),
+						(101, 'image', 'bakeryName','short address', 0, 10, 3.7,  200, '%s', 4),
+						(102, 'image', 'bakeryName','short address', 0, 10, 3.7,  300, '%s', 5),
+						(103, 'image', 'bakeryName','short address', 0, 31, 3.7,  500, '%s', 2),
+						(104, 'image', 'bakeryName','short address', 0, 31, 3.7,  600, '%s', 1),
+						(105, 'image', 'bakeryName','short address', 0,  0, 3.7,  700, '%s', 6)
 				""".replaceAll("%s", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
 		}
 	}
 }
+

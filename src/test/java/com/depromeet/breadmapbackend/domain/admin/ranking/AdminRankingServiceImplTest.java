@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.command.domain.ScoredBakery;
+import com.depromeet.breadmapbackend.domain.bakery.ranking.command.infrastructure.ScoredBakeryJpaEntity;
 
 /**
  * AdminRankingServiceImplTest
@@ -74,8 +74,8 @@ class AdminRankingServiceImplTest {
 
 		//then
 		assertThat(result).isEqualTo(3);
-		assertThat(em.find(ScoredBakery.class, 111L).getRank()).isEqualTo(2);
-		assertThat(em.find(ScoredBakery.class, 115L).getRank()).isEqualTo(1);
-		assertThat(em.find(ScoredBakery.class, 112L).getRank()).isEqualTo(5);
+		assertThat(em.find(ScoredBakeryJpaEntity.class, 111L).getRank()).isEqualTo(2);
+		assertThat(em.find(ScoredBakeryJpaEntity.class, 115L).getRank()).isEqualTo(1);
+		assertThat(em.find(ScoredBakeryJpaEntity.class, 112L).getRank()).isEqualTo(5);
 	}
 }

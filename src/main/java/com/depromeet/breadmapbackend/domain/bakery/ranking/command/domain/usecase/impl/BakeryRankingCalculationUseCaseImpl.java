@@ -75,7 +75,6 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 	}
 
 	private boolean isFirstInstanceToCalculateRanks(final String EVENT_KEY) {
-
 		final Optional<Long> incrementedValue = redisRepository.increment(EVENT_KEY);
 		return incrementedValue.isPresent() && incrementedValue.get() == 1L;
 	}
@@ -86,8 +85,6 @@ public class BakeryRankingCalculationUseCaseImpl implements BakeryRankingCalcula
 
 	private int saveTopRankBakeryList(final List<ScoredBakery> scoredBakeryList) {
 		return scoredBakeryRepository.bulkInsert(scoredBakeryList);
-		// TODO : rank view 변경 이벤트 발행 -> ( 랭킹뷰 재생성  기본적인 빵집 정보만 저장 )
-		// TODO : 빵집 깃발 카운트 평정 출력해야하는데.....사용자 깃발 추가 여부, 평점 이벤트 발행해 말아??? 평점은... 안해도???
 	}
 
 	private List<ScoredBakery> getTopRankBakeryList(final List<ScoredBakery> scoredBakeryList) {

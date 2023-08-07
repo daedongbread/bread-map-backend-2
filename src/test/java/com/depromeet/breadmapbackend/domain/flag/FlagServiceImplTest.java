@@ -2,18 +2,24 @@ package com.depromeet.breadmapbackend.domain.flag;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.sql.DataSource;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import com.depromeet.breadmapbackend.domain.flag.dto.FlagBakeryDto;
 import com.depromeet.breadmapbackend.domain.flag.dto.FlagDto;
@@ -22,13 +28,26 @@ import com.depromeet.breadmapbackend.domain.review.dto.MapSimpleReviewDto;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
-class FlagServiceImplTest extends FlagServiceTest {
+@SpringBootTest
+class FlagServiceImplTest {
 
 	@Autowired
 	private FlagServiceImpl sut;
+	@Autowired
+	private EntityManager em;
+	@Autowired
+	private DataSource dataSource;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		try (final Connection connection = dataSource.getConnection()) {
+
+			ScriptUtils.executeSqlScript(connection, new ClassPathResource("flag-test-data.sql"));
+		}
+	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void User_Flag삭제_성공_테스트() throws Exception {
 		// given
 		final Long userId = 111L;
@@ -45,7 +64,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 
 	@ParameterizedTest
 	@MethodSource("CreateRemoveBakeryToFlagTestSource")
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void User_Flag삭제_실패_테스트(
 		final Long userId,
 		final Long flagId,
@@ -59,7 +78,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void flag_조회_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -83,7 +102,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void flag_추가_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -113,7 +132,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void flag_수정_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -141,7 +160,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void flag_수정_실패_테스트_FLAG_UNEDIT_EXCEPTION() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -163,7 +182,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void falg_제거_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -182,7 +201,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void flag에_등록된_bakery_조회_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -210,7 +229,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void bakery_flag에_추가_성공_테스트() throws Exception {
 		//given
 		final Long userId = 111L;
@@ -234,7 +253,7 @@ class FlagServiceImplTest extends FlagServiceTest {
 	}
 
 	@Test
-	@Sql("classpath:flag-test-data.sql")
+		// @Sql("classpath:flag-test-data.sql")
 	void bakery_flag에_추가_실패_테스트_FLAG_BAKERY_DUPLICATE_EXCEPTION() throws Exception {
 		//given
 		final Long userId = 111L;
