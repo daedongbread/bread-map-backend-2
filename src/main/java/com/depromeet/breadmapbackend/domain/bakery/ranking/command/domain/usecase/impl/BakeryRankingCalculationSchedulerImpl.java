@@ -24,12 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BakeryRankingCalculationSchedulerImpl implements BakeryRankingCalculationScheduler {
 
-	private final BakeryRankingCalculationEvent eventStream;
+	private final BakeryRankingCalculationEvent bakeryRankingCalculationEvent;
 
 	@Override
 	@Scheduled(cron = "0 0 0 * * *")
 	public void command() {
 		log.info("========================= Start Calculating Bakery Ranking =========================");
-		eventStream.publish(LocalDate.now());
+		bakeryRankingCalculationEvent.publish(LocalDate.now());
 	}
 }
