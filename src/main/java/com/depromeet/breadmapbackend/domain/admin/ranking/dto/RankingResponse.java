@@ -20,6 +20,7 @@ public record RankingResponse(
 ) {
 
 	public record SimpleBakeryResponse(
+		Long id,
 		int rank,
 		Long bakeryId,
 		String bakeryName,
@@ -31,7 +32,8 @@ public record RankingResponse(
 	) {
 
 		public SimpleBakeryResponse(final ScoredBakery scoredBakery) {
-			this(scoredBakery.getRank(),
+			this(scoredBakery.getId(),
+				scoredBakery.getRank(),
 				scoredBakery.getBakery().getId(),
 				scoredBakery.getBakery().getName(),
 				scoredBakery.getBakery().getAddress(),
