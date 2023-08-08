@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -79,7 +80,9 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 				LocalDateParser.parse(startDate),
 				LocalDateParser.parse(endDate),
 				dateList,
-				bakeryRanking.stream().map(RankingResponse.SimpleBakeryResponse::new).toList()
+				bakeryRanking.stream().map(RankingResponse.SimpleBakeryResponse::new)
+					.sorted(Comparator.comparing(RankingResponse.SimpleBakeryResponse::rank))
+					.toList()
 			);
 		}
 		return new RankingResponse(
