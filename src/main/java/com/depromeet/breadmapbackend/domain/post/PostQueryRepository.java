@@ -81,7 +81,8 @@ public class PostQueryRepository {
 						.where(postLike.post.id.eq(post.id)),
 					JPAExpressions.select(comment.count().coalesce(0L))
 						.from(comment)
-						.where(comment.postId.eq(post.id)),
+						.where(comment.postId.eq(post.id)
+							.and(comment.postTopic.eq(topic))),
 					JPAExpressions.select(review.count().coalesce(0L))
 						.from(review)
 						.where(review.user.id.eq(post.user.id)),
@@ -390,10 +391,10 @@ public class PostQueryRepository {
 				 			then 1 
 						else 2 
 					end 						  as sortOrder
-				 , case when t6.count >= 0 then true
+				 , case when t6.count > 0 then true
 				  		else false
 				  end 							 as isUserLiked	
-				 , case when t5.count >= 0 then true
+				 , case when t5.count > 0 then true
 				  		else false
 				  	end 							 as isUserCommented
 				
@@ -455,12 +456,13 @@ public class PostQueryRepository {
 				     , t3.address                               as address
 				     , t3.image                                 as bakeryThumbnail
 				     , 2 										as sortOrder
-				     , case when t6.count >= 0 then true
-							else false
-				  		end 							 as isUserCommented	
-				 	 , case when t5.count >= 0 then true
+					 , case when t5.count > 0 then true
 				  			else false
 				  		end 							 as isUserLiked
+				     , case when t6.count > 0 then true
+							else false
+				  		end 							 as isUserCommented	
+					
 				from review t1
 			    inner join user t2 on t1.user_id = t2.id
 			    inner join bakery t3 on t1.bakery_id = t3.id

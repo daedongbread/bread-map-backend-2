@@ -20,6 +20,9 @@ public enum ReportReason {
 	IRRELEVANT_IMAGE("IRRELEVANT_IMAGE"), // 관련없는 사진 게시
 	UNFIT_CONTENT("UNFIT_CONTENT"), //  작성 취지에 맞지 않는 내용(복사글 등)
 	COPYRIGHT_THEFT("COPYRIGHT_THEFT"), // 저작권 도용 의심(사진 등)
+	CONTAINS_PERSONAL_INFO("CONTAINS_PERSONAL_INFO"), // 개인정보 포함
+	REPEATED_CONTENTS("REPEATED_CONTENTS"), // 중복된 내용
+	ADVERTISEMENT("ADVERTISEMENT"), // 광고성
 	ETC("ETC") // 기타(하단 내용 작성)
 	;
 

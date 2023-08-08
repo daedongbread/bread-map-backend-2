@@ -18,6 +18,7 @@
 - 커뮤니티 좋아요 토글 API
 - 커뮤니티 수정 API
 - 커뮤니티 이벤트 캐러셀 조회 API
+- 커뮤니티 삭제 API
 
 === 커뮤니티 등록 API [POST]
 
@@ -82,4 +83,8 @@ operation::v1/comments/like[snippets='http-request,request-headers,path-paramete
 === 신고 등록 API [POST]
 
 operation::v1/reports/add[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== 커뮤니티 삭제 API [DELETE]
+
+operation::v1/posts/delete[snippets='http-request,request-headers,path-parameters,http-response']
 

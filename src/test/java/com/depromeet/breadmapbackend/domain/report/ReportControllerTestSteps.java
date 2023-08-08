@@ -56,8 +56,11 @@ public class ReportControllerTestSteps {
 						+ "IRRELEVANT_CONTENT 관계없는 내용\n"
 						+ "INAPPROPRIATE_CONTENT 음란성, 욕설 등 부적절한 내용\n"
 						+ "IRRELEVANT_IMAGE 관련없는 사진 게시\n"
-						+ "UNFIT_CONTENT 작성 취지에 맞지 않는 내용(복사글 등)\n"
+						+ "CONTAINS_PERSONAL_INFO 작성 취지에 맞지 않는 내용(복사글 등)\n"
 						+ "COPYRIGHT_THEFT 저작권 도용 의심(사진 등)\n"
+						+ "CONTAINS_PERSONAL_INFO   개인정보 포함 \n"
+						+ "REPEATED_CONTENTS  중복된 내용 \n"
+						+ "ADVERTISEMENT 광고성\n"
 						+ "ETC 기타(하단 내용 작성) "),
 					fieldWithPath("content").description("신고 기타 내용")
 				)
