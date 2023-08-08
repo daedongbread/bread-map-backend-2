@@ -19,7 +19,7 @@ import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 public record CommentCreateRequest(
 
 	@NotNull Long postId,
-	@NotNull @Size(min = 10, max = 200) String content,
+	@NotNull @Size(min = 1, max = 200) String content,
 	@NotNull boolean isFirstDepth,
 	Optional<Long> parentId,
 	Optional<Long> targetCommentUserId,
