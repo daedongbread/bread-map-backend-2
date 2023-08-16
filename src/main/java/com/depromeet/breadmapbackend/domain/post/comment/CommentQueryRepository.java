@@ -63,7 +63,7 @@ public class CommentQueryRepository {
 		return new PageImpl<>(
 			jdbcTemplate.query(getSortedCommentBaseSql(), params, COMMENT_QUERY_ROW_MAPPER),
 			PageRequest.of(page, PAGE_SIZE),
-			getAllCommentCount(postId)
+			getAllCommentCount(postId, postTopic)
 		);
 	}
 
@@ -150,14 +150,16 @@ public class CommentQueryRepository {
 			""";
 	}
 
-	private Long getAllCommentCount(final Long postId) {
+	public Long getAllCommentCount(final Long postId, final PostTopic postTopic) {
 		final String sql = """
 			 select count(*) 
 			    from comment 			
 			    where post_id = :postId
+			    and post_topic = :postTopic
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource()
-			.addValue("postId", postId);
+			.addValue("postId", postId)
+			.addValue("postTopic", postTopic.name());
 		return jdbcTemplate.queryForObject(sql, param, Long.class);
 	}
 

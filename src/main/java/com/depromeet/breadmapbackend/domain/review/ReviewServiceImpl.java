@@ -16,6 +16,8 @@ import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.bakery.product.ProductRepository;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReportRepository;
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
+import com.depromeet.breadmapbackend.domain.post.comment.CommentQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.dto.ReviewDetailDto;
 import com.depromeet.breadmapbackend.domain.review.dto.ReviewDto;
 import com.depromeet.breadmapbackend.domain.review.dto.ReviewRequest;
@@ -47,6 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewLikeRepository reviewLikeRepository;
 	private final FollowRepository followRepository;
 	private final ProductAddReportRepository productAddReportRepository;
+	private final CommentQueryRepository commentQueryRepository;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Review> getReviewList(User me, Bakery bakery) {
@@ -74,7 +77,9 @@ public class ReviewServiceImpl implements ReviewService {
 				followRepository.countByToUser(review.getUser()),
 				followRepository.findByFromUserAndToUser(me, review.getUser()).isPresent(),
 				me.equals(review.getUser()),
-				reviewLikeRepository.findByUserAndReview(me, review).isPresent()))
+				reviewLikeRepository.findByUserAndReview(me, review).isPresent(),
+				commentQueryRepository.getAllCommentCount(review.getId(), PostTopic.REVIEW)
+			))
 			.collect(Collectors.toList());
 		return PageResponseDto.of(bakeryReviews, contents);
 	}
@@ -96,7 +101,8 @@ public class ReviewServiceImpl implements ReviewService {
 				followRepository.countByToUser(review.getUser()),
 				followRepository.findByFromUserAndToUser(me, review.getUser()).isPresent(),
 				me.equals(review.getUser()),
-				reviewLikeRepository.findByUserAndReview(me, review).isPresent()))
+				reviewLikeRepository.findByUserAndReview(me, review).isPresent(),
+				commentQueryRepository.getAllCommentCount(review.getId(), PostTopic.REVIEW)))
 			.collect(Collectors.toList());
 		return PageResponseDto.of(productReviews, contents);
 	}
@@ -115,7 +121,8 @@ public class ReviewServiceImpl implements ReviewService {
 				followRepository.countByToUser(review.getUser()),
 				followRepository.findByFromUserAndToUser(me, review.getUser()).isPresent(),
 				me.equals(review.getUser()),
-				reviewLikeRepository.findByUserAndReview(me, review).isPresent()))
+				reviewLikeRepository.findByUserAndReview(me, review).isPresent(),
+				commentQueryRepository.getAllCommentCount(review.getId(), PostTopic.REVIEW)))
 			.collect(Collectors.toList());
 		return PageResponseDto.of(userReviews, contents);
 	}
@@ -153,6 +160,7 @@ public class ReviewServiceImpl implements ReviewService {
 			.isLike(reviewLikeRepository.findByUserAndReview(user, review).isPresent())
 			.userOtherReviews(userOtherReviews)
 			.bakeryOtherReviews(bakeryOtherReviews)
+			.commentNum(commentQueryRepository.getAllCommentCount(review.getId(), PostTopic.REVIEW))
 			.build();
 	}
 

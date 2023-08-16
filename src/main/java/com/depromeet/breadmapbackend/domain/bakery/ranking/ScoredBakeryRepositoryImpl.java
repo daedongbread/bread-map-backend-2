@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 import com.depromeet.breadmapbackend.global.converter.LocalDateParser;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,10 +80,17 @@ public class ScoredBakeryRepositoryImpl implements ScoredBakeryRepository {
 				LocalDateParser.parse(startDate),
 				LocalDateParser.parse(endDate),
 				dateList,
-				bakeryRanking.stream().map(RankingResponse.SimpleBakeryResponse::new).toList()
+				bakeryRanking.stream().map(RankingResponse.SimpleBakeryResponse::new)
+					.sorted(Comparator.comparing(RankingResponse.SimpleBakeryResponse::rank))
+					.toList()
 			);
 		}
-		throw new DaedongException(DaedongStatus.BAKERY_RANKING_NOT_FOUND);
+		return new RankingResponse(
+			LocalDateParser.parse(startDate),
+			LocalDateParser.parse(endDate),
+			List.of(),
+			List.of()
+		);
 	}
 
 	@Transactional
