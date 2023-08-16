@@ -9,6 +9,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -69,7 +70,8 @@ public class Bakery extends BaseEntity {
 	@Embedded
 	private BakeryURL bakeryURL;
 
-	private String image;
+	@ElementCollection(fetch = FetchType.LAZY)
+	private List<String> images = new ArrayList<>();
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -93,8 +95,8 @@ public class Bakery extends BaseEntity {
 	public Bakery(
 		Long id, String name, Double latitude, Double longitude,
 		String address, String detailedAddress, String hours, String phoneNumber, String checkPoint,
-		String newBreadTime,
-		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
+		String newBreadTime, List<String> images,
+		String websiteURL, String instagramURL, String facebookURL, String blogURL,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status, BakeryAddReport bakeryAddReport
 	) {
 		this.id = id;
@@ -107,9 +109,9 @@ public class Bakery extends BaseEntity {
 		this.detailedAddress = detailedAddress;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
+		this.images.addAll(images);
 		this.bakeryURL = BakeryURL.builder()
 			.websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
-		this.image = image;
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
 		this.bakeryAddReport = bakeryAddReport;
@@ -119,7 +121,7 @@ public class Bakery extends BaseEntity {
 		String name, String address, String detailedAddress, Double latitude, Double longitude, String hours,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber,
 		String checkPoint,
-		String newBreadTime, String image,
+		String newBreadTime, List<String> updateImages,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status
 	) {
 		this.name = name;
@@ -129,10 +131,17 @@ public class Bakery extends BaseEntity {
 		this.longitude = longitude;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
-		this.image = image;
+		updateImages(updateImages);
 		this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
+		this.checkPoint = checkPoint;
+		this.newBreadTime = newBreadTime;
+	}
+
+	public void updateImages(List<String> updateImages) {
+		this.images.clear();
+		this.images.addAll(updateImages);
 	}
 
 	public boolean isPosting() {

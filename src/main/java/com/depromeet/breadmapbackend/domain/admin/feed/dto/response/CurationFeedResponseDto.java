@@ -76,7 +76,7 @@ public class CurationFeedResponseDto {
 			.bakeryName(bakery.getName())
 			.bakeryAddress(bakery.getAddress())
 			.openingHours(bakery.getHours())
-			.bakeryImageUrl(bakery.getImage())
+			.bakeryImageUrl(bakery.getImages().get(0))
 			.checkPoint(bakery.getCheckPoint())
 			.newBreadTime(bakery.getNewBreadTime())
 			.address(bakery.getAddress())

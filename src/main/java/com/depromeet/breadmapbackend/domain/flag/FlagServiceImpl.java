@@ -44,7 +44,7 @@ public class FlagServiceImpl implements FlagService {
 				.bakeryImageList(flag.getFlagBakeryList().stream()
 					.filter(flagBakery -> flagBakery.getBakery().isPosting())
 					.sorted(Comparator.comparing(FlagBakery::getCreatedAt)).limit(3)
-					.map(flagBakery -> flagBakery.getBakery().getImage())
+					.map(flagBakery -> flagBakery.getBakery().getImages().get(0))
 					.collect(Collectors.toList())).build())
 			.collect(Collectors.toList());
 	}

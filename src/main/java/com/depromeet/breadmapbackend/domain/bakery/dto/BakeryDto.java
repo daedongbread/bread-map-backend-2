@@ -44,7 +44,7 @@ public class BakeryDto {
 	@Getter
 	@NoArgsConstructor
 	public static class BakeryInfo {
-		private String image;
+		private List<String> images;
 		private String name;
 		private Integer flagNum;
 		private Double rating;
@@ -61,7 +61,7 @@ public class BakeryDto {
 
 		@Builder
 		public BakeryInfo(Bakery bakery, Integer flagNum, List<Review> reviewList) {
-			this.image = bakery.getImage();
+			this.images = bakery.getImages();
 			this.name = bakery.getName();
 			this.flagNum = flagNum;
 			this.rating = bakery.bakeryRating(reviewList);
