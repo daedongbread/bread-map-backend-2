@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
@@ -70,6 +71,7 @@ public class Bakery extends BaseEntity {
 	@Embedded
 	private BakeryURL bakeryURL;
 
+	@BatchSize(size = 2)
 	@ElementCollection(fetch = FetchType.LAZY)
 	private List<String> images = new ArrayList<>();
 
