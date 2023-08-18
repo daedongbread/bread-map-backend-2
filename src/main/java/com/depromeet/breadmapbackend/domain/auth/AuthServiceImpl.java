@@ -1,8 +1,7 @@
 package com.depromeet.breadmapbackend.domain.auth;
 
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import com.depromeet.breadmapbackend.domain.auth.dto.ReissueRequest;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
+import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -76,22 +76,20 @@ public class AuthServiceImpl implements AuthService {
 			throw new DaedongException(DaedongStatus.ALREADY_REGISTER_USER);
 	}
 
-	private String createNickName() {
-		List<String> adjectiveList =
-			Arrays.asList("맛있는", "달콤한", "매콤한", "바삭한", "짭잘한", "고소한", "알싸한", "새콤한", "느끼한", "무서운");
-		List<String> breadNameList =
-			Arrays.asList("식빵", "소금빵", "바게트", "마카롱", "마늘빵", "베이글", "도넛", "꽈배기", "피자빵", "크루아상");
+	private UserInfo createUserInfoFrom(final OIDCUserInfo oidcUserInfo) {
+		UserInfo userInfo = UserInfo.create(
+			oidcUserInfo.getEmail(),
+			getDefaultProfileImage()
+		);
+		while (userRepository.findByNickName(userInfo.getNickName()).isPresent()) {
+			userInfo = userInfo.updateDefaultNickName();
+		}
+		return userInfo;
+	}
 
-		String nickName;
-		do {
-			String adjective = adjectiveList.get(new SecureRandom().nextInt(adjectiveList.size()));
-			String breadName = breadNameList.get(new SecureRandom().nextInt(breadNameList.size()));
-
-			int num = new SecureRandom().nextInt(9999) + 1;
-
-			nickName = adjective + breadName + num;
-		} while (userRepository.findByNickName(nickName).isPresent());
-		return nickName;
+	private String getDefaultProfileImage() {
+		return customAWSS3Properties.getCloudFront() + "/" +
+			customAWSS3Properties.getDefaultImage().getUser() + ".png";
 	}
 
 	private void createUser(OIDCUserInfo oidcUserInfo, Boolean isMarketingInfoReceptionAgreed) {
@@ -99,11 +97,8 @@ public class AuthServiceImpl implements AuthService {
 			.oAuthInfo(OAuthInfo.builder()
 				.oAuthType(oidcUserInfo.getOAuthType())
 				.oAuthId(oidcUserInfo.getOAuthId()).build())
-			.userInfo(UserInfo.builder()
-				.nickName(createNickName())
-				.email(oidcUserInfo.getEmail())
-				.image(customAWSS3Properties.getCloudFront() + "/" +
-					customAWSS3Properties.getDefaultImage().getUser() + ".png").build())
+			.userInfo(createUserInfoFrom(oidcUserInfo)
+			)
 			.isMarketingInfoReceptionAgreed(isMarketingInfoReceptionAgreed)
 			.build();
 		userRepository.save(user);
@@ -152,17 +147,29 @@ public class AuthServiceImpl implements AuthService {
 
 		User user = userRepository.findByOAuthId(oAuthId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		if (noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
-			noticeTokenRepository.delete(
-				noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
-		}
-
-		makeTokenInvalid(request.getAccessToken(), request.getRefreshToken());
+		makeTokenInvalid(user, request);
 	}
 
-	private void makeTokenInvalid(String accessToken, String refreshToken) {
-		redisTokenUtils.setAccessTokenBlackList(accessToken, jwtTokenProvider.getExpiration(accessToken));
-		redisTokenUtils.deleteRefreshToken(refreshToken);
+	@Override
+	public void deRegisterUser(final LogoutRequest request, final Long userId) {
+		final User user = userRepository.findById(userId)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+		user.deRegisterUser(UUID.randomUUID().toString().substring(0, 8));
+
+		makeTokenInvalid(user, request);
+	}
+
+	private void makeTokenInvalid(final User user, LogoutRequest request) {
+		final Optional<NoticeToken> userDeviceToken =
+			noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken());
+
+		userDeviceToken.ifPresent(noticeTokenRepository::delete);
+
+		redisTokenUtils.setAccessTokenBlackList(
+			request.getAccessToken(),
+			jwtTokenProvider.getExpiration(request.getAccessToken())
+		);
+		redisTokenUtils.deleteRefreshToken(request.getRefreshToken());
 	}
 
 	private void makeRefreshTokenInvalid(String refreshToken) {
