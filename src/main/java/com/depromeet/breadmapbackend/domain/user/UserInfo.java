@@ -75,4 +75,10 @@ public class UserInfo {
 
 		return adjective + breadName + num;
 	}
+
+	public void deRegister(final String deRegiKey, final String defaultImage) {
+		this.email = deRegiKey;
+		this.nickName = "탈퇴한 유저" + deRegiKey;
+		this.image = defaultImage;
+	}
 }

@@ -154,7 +154,7 @@ public class AuthServiceImpl implements AuthService {
 	public void deRegisterUser(final LogoutRequest request, final Long userId) {
 		final User user = userRepository.findById(userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		user.deRegisterUser(UUID.randomUUID().toString().substring(0, 8));
+		user.deRegisterUser(UUID.randomUUID().toString().substring(0, 8), getDefaultProfileImage());
 
 		makeTokenInvalid(user, request);
 	}

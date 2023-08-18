@@ -92,7 +92,9 @@ public class User extends BaseEntity {
 		return false;
 	}
 
-	public void deRegisterUser(final String deRegiKeyString) {
+	public void deRegisterUser(final String deRegiKeyString, final String defaultImage) {
 		this.isRegistered = false;
+		this.oAuthInfo.deRegister(deRegiKeyString);
+		this.userInfo.deRegister(deRegiKeyString, defaultImage);
 	}
 }
