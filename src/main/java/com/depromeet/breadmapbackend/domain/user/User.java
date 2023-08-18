@@ -66,6 +66,10 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Flag> flagList = new ArrayList<>();
 
+	@Column(nullable = false)
+	@Convert(converter = BooleanToYNConverter.class)
+	private Boolean isRegistered = Boolean.TRUE;
+
 	public String getOAuthId() {
 		return this.oAuthInfo.getOAuthId();
 	}
@@ -86,5 +90,9 @@ public class User extends BaseEntity {
 	public boolean alarmOff() {
 		this.isAlarmOn = false;
 		return false;
+	}
+
+	public void deRegisterUser(final String deRegiKeyString) {
+		this.isRegistered = false;
 	}
 }
