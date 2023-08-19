@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,10 @@ class ScoredBakeryTest {
 			.longitude(127.044235133983)
 			.name("bakery")
 			.status(BakeryStatus.POSTING)
-			.image("bakeryImage.jpg")
+			.images(List.of(
+				"bakeryImage1.jpg",
+				"bakeryImage2.jpg"
+			))
 			.build();
 		// final double bakeryRating = 4.5;
 		final Long flagCount = 2L;

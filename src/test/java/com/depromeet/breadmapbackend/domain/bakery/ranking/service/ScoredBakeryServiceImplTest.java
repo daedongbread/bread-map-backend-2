@@ -65,7 +65,10 @@ class ScoredBakeryServiceImplTest {
 			.longitude(127.044235133983)
 			.name("bakery")
 			.status(BakeryStatus.POSTING)
-			.image("bakeryImage.jpg")
+			.images(List.of(
+				"bakeryImage1.jpg",
+				"bakeryImage2.jpg"
+			))
 			.build();
 		final double bakeryRating = 4.5;
 		final Long flagCount = 2L;

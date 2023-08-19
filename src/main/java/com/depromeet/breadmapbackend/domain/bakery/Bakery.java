@@ -72,7 +72,7 @@ public class Bakery extends BaseEntity {
 	private BakeryURL bakeryURL;
 
 	@BatchSize(size = 2)
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> images = new ArrayList<>();
 
 	@Column(nullable = false)

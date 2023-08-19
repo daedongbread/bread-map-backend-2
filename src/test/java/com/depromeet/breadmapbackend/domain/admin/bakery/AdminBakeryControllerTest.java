@@ -81,7 +81,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 		bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
 			.facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			)).build();
 		bakeryRepository.save(bakery);
 		s3Uploader.upload(
 			new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
@@ -244,7 +247,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("data.reportId").description("빵집 제보 고유 번호"),
 					fieldWithPath("data.pioneerId").description("빵집 개척자 고유 번호"),
 					fieldWithPath("data.pioneerNickName").description("빵집 개척자 닉네임"),
-					fieldWithPath("data.image").description("빵집 이미지"),
+					fieldWithPath("data.images").type(ARRAY).description("빵집 이미지 (최대 2개)"),
 					fieldWithPath("data.address").description("빵집 도로명 주소"),
 					fieldWithPath("data.detailedAddress").optional().description("빵집 도로명 상세 주소"),
 					fieldWithPath("data.latitude").description("빵집 위도"),
@@ -302,7 +305,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 		String object = objectMapper.writeValueAsString(BakeryAddRequest.builder()
 			.reportId(1L)
 			.name("newBakery")
-			.image("tempImage.jpg")
+			.images(List.of(
+				"tempImage1.jpg",
+				"tempImage2.jpg"
+			))
 			.address("address")
 			.detailedAddress("detailedAddress")
 			.latitude(35.124124)
@@ -332,7 +338,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				requestFields(
 					fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
-					fieldWithPath("image").optional().description("빵집 이미지"),
+					fieldWithPath("images").type(ARRAY).description("빵집 이미지 (최대 2개)"),
 					fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
 					fieldWithPath("detailedAddress").optional().description("빵집 도로명 상세 주소"),
 					fieldWithPath("latitude").description("빵집 위도"),
@@ -371,7 +377,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 		String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
 			.name("newBakery")
-			.image("tempImage.jpg")
+			.images(List.of(
+				"tempImage1.jpg",
+				"tempImage2.jpg"
+			))
 			.address("address")
 			.detailedAddress("detailedAddress")
 			.latitude(35.124124)
@@ -405,7 +414,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 					parameterWithName("bakeryId").description("빵집 고유 번호")),
 				requestFields(
 					fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
-					fieldWithPath("image").optional().description("빵집 이미지"),
+					fieldWithPath("images").type(ARRAY).description("빵집 이미지 (최대 2개)"),
 					fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
 					fieldWithPath("detailedAddress").optional().description("빵집 도로명 상세 주소"),
 					fieldWithPath("latitude").description("빵집 위도"),
@@ -795,7 +804,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 			.toList();
 
 		String response = objectMapper.writeValueAsString(new ApiResponse<>(content));
-		
+
 		//when
 		ResultActions perform = mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/products", bakery.getId())
 			.header("Authorization", "Bearer " + token.getAccessToken())

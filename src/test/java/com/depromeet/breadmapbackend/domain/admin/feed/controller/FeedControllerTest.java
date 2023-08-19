@@ -90,7 +90,10 @@ public class FeedControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 1")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery secondBakery = Bakery.builder()
@@ -100,7 +103,10 @@ public class FeedControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 2")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		bakeryRepository.save(firstBakery);

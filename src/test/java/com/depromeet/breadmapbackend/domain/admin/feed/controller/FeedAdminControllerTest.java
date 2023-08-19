@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +28,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CommonFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedRequestDto;
@@ -82,7 +87,10 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 1")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery secondBakery = Bakery.builder()
@@ -92,7 +100,10 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 2")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery saveFirstBakery = bakeryRepository.save(firstBakery);
@@ -170,7 +181,8 @@ public class FeedAdminControllerTest extends ControllerTest {
 		List<Bakery> bakeries = List.of(firstBakery, secondBakery);
 
 		CurationFeed curationEntity = (CurationFeed)FeedAssembler.toEntity(admin, category, curationRequest);
-		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationEntity, List.of(saveFirstBakery, saveSecondBakery), curationRequest);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationEntity,
+			List.of(saveFirstBakery, saveSecondBakery), curationRequest);
 
 		curationEntity.addAll(bakeries, curationBakeries);
 
@@ -353,7 +365,10 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.facilityInfoList(Collections.singletonList(FacilityInfo.PARKING))
 			.name("update bakery")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery updatebakery = bakeryRepository.save(updateBakery);
