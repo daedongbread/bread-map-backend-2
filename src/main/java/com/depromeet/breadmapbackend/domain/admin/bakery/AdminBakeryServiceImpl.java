@@ -531,7 +531,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			customAWSS3Properties.getCloudFront() + "/" + customAWSS3Properties.getDefaultImage().getBakery() + (
 				new SecureRandom().nextInt(10) + 1) + ".png";
 
-		boolean isEmptyList = images.stream().allMatch(StringUtils::hasText);
+		boolean isEmptyList = images.stream().noneMatch(StringUtils::hasText);
 
 		if (isEmptyList) {
 			images.clear();
