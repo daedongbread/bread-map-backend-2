@@ -151,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
+	@Transactional
 	public void deRegisterUser(final LogoutRequest request, final Long userId) {
 		final User user = userRepository.findById(userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));

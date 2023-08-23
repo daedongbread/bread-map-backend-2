@@ -33,6 +33,8 @@ public class UserFollowServiceImpl implements UserFollowService {
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 		User toUser = userRepository.findById(request.getUserId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+		if (toUser.isDeRegistered())
+			throw new DaedongException(DaedongStatus.USER_NOT_REGISTERED);
 		if (fromUser.equals(toUser))
 			throw new DaedongException(DaedongStatus.SELF_FOLLOW_EXCEPTION);
 		if (followRepository.findByFromUserAndToUser(fromUser, toUser).isPresent())

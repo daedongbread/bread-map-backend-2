@@ -9,6 +9,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserInfo {
 	@Column(nullable = false, unique = true)

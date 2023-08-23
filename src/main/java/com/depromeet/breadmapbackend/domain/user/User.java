@@ -67,8 +67,7 @@ public class User extends BaseEntity {
 	private List<Flag> flagList = new ArrayList<>();
 
 	@Column(nullable = false)
-	@Convert(converter = BooleanToYNConverter.class)
-	private Boolean isRegistered = Boolean.TRUE;
+	private boolean isDeRegistered = false;
 
 	public String getOAuthId() {
 		return this.oAuthInfo.getOAuthId();
@@ -93,7 +92,7 @@ public class User extends BaseEntity {
 	}
 
 	public void deRegisterUser(final String deRegiKeyString, final String defaultImage) {
-		this.isRegistered = false;
+		this.isDeRegistered = true;
 		this.oAuthInfo.deRegister(deRegiKeyString);
 		this.userInfo.deRegister(deRegiKeyString, defaultImage);
 	}
