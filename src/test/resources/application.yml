@@ -25,6 +25,8 @@ spring:
         format_sql: true
         create_empty_composites:
           enabled: true
+  flyway:
+    enabled: false
   security:
     oauth2:
       client:
