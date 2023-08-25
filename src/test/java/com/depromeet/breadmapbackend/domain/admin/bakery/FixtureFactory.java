@@ -27,6 +27,7 @@ public class FixtureFactory {
 			.and(inClass(BakeryAddRequest.class));
 
 		EasyRandomParameters param = new EasyRandomParameters()
+			.collectionSizeRange(1, 2)
 			.stringLengthRange(3, 20)
 			.randomize(idPredicate, () -> reportId)
 			.randomize(productAddRequestPredicate, () -> null);
