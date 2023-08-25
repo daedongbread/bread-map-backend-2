@@ -111,7 +111,7 @@ public class Bakery extends BaseEntity {
 		this.detailedAddress = detailedAddress;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
-		this.images.addAll(images);
+		this.images = images;
 		this.bakeryURL = BakeryURL.builder()
 			.websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
 		this.facilityInfoList = facilityInfoList;
@@ -142,6 +142,10 @@ public class Bakery extends BaseEntity {
 	}
 
 	public void updateImages(List<String> updateImages) {
+		if (this.images == null) {
+			this.images = new ArrayList<>();
+		}
+
 		this.images.clear();
 		this.images.addAll(updateImages);
 	}
