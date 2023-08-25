@@ -101,6 +101,9 @@ public class Bakery extends BaseEntity {
 		String websiteURL, String instagramURL, String facebookURL, String blogURL,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status, BakeryAddReport bakeryAddReport
 	) {
+
+		validateOnImagesCount(images);
+
 		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
@@ -146,8 +149,16 @@ public class Bakery extends BaseEntity {
 			this.images = new ArrayList<>();
 		}
 
+		validateOnImagesCount(updateImages);
+
 		this.images.clear();
 		this.images.addAll(updateImages);
+	}
+
+	private void validateOnImagesCount(List<String> requestImages) {
+		if (requestImages.size() > 2) {
+			throw new DaedongException(DaedongStatus.BAKERY_IMAGE_CANNOT_MORE_THAN_TWO);
+		}
 	}
 
 	public boolean isPosting() {
