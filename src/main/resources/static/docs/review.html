@@ -512,7 +512,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/1?sortBy=high&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTYwLCJleHAiOjE2OTI5Nzk3NjB9.FF8Ca64WOPMvRi6qpC2QUQpPMZN8kFUWE2MJ78ZljsU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -611,7 +611,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 3914
+Content-Length: 4230
 
 {
   "data" : {
@@ -623,7 +623,7 @@ Content-Length: 3914
     "contents" : [ {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -650,13 +650,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.5
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -680,43 +680,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 1,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 5,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.08.09",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -740,13 +710,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -760,7 +730,7 @@ Content-Length: 3914
         "isMe" : true
       },
       "reviewInfo" : {
-        "id" : 3,
+        "id" : 5,
         "productRatingList" : [ {
           "productName" : "bread1",
           "rating" : 4
@@ -770,8 +740,41 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
+      }
+    }, {
+      "bakeryInfo" : {
+        "bakeryId" : 1,
+        "bakeryImage" : "bakeryImage1.jpg",
+        "bakeryName" : "bakery1",
+        "bakeryAddress" : "address"
+      },
+      "userInfo" : {
+        "userId" : 1,
+        "userImage" : null,
+        "nickName" : "nickname1",
+        "reviewNum" : 6,
+        "followerNum" : 0,
+        "isFollow" : false,
+        "isMe" : true
+      },
+      "reviewInfo" : {
+        "id" : 2,
+        "productRatingList" : [ {
+          "productName" : "bread1",
+          "rating" : 4
+        }, {
+          "productName" : "bread2",
+          "rating" : 3
+        } ],
+        "imageList" : [ "image2" ],
+        "content" : "content2",
+        "isLike" : false,
+        "likeNum" : 0,
+        "commentNum" : 0,
+        "createdAt" : "2023.08.26",
+        "averageRating" : 3.5
       }
     } ]
   }
@@ -839,7 +842,7 @@ Content-Length: 3914
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
 </tr>
 <tr>
@@ -969,7 +972,7 @@ Content-Length: 3914
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/bakeries/1/products/1?sortBy=low&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTU4LCJleHAiOjE2OTI5Nzk3NTh9.Q6zNZz1rKe75Z1gRuQKVW-M9cf-I6v2GdjslpwLdVb0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1072,7 +1075,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 3914
+Content-Length: 4146
 
 {
   "data" : {
@@ -1084,7 +1087,7 @@ Content-Length: 3914
     "contents" : [ {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1108,13 +1111,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1138,13 +1141,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1168,13 +1171,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1198,13 +1201,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1231,7 +1234,7 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 3.5
       }
     } ]
@@ -1300,7 +1303,7 @@ Content-Length: 3914
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
 </tr>
 <tr>
@@ -1425,7 +1428,7 @@ Content-Length: 3914
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/users/1?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTU4LCJleHAiOjE2OTI5Nzk3NTh9.Q6zNZz1rKe75Z1gRuQKVW-M9cf-I6v2GdjslpwLdVb0
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1520,7 +1523,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 3914
+Content-Length: 4146
 
 {
   "data" : {
@@ -1532,7 +1535,7 @@ Content-Length: 3914
     "contents" : [ {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1556,13 +1559,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1586,43 +1589,13 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
-        "bakeryName" : "bakery1",
-        "bakeryAddress" : "address"
-      },
-      "userInfo" : {
-        "userId" : 1,
-        "userImage" : null,
-        "nickName" : "nickname1",
-        "reviewNum" : 6,
-        "followerNum" : 0,
-        "isFollow" : false,
-        "isMe" : true
-      },
-      "reviewInfo" : {
-        "id" : 4,
-        "productRatingList" : [ {
-          "productName" : "bread1",
-          "rating" : 4
-        } ],
-        "imageList" : [ ],
-        "content" : "content3",
-        "isLike" : false,
-        "likeNum" : 0,
-        "commentNum" : 0,
-        "createdAt" : "2023.08.09",
-        "averageRating" : 4.0
-      }
-    }, {
-      "bakeryInfo" : {
-        "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1646,13 +1619,43 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.0
       }
     }, {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
+        "bakeryName" : "bakery1",
+        "bakeryAddress" : "address"
+      },
+      "userInfo" : {
+        "userId" : 1,
+        "userImage" : null,
+        "nickName" : "nickname1",
+        "reviewNum" : 6,
+        "followerNum" : 0,
+        "isFollow" : false,
+        "isMe" : true
+      },
+      "reviewInfo" : {
+        "id" : 4,
+        "productRatingList" : [ {
+          "productName" : "bread1",
+          "rating" : 4
+        } ],
+        "imageList" : [ ],
+        "content" : "content3",
+        "isLike" : false,
+        "likeNum" : 0,
+        "commentNum" : 0,
+        "createdAt" : "2023.08.26",
+        "averageRating" : 4.0
+      }
+    }, {
+      "bakeryInfo" : {
+        "bakeryId" : 1,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1679,7 +1682,7 @@ Content-Length: 3914
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 3.5
       }
     } ]
@@ -1748,7 +1751,7 @@ Content-Length: 3914
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
 </tr>
 <tr>
@@ -1873,7 +1876,7 @@ Content-Length: 3914
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/1 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTU5LCJleHAiOjE2OTI5Nzk3NTl9.p522CFWInX2fKGpntH2AgjuKhHPIy5hXjEfOsenIGMw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1947,14 +1950,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1602
+Content-Length: 1695
 
 {
   "data" : {
     "reviewDto" : {
       "bakeryInfo" : {
         "bakeryId" : 1,
-        "bakeryImage" : null,
+        "bakeryImage" : "bakeryImage1.jpg",
         "bakeryName" : "bakery1",
         "bakeryAddress" : "address"
       },
@@ -1981,7 +1984,7 @@ Content-Length: 1602
         "isLike" : false,
         "likeNum" : 0,
         "commentNum" : 0,
-        "createdAt" : "2023.08.09",
+        "createdAt" : "2023.08.26",
         "averageRating" : 4.5
       }
     },
@@ -1990,7 +1993,11 @@ Content-Length: 1602
       "image" : null,
       "rating" : 4.0
     }, {
-      "id" : 5,
+      "id" : 2,
+      "image" : "image2",
+      "rating" : 3.5
+    }, {
+      "id" : 3,
       "image" : null,
       "rating" : 4.0
     }, {
@@ -1998,20 +2005,20 @@ Content-Length: 1602
       "image" : null,
       "rating" : 4.0
     }, {
-      "id" : 3,
+      "id" : 5,
       "image" : null,
       "rating" : 4.0
-    }, {
-      "id" : 2,
-      "image" : "image2",
-      "rating" : 3.5
     } ],
     "bakeryOtherReviews" : [ {
       "id" : 6,
       "image" : null,
       "rating" : 4.0
     }, {
-      "id" : 5,
+      "id" : 2,
+      "image" : "image2",
+      "rating" : 3.5
+    }, {
+      "id" : 3,
       "image" : null,
       "rating" : 4.0
     }, {
@@ -2019,13 +2026,9 @@ Content-Length: 1602
       "image" : null,
       "rating" : 4.0
     }, {
-      "id" : 3,
+      "id" : 5,
       "image" : null,
       "rating" : 4.0
-    }, {
-      "id" : 2,
-      "image" : "image2",
-      "rating" : 3.5
     } ]
   }
 }</code></pre>
@@ -2067,7 +2070,7 @@ Content-Length: 1602
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.reviewDto.bakeryInfo.bakeryImage</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">빵집 이미지</p></td>
 </tr>
 <tr>
@@ -2234,8 +2237,8 @@ Content-Length: 1602
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/bakeries/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
-Content-Length: 450
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTU5LCJleHAiOjE2OTI5Nzk3NTl9.p522CFWInX2fKGpntH2AgjuKhHPIy5hXjEfOsenIGMw
+Content-Length: 471
 Host: localhost:8080
 
 {
@@ -2426,7 +2429,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/1 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTU5LCJleHAiOjE2OTI5Nzk3NTl9.p522CFWInX2fKGpntH2AgjuKhHPIy5hXjEfOsenIGMw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2525,7 +2528,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/1/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY1LCJleHAiOjE2OTE1MTE0NjV9.T_Cq2XLh3p5BsKXzTl_dAEjDCsoxKuLEObFnV_zvHp0
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTY2LCJleHAiOjE2OTI5Nzk3NjZ9.l-_BW8XsbsuVscCQILW_f0LaB-g5N766n8SomiYpjZA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2609,7 +2612,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/2/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY1LCJleHAiOjE2OTE1MTE0NjV9.T_Cq2XLh3p5BsKXzTl_dAEjDCsoxKuLEObFnV_zvHp0
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTY2LCJleHAiOjE2OTI5Nzk3NjZ9.l-_BW8XsbsuVscCQILW_f0LaB-g5N766n8SomiYpjZA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2717,7 +2720,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/reviews/1/comments HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTYwLCJleHAiOjE2OTI5Nzk3NjB9.FF8Ca64WOPMvRi6qpC2QUQpPMZN8kFUWE2MJ78ZljsU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2791,7 +2794,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 495
+Content-Length: 517
 
 {
   "data" : [ {
@@ -2801,7 +2804,7 @@ Content-Length: 495
     "nickName" : "nickname1",
     "commentNickName" : null,
     "content" : "comment1",
-    "createdAt" : "2023.08.09",
+    "createdAt" : "2023.08.26",
     "likeNum" : 1,
     "commentList" : [ {
       "id" : 4,
@@ -2810,7 +2813,7 @@ Content-Length: 495
       "nickName" : "nickname1",
       "commentNickName" : "nickname1",
       "content" : "comment2",
-      "createdAt" : "2023.08.09",
+      "createdAt" : "2023.08.26",
       "likeNum" : 0,
       "commentList" : [ ]
     } ]
@@ -2948,8 +2951,8 @@ Content-Length: 495
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
-Content-Length: 68
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTYxLCJleHAiOjE2OTI5Nzk3NjF9.-dW1ZxRSXwbEEAOJ2TQqN2tVGlacsnkIaS9oEWPZQo4
+Content-Length: 71
 Host: localhost:8080
 
 {
@@ -3074,7 +3077,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/1/comments/10 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTYxLCJleHAiOjE2OTI5Nzk3NjF9.-dW1ZxRSXwbEEAOJ2TQqN2tVGlacsnkIaS9oEWPZQo4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3162,7 +3165,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/1/comments/2/like HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTYwLCJleHAiOjE2OTI5Nzk3NjB9.FF8Ca64WOPMvRi6qpC2QUQpPMZN8kFUWE2MJ78ZljsU
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3250,7 +3253,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/reviews/1/comments/5/unlike HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY0LCJleHAiOjE2OTE1MTE0NjR9.awGEITVQZEmK2Hho0iwl1A7QtWAu3K2zP6-UJdez4x8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTYxLCJleHAiOjE2OTI5Nzk3NjF9.-dW1ZxRSXwbEEAOJ2TQqN2tVGlacsnkIaS9oEWPZQo4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3351,9 +3354,9 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reviews/1/report HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkxNTA3ODY1LCJleHAiOjE2OTE1MTE0NjV9.T_Cq2XLh3p5BsKXzTl_dAEjDCsoxKuLEObFnV_zvHp0
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjkyOTc2MTY3LCJleHAiOjE2OTI5Nzk3Njd9.k_KttmYkC70T0JQJH9UuGexqwX9cYYDapo7lLkv35yo
 Accept: application/json
-Content-Length: 54
+Content-Length: 57
 Host: localhost:8080
 
 {
@@ -3482,7 +3485,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-17 11:55:55 +0900
+Last updated 2023-06-17 02:56:46 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
