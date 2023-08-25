@@ -10,6 +10,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,6 +48,7 @@ class ReviewCommentControllerTest extends ControllerTest {
 
 	@BeforeEach
 	public void setup() {
+		List<String> images = List.of("test images");
 		User user = User.builder()
 			.oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId1").build())
 			.userInfo(UserInfo.builder().nickName("nickname1").build())
@@ -55,8 +57,15 @@ class ReviewCommentControllerTest extends ControllerTest {
 		token = jwtTokenProvider.createJwtToken(user.getOAuthId(), user.getRoleType().getCode());
 
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
-		Bakery bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
-			.facilityInfoList(facilityInfo).name("bakery1").status(BakeryStatus.POSTING).build();
+		Bakery bakery = Bakery.builder()
+			.address("address")
+			.latitude(37.5596080725671)
+			.longitude(127.044235133983)
+			.images(new ArrayList<>(images))
+			.facilityInfoList(facilityInfo)
+			.name("bakery1")
+			.status(BakeryStatus.POSTING)
+			.build();
 		bakeryRepository.save(bakery);
 
 		review = Review.builder().user(user).bakery(bakery).content("content1").build();
@@ -137,7 +146,7 @@ class ReviewCommentControllerTest extends ControllerTest {
 				)
 			))
 			.andExpect(status().isCreated());
-        
+
 		final NoticeEvent noticeEvent = events.stream(NoticeEvent.class).findFirst().orElseThrow();
 		assertThat(noticeEvent.getNoticeType()).isEqualTo(NoticeType.REVIEW_COMMENT);
 		assertThat(noticeEvent.getUser()).isEqualTo(review.getUser());

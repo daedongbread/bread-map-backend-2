@@ -3,10 +3,9 @@ package com.depromeet.breadmapbackend.domain.admin.feed.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
-import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,12 @@ import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.category.repository.CategoryRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CommonFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
@@ -47,6 +52,7 @@ public class FeedRepositoryTest {
 
 	@Autowired
 	BakeryRepository bakeryRepository;
+	private List<String> images = List.of("test images");
 
 	@DisplayName("랜딩 피드를 저장한다")
 	@Test
@@ -129,6 +135,7 @@ public class FeedRepositoryTest {
 			.longitude(127.044235133983)
 			.name("test bakery 1")
 			.status(BakeryStatus.POSTING)
+			.images(new ArrayList<>(images))
 			.build());
 
 		CurationFeed feed = CurationFeed.builder()

@@ -4,6 +4,7 @@ import static com.depromeet.breadmapbackend.global.EventInfo.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +144,7 @@ class ScoredBakeryServiceImplTest {
 			.mapToObj(i -> FixtureFactory.getScoredBakery(i).nextObject(ScoredBakery.class))
 			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
 			.toList();
+		preparedDate.forEach(data -> data.getBakery().updateImages(new ArrayList<>(List.of("test images"))));
 		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);
 		return preparedDate;
 	}
@@ -152,6 +154,7 @@ class ScoredBakeryServiceImplTest {
 			.mapToObj(i -> FixtureFactory.getYesterdayScoredBakery(i).nextObject(ScoredBakery.class))
 			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
 			.toList();
+		preparedDate.forEach(data -> data.getBakery().updateImages(new ArrayList<>(List.of("test images"))));
 		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);
 		return preparedDate;
 	}

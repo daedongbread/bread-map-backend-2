@@ -75,10 +75,13 @@ class FlagServiceImplTest extends FlagServiceTest {
 
 		assertThat(firstFlag.getFlagInfo().getId()).isEqualTo(111L);
 		assertThat(firstFlag.getFlagInfo().getColor()).isEqualTo(FlagColor.YELLOW);
-		assertThat(firstFlag.getBakeryImageList()).isEqualTo(List.of("image111"));
+		assertThat(firstFlag.getBakeryImageList()).isEqualTo(
+			List.of("https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery4.png"));
 		assertThat(secondFlag.getFlagInfo().getId()).isEqualTo(112L);
 		assertThat(secondFlag.getFlagInfo().getColor()).isEqualTo(FlagColor.CYAN);
-		assertThat(secondFlag.getBakeryImageList()).isEqualTo(List.of("image", "image2"));
+		assertThat(secondFlag.getBakeryImageList()).isEqualTo(
+			List.of("https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery4.png",
+				"https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery3.png"));
 
 	}
 

@@ -34,6 +34,11 @@ insert into bakery (id, created_at, modified_at, address, latitude, longitude, n
 (113,  '2023-01-03', '2023-01-01', '제주도', 37.5596080725679, 127.044235133911,'제주도 빵집', 'POSTING')
 ;
 
+insert into bakery_images (bakery_id, images) values
+(111, 'image'),
+(112, 'image3'),
+(113, 'image2');
+
 
 insert into review (id, created_at, modified_at, content, is_block, is_delete, is_hide, is_new, bakery_id, user_id   )values
 (111,  '2023-01-01', '2023-01-01', '좋아요!', 'N', 'N', 'N','N',111,111),

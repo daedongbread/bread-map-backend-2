@@ -9,6 +9,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,6 +39,7 @@ class BakeryControllerTest extends ControllerTest {
 
 	@BeforeEach
 	public void setup() {
+		List<String> images = List.of("test images");
 		user = User.builder().oAuthInfo(OAuthInfo.builder().oAuthType(OAuthType.GOOGLE).oAuthId("oAuthId").build())
 			.userInfo(UserInfo.builder().nickName("nickname").build()).build();
 		userRepository.save(user);
@@ -56,6 +58,7 @@ class BakeryControllerTest extends ControllerTest {
 			.name("bakery1")
 			.status(BakeryStatus.POSTING)
 			.bakeryAddReport(report1)
+			.images(new ArrayList<>(images))
 			.build();
 		bakeryRepository.save(bakery1);
 		// bakeryViewRepository.save(BakeryView.builder().bakery(bakery1).build());
@@ -67,6 +70,7 @@ class BakeryControllerTest extends ControllerTest {
 			.name("bakery2")
 			.status(BakeryStatus.POSTING)
 			.bakeryAddReport(report2)
+			.images(new ArrayList<>(images))
 			.build();
 		bakeryRepository.save(bakery2);
 
@@ -173,7 +177,7 @@ class BakeryControllerTest extends ControllerTest {
 				),
 				responseFields(
 					fieldWithPath("data.bakeryInfo").description("빵집 정보"),
-					fieldWithPath("data.bakeryInfo.image").description("빵집 이미지"),
+					fieldWithPath("data.bakeryInfo.images").description("빵집 이미지"),
 					fieldWithPath("data.bakeryInfo.name").description("빵집 이름"),
 					fieldWithPath("data.bakeryInfo.flagNum").description("빵집 가봤어요 수"),
 					fieldWithPath("data.bakeryInfo.rating").description("빵집 평점"),
