@@ -23,6 +23,8 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 
 public class CurationFeedTest {
 
+	private List<String> images = List.of("test images");
+
 	@Test
 	@DisplayName("큐레이션 피드에 추천하는 빵집을 넣어 생성한다")
 	void 큐레이션_추천빵집_테스트() {
@@ -62,11 +64,13 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -118,11 +122,13 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.UNPOSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -194,31 +200,37 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(3L)
 				.name("추천빵집 3")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(4L)
 				.name("추천빵집 4")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(5L)
 				.name("추천빵집 5")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(6L)
 				.name("추천빵집 6")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -275,16 +287,19 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -336,11 +351,13 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -396,11 +413,13 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -428,6 +447,7 @@ public class CurationFeedTest {
 				.id(3L)
 				.name("추천빵집 3")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
