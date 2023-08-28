@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class UserInfo {
 	@Column(nullable = false, unique = true)
 	private String nickName;
-
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Enumerated(EnumType.STRING)
