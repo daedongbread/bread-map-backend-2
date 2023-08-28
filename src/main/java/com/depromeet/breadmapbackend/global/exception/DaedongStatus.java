@@ -59,6 +59,8 @@ public enum DaedongStatus {
 	SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID(BAD_REQUEST, 40110, "second depth comment should have parent id"),
 	BAKERY_IMAGE_CANNOT_MORE_THAN_TWO(BAD_REQUEST, 40111, "bakery images cannot bigger than 2"),
 
+	USER_NOT_REGISTERED(BAD_REQUEST, 40111, "user is deregistered"),
+
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
 	TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"), // access or refresh token이 유효하지 않을 때
@@ -119,7 +121,8 @@ public enum DaedongStatus {
 		"no registered consumer group"), // 해당 이벤트에 등록되지 않은 컨슈머 그룹입니다.
 	CANNOT_LIKE_MORE_THAN_COUNT(INTERNAL_SERVER_ERROR, 50002, "cannot like more than 5"),
 	CANNOT_FIND_FEED_LIKE(INTERNAL_SERVER_ERROR, 50003, "you have never liked this feed"),
-	CANNOT_UNLIKE_UNDER_ZERO(INTERNAL_SERVER_ERROR, 50004, "cannot like under 0");
+	CANNOT_UNLIKE_UNDER_ZERO(INTERNAL_SERVER_ERROR, 50004, "cannot like under 0"),
+	;
 	private final HttpStatus status;
 	private final Integer code;
 	private final String description;

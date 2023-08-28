@@ -393,6 +393,8 @@ class AdminBakeryControllerTest extends ControllerTest {
 			.phoneNumber("010-1234-5678")
 			.facilityInfoList(facilityInfo)
 			.status(BakeryStatus.POSTING)
+			.newBreadTime("2023-08-2700:00:00")
+			.checkPoint("update check point")
 			.productList(Arrays.asList(
 				BakeryUpdateRequest.ProductUpdateRequest.builder()
 					.productId(product.getId()).productType(ProductType.BREAD)

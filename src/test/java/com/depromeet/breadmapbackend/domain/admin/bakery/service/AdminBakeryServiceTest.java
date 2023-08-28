@@ -264,6 +264,8 @@ public class AdminBakeryServiceTest {
 			.phoneNumber("010-1234-5678")
 			.facilityInfoList(facilityInfo)
 			.status(BakeryStatus.POSTING)
+			.newBreadTime("2023-08-2700:00:00")
+			.checkPoint("update check point")
 			.productList(Collections.singletonList(
 				BakeryUpdateRequest.ProductUpdateRequest.builder()
 					.productId(2L).productType(ProductType.BREAD)
@@ -281,12 +283,24 @@ public class AdminBakeryServiceTest {
 		given(customAWSS3Properties.getDefaultImage())
 			.willReturn(defaultImage);
 
+		assertThat(bakeries.get(0)).extracting(
+			"newBreadTime", "checkPoint"
+		).containsOnly(
+			null, null
+		);
+
 		//when
 		adminBakeryService.updateBakery(bakeries.get(0).getId(), updateRequest);
 
 		//then
 		assertThat(bakeries.get(0).getProductList()).hasSize(1);
 		assertThat(bakeries.get(0).getImages()).hasSize(2);
+		assertThat(bakeries.get(0)).extracting(
+			"newBreadTime", "checkPoint"
+		).containsOnly(
+			"2023-08-2700:00:00", "update check point"
+		);
+
 	}
 
 	@DisplayName("updateBakery 테스트 - 수정 이미지가 0개일 경우 기본 이미지 1개를 삽입한다")
@@ -315,7 +329,6 @@ public class AdminBakeryServiceTest {
 					.productName("testBread").price("12000").image("tempImage.jpg").build()
 			))
 			.build();
-
 		//given
 		given(bakeryRepository.findById(anyLong()))
 			.willReturn(Optional.of(bakeries.get(0)));
@@ -325,7 +338,6 @@ public class AdminBakeryServiceTest {
 			.willReturn("test Cloud front");
 		given(customAWSS3Properties.getDefaultImage())
 			.willReturn(defaultImage);
-
 		//when
 		adminBakeryService.updateBakery(bakeries.get(0).getId(), updateRequest);
 
