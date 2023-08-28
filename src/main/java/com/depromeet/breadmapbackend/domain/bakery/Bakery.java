@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
@@ -73,6 +74,10 @@ public class Bakery extends BaseEntity {
 
 	@BatchSize(size = 2)
 	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(
+		name = "bakery_images",
+		joinColumns = @JoinColumn(name = "bakery_id")
+	)
 	private List<String> images = new ArrayList<>();
 
 	@Column(nullable = false)
