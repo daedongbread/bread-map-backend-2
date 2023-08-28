@@ -1,5 +1,8 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
+import java.time.LocalDate;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +13,7 @@ import javax.persistence.OneToOne;
 import org.springframework.util.Assert;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,44 +38,64 @@ public class ScoredBakery {
 	@OneToOne
 	@JoinColumn(name = "bakery_id")
 	private Bakery bakery;
-	private double bakeryRating;
-	private Long flagCount;
+	private long viewCount;
+	private long flagCount;
+	// private double rating;
 	private double totalScore;
-	private String createdWeekOfMonthYear;
+	private LocalDate calculatedDate;
+	@Column(name = "bakery_rank")
+	private int rank;
 
 	@Builder
 	private ScoredBakery(
 		final Bakery bakery,
-		final double bakeryRating,
-		final Long flagCount,
+		final long viewCount,
+		final long flagCount,
+		// final double rating,
 		final double totalScore,
-		final String createdWeekOfMonthYear
+		final LocalDate calculatedDate
 	) {
 
 		Assert.notNull(bakery, "bakery must not be null");
-		Assert.isTrue(bakeryRating >= 0 && bakeryRating <= 5, "bakeryRating must be between 0 and 5");
-		Assert.notNull(flagCount, "flagCount must not be null");
-		Assert.notNull(createdWeekOfMonthYear, "weekOfMonth must not be null");
+		Assert.notNull(calculatedDate, "calculatedDate must not be null");
 
 		this.bakery = bakery;
-		this.bakeryRating = bakeryRating;
+		this.viewCount = viewCount;
 		this.flagCount = flagCount;
+		// this.rating = rating;
 		this.totalScore = totalScore;
-		this.createdWeekOfMonthYear = createdWeekOfMonthYear;
+		this.calculatedDate = calculatedDate;
 	}
 
-	public static ScoredBakery from(final BakeryScores bakeryScores) {
+	public void setRank(final int rank) {
+		this.rank = rank;
+	}
+
+	public static ScoredBakery from(final BakeryScoreBaseWithSelectedDate bakeryScoreBase) {
 		return builder()
-			.bakery(bakeryScores.bakery())
-			.bakeryRating(bakeryScores.bakeryRating())
-			.flagCount(bakeryScores.flagCount())
-			.totalScore(calculateTotalScore(bakeryScores.bakeryRating(), bakeryScores.flagCount()))
-			.createdWeekOfMonthYear(bakeryScores.weekOfMonth())
+			.bakery(bakeryScoreBase.bakery())
+			.flagCount(bakeryScoreBase.flagCount())
+			.viewCount(bakeryScoreBase.viewCount())
+			// .rating(bakeryScoreBase.bakeryRating())
+			.totalScore(
+				calculateTotalScore(
+					// bakeryScoreBase.bakeryRating(),
+					bakeryScoreBase.flagCount(),
+					bakeryScoreBase.viewCount()
+				)
+			)
+			.calculatedDate(bakeryScoreBase.selectedDate())
 			.build();
 	}
 
-	private static double calculateTotalScore(final double bakeryRating, final Long flagCount) {
-		return (bakeryRating * RankWeight.RATING_WEIGHT.getWeight()) +
-			(flagCount.doubleValue() * RankWeight.FLAG_COUNT_WEIGHT.getWeight());
+	private static double calculateTotalScore(
+		// final double bakeryRating,
+		final Long flagCount,
+		final Long viewCount
+	) {
+		return
+			// (bakeryRating * RankWeight.RATING_WEIGHT.getWeight()) +
+			(flagCount.doubleValue() * RankWeight.FLAG_COUNT_WEIGHT.getWeight()) +
+				(viewCount.doubleValue() * RankWeight.VIEW_COUNT_WEIGHT.getWeight());
 	}
 }

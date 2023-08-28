@@ -2,11 +2,13 @@ package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryScores;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 
 /**
  * ScoredBakeryTest
@@ -28,13 +30,17 @@ class ScoredBakeryTest {
 			.status(BakeryStatus.POSTING)
 			.image("bakeryImage.jpg")
 			.build();
-		final double bakeryRating = 4.5;
+		// final double bakeryRating = 4.5;
 		final Long flagCount = 2L;
+		final Long viewCount = 1000L;
+		final LocalDate calculatedDate = LocalDate.now();
+		final double expectedTotalScore = 1002;
+		final BakeryScoreBaseWithSelectedDate bakeryScoreBaseWithSelectedDate =
+			new BakeryScoreBaseWithSelectedDate(bakery, flagCount, viewCount, calculatedDate);
 
-		final double expectedTotalScore = 6.5;
-		final BakeryScores bakeryScores = new BakeryScores(bakery, bakeryRating, flagCount, "2022-1-1");
 		//when
-		final ScoredBakery result = ScoredBakery.from(bakeryScores);
+		final ScoredBakery result = ScoredBakery.from(bakeryScoreBaseWithSelectedDate);
+
 		//then
 		assertThat(result.getTotalScore()).isEqualTo(expectedTotalScore);
 

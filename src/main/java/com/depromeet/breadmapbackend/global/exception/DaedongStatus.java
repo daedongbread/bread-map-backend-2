@@ -36,7 +36,29 @@ public enum DaedongStatus {
 	ADMIN_PAGE_EXCEPTION(BAD_REQUEST, 40091, "invalid admin page request"), // 관리자 관련 페이지 조건이 틀렸을 때
 	ADMIN_IMAGE_TYPE_EXCEPTION(BAD_REQUEST, 40092, "invalid admin image type"), // 관리자 관련 이미지 조건이 틀렸을 때  TODO
 	ADMIN_IMAGE_UNDELETE_EXCEPTION(BAD_REQUEST, 40093, "admin image undelete"), // 관리자 관련 이미지가 사용 중이서 삭제할 수 없을 때
-	CALCULATING_BAKERY_RANKING(BAD_REQUEST, 40094, "re-calculating bakery rank"), // 랭킹 계산 중
+	CURATION_BAKERY_SIZE_EXCEPTION(BAD_REQUEST, 40094, "curation size exceed"),
+	CURATION_UNEDIT_EXCEPTION(BAD_REQUEST, 40095, "curation cannot remove or update"),
+	BAKERY_NOT_POSTING(BAD_REQUEST, 40096, "bakery status is not posting"),
+	CALCULATING_BAKERY_RANKING(BAD_REQUEST, 40097, "re-calculating bakery rank"), // 랭킹 계산 중
+	BAKERY_RANKING_NOT_FOUND(BAD_REQUEST, 40098, "bakery ranking not found"), // 랭킹이 존재하지 않을 때
+
+	INVALID_POST_TOPIC(BAD_REQUEST, 40099, "invalid post topic"),
+	COMMENT_NOT_FOUND(BAD_REQUEST, 40100, "comment not found"),
+	INVALID_COMMENT_STATUS(BAD_REQUEST, 40101, "comment status not valid"),
+	INVALID_POST(BAD_REQUEST, 40102, "invalid post"),
+	REPORT_CONTENT_EXCEPTION(BAD_REQUEST, 40103, "report conent exception"),
+	INVALID_REPORT_TYPE(BAD_REQUEST, 40104, "invalid report type"),
+	INVALID_REPORT_TARGET(BAD_REQUEST, 40105, "invalid report target"),
+	CANNOT_REPORT_OWN_POST(BAD_REQUEST, 40106, "cannot report own content"),
+
+	INVALID_EVENT_STATUS(BAD_REQUEST, 40107, "invalid event status"),
+	CAROUSEL_POST_COUNT_EXCEEDED(BAD_REQUEST, 40108, "carousel post count exceeded"),
+
+	SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID(BAD_REQUEST, 40109,
+		"second depth comment should have target user id"),
+	SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID(BAD_REQUEST, 40110, "second depth comment should have parent id"),
+
+	USER_NOT_REGISTERED(BAD_REQUEST, 40111, "user is deregistered"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
@@ -61,14 +83,18 @@ public enum DaedongStatus {
 	REVIEW_NOT_FOUND(NOT_FOUND, 40450, "review not found"), // 존재하지 않은 리뷰일 때
 	REVIEW_COMMENT_NOT_FOUND(NOT_FOUND, 40451, "review comment not found"), // 존재하지 않은 리뷰일 때
 	REVIEW_IMAGE_NOT_FOUND(NOT_FOUND, 40452, "review image not found"), // 존재하지 않은 리뷰 이미지일 때
+	FEED_NOT_FOUND(NOT_FOUND, 40453, "feed not found"),
+	CATEGORY_NOT_FOUND(NOT_FOUND, 40454, "category not found"),
+	CURATION_CONTEXT_NOT_MATCHING(NOT_FOUND, 40455, "curation context not matching"),
 	//    NOTICE_TOKEN_NOT_FOUND(NOT_FOUND, 40460, "notice token not found"), // 알림 토큰이 존재하지 않을 때
 	ADMIN_NOT_FOUND(NOT_FOUND, 40490, "admin not found"), // 관리자가 존재하지 않을 때
 	BAKERY_REPORT_NOT_FOUND(NOT_FOUND, 40491, "bakery report not found"), // 빵집 제보가 존재하지 않을 때
-	BAKERY_IMAGE_REPORT_NOT_FOUND(NOT_FOUND, 40491, "bakery image report not found"), // 빵집 이미지 제보가 존재하지 않을 때
-	REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40492, "review report not found"), // 존재하지 않는 리뷰 신고일 때
-	PRODUCT_ADD_REPORT_NOT_FOUND(NOT_FOUND, 40493, "product add report not found"), // 상품 추가 제보가 존재하지 않을 때
-	PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40494,
+	BAKERY_IMAGE_REPORT_NOT_FOUND(NOT_FOUND, 40492, "bakery image report not found"), // 빵집 이미지 제보가 존재하지 않을 때
+	REVIEW_REPORT_NOT_FOUND(NOT_FOUND, 40493, "review report not found"), // 존재하지 않는 리뷰 신고일 때
+	PRODUCT_ADD_REPORT_NOT_FOUND(NOT_FOUND, 40494, "product add report not found"), // 상품 추가 제보가 존재하지 않을 때
+	PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40495,
 		"product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
+	POST_NOT_FOUND(NOT_FOUND, 40495, "Post not found"),
 
 	// 409 CONFLICT
 	ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때
@@ -86,9 +112,15 @@ public enum DaedongStatus {
 	REVIEW_COMMENT_UNLIKE_DUPLICATE_EXCEPTION(CONFLICT, 40953, "already unlike review comment"), // 이미 좋아요를 취소한 댓글일 때
 	//    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
 	ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate"), // 관리자 이메일 중복일 때
+	CURATION_DUPLICATE_EXCEPTION(CONFLICT, 40991, "curation already has same bakery"),
 
 	// 500
-	OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key") // OIDC public key가 문제일 때
+	OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key"), // OIDC public key가 문제일 때
+	EVENT_DOES_NOT_HAVE_CONSUMER_GROUP(INTERNAL_SERVER_ERROR, 50001,
+		"no registered consumer group"), // 해당 이벤트에 등록되지 않은 컨슈머 그룹입니다.
+	CANNOT_LIKE_MORE_THAN_COUNT(INTERNAL_SERVER_ERROR, 50002, "cannot like more than 5"),
+	CANNOT_FIND_FEED_LIKE(INTERNAL_SERVER_ERROR, 50003, "you have never liked this feed"),
+	CANNOT_UNLIKE_UNDER_ZERO(INTERNAL_SERVER_ERROR, 50004, "cannot like under 0"),
 	;
 	private final HttpStatus status;
 	private final Integer code;

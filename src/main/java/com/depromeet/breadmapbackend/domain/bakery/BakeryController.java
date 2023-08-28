@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryCardDto;
+import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryListRequest;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
-import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 
 import lombok.RequiredArgsConstructor;
@@ -48,9 +49,21 @@ public class BakeryController {
 		);
 	}
 
+	/** 여기 **/
 	@GetMapping("/{bakeryId}")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<BakeryDto> getBakery(@CurrentUser String oAuthId, @PathVariable Long bakeryId) {
-		return new ApiResponse<>(bakeryService.getBakery(oAuthId, bakeryId));
+	public ApiResponse<BakeryDto> getBakery(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
+		@PathVariable Long bakeryId
+	) {
+		return new ApiResponse<>(bakeryService.getBakery(currentUserInfo.getId(), bakeryId));
+	}
+
+	@GetMapping("/new")
+	@ResponseStatus(HttpStatus.OK)
+	ApiResponse<List<NewBakeryCardDto>> getNewBakeryList(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo
+	) {
+		return new ApiResponse<>(bakeryService.getNewBakeryList(currentUserInfo.getId()));
 	}
 }

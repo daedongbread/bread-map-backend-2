@@ -46,7 +46,7 @@ public class FakeFlagBakeryRepositoryImpl implements FlagBakeryRepository {
 	}
 
 	@Override
-	public Optional<Flag> findFlagByBakeryAndUser(final Bakery bakery, final Long userId) {
+	public Optional<FlagBakery> findByBakeryAndUserId(final Bakery bakery, final Long userId) {
 		return Optional.empty();
 	}
 
@@ -84,6 +84,11 @@ public class FakeFlagBakeryRepositoryImpl implements FlagBakeryRepository {
 	@Override
 	public List<FlagBakery> findByUserIdAndBakeryIdIn(final Long userId, final List<Long> bakeryIdList) {
 		return List.of(FixtureFactory.getFlagBakery(1L, userId).nextObject(FlagBakery.class));
+	}
+
+	@Override
+	public List<FlagBakeryCount> countFlagBakeryByBakeryIdIn(final List<Long> bakeryIdList) {
+		return List.of();
 	}
 
 	@Override

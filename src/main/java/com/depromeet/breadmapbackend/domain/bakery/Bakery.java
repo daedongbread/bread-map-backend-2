@@ -4,6 +4,7 @@ import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,14 +20,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.FacilityInfoListConverter;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,6 +63,8 @@ public class Bakery extends BaseEntity {
 	private String hours;
 
 	private String phoneNumber;
+	private String checkPoint;
+	private String newBreadTime;
 
 	@Embedded
 	private BakeryURL bakeryURL;
@@ -74,9 +81,9 @@ public class Bakery extends BaseEntity {
 	@Convert(converter = FacilityInfoListConverter.class)
 	private List<FacilityInfo> facilityInfoList = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "pioneer_id")
-	private User pioneer;
+	@OneToOne
+	@JoinColumn(name = "report_id")
+	private BakeryAddReport bakeryAddReport;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id")
@@ -84,15 +91,19 @@ public class Bakery extends BaseEntity {
 
 	@Builder
 	public Bakery(
-		String name, Double latitude, Double longitude,
-		String address, String detailedAddress, String hours, String phoneNumber,
+		Long id, String name, Double latitude, Double longitude,
+		String address, String detailedAddress, String hours, String phoneNumber, String checkPoint,
+		String newBreadTime,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
-		List<FacilityInfo> facilityInfoList, BakeryStatus status, User pioneer
+		List<FacilityInfo> facilityInfoList, BakeryStatus status, BakeryAddReport bakeryAddReport
 	) {
+		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.address = address;
+		this.checkPoint = checkPoint;
+		this.newBreadTime = newBreadTime;
 		this.detailedAddress = detailedAddress;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
@@ -101,12 +112,14 @@ public class Bakery extends BaseEntity {
 		this.image = image;
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
-		this.pioneer = pioneer;
+		this.bakeryAddReport = bakeryAddReport;
 	}
 
 	public void update(
 		String name, String address, String detailedAddress, Double latitude, Double longitude, String hours,
-		String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber, String image,
+		String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber,
+		String checkPoint,
+		String newBreadTime, String image,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status
 	) {
 		this.name = name;
@@ -120,10 +133,6 @@ public class Bakery extends BaseEntity {
 		this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
-	}
-
-	public void updatePioneer(User pioneer) {
-		this.pioneer = pioneer;
 	}
 
 	public boolean isPosting() {
@@ -147,9 +156,34 @@ public class Bakery extends BaseEntity {
 			.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
 	}
 
+	public User getPioneer() {
+		return this.bakeryAddReport != null ? this.bakeryAddReport.getUser() : null;
+	}
+
 	public String getShortAddress() {
 		final String[] addressSplit = this.address.split("\\s");
 		return addressSplit.length == 1 ? addressSplit[0] : addressSplit[0] + " " + addressSplit[1];
+	}
 
+	public Product getProduct(Long productId) {
+		return this.productList.stream()
+			.filter(product -> Objects.equals(product.getId(), productId))
+			.findAny()
+			.orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Bakery bakery = (Bakery)o;
+		return Objects.equals(id, bakery.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

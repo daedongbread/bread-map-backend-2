@@ -10,19 +10,29 @@
 :operation-http-response-title: Example Response
 
 == Auth APIs
+
 - 로그인 API
 - 회원가입 API
 - 토큰 재발급 API
 - 로그아웃 API
+- 회원 탈퇴 API
 
 === 로그인 API [POST]
+
 operation::v1/auth/login[snippets='http-request,request-fields,http-response,response-fields']
 
 === 회원가입 API [POST]
+
 operation::v1/auth/register[snippets='http-request,request-fields,http-response,response-fields']
 
 === 토큰 재발급 API [POST]
+
 operation::v1/auth/reissue[snippets='http-request,request-fields,http-response,response-fields']
 
 === 로그아웃 API [POST]
+
 operation::v1/auth/logout[snippets='http-request,request-headers,request-fields,http-response']
+
+=== 회원탈퇴 API [DELETE]
+
+operation::v1/auth/delete[snippets='http-request,request-headers,request-fields,http-response']

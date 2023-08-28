@@ -1,0 +1,28 @@
+= 피드 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:site-url: /build/asciidoc/html5/
+:operation-http-request-title: Example Request
+:operation-http-response-title: Example Response
+
+== Feed APIs
+
+- 피드 전체 조회 API
+- 큐레이션 피드 조회 API
+- 큐레이션 피드 좋아요 API
+
+=== 피드 전체 조회 API [GET]
+
+operation::findall-feed-user[snippets='http-request,request-headers,response-fields,http-response']
+
+=== 큐레이션 피드 상세 조회 API [GET]
+
+operation::find-detail-curation-feed-user[snippets='http-request,request-headers,path-parameters,request-parameters,response-fields,http-response']
+
+=== 큐레이션 피드 좋아요 API [POST]
+
+operation::like-curation-feed-user[snippets='http-request,request-headers,path-parameters,response-fields,http-response']

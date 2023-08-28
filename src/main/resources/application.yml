@@ -1,10 +1,13 @@
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 40s
   jpa:
     hibernate:
       use-new-id-generator-mappings: false # Hibernate id 생성 전략 여부
     #    show-sql: true
     open-in-view: false # OSIV
     properties:
+      default_batch_fetch_size: 100
       hibernate:
         #        format_sql: true
         create_empty_composites:
@@ -57,3 +60,8 @@ cloud:
       instanceProfile: true # AWS 인스턴스 프로필 사용 여부
     stack:
       auto: false # AWS CloudFormation 사용 여부
+
+redis:
+  poll-timeout:
+    bakery-view: 2
+    bakery-ranking-calculator: 2
