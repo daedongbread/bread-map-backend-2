@@ -454,7 +454,10 @@ public class PostQueryRepository {
 				     , t3.id                                    as bakeryId
 				     , t3.name                                  as name
 				     , t3.address                               as address
-				     , t3.image                                 as bakeryThumbnail
+				     , (select images
+				     	from bakery_images bi
+				     	where bi.bakery_id = t3.id 
+				     	limit 1)                                as bakeryThumbnail
 				     , 2 										as sortOrder
 					 , case when t5.count > 0 then true
 				  			else false

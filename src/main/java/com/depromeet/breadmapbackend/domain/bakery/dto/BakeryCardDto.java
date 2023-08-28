@@ -40,7 +40,7 @@ public class BakeryCardDto {
 		this.latitude = bakery.getLatitude();
 		this.longitude = bakery.getLongitude();
 		this.id = bakery.getId();
-		this.image = bakery.getImage();
+		this.image = bakery.getImages().get(0);
 		this.name = bakery.getName();
 		this.flagNum = flagNum;
 		this.rating = bakery.bakeryRating(reviewList);

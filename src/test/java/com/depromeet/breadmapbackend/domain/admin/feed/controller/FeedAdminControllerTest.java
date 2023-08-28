@@ -1,11 +1,13 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
+import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.DATE;
 import static com.google.protobuf.FieldType.*;
 import static org.springframework.asm.Type.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -28,6 +30,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
@@ -76,7 +79,7 @@ public class FeedAdminControllerTest extends ControllerTest {
 
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 
-		Category cate = new Category("test category");
+		Category cate = Category.builder().categoryName("test category").build();
 		category = categoryRepository.save(cate);
 
 		Bakery firstBakery = Bakery.builder()
@@ -86,7 +89,10 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 1")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery secondBakery = Bakery.builder()
@@ -96,11 +102,14 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 2")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
-		bakeryRepository.save(firstBakery);
-		bakeryRepository.save(secondBakery);
+		Bakery saveFirstBakery = bakeryRepository.save(firstBakery);
+		Bakery saveSecondBakery = bakeryRepository.save(secondBakery);
 
 		s3Uploader.upload(
 			new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
@@ -174,8 +183,10 @@ public class FeedAdminControllerTest extends ControllerTest {
 		List<Bakery> bakeries = List.of(firstBakery, secondBakery);
 
 		CurationFeed curationEntity = (CurationFeed)FeedAssembler.toEntity(admin, category, curationRequest);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationEntity,
+			List.of(saveFirstBakery, saveSecondBakery), curationRequest);
 
-		curationEntity.addAll(bakeries, curationRequest);
+		curationEntity.addAll(bakeries, curationBakeries);
 
 		curation = feedRepository.save(curationEntity);
 	}
@@ -221,16 +232,16 @@ public class FeedAdminControllerTest extends ControllerTest {
 			preprocessResponse(prettyPrint()),
 			requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
 			requestFields(
-				fieldWithPath("common.subTitle").optional().description("피드 소제목"),
-				fieldWithPath("common.introduction").optional().description("피드 시작하는 말"),
-				fieldWithPath("common.conclusion").optional().description("피드 끝맺음 말"),
-				fieldWithPath("common.thumbnailUrl").description("피드 배너 이미지 url"),
-				fieldWithPath("common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-				fieldWithPath("common.feedType").description("피드 타입(LANDING, CURATION)"),
-				fieldWithPath("common.categoryId").description("카테고리 아이디"),
+				fieldWithPath("common.subTitle").type(STRING).optional().description("피드 소제목"),
+				fieldWithPath("common.introduction").type(STRING).optional().description("피드 시작하는 말"),
+				fieldWithPath("common.conclusion").type(STRING).optional().description("피드 끝맺음 말"),
+				fieldWithPath("common.thumbnailUrl").type(STRING).description("피드 배너 이미지 url"),
+				fieldWithPath("common.activated").type(STRING).description("피드 활성화 여부(POSTING, INACTIVATED)"),
+				fieldWithPath("common.feedType").type(STRING).description("피드 타입(LANDING, CURATION)"),
+				fieldWithPath("common.categoryId").type(NUMBER).description("카테고리 아이디"),
 				fieldWithPath("common.activeTime").type(STRING).description("피드 게시 시작 날짜(yyyy-mm-ddTHH:mm:ss)"),
 				fieldWithPath("curation").description("null 보내주세요"),
-				fieldWithPath("landing.redirectUrl").optional().description("랜딩 RedirectUrl")),
+				fieldWithPath("landing.redirectUrl").description("랜딩 RedirectUrl")),
 			responseHeaders(
 				headerWithName(HttpHeaders.LOCATION).description("어드민 - 피드 상세 보기 주소")
 			))
@@ -259,17 +270,17 @@ public class FeedAdminControllerTest extends ControllerTest {
 			preprocessResponse(prettyPrint()),
 			requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
 			requestFields(
-				fieldWithPath("common.subTitle").optional().description("피드 소제목"),
-				fieldWithPath("common.introduction").optional().description("피드 시작하는 말"),
-				fieldWithPath("common.conclusion").optional().description("피드 끝맺음 말"),
-				fieldWithPath("common.thumbnailUrl").description("피드 배너 이미지 url"),
-				fieldWithPath("common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-				fieldWithPath("common.feedType").description("피드 타입(LANDING, CURATION)"),
-				fieldWithPath("common.categoryId").description("카테고리 아이디"),
+				fieldWithPath("common.subTitle").type(STRING).description("피드 소제목"),
+				fieldWithPath("common.introduction").type(STRING).description("피드 시작하는 말"),
+				fieldWithPath("common.conclusion").type(STRING).description("피드 끝맺음 말"),
+				fieldWithPath("common.thumbnailUrl").type(STRING).description("피드 배너 이미지 url"),
+				fieldWithPath("common.activated").type(STRING).description("피드 활성화 여부(POSTING, INACTIVATED)"),
+				fieldWithPath("common.feedType").type(STRING).description("피드 타입(LANDING, CURATION)"),
+				fieldWithPath("common.categoryId").type(NUMBER).description("카테고리 아이디"),
 				fieldWithPath("common.activeTime").type(STRING).description("피드 게시 시작 날짜(yyyy-mm-ddTHH:mm:ss)"),
-				fieldWithPath("curation.[].bakeryId").optional().description("추천 빵집 ID"),
-				fieldWithPath("curation.[].productId").optional().description("추천 빵집 메뉴 ID"),
-				fieldWithPath("curation.[].reason").optional().description("추천 이유"),
+				fieldWithPath("curation.[].bakeryId").type(NUMBER).description("추천 빵집 ID"),
+				fieldWithPath("curation.[].productId").type(NUMBER).description("추천 빵집 메뉴 ID"),
+				fieldWithPath("curation.[].reason").type(STRING).description("추천 이유"),
 				fieldWithPath("landing").description("null 보내주세요")),
 			responseHeaders(
 				headerWithName(HttpHeaders.LOCATION).description("어드민 - 피드 상세 보기 주소")
@@ -318,16 +329,16 @@ public class FeedAdminControllerTest extends ControllerTest {
 					parameterWithName("feedId").description("피드 아이디")
 				),
 				requestFields(
-					fieldWithPath("common.subTitle").optional().description("업데이트된 피드 소제목"),
-					fieldWithPath("common.introduction").optional().description("업데이트된 피드 시작하는 말"),
-					fieldWithPath("common.conclusion").optional().description("업데이트된 피드 끝맺음 말"),
-					fieldWithPath("common.thumbnailUrl").description("업데이트된 피드 배너 이미지 url"),
-					fieldWithPath("common.activated").description("업데이트된 피드 활성화 여부(POSTING, INACTIVATED)"),
-					fieldWithPath("common.feedType").description("업데이트된 피드 타입(LANDING, CURATION)"),
-					fieldWithPath("common.categoryId").description("카테고리 아이디"),
+					fieldWithPath("common.subTitle").type(STRING).optional().description("업데이트된 피드 소제목"),
+					fieldWithPath("common.introduction").type(STRING).optional().description("업데이트된 피드 시작하는 말"),
+					fieldWithPath("common.conclusion").type(STRING).optional().description("업데이트된 피드 끝맺음 말"),
+					fieldWithPath("common.thumbnailUrl").type(STRING).description("업데이트된 피드 배너 이미지 url"),
+					fieldWithPath("common.activated").type(STRING).description("업데이트된 피드 활성화 여부(POSTING, INACTIVATED)"),
+					fieldWithPath("common.feedType").type(STRING).description("업데이트된 피드 타입(LANDING, CURATION)"),
+					fieldWithPath("common.categoryId").type(NUMBER).description("카테고리 아이디"),
 					fieldWithPath("common.activeTime").type(STRING).description("업데이트된  피드 게시 시작 날짜(yyyy-mm-ddTHH:mm:ss)"),
 					fieldWithPath("curation").description("null 보내주세요"),
-					fieldWithPath("landing.redirectUrl").optional().description("업데이트된 redirectURl"))
+					fieldWithPath("landing.redirectUrl").type(STRING).description("업데이트된 redirectURl"))
 			)
 		);
 	}
@@ -356,7 +367,10 @@ public class FeedAdminControllerTest extends ControllerTest {
 			.facilityInfoList(Collections.singletonList(FacilityInfo.PARKING))
 			.name("update bakery")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery updatebakery = bakeryRepository.save(updateBakery);
@@ -399,17 +413,17 @@ public class FeedAdminControllerTest extends ControllerTest {
 					parameterWithName("feedId").description("피드 아이디")
 				),
 				requestFields(
-					fieldWithPath("common.subTitle").optional().description("업데이트된 피드 소제목"),
-					fieldWithPath("common.introduction").optional().description("업데이트된 피드시작하는 말"),
-					fieldWithPath("common.conclusion").optional().description("업데이트된 피드 끝맺음 말"),
-					fieldWithPath("common.thumbnailUrl").description("업데이트된 피드 배너 이미지 url"),
-					fieldWithPath("common.activated").description("업데이트된 피드 활성화 여부(POSTING, INACTIVATED)"),
-					fieldWithPath("common.feedType").description("업데이트된 피드 타입(LANDING, CURATION)"),
-					fieldWithPath("common.categoryId").description("카테고리 아이디"),
+					fieldWithPath("common.subTitle").type(STRING).optional().description("업데이트된 피드 소제목"),
+					fieldWithPath("common.introduction").type(STRING).optional().description("업데이트된 피드시작하는 말"),
+					fieldWithPath("common.conclusion").type(STRING).optional().description("업데이트된 피드 끝맺음 말"),
+					fieldWithPath("common.thumbnailUrl").type(STRING).description("업데이트된 피드 배너 이미지 url"),
+					fieldWithPath("common.activated").type(STRING).description("업데이트된 피드 활성화 여부(POSTING, INACTIVATED)"),
+					fieldWithPath("common.feedType").type(STRING).description("업데이트된 피드 타입(LANDING, CURATION)"),
+					fieldWithPath("common.categoryId").type(NUMBER).description("카테고리 아이디"),
 					fieldWithPath("common.activeTime").type(STRING).description("업데이트된 피드 게시 시작 날짜(yyyy-mm-ddTHH:mm:ss)"),
-					fieldWithPath("curation.[].bakeryId").optional().description("업데이트된 피드 추천 빵집 ID"),
-					fieldWithPath("curation.[].productId").optional().description("업데이트된 피드 추천 빵집 메뉴 ID"),
-					fieldWithPath("curation.[].reason").optional().description("업데이트된 피드 추천 빵집 추천 이유"),
+					fieldWithPath("curation.[].bakeryId").type(NUMBER).description("업데이트된 피드 추천 빵집 ID"),
+					fieldWithPath("curation.[].productId").type(NUMBER).description("업데이트된 피드 추천 빵집 메뉴 ID"),
+					fieldWithPath("curation.[].reason").type(STRING).description("업데이트된 피드 추천 빵집 추천 이유"),
 					fieldWithPath("landing").description("null 보내주세요"))
 			)
 		);
@@ -460,14 +474,14 @@ public class FeedAdminControllerTest extends ControllerTest {
 						parameterWithName("page").optional().description("페이지(0부터시작)"),
 						parameterWithName("size").optional().description("한 페이지에 출력할 개수(default 20)")),
 					responseFields(
-						fieldWithPath("data.totalPages").description("전체 페이지 수"),
-						fieldWithPath("data.totalElements").description("전체 데이터 개수"),
-						fieldWithPath("data.contents.[].feedId").description("피드 번호"),
-						fieldWithPath("data.contents.[].feedTitle").description("피드 제목"),
-						fieldWithPath("data.contents.[].authorName").description("피드 작성자 이메일"),
-						fieldWithPath("data.contents.[].createdAt").description("피드 등록일자"),
-						fieldWithPath("data.contents.[].categoryName").description("피드 카테고리 이름"),
-						fieldWithPath("data.contents.[].isActive").description("피드 활성화 여부")
+						fieldWithPath("data.totalPages").type(NUMBER).description("전체 페이지 수"),
+						fieldWithPath("data.totalElements").type(NUMBER).description("전체 데이터 개수"),
+						fieldWithPath("data.contents.[].feedId").type(NUMBER).description("피드 번호"),
+						fieldWithPath("data.contents.[].feedTitle").type(STRING).description("피드 제목"),
+						fieldWithPath("data.contents.[].authorName").type(STRING).description("피드 작성자 이메일"),
+						fieldWithPath("data.contents.[].createdAt").type(DATE).description("피드 등록일자"),
+						fieldWithPath("data.contents.[].categoryName").type(STRING).description("피드 카테고리 이름"),
+						fieldWithPath("data.contents.[].isActive").type(STRING).description("피드 활성화 여부")
 					)
 				)
 			);
@@ -509,19 +523,19 @@ public class FeedAdminControllerTest extends ControllerTest {
 						parameterWithName("feedType").description("피드 타입(LANDING, CURATION)")
 					),
 					responseFields(
-						fieldWithPath("data.common.feedId").description("피드 소제목"),
-						fieldWithPath("data.common.subTitle").description("피드 소제목"),
-						fieldWithPath("data.common.introduction").description("피드 시작하는 말"),
-						fieldWithPath("data.common.conclusion").description("피드 끝맺음 말"),
-						fieldWithPath("data.common.thumbnailUrl").description("피드 배너 이미지 url"),
-						fieldWithPath("data.common.categoryName").description("카테고리 이름"),
-						fieldWithPath("data.common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
-						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
+						fieldWithPath("data.common.feedId").type(NUMBER).description("피드 소제목"),
+						fieldWithPath("data.common.subTitle").type(STRING).description("피드 소제목"),
+						fieldWithPath("data.common.introduction").type(STRING).description("피드 시작하는 말"),
+						fieldWithPath("data.common.conclusion").type(STRING).description("피드 끝맺음 말"),
+						fieldWithPath("data.common.thumbnailUrl").type(STRING).description("피드 배너 이미지 url"),
+						fieldWithPath("data.common.categoryName").type(STRING).description("카테고리 이름"),
+						fieldWithPath("data.common.activated").type(STRING).description("피드 활성화 여부(POSTING, INACTIVATED)"),
+						fieldWithPath("data.common.feedType").type(STRING).description("피드 타입(LANDING, CURATION)"),
+						fieldWithPath("data.common.activateTime").type(STRING).description("피드 게시 시작 날짜"),
 						fieldWithPath("data.curation").optional().description("null"),
-						fieldWithPath("data.landing.redirectUrl").description("redirectURl"),
-						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"),
-						fieldWithPath("data.likeStatus").description("현재 조회하고 있는 유저의 피드 좋아요 상태(관리자는 null"))
+						fieldWithPath("data.landing.redirectUrl").type(STRING).description("redirectURl"),
+						fieldWithPath("data.likeCounts").type(NUMBER).description("현재 피드 좋아요 개수"),
+						fieldWithPath("data.likeStatus").type(STRING).description("현재 조회하고 있는 유저의 피드 좋아요 상태(관리자는 null"))
 				)
 			);
 	}
@@ -568,39 +582,39 @@ public class FeedAdminControllerTest extends ControllerTest {
 						parameterWithName("feedType").description("피드 타입(LANDING, CURATION)")
 					),
 					responseFields(
-						fieldWithPath("data.common.feedId").description("피드 소제목"),
-						fieldWithPath("data.common.subTitle").description("피드 소제목"),
-						fieldWithPath("data.common.introduction").description("피드 시작하는 말"),
-						fieldWithPath("data.common.conclusion").description("피드 끝맺음 말"),
-						fieldWithPath("data.common.thumbnailUrl").description("피드 배너 이미지 url"),
-						fieldWithPath("data.common.categoryName").description("카테고리 이름"),
-						fieldWithPath("data.common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
-						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
-						fieldWithPath("data.curation.[].bakeryId").description("큐레이션 피드 빵집 ID"),
-						fieldWithPath("data.curation.[].bakeryName").description("큐레이션 피드 빵집 이름"),
-						fieldWithPath("data.curation.[].bakeryAddress").description("큐레이션 피드 빵집 주소"),
-						fieldWithPath("data.curation.[].openingHours").description("큐레이션 피드 빵집 오픈시각"),
-						fieldWithPath("data.curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
-						fieldWithPath("data.curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
-						fieldWithPath("data.curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].address").description("큐레이션 피드 빵집 주소"),
-						fieldWithPath("data.curation.[].detailedAddress").description("큐레이션 피드 빵집 상세주소"),
-						fieldWithPath("data.curation.[].websiteURL").description("큐레이션 피드 빵집 웹사이트 Url"),
-						fieldWithPath("data.curation.[].instagramURL").description("큐레이션 피드 빵집 인스타 Url"),
-						fieldWithPath("data.curation.[].facebookURL").description("큐레이션 피드 빵집 페이스북 Url"),
-						fieldWithPath("data.curation.[].blogURL").description("큐레이션 피드 빵집 상품 블로그 Url"),
-						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY).description("큐레이션 피드 빵집 태그 리스트"),
-						fieldWithPath("data.curation.[].phoneNumber").description("큐레이션 피드 빵집 전하번호"),
-						fieldWithPath("data.curation.[].reason").description("큐레이션 피드 빵집 추천 이유"),
-						fieldWithPath("data.curation.[].flagged").description("false. 어드민은 무시하셔도 됩니다"),
-						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
-						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
-						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
-						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
+						fieldWithPath("data.common.feedId").type(STRING).description("피드 소제목"),
+						fieldWithPath("data.common.subTitle").type(STRING).description("피드 소제목"),
+						fieldWithPath("data.common.introduction").type(STRING).description("피드 시작하는 말"),
+						fieldWithPath("data.common.conclusion").type(STRING).description("피드 끝맺음 말"),
+						fieldWithPath("data.common.thumbnailUrl").type(STRING).description("피드 배너 이미지 url"),
+						fieldWithPath("data.common.categoryName").type(STRING).description("카테고리 이름"),
+						fieldWithPath("data.common.activated").type(STRING).description("피드 활성화 여부(POSTING, INACTIVATED)"),
+						fieldWithPath("data.common.feedType").type(STRING).description("피드 타입(LANDING, CURATION)"),
+						fieldWithPath("data.common.activateTime").type(STRING).description("피드 게시 시작 날짜"),
+						fieldWithPath("data.curation.[].bakeryId").type(NUMBER).description("큐레이션 피드 빵집 ID"),
+						fieldWithPath("data.curation.[].bakeryName").type(STRING).description("큐레이션 피드 빵집 이름"),
+						fieldWithPath("data.curation.[].bakeryAddress").type(STRING).description("큐레이션 피드 빵집 주소"),
+						fieldWithPath("data.curation.[].openingHours").type(STRING).description("큐레이션 피드 빵집 오픈시각"),
+						fieldWithPath("data.curation.[].bakeryImageUrl").type(STRING).description("큐레이션 피드 빵집 이미지 Url"),
+						fieldWithPath("data.curation.[].checkPoint").type(STRING).description("큐레이션 피드 빵집 체크포인트"),
+						fieldWithPath("data.curation.[].newBreadTime").type(STRING).description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].address").type(STRING).description("큐레이션 피드 빵집 주소"),
+						fieldWithPath("data.curation.[].detailedAddress").type(STRING).description("큐레이션 피드 빵집 상세주소"),
+						fieldWithPath("data.curation.[].websiteURL").type(STRING).description("큐레이션 피드 빵집 웹사이트 Url"),
+						fieldWithPath("data.curation.[].instagramURL").type(STRING).description("큐레이션 피드 빵집 인스타 Url"),
+						fieldWithPath("data.curation.[].facebookURL").type(STRING).description("큐레이션 피드 빵집 페이스북 Url"),
+						fieldWithPath("data.curation.[].blogURL").type(STRING).description("큐레이션 피드 빵집 상품 블로그 Url"),
+						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY).type(STRING).description("큐레이션 피드 빵집 태그 리스트"),
+						fieldWithPath("data.curation.[].phoneNumber").type(STRING).description("큐레이션 피드 빵집 전하번호"),
+						fieldWithPath("data.curation.[].reason").type(STRING).description("큐레이션 피드 빵집 추천 이유"),
+						fieldWithPath("data.curation.[].flagged").type(BOOLEAN).description("false. 어드민은 무시하셔도 됩니다"),
+						fieldWithPath("data.curation.[].productId").type(NUMBER).description("큐레이션 피드 빵집 상품 ID"),
+						fieldWithPath("data.curation.[].productName").type(STRING).description("큐레이션 피드 빵집 상품 이름"),
+						fieldWithPath("data.curation.[].productPrice").type(STRING).description("큐레이션 피드 빵집 상품 가격"),
+						fieldWithPath("data.curation.[].productImageUrl").type(STRING).description("큐레이션 피드 빵집 상품 이미지 Url"),
 						fieldWithPath("data.landing").optional().description("null"),
-						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"),
-						fieldWithPath("data.likeStatus").description("현재 조회하고 있는 유저의 피드 좋아요 상태(관리자는 null"))
+						fieldWithPath("data.likeCounts").type(NUMBER).description("현재 피드 좋아요 개수"),
+						fieldWithPath("data.likeStatus").type(STRING).description("현재 조회하고 있는 유저의 피드 좋아요 상태(관리자는 null"))
 				)
 			);
 	}

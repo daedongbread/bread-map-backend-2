@@ -25,6 +25,7 @@ import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminSimpleBakeryDt
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryLocationDto;
+import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryProductsDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateReportDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.NewReviewDto;
@@ -192,6 +193,16 @@ public class AdminBakeryController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteReview(@PathVariable Long bakeryId, @PathVariable Long reviewId) {
 		adminBakeryService.deleteReview(bakeryId, reviewId);
+	}
+
+	@GetMapping("/{bakeryId}/products")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<List<BakeryProductsDto>> getBakeryProducts(
+		@PathVariable Long bakeryId
+	) {
+		List<BakeryProductsDto> response = adminBakeryService.getBakeryProducts(bakeryId);
+
+		return new ApiResponse<>(response);
 	}
 
 	//    @DeleteMapping("/{bakeryId}")

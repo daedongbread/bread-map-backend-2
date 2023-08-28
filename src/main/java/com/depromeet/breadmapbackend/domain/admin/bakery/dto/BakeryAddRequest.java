@@ -27,7 +27,8 @@ public class BakeryAddRequest {
 	@Size(min = 1, max = 20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
 	private String name;
 
-	private String image;
+	@Size(max = 2)
+	private List<String> images;
 
 	@NotBlank(message = "주소는 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
 	@Size(min = 3, max = 100, message = "3자 이상, 100자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)

@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
+import static com.fasterxml.jackson.databind.node.JsonNodeType.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.dto.FeedLikeResponse;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
@@ -78,7 +80,7 @@ public class FeedControllerTest extends ControllerTest {
 
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 
-		Category cate = new Category("test category");
+		Category cate = Category.builder().categoryName("test category").build();
 		category = categoryRepository.save(cate);
 
 		Bakery firstBakery = Bakery.builder()
@@ -88,7 +90,10 @@ public class FeedControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 1")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		Bakery secondBakery = Bakery.builder()
@@ -98,7 +103,10 @@ public class FeedControllerTest extends ControllerTest {
 			.facilityInfoList(facilityInfo)
 			.name("test bakery 2")
 			.status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg")
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			))
 			.build();
 
 		bakeryRepository.save(firstBakery);
@@ -189,7 +197,10 @@ public class FeedControllerTest extends ControllerTest {
 
 		CurationFeed curationEntity = (CurationFeed)FeedAssembler.toEntity(admin, category, curationRequest);
 
-		curationEntity.addAll(bakeries, curationRequest);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationEntity, bakeries,
+			curationRequest);
+
+		curationEntity.addAll(bakeries, curationBakeries);
 
 		curation = feedRepository.saveAndFlush(curationEntity);
 
@@ -250,10 +261,10 @@ public class FeedControllerTest extends ControllerTest {
 					preprocessResponse(prettyPrint()),
 					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
 					responseFields(
-						fieldWithPath("data.[].feedId").description("피드 아이디"),
-						fieldWithPath("data.[].imageUrl").description("피드 이미지"),
-						fieldWithPath("data.[].feedType").description("피드 타입"),
-						fieldWithPath("data.[].redirectUrl").optional().description("RedirectUrl (랜딩 타입만 사용)")
+						fieldWithPath("data.[].feedId").type(NUMBER).description("피드 아이디"),
+						fieldWithPath("data.[].imageUrl").type(STRING).description("피드 이미지"),
+						fieldWithPath("data.[].feedType").type(STRING).description("피드 타입"),
+						fieldWithPath("data.[].redirectUrl").type(STRING).optional().description("RedirectUrl (랜딩 타입만 사용)")
 					)
 				)
 			);
@@ -357,39 +368,42 @@ public class FeedControllerTest extends ControllerTest {
 						parameterWithName("feedType").description("피드 타입(LANDING, CURATION)")
 					),
 					responseFields(
-						fieldWithPath("data.common.feedId").description("피드 소제목"),
-						fieldWithPath("data.common.subTitle").description("피드 소제목"),
-						fieldWithPath("data.common.introduction").description("피드 시작하는 말"),
-						fieldWithPath("data.common.conclusion").description("피드 끝맺음 말"),
-						fieldWithPath("data.common.thumbnailUrl").description("피드 배너 이미지 url"),
-						fieldWithPath("data.common.categoryName").description("카테고리 이름"),
-						fieldWithPath("data.common.activated").description("피드 활성화 여부(POSTING, INACTIVATED)"),
-						fieldWithPath("data.common.feedType").description("피드 타입(LANDING, CURATION)"),
-						fieldWithPath("data.common.activateTime").description("피드 게시 시작 날짜"),
-						fieldWithPath("data.curation.[].bakeryId").description("큐레이션 피드 빵집 ID"),
-						fieldWithPath("data.curation.[].bakeryName").description("큐레이션 피드 빵집 이름"),
-						fieldWithPath("data.curation.[].bakeryAddress").description("큐레이션 피드 빵집 주소"),
-						fieldWithPath("data.curation.[].openingHours").description("큐레이션 피드 빵집 오픈시각"),
-						fieldWithPath("data.curation.[].bakeryImageUrl").description("큐레이션 피드 빵집 이미지 Url"),
-						fieldWithPath("data.curation.[].checkPoint").description("큐레이션 피드 빵집 체크포인트"),
-						fieldWithPath("data.curation.[].newBreadTime").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].address").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].detailedAddress").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].websiteURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].instagramURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].facebookURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].blogURL").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].facilityInfo").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].phoneNumber").description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
-						fieldWithPath("data.curation.[].reason").description("큐레이션 피드 빵집 추천 이유"),
-						fieldWithPath("data.curation.[].flagged").description("큐레이션 피드 빵집 플래그 저장 여부"),
-						fieldWithPath("data.curation.[].productId").description("큐레이션 피드 빵집 상품 ID"),
-						fieldWithPath("data.curation.[].productName").description("큐레이션 피드 빵집 상품 이름"),
-						fieldWithPath("data.curation.[].productPrice").description("큐레이션 피드 빵집 상품 가격"),
-						fieldWithPath("data.curation.[].productImageUrl").description("큐레이션 피드 빵집 상품 이미지 Url"),
+						fieldWithPath("data.common.feedId").type(NUMBER).description("피드 아이디"),
+						fieldWithPath("data.common.subTitle").type(STRING).description("피드 소제목"),
+						fieldWithPath("data.common.introduction").type(STRING).description("피드 시작하는 말"),
+						fieldWithPath("data.common.conclusion").type(STRING).description("피드 끝맺음 말"),
+						fieldWithPath("data.common.thumbnailUrl").type(STRING).description("피드 배너 이미지 url"),
+						fieldWithPath("data.common.categoryName").type(STRING).description("카테고리 이름"),
+						fieldWithPath("data.common.activated").type(STRING).description("피드 활성화 여부(POSTING, INACTIVATED)"),
+						fieldWithPath("data.common.feedType").type(STRING).description("피드 타입(LANDING, CURATION)"),
+						fieldWithPath("data.common.activateTime").type(STRING).description("피드 게시 시작 날짜"),
+						fieldWithPath("data.curation.[].bakeryId").type(NUMBER).description("큐레이션 피드 빵집 ID"),
+						fieldWithPath("data.curation.[].bakeryName").type(STRING).description("큐레이션 피드 빵집 이름"),
+						fieldWithPath("data.curation.[].bakeryAddress").type(STRING).description("큐레이션 피드 빵집 주소"),
+						fieldWithPath("data.curation.[].openingHours").type(STRING).description("큐레이션 피드 빵집 오픈시각"),
+						fieldWithPath("data.curation.[].bakeryImageUrl").type(STRING).description("큐레이션 피드 빵집 이미지 Url"),
+						fieldWithPath("data.curation.[].checkPoint").type(STRING).description("큐레이션 피드 빵집 체크포인트"),
+						fieldWithPath("data.curation.[].newBreadTime").type(STRING).description("큐레이션 피드 빵집 갓군빵 나오는 시간"),
+						fieldWithPath("data.curation.[].address").type(STRING).description("큐레이션 피드 추천 빵집 도로명 주소"),
+						fieldWithPath("data.curation.[].detailedAddress").type(STRING)
+							.description("큐레이션 피드 추천 빵집 도로명 상세 주소"),
+						fieldWithPath("data.curation.[].websiteURL").type(STRING).description("큐레이션 피드 추천 빵집 website URL"),
+						fieldWithPath("data.curation.[].instagramURL").type(STRING)
+							.description("큐레이션 피드 추천 빵집 Instagram URL"),
+						fieldWithPath("data.curation.[].facebookURL").type(STRING)
+							.description("큐레이션 피드 추천 빵집 FaceBook URL"),
+						fieldWithPath("data.curation.[].blogURL").type(STRING).description("큐레이션 피드 추천 빵집 블로그 URL"),
+						fieldWithPath("data.curation.[].facilityInfo").type(STRING).description("큐레이션 피드 추천 빵집 부대시설"),
+						fieldWithPath("data.curation.[].phoneNumber").type(STRING).description("큐레이션 피드 추천 빵집 전화번호"),
+						fieldWithPath("data.curation.[].reason").type(STRING).description("큐레이션 피드 빵집 추천 이유"),
+						fieldWithPath("data.curation.[].flagged").type(BOOLEAN).description("큐레이션 피드 빵집 플래그 저장 여부"),
+						fieldWithPath("data.curation.[].productId").type(NUMBER).description("큐레이션 피드 빵집 상품 ID"),
+						fieldWithPath("data.curation.[].productName").type(STRING).description("큐레이션 피드 빵집 상품 이름"),
+						fieldWithPath("data.curation.[].productPrice").type(STRING).description("큐레이션 피드 빵집 상품 가격"),
+						fieldWithPath("data.curation.[].productImageUrl").type(STRING).description("큐레이션 피드 빵집 상품 이미지 Url"),
 						fieldWithPath("data.landing").optional().description("null"),
-						fieldWithPath("data.likeCounts").description("현재 피드 좋아요 개수"),
-						fieldWithPath("data.likeStatus").description("현재 유저가 피드 좋아요 한 상태"))
+						fieldWithPath("data.likeCounts").type(NUMBER).description("현재 피드 좋아요 개수"),
+						fieldWithPath("data.likeStatus").type(STRING).description("현재 유저가 피드 좋아요 한 상태"))
 				)
 			);
 	}
@@ -429,9 +443,9 @@ public class FeedControllerTest extends ControllerTest {
 						parameterWithName("feedId").description("피드 아이디")
 					),
 					responseFields(
-						fieldWithPath("data.userId").description("유저 아이디"),
-						fieldWithPath("data.likeStatus").description("유저 좋아요 상태(좋아요 체크)"),
-						fieldWithPath("data.likeCounts").description("현재 피드에 좋아요 찍은 횟수"))
+						fieldWithPath("data.userId").type(NUMBER).description("유저 아이디"),
+						fieldWithPath("data.likeStatus").type(STRING).description("유저 좋아요 상태(좋아요 체크)"),
+						fieldWithPath("data.likeCounts").type(NUMBER).description("현재 피드에 좋아요 찍은 횟수"))
 				)
 			);
 	}

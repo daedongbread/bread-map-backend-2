@@ -43,19 +43,19 @@ public class CurationFeed extends Feed {
 		this.likes = new FeedLikes(new ArrayList<>());
 	}
 
-	public void addAll(List<Bakery> bakeries, FeedRequestDto requestDto) {
-		this.bakeries.addAll(this, bakeries, requestDto);
+	public void addAll(List<Bakery> bakeries, List<CurationBakery> curationBakeries) {
+		this.bakeries.addAll(bakeries, curationBakeries);
 	}
 
 	public void removeAllBakeries() {
 		this.bakeries.clear();
 	}
 
-	public void update(List<Bakery> bakeries, Category category, FeedRequestDto updateDto) {
-		super.update(category, updateDto.getCommon());
+	public void update(Feed feed, List<Bakery> bakeries, List<CurationBakery> curationBakeries) {
+		super.update(feed);
 
 		this.removeAllBakeries();
-		this.addAll(bakeries, updateDto);
+		this.addAll(bakeries, curationBakeries);
 	}
 
 	public int getLikeCount() {

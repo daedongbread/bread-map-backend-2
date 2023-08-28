@@ -45,11 +45,16 @@ insert into FLAG_BAKERY (id, created_at, modified_at, bakery_id, flag_id, user_i
 (114,  '2023-01-03', '2023-01-01', 113, 113, 112)
 ;
 
-insert into bakery (id, created_at, modified_at, address, latitude, longitude, name, status  ,image )values
-(111,  '2023-01-01', '2023-01-01', '수원', 37.5596080725671, 127.044235133983,'수원빵집','POSTING' , 'image111'),
-(112,  '2023-01-02', '2023-01-01', '서울', 37.5596080725632, 127.044235133932,'서울 빵집','POSTING' , 'image'),
-(113,  '2023-01-03', '2023-01-01', '제주도', 37.5596080725679, 127.044235133911,'제주도 빵집', 'POSTING', 'image2')
+insert into bakery (id, created_at, modified_at, address, latitude, longitude, name, status )values
+(111,  '2023-01-01', '2023-01-01', '수원', 37.5596080725671, 127.044235133983,'수원빵집','POSTING'),
+(112,  '2023-01-02', '2023-01-01', '서울', 37.5596080725632, 127.044235133932,'서울 빵집','POSTING'),
+(113,  '2023-01-03', '2023-01-01', '제주도', 37.5596080725679, 127.044235133911,'제주도 빵집', 'POSTING')
 ;
+
+insert into bakery_images (bakery_id, images) values
+(111, 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery4.png'),
+(112, 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery4.png'),
+(113, 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultBakery3.png');
 
 insert into review (id, created_at, modified_at, content, is_block, is_delete, is_hide, is_new  ,bakery_id, user_id )values
 (111,  '2023-01-01', '2023-01-01', '수원',  'N', 'N', 'N', 'N', 113, 112),

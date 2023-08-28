@@ -61,18 +61,15 @@ public abstract class Feed extends BaseEntity {
 	@Enumerated(value = EnumType.STRING)
 	private FeedStatus activated;
 
-	protected void update(Category category, CommonFeedRequestDto updateDto) {
-		this.category = category;
-		this.subTitle = updateDto.getSubTitle();
-		this.introduction = updateDto.getIntroduction();
-		this.conclusion = updateDto.getConclusion();
-		this.thumbnailUrl = updateDto.getThumbnailUrl();
-		this.activeTime = DateTimeParser.parse(updateDto.getActiveTime());
-		this.feedType = updateDto.getFeedType().toString();
-	}
-
-	public void delete() {
-		this.activated = FeedStatus.INACTIVATED;
+	protected void update(Feed updateFeed) {
+		this.category = updateFeed.getCategory();
+		this.subTitle = updateFeed.getSubTitle();
+		this.introduction = updateFeed.getIntroduction();
+		this.conclusion = updateFeed.getConclusion();
+		this.thumbnailUrl = updateFeed.getThumbnailUrl();
+		this.activeTime = DateTimeParser.parse(updateFeed.getActiveTime().toString());
+		this.feedType = updateFeed.getFeedType();
+		this.activated = updateFeed.getActivated();
 	}
 
 	public Feed(Long id, Admin admin, Category category, String subTitle, String introduction, String conclusion,

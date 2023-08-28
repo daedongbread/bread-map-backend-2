@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,13 +23,15 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 
 public class CurationFeedTest {
 
+	private List<String> images = List.of("test images");
+
 	@Test
 	@DisplayName("큐레이션 피드에 추천하는 빵집을 넣어 생성한다")
 	void 큐레이션_추천빵집_테스트() {
 
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -60,16 +64,20 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationFeed, bakeries, request);
+
 		//when
-		curationFeed.addAll(bakeries, request);
+		curationFeed.addAll(bakeries, curationBakeries);
 
 		//then
 		assertThat(curationFeed.getBakeries().getCurationBakeries().size()).isEqualTo(2);
@@ -81,7 +89,7 @@ public class CurationFeedTest {
 
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -114,16 +122,20 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.UNPOSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationFeed, bakeries, request);
+
 		//then
-		assertThatCode(() -> curationFeed.addAll(bakeries, request))
+		assertThatCode(() -> curationFeed.addAll(bakeries, curationBakeries))
 			.isInstanceOf(DaedongException.class)
 			.extracting("daedongStatus.code")
 			.isEqualTo(40096);
@@ -135,7 +147,7 @@ public class CurationFeedTest {
 
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -188,36 +200,44 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(3L)
 				.name("추천빵집 3")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(4L)
 				.name("추천빵집 4")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(5L)
 				.name("추천빵집 5")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(6L)
 				.name("추천빵집 6")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationFeed, bakeries, request);
+
 		//then
-		assertThatCode(() -> curationFeed.addAll(bakeries, request))
+		assertThatCode(() -> curationFeed.addAll(bakeries, curationBakeries))
 			.isInstanceOf(DaedongException.class)
 			.extracting("daedongStatus.code")
 			.isEqualTo(40094);
@@ -229,7 +249,7 @@ public class CurationFeedTest {
 
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -267,21 +287,26 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationFeed, bakeries, request);
+
 		//then
-		assertThatCode(() -> curationFeed.addAll(bakeries, request))
+		assertThatCode(() -> curationFeed.addAll(bakeries, curationBakeries))
 			.isInstanceOf(DaedongException.class)
 			.extracting("daedongStatus.code")
 			.isEqualTo(40991);
@@ -293,7 +318,7 @@ public class CurationFeedTest {
 
 		//given
 		CurationFeed curationFeed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -326,15 +351,19 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
-		curationFeed.addAll(bakeries, request);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationFeed, bakeries, request);
+
+		curationFeed.addAll(bakeries, curationBakeries);
 
 		//when
 		curationFeed.removeAllBakeries();
@@ -348,8 +377,10 @@ public class CurationFeedTest {
 	void 큐레이션_피드를_수정한다() {
 
 		//given
+		Admin admin = Admin.builder().id(1L).email("test@test.com").build();
+
 		CurationFeed curationFeed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -382,11 +413,13 @@ public class CurationFeedTest {
 				.id(1L)
 				.name("추천빵집 1")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build(),
 			Bakery.builder()
 				.id(2L)
 				.name("추천빵집 2")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
@@ -414,15 +447,23 @@ public class CurationFeedTest {
 				.id(3L)
 				.name("추천빵집 3")
 				.status(BakeryStatus.POSTING)
+				.images(new ArrayList<>(images))
 				.build()
 		);
 
-		Category updateCategory = new Category("업데이트된 카테고리");
+		Category updateCategory = Category.builder().categoryName("업데이트된 카테고리").build();
 
-		curationFeed.addAll(bakeries, request);
+		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(curationFeed, bakeries, request);
+
+		curationFeed.addAll(bakeries, curationBakeries);
 
 		//when
-		curationFeed.update(updateBakeries, updateCategory, updateRequest);
+
+		Feed updateFeed = FeedAssembler.toEntity(admin, updateCategory, updateRequest);
+
+		List<CurationBakery> updateCurationBakeries = FeedAssembler.toCurationBakery(curationFeed, updateBakeries, updateRequest);
+
+		curationFeed.update(updateFeed, updateBakeries, updateCurationBakeries);
 
 		//then
 		assertThat(curationFeed)
@@ -440,7 +481,7 @@ public class CurationFeedTest {
 	void 피드_좋아요_총_카운트_계산_테스트() {
 		//given
 		CurationFeed feed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -468,7 +509,7 @@ public class CurationFeedTest {
 	void 피드_좋아요_유저_개별_카운트_계산_테스트() {
 		//given
 		CurationFeed feed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -499,7 +540,7 @@ public class CurationFeedTest {
 	void 피드_좋아요_테스트() {
 		//given
 		CurationFeed feed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 
@@ -525,7 +566,7 @@ public class CurationFeedTest {
 	void 피드_좋아요_테스트_5개_이상_실패() {
 		//given
 		CurationFeed feed = CurationFeed.builder()
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.likes(new FeedLikes(new ArrayList<>()))
 			.build();
 

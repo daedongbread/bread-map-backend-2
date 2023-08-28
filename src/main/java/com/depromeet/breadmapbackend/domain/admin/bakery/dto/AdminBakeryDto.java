@@ -19,7 +19,7 @@ public class AdminBakeryDto {
 	private String name;
 	private Long pioneerId;
 	private String pioneerNickName;
-	private String image;
+	private List<String> images;
 
 	private String address;
 	private String detailedAddress;
@@ -41,14 +41,14 @@ public class AdminBakeryDto {
 	private Long reportId;
 
 	@Builder
-	public AdminBakeryDto(Bakery bakery, String image, List<AdminProductDto> productList) {
+	public AdminBakeryDto(Bakery bakery, List<String> images, List<AdminProductDto> productList) {
 		final Optional<BakeryAddReport> bakeryAddReport = Optional.ofNullable(bakery.getBakeryAddReport());
 		final User pioneer = bakeryAddReport.map(BakeryAddReport::getUser).orElse(null);
 		this.name = bakery.getName();
 		this.reportId = bakeryAddReport.map(BakeryAddReport::getId).orElse(null);
 		this.pioneerId = (pioneer != null) ? pioneer.getId() : null;
 		this.pioneerNickName = (pioneer != null) ? pioneer.getNickName() : null;
-		this.image = image;
+		this.images = images;
 		this.address = bakery.getAddress();
 		this.detailedAddress = bakery.getDetailedAddress();
 		this.latitude = bakery.getLatitude();

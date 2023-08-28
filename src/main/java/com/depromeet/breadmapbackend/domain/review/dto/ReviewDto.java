@@ -30,7 +30,7 @@ public class ReviewDto {
 		@Builder
 		public BakeryInfo(Bakery bakery) {
 			this.bakeryId = bakery.getId();
-			this.bakeryImage = bakery.getImage();
+			this.bakeryImage = bakery.getImages().get(0);
 			this.bakeryName = bakery.getName();
 			this.bakeryAddress = bakery.getAddress();
 		}

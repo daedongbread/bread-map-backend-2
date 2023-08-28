@@ -11,7 +11,7 @@ public class CategoryAssembler {
 	}
 
 	public static Category toEntity(CategoryRequest request) {
-		return new Category(request.getCategoryName());
+		return Category.builder().categoryName(request.getCategoryName()).build();
 	}
 
 	public static List<CategoryResponse> toDto(List<Category> categories) {

@@ -103,7 +103,7 @@ public class FeedRepositoryTest_Search {
 			.password("1234")
 			.build();
 
-		Category category = new Category("대동빵 멤버 추천 빵집");
+		Category category = Category.builder().categoryName("대동빵 멤버 추천 빵집").build();
 
 		List<Feed> feeds = List.of(
 			LandingFeed.builder()
@@ -217,8 +217,8 @@ public class FeedRepositoryTest_Search {
 			.password("1234")
 			.build();
 
-		Category category1 = new Category("대동빵 멤버 추천 빵집");
-		Category category2 = new Category("8월 빵집");
+		Category category1 = Category.builder().categoryName("대동빵 멤버 추천 빵집").build();
+		Category category2 = Category.builder().categoryName("8월 빵집").build();
 
 		Feed[] feeds = new Feed[] {
 			LandingFeed.builder()
