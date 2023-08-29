@@ -1,13 +1,14 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.controller;
 
-import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.DATE;
-import static com.google.protobuf.FieldType.*;
-import static org.springframework.asm.Type.*;
+import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.*;
+import static com.google.protobuf.FieldType.STRING;
+import static org.springframework.asm.Type.ARRAY;
+import static org.springframework.asm.Type.BOOLEAN;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -244,6 +245,9 @@ public class FeedAdminControllerTest extends ControllerTest {
 				fieldWithPath("landing.redirectUrl").description("랜딩 RedirectUrl")),
 			responseHeaders(
 				headerWithName(HttpHeaders.LOCATION).description("어드민 - 피드 상세 보기 주소")
+			),
+			responseFields(
+				fieldWithPath("data.feedId").type(NUMBER).description("생성된 피드 아이디")
 			))
 		);
 	}
@@ -284,6 +288,9 @@ public class FeedAdminControllerTest extends ControllerTest {
 				fieldWithPath("landing").description("null 보내주세요")),
 			responseHeaders(
 				headerWithName(HttpHeaders.LOCATION).description("어드민 - 피드 상세 보기 주소")
+			),
+			responseFields(
+				fieldWithPath("data.feedId").type(NUMBER).description("생성된 피드 아이디")
 			))
 		);
 	}
@@ -604,7 +611,9 @@ public class FeedAdminControllerTest extends ControllerTest {
 						fieldWithPath("data.curation.[].instagramURL").type(STRING).description("큐레이션 피드 빵집 인스타 Url"),
 						fieldWithPath("data.curation.[].facebookURL").type(STRING).description("큐레이션 피드 빵집 페이스북 Url"),
 						fieldWithPath("data.curation.[].blogURL").type(STRING).description("큐레이션 피드 빵집 상품 블로그 Url"),
-						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY).type(STRING).description("큐레이션 피드 빵집 태그 리스트"),
+						fieldWithPath("data.curation.[].facilityInfo").type(ARRAY)
+							.type(STRING)
+							.description("큐레이션 피드 빵집 태그 리스트"),
 						fieldWithPath("data.curation.[].phoneNumber").type(STRING).description("큐레이션 피드 빵집 전하번호"),
 						fieldWithPath("data.curation.[].reason").type(STRING).description("큐레이션 피드 빵집 추천 이유"),
 						fieldWithPath("data.curation.[].flagged").type(BOOLEAN).description("false. 어드민은 무시하셔도 됩니다"),
