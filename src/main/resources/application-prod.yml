@@ -30,6 +30,8 @@ spring:
       bakery-review: ${REDIS_KEY_BAKERY_REVIEW}
       product-review: ${REDIS_KEY_PRODUCT_REVIEW}
       user-review: ${REDIS_KEY_USER_REVIEW}
+  flyway:
+    enabled: false
 
 oauth:
   google: ${GOOGLE_ID}
