@@ -14,10 +14,11 @@ spring:
   #      max-lifeitme: 300
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       default_batch_fetch_size: 100
+    generate-ddl: false
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
@@ -30,6 +31,10 @@ spring:
       bakery-review: ${REDIS_KEY_BAKERY_REVIEW}
       product-review: ${REDIS_KEY_PRODUCT_REVIEW}
       user-review: ${REDIS_KEY_USER_REVIEW}
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
 
 oauth:
   google: ${GOOGLE_ID}
