@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
+import static com.fasterxml.jackson.databind.node.JsonNodeType.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -16,13 +17,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminImageRegisterRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
+import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryProductsDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryImageType;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
@@ -45,6 +49,7 @@ import com.depromeet.breadmapbackend.domain.review.view.ReviewView;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
+import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.security.domain.OAuthType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
@@ -76,7 +81,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 		bakery = Bakery.builder().address("address").latitude(37.5596080725671).longitude(127.044235133983)
 			.facilityInfoList(facilityInfo).name("bakery").status(BakeryStatus.POSTING)
-			.image(customAWSS3Properties.getCloudFront() + "/" + "bakeryImage.jpg").build();
+			.images(List.of(
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage1.jpg",
+				customAWSS3Properties.getCloudFront() + "/" + "bakeryImage2.jpg"
+			)).build();
 		bakeryRepository.save(bakery);
 		s3Uploader.upload(
 			new MockMultipartFile("image", "bakeryImage.jpg", "image/jpg", "test".getBytes()),
@@ -239,7 +247,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 					fieldWithPath("data.reportId").description("빵집 제보 고유 번호"),
 					fieldWithPath("data.pioneerId").description("빵집 개척자 고유 번호"),
 					fieldWithPath("data.pioneerNickName").description("빵집 개척자 닉네임"),
-					fieldWithPath("data.image").description("빵집 이미지"),
+					fieldWithPath("data.images").type(ARRAY).description("빵집 이미지 (최대 2개)"),
 					fieldWithPath("data.address").description("빵집 도로명 주소"),
 					fieldWithPath("data.detailedAddress").optional().description("빵집 도로명 상세 주소"),
 					fieldWithPath("data.latitude").description("빵집 위도"),
@@ -297,7 +305,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 		String object = objectMapper.writeValueAsString(BakeryAddRequest.builder()
 			.reportId(1L)
 			.name("newBakery")
-			.image("tempImage.jpg")
+			.images(List.of(
+				"tempImage1.jpg",
+				"tempImage2.jpg"
+			))
 			.address("address")
 			.detailedAddress("detailedAddress")
 			.latitude(35.124124)
@@ -327,7 +338,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				requestFields(
 					fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
-					fieldWithPath("image").optional().description("빵집 이미지"),
+					fieldWithPath("images").type(ARRAY).description("빵집 이미지 (최대 2개)"),
 					fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
 					fieldWithPath("detailedAddress").optional().description("빵집 도로명 상세 주소"),
 					fieldWithPath("latitude").description("빵집 위도"),
@@ -366,7 +377,10 @@ class AdminBakeryControllerTest extends ControllerTest {
 		List<FacilityInfo> facilityInfo = Collections.singletonList(FacilityInfo.PARKING);
 		String object = objectMapper.writeValueAsString(BakeryUpdateRequest.builder()
 			.name("newBakery")
-			.image("tempImage.jpg")
+			.images(List.of(
+				"tempImage1.jpg",
+				"tempImage2.jpg"
+			))
 			.address("address")
 			.detailedAddress("detailedAddress")
 			.latitude(35.124124)
@@ -379,6 +393,8 @@ class AdminBakeryControllerTest extends ControllerTest {
 			.phoneNumber("010-1234-5678")
 			.facilityInfoList(facilityInfo)
 			.status(BakeryStatus.POSTING)
+			.newBreadTime("2023-08-2700:00:00")
+			.checkPoint("update check point")
 			.productList(Arrays.asList(
 				BakeryUpdateRequest.ProductUpdateRequest.builder()
 					.productId(product.getId()).productType(ProductType.BREAD)
@@ -400,7 +416,7 @@ class AdminBakeryControllerTest extends ControllerTest {
 					parameterWithName("bakeryId").description("빵집 고유 번호")),
 				requestFields(
 					fieldWithPath("name").description("빵집 이름 (1자 이상, 20자 이하)"),
-					fieldWithPath("image").optional().description("빵집 이미지"),
+					fieldWithPath("images").type(ARRAY).description("빵집 이미지 (최대 2개)"),
 					fieldWithPath("address").description("빵집 도로명 주소 (3자 이상, 100자 이하)"),
 					fieldWithPath("detailedAddress").optional().description("빵집 도로명 상세 주소"),
 					fieldWithPath("latitude").description("빵집 위도"),
@@ -779,4 +795,43 @@ class AdminBakeryControllerTest extends ControllerTest {
 			.andExpect(status().isNoContent());
 	}
 
+	@Test
+	@DisplayName("빵집의 상품 전체 조회 테스트")
+	void test() throws Exception {
+
+		//given
+		List<BakeryProductsDto> content = productRepository.findByBakeryId(bakery.getId())
+			.stream()
+			.map(BakeryProductsDto::of)
+			.toList();
+
+		String response = objectMapper.writeValueAsString(new ApiResponse<>(content));
+
+		//when
+		ResultActions perform = mockMvc.perform(get("/v1/admin/bakeries/{bakeryId}/products", bakery.getId())
+			.header("Authorization", "Bearer " + token.getAccessToken())
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.contentType(MediaType.APPLICATION_JSON_VALUE));
+
+		perform.andExpect(status().isOk())
+			.andExpect(content().string(response));
+
+		//then
+		perform.andDo(print()).
+			andDo(document("find-bakery-products-admin",
+					preprocessRequest(prettyPrint()),
+					preprocessResponse(prettyPrint()),
+					requestHeaders(headerWithName("Authorization").description("어드민 유저의 Access Token")),
+					pathParameters(
+						parameterWithName("bakeryId").description("빵집 아이디")
+					),
+					responseFields(
+						fieldWithPath("data.[].productId").type(NUMBER).description("상품 아이디"),
+						fieldWithPath("data.[].productType").type(STRING).description("상품 타입"),
+						fieldWithPath("data.[].productName").type(STRING).description("상품 이름"),
+						fieldWithPath("data.[].productPrice").type(STRING).description("상품 가격")
+					)
+				)
+			);
+	}
 }

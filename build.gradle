@@ -105,6 +105,12 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.17.2'
 
     testImplementation 'org.testcontainers:junit-jupiter:1.17.2'
+
+    testImplementation 'org.mockito:mockito-inline:3.6.0'
+
+    // flyway
+    implementation 'org.flywaydb:flyway-core:8.4.4'
+    implementation 'org.flywaydb:flyway-mysql:8.4.4'
 }
 
 tasks.named('test') {

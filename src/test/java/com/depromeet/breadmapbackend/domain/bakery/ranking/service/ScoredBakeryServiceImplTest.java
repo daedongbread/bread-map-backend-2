@@ -4,6 +4,7 @@ import static com.depromeet.breadmapbackend.global.EventInfo.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +66,10 @@ class ScoredBakeryServiceImplTest {
 			.longitude(127.044235133983)
 			.name("bakery")
 			.status(BakeryStatus.POSTING)
-			.image("bakeryImage.jpg")
+			.images(List.of(
+				"bakeryImage1.jpg",
+				"bakeryImage2.jpg"
+			))
 			.build();
 		final double bakeryRating = 4.5;
 		final Long flagCount = 2L;
@@ -140,6 +144,7 @@ class ScoredBakeryServiceImplTest {
 			.mapToObj(i -> FixtureFactory.getScoredBakery(i).nextObject(ScoredBakery.class))
 			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
 			.toList();
+		preparedDate.forEach(data -> data.getBakery().updateImages(new ArrayList<>(List.of("test images"))));
 		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);
 		return preparedDate;
 	}
@@ -149,6 +154,7 @@ class ScoredBakeryServiceImplTest {
 			.mapToObj(i -> FixtureFactory.getYesterdayScoredBakery(i).nextObject(ScoredBakery.class))
 			.sorted(Comparator.comparing(ScoredBakery::getTotalScore).reversed().thenComparing(ScoredBakery::getId))
 			.toList();
+		preparedDate.forEach(data -> data.getBakery().updateImages(new ArrayList<>(List.of("test images"))));
 		FakeScoredBakeryRepositoryImpl.prepareData(preparedDate);
 		return preparedDate;
 	}

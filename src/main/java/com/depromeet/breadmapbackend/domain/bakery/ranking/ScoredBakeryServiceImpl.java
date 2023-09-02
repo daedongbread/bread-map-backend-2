@@ -137,7 +137,7 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.id(bakeryScores.getBakery().getId())
 			.flagNum(getFlagCount(bakeryScores, flagBakeryCounts))
 			.name(bakeryScores.getBakery().getName())
-			.image(bakeryScores.getBakery().getImage())
+			.image(bakeryScores.getBakery().getImages().get(0))
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
 			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
 			.calculatedDate(bakeryScores.getCalculatedDate())

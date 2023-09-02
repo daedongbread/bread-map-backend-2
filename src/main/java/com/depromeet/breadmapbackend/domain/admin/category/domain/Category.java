@@ -11,6 +11,7 @@ import com.depromeet.breadmapbackend.domain.admin.category.dto.CategoryRequest;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,12 +26,14 @@ public class Category extends BaseEntity {
 
 	private String categoryName;
 
-	public Category(String categoryName) {
+	@Builder
+	public Category(Long id, String categoryName) {
+		this.id = id;
 		this.categoryName = categoryName;
 	}
 
 	public Category update(CategoryRequest request) {
-		return new Category(request.getCategoryName());
+		return Category.builder().categoryName(request.getCategoryName()).build();
 	}
 
 	@Override

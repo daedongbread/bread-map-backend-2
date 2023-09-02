@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.service;
 
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.LandingFeedResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,11 +45,14 @@ public class LandingFeedService implements FeedService {
 
 	@Transactional
 	@Override
-	public void updateFeed(Long feedId, FeedRequestDto updateDto) {
+	public void updateFeed(Long adminId, Long feedId, FeedRequestDto updateDto) {
+		Admin admin = findAdminById(adminId);
 		LandingFeed feed = findLandingFeedById(feedId);
 		Category category = findCategoryById(updateDto.getCommon().getCategoryId());
 
-		feed.update(category, updateDto);
+		Feed updateFeed = FeedAssembler.toEntity(admin, category, updateDto);
+
+		feed.update(updateFeed);
 	}
 
 	@Override

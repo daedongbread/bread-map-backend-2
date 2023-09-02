@@ -32,7 +32,7 @@ public class CommonFeedRequestDto {
 	@NotBlank(message = "피드 타입은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
 	private FeedType feedType;
 
-	@NotBlank(message = "게시 시간은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
+	@NotBlank(message = "게시 시간은 필수 값입니다.(yyyy-mm-ddThh:mm:ss)", groups = ValidationGroups.NotEmptyGroup.class)
 	private String activeTime;
 
 	@Builder

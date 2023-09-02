@@ -22,6 +22,7 @@ import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedStatus;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedSearchRequest;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedCreateResponse;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.FeedResponseForAdmin;
 import com.depromeet.breadmapbackend.domain.admin.feed.service.CommonFeedService;
@@ -43,7 +44,7 @@ public class FeedAdminController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void addFeed(
+	public ApiResponse<FeedCreateResponse> addFeed(
 		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@RequestBody FeedRequestDto requestDto,
 		HttpServletResponse response
@@ -55,17 +56,20 @@ public class FeedAdminController {
 		String redirectUrl = String.format(REDIRECT_URL, feedId);
 
 		response.setHeader("Location", redirectUrl);
+
+		return new ApiResponse<>(new FeedCreateResponse(feedId));
 	}
 
 	@PatchMapping("/{feedId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateFeed(
+		@AuthenticationPrincipal CurrentUserInfo currentUserInfo,
 		@PathVariable Long feedId,
 		@Valid @RequestBody FeedRequestDto updateDto
 	) {
 		FeedService feedService = serviceFactory.getService(updateDto.getCommon().getFeedType());
 
-		feedService.updateFeed(feedId, updateDto);
+		feedService.updateFeed(currentUserInfo.getId(), feedId, updateDto);
 	}
 
 	@GetMapping("/all")

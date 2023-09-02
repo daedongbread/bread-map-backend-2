@@ -59,7 +59,8 @@ public class Product extends BaseEntity {
 	private boolean isTrue;
 
 	@Builder
-	private Product(ProductType productType, String name, String price, String image, Bakery bakery, Boolean isTrue) {
+	private Product(Long id, ProductType productType, String name, String price, String image, Bakery bakery, Boolean isTrue) {
+		this.id = id;
 		this.productType = productType;
 		this.name = name;
 		this.price = price;

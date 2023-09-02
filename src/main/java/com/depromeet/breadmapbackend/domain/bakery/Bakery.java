@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
@@ -69,7 +72,13 @@ public class Bakery extends BaseEntity {
 	@Embedded
 	private BakeryURL bakeryURL;
 
-	private String image;
+	@BatchSize(size = 2)
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(
+		name = "bakery_images",
+		joinColumns = @JoinColumn(name = "bakery_id")
+	)
+	private List<String> images = new ArrayList<>();
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -93,10 +102,13 @@ public class Bakery extends BaseEntity {
 	public Bakery(
 		Long id, String name, Double latitude, Double longitude,
 		String address, String detailedAddress, String hours, String phoneNumber, String checkPoint,
-		String newBreadTime,
-		String websiteURL, String instagramURL, String facebookURL, String blogURL, String image,
+		String newBreadTime, List<String> images,
+		String websiteURL, String instagramURL, String facebookURL, String blogURL,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status, BakeryAddReport bakeryAddReport
 	) {
+
+		validateOnImagesCount(images);
+
 		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
@@ -107,9 +119,9 @@ public class Bakery extends BaseEntity {
 		this.detailedAddress = detailedAddress;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
+		this.images = images;
 		this.bakeryURL = BakeryURL.builder()
 			.websiteURL(websiteURL).instagramURL(instagramURL).facebookURL(facebookURL).blogURL(blogURL).build();
-		this.image = image;
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
 		this.bakeryAddReport = bakeryAddReport;
@@ -119,7 +131,7 @@ public class Bakery extends BaseEntity {
 		String name, String address, String detailedAddress, Double latitude, Double longitude, String hours,
 		String websiteURL, String instagramURL, String facebookURL, String blogURL, String phoneNumber,
 		String checkPoint,
-		String newBreadTime, String image,
+		String newBreadTime, List<String> updateImages,
 		List<FacilityInfo> facilityInfoList, BakeryStatus status
 	) {
 		this.name = name;
@@ -129,10 +141,29 @@ public class Bakery extends BaseEntity {
 		this.longitude = longitude;
 		this.hours = hours;
 		this.phoneNumber = phoneNumber;
-		this.image = image;
+		updateImages(updateImages);
 		this.bakeryURL.update(websiteURL, instagramURL, facebookURL, blogURL);
 		this.facilityInfoList = facilityInfoList;
 		this.status = status;
+		this.checkPoint = checkPoint;
+		this.newBreadTime = newBreadTime;
+	}
+
+	public void updateImages(List<String> updateImages) {
+		if (this.images == null) {
+			this.images = new ArrayList<>();
+		}
+
+		validateOnImagesCount(updateImages);
+
+		this.images.clear();
+		this.images.addAll(updateImages);
+	}
+
+	private void validateOnImagesCount(List<String> requestImages) {
+		if (requestImages.size() > 2) {
+			throw new DaedongException(DaedongStatus.BAKERY_IMAGE_CANNOT_MORE_THAN_TWO);
+		}
 	}
 
 	public boolean isPosting() {

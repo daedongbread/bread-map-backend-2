@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery;
 
 import java.security.SecureRandom;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +27,7 @@ import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminSimpleBakeryDt
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryLocationDto;
+import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryProductsDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateReportDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryUpdateRequest;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.NewReviewDto;
@@ -129,11 +131,13 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		List<AdminProductDto> productList = productRepository.findByBakeryAndIsTrueIsTrue(bakery).stream()
 			.map(AdminProductDto::new).collect(Collectors.toList());
 
-		String image = (bakery.getImage().contains(customAWSS3Properties.getDefaultImage().getBakery())) ? null :
-			bakery.getImage();
+		List<String> images = bakery.getImages().stream()
+			.map(image -> image.contains(customAWSS3Properties.getDefaultImage().getBakery()) ? null : image)
+			.toList();
+
 		return AdminBakeryDto.builder()
 			.bakery(bakery)
-			.image(image)
+			.images(images)
 			.productList(productList)
 			.build();
 	}
@@ -183,9 +187,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 
 		Bakery bakery = Bakery.builder()
 			.name(request.getName())
-			.image((StringUtils.hasText(request.getImage())) ? request.getImage() :
-				customAWSS3Properties.getCloudFront() + "/" +
-					customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png")
+			.images(getImagesIfExistsOrGetDefaultImage(request.getImages()))
 			.address(request.getAddress())
 			.detailedAddress(request.getDetailedAddress())
 			.latitude(request.getLatitude())
@@ -234,14 +236,14 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		Bakery bakery = bakeryRepository.findById(bakeryId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
+		List<String> images = getImagesIfExistsOrGetDefaultImage(request.getImages());
+
 		bakery.update(request.getName(),
 			request.getAddress(), request.getDetailedAddress(), request.getLatitude(), request.getLongitude(),
 			request.getHours(),
 			request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
 			request.getPhoneNumber(), request.getCheckPoint(), request.getNewBreadTime(),
-			(StringUtils.hasText(request.getImage())) ? request.getImage() :
-				customAWSS3Properties.getCloudFront() + "/" +
-					customAWSS3Properties.getDefaultImage().getBakery() + (new SecureRandom().nextInt(10) + 1) + ".png",
+			images,
 			request.getFacilityInfoList(), request.getStatus());
 
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
@@ -371,17 +373,24 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	}
 
 	private Boolean isUsedImage(Bakery bakery, String image) {
-		Set<String> usedImage = bakery.getProductList().stream()
+		Set<String> usedImage = new HashSet<>();
+
+		List<String> productImages = bakery.getProductList().stream() // In Query ?
 			.filter(product -> product.getImage() != null)
 			.map(product -> {
 				String replace = product.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
 				return replace.split("/")[replace.split("/").length - 1];
-			}).collect(Collectors.toSet());
+			}).toList();
 
-		if (bakery.getImage() != null) {
-			String replace = bakery.getImage().replace(customAWSS3Properties.getCloudFront() + "/", "");
-			usedImage.add(replace.split("/")[replace.split("/").length - 1]);
-		}
+		List<String> bakeryImages = bakery.getImages().stream() // In Query ?
+			.filter(StringUtils::hasText)
+			.map(e -> e.replace(customAWSS3Properties.getCloudFront() + "/", ""))
+			.map(e -> e.split("/")[e.split("/").length - 1])
+			.toList();
+
+		usedImage.addAll(bakeryImages);
+		usedImage.addAll(productImages);
+
 		return usedImage.contains(image);
 	}
 
@@ -505,6 +514,34 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		Review review = reviewRepository.findByIdAndBakery(reviewId, bakery)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 		review.delete();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<BakeryProductsDto> getBakeryProducts(Long bakeryId) {
+
+		return productRepository.findByBakeryId(bakeryId).stream()
+			.map(BakeryProductsDto::of)
+			.toList();
+	}
+
+	private List<String> getImagesIfExistsOrGetDefaultImage(List<String> images) {
+
+		String defaultBakeryImage =
+			customAWSS3Properties.getCloudFront() + "/" + customAWSS3Properties.getDefaultImage().getBakery() + (
+				new SecureRandom().nextInt(10) + 1) + ".png";
+
+		boolean isEmptyList = images.stream().noneMatch(StringUtils::hasText);
+
+		if (isEmptyList) {
+			images.clear();
+			images.add(defaultBakeryImage);
+			return images;
+		}
+
+		return images.stream()
+			.map(image -> StringUtils.hasText(image) ? image : defaultBakeryImage)
+			.toList();
 	}
 
 	//    @Transactional(rollbackFor = Exception.class)

@@ -5,10 +5,8 @@ import java.util.stream.Collectors;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.LandingFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.*;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.CurationFeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.CommonFeedResponseDto;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.response.CurationFeedResponseDto;
@@ -122,5 +120,16 @@ public class FeedAssembler {
 		return feeds.stream()
 			.map(FeedAssembler::toDtoForUser)
 			.collect(Collectors.toList());
+	}
+
+	public static CurationBakery toCurationBakery(CurationFeed curationFeed, Bakery bakery, CurationFeedRequestDto requestDto) {
+		return new CurationBakery(curationFeed, bakery, requestDto);
+	}
+
+	public static List<CurationBakery> toCurationBakery(CurationFeed curationFeed, List<Bakery> bakeries, FeedRequestDto request) {
+		return bakeries.stream()
+				.map(bakery -> new CurationBakery(curationFeed, bakery, request.findCuration(bakery.getId())))
+//				.forEach(this.bakeries::add);
+				.collect(Collectors.toList());
 	}
 }

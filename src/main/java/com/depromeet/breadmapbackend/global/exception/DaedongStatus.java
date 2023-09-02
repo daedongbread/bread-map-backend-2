@@ -57,6 +57,7 @@ public enum DaedongStatus {
 	SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID(BAD_REQUEST, 40109,
 		"second depth comment should have target user id"),
 	SECOND_DEPTH_COMMENT_SHOULD_HAVE_PARENT_ID(BAD_REQUEST, 40110, "second depth comment should have parent id"),
+	BAKERY_IMAGE_CANNOT_MORE_THAN_TWO(BAD_REQUEST, 40111, "bakery images cannot bigger than 2"),
 
 	USER_NOT_REGISTERED(BAD_REQUEST, 40111, "user is deregistered"),
 

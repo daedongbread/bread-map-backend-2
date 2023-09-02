@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
 
+import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,8 @@ public class LandingFeedTest {
 	void 랜딩피드_수정_테스트() {
 
 		//given
+		Admin admin = Admin.builder().id(1L).email("test admin").build();
+
 		LandingFeed landingFeed = LandingFeed.builder()
 			.feedType(FeedType.LANDING.toString())
 			.subTitle("8월 추천 빵집")
@@ -27,11 +31,11 @@ public class LandingFeedTest {
 			.conclusion("다음에 또 만나요")
 			.activated(FeedStatus.POSTING)
 			.thumbnailUrl("testUrl")
-			.category(new Category("테스트 카테고리"))
+			.category(Category.builder().categoryName("테스트 카테고리").build())
 			.redirectUrl("testRedirectUrl")
 			.build();
 
-		Category category = new Category("업데이트 카테고리");
+		Category category = Category.builder().categoryName("업데이트된 카테고리").build();
 
 		FeedRequestDto updateRequest = new FeedRequestDto(
 			CommonFeedRequestDto.builder()
@@ -46,8 +50,10 @@ public class LandingFeedTest {
 			new LandingFeedRequestDto("updateRedirectUrl")
 		);
 
+		Feed toBe = FeedAssembler.toEntity(admin, category, updateRequest);
+
 		//when
-		landingFeed.update(category, updateRequest);
+		landingFeed.update(toBe);
 
 		//then
 		assertThat(landingFeed)
