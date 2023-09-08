@@ -17,6 +17,7 @@ import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserCacheRepository;
 import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -44,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final CustomAWSS3Properties customAWSS3Properties;
 	private final OIDCVerifyProcessor oidcVerifyProcessor;
+	private final UserCacheRepository userCacheRepository;
 
 	@Transactional(rollbackFor = Exception.class)
 	public JwtToken login(LoginRequest request) {
@@ -155,6 +157,7 @@ public class AuthServiceImpl implements AuthService {
 	public void deRegisterUser(final LogoutRequest request, final Long userId) {
 		final User user = userRepository.findById(userId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+		userCacheRepository.deleteUser(user.getOAuthInfo().getOAuthId());
 		user.deRegisterUser(UUID.randomUUID().toString().substring(0, 8), getDefaultProfileImage());
 
 		makeTokenInvalid(user, request);
