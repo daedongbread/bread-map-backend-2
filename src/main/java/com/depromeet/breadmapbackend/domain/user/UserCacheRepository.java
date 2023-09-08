@@ -49,6 +49,10 @@ public class UserCacheRepository {
 		}
 	}
 
+	public void deleteUser(final String oAuthId) {
+		redisTemplate.delete(getKey(oAuthId));
+	}
+
 	private String getKey(String oAuthId) {
 		return "USERINFO:" + oAuthId;
 	}
