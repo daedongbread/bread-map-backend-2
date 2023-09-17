@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SQSService {
 	private final QueueMessagingTemplate queueMessagingTemplate;
-	public void sendMessage(String queueName, SQSDto sqsDto, Long entityId) {
+	public void sendMessageToFIFOQueue(String queueName, SQSDto sqsDto, Long entityId) {
 		Map<String, Object> header = Map.of(
 			SqsMessageHeaders.SQS_GROUP_ID_HEADER, entityId,
 			SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER, UUID.randomUUID().toString()

@@ -14,6 +14,6 @@ public class UpdateBakerySQSService {
 	private final String UPDATE_BAKERY_QUEUE_NAME = "UpdateBakeryQueue.fifo"; // TODO : go to config
 
 	public void sendMessage(UpdateBakeryMessage message) {
-		sqsService.sendMessage(UPDATE_BAKERY_QUEUE_NAME, message, message.getBakeryId());
+		sqsService.sendMessageToFIFOQueue(UPDATE_BAKERY_QUEUE_NAME, message, message.getBakeryId());
 	}
 }
