@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.auth.dto.LogoutRequest;
@@ -16,6 +17,7 @@ import com.depromeet.breadmapbackend.domain.user.UserInfo;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.global.security.token.JwtToken;
 import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
+import com.depromeet.breadmapbackend.utils.TestLocalStackConfig;
 
 /**
  * AuthServiceImplTest
@@ -26,6 +28,7 @@ import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
  */
 
 @SpringBootTest
+@Import({TestLocalStackConfig.class})
 class AuthServiceImplTest {
 
 	@Autowired

@@ -113,6 +113,8 @@ dependencies {
     // flyway
     implementation 'org.flywaydb:flyway-core:8.4.4'
     implementation 'org.flywaydb:flyway-mysql:8.4.4'
+    //localstack
+    implementation "org.testcontainers:localstack:1.16.3"
 }
 
 tasks.named('test') {
