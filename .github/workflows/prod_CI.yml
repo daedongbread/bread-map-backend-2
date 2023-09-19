@@ -33,10 +33,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Build with Gradle
+    - name: Check with Gradle
       run: |
         chmod +x ./gradlew
-        ./gradlew build
+        ./gradlew check
         
     - name: If failure then upload test reports
       if: failure()
