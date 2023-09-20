@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.UpdateCarouselOrderCommand;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventCommand;
-import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.UpdateEventOrderCommand;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 
@@ -86,9 +86,9 @@ class PostAdminControllerTest extends ControllerTest {
 	void 이벤트_정렬_순서_수정() throws Exception {
 		// given
 		final var 이벤트_순서_수정_요청_데이터 = List.of(
-			new UpdateEventOrderCommand(16, 112L),
-			new UpdateEventOrderCommand(1, 126L),
-			new UpdateEventOrderCommand(2, 113L)
+			new UpdateCarouselOrderCommand(16, 112L),
+			new UpdateCarouselOrderCommand(1, 126L),
+			new UpdateCarouselOrderCommand(2, 113L)
 		);
 
 		// when

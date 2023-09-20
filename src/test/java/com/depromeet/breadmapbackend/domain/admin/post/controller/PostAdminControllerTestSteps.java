@@ -14,8 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.UpdateCarouselOrderCommand;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventCommand;
-import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.UpdateEventOrderCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -137,7 +137,7 @@ public class PostAdminControllerTestSteps {
 	}
 
 	public static ResultActions 이벤트_순서_수정_요청(
-		final List<UpdateEventOrderCommand> 이벤트_순서_수정_요청_데이터,
+		final List<UpdateCarouselOrderCommand> 이벤트_순서_수정_요청_데이터,
 		final String 관리자_토큰,
 		final MockMvc mockMvc,
 		final ObjectMapper objectMapper

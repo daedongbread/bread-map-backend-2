@@ -1,7 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.post.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.request.EventRequest;
-import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.request.UpdateEventOrderRequest;
-import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventCarouselResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.PostAdminResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.service.PostAdminService;
@@ -88,25 +84,6 @@ public class PostAdminController {
 	ApiResponse<Boolean> canFixEvent() {
 		return new ApiResponse<>(
 			postAdminService.canFixEvent()
-		);
-	}
-
-	// 캐러셀 순서 변경
-	@PatchMapping("/order")
-	@ResponseStatus(HttpStatus.OK)
-	void updateEventOrder(
-		@RequestBody @Valid final List<UpdateEventOrderRequest> request
-	) {
-		postAdminService.updateEventOrder(request.stream().map(Mapper::of).toList());
-	}
-
-	@GetMapping("/carousels")
-	@ResponseStatus(HttpStatus.OK)
-	ApiResponse<List<EventCarouselResponse>> getCarousels() {
-		return new ApiResponse<>(postAdminService.getCarousels()
-			.stream()
-			.map(Mapper::of)
-			.toList()
 		);
 	}
 }

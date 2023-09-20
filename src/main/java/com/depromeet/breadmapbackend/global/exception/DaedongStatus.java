@@ -96,6 +96,7 @@ public enum DaedongStatus {
 	PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40495,
 		"product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
 	POST_NOT_FOUND(NOT_FOUND, 40495, "Post not found"),
+	CAROUSEL_NOT_FOUND(NOT_FOUND, 40496, "Carousel not found"),
 
 	// 409 CONFLICT
 	ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때

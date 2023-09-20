@@ -15,10 +15,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.UpdateCarouselOrderCommand;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventCommand;
-import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.UpdateEventOrderCommand;
-import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.EventCarouselInfo;
+import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.CarouselInfo;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.PostManagerMapperInfo;
 import com.depromeet.breadmapbackend.domain.post.Post;
 
@@ -156,10 +156,10 @@ class PostAdminServiceImplTest extends PostAdminServiceTest {
 	@Test
 	void 캐러셀_순서_수정() throws Exception {
 		//given
-		final List<UpdateEventOrderCommand> command = List.of(
-			new UpdateEventOrderCommand(16, 112L),
-			new UpdateEventOrderCommand(1, 126L),
-			new UpdateEventOrderCommand(2, 113L)
+		final List<UpdateCarouselOrderCommand> command = List.of(
+			new UpdateCarouselOrderCommand(16, 112L),
+			new UpdateCarouselOrderCommand(1, 126L),
+			new UpdateCarouselOrderCommand(2, 113L)
 		);
 
 		//when
@@ -184,10 +184,10 @@ class PostAdminServiceImplTest extends PostAdminServiceTest {
 	void 캐러셀_조회() throws Exception {
 		//given
 		//when
-		final List<EventCarouselInfo> result = sut.getCarousels();
+		final List<CarouselInfo> result = sut.getCarousels();
 		//then
 		assertThat(result).hasSize(16);
-		final EventCarouselInfo firstEvent = result.get(0);
+		final CarouselInfo firstEvent = result.get(0);
 		assertThat(firstEvent.order()).isEqualTo(1);
 		assertThat(firstEvent.bannerImage()).isEqualTo("bannerImage26");
 		assertThat(firstEvent.managerId()).isEqualTo(113L);
