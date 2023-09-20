@@ -159,8 +159,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 
 	private SgisGeocodeDto getGeocode(String accessToken, String address) {
 		SgisGeocodeDto geocode = sgisClient.getGeocode(accessToken, address);
-		if (geocode.getResult() == null)
-			throw new FeignException();
+		if (geocode.getResult() == null) {
+			throw new DaedongException(DaedongStatus.NO_SEARCH_RESULT, address);
+		}
 		return geocode;
 	}
 
