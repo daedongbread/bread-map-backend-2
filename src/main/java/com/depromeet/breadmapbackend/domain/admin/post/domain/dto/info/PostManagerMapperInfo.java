@@ -16,7 +16,6 @@ public record PostManagerMapperInfo(
 	Long userId,
 	String title,
 	boolean isFixed,
-	boolean isCarousel,
 	boolean isPosted,
 	String createdAt
 ) {
@@ -27,7 +26,6 @@ public record PostManagerMapperInfo(
 			getPost(postManagerMapper).getUser().getId(),
 			getPost(postManagerMapper).getTitle(),
 			postManagerMapper.isFixed(),
-			postManagerMapper.isCarousel(),
 			postManagerMapper.isPosted(),
 			getPost(postManagerMapper).getCreatedAt().toString());
 	}

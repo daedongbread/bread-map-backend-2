@@ -108,7 +108,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 			command.isFixed(),
 			command.isPosted()
 		);
-		carouselManagerService.toggleCarousel(carouselManager.getId());
+		carouselManagerService.toggleCarousel(carouselManager.getId(), command.isCarousel());
 		carouselManager.updateBannerImage(command.bannerImage());
 
 	}

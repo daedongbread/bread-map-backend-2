@@ -15,7 +15,6 @@ public record PostAdminResponse(
 	Long userId,
 	String title,
 	boolean isFixed,
-	boolean isCarousel,
 	boolean isPosted,
 	String createdAt
 
@@ -28,7 +27,6 @@ public record PostAdminResponse(
 			info.userId(),
 			info.title(),
 			info.isFixed(),
-			info.isCarousel(),
 			info.isPosted(),
 			info.createdAt()
 		);

@@ -11,7 +11,6 @@ import com.depromeet.breadmapbackend.domain.admin.post.domain.repository.PostAdm
 import com.depromeet.breadmapbackend.domain.post.comment.CommentRepository;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
-import com.depromeet.breadmapbackend.domain.post.dto.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
@@ -124,14 +123,6 @@ public class PostServiceImpl implements PostService {
 			postLikeRepository.delete(postLike.get());
 			return 0;
 		}
-	}
-
-	@Override
-	public List<EventCarouselInfo> getEventCarousels() {
-		return postAdminRepository.findCarouselPosts().stream()
-			.map(EventCarouselInfo::of)
-			.toList();
-
 	}
 
 	private Long getSelectedPostCount(final Page<CommunityCardInfo> communityCards) {

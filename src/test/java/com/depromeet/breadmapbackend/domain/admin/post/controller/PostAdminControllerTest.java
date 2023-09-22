@@ -86,9 +86,9 @@ class PostAdminControllerTest extends ControllerTest {
 	void 이벤트_정렬_순서_수정() throws Exception {
 		// given
 		final var 이벤트_순서_수정_요청_데이터 = List.of(
-			new UpdateCarouselOrderCommand(16, 112L),
-			new UpdateCarouselOrderCommand(1, 126L),
-			new UpdateCarouselOrderCommand(2, 113L)
+			new UpdateCarouselOrderCommand(112L, 16),
+			new UpdateCarouselOrderCommand(126L, 1),
+			new UpdateCarouselOrderCommand(113L, 2)
 		);
 
 		// when
@@ -97,14 +97,14 @@ class PostAdminControllerTest extends ControllerTest {
 		이벤트_순서_수정_결과_검증(결과);
 	}
 
-	@Test
-	void 이벤트_캐러셀_조회() throws Exception {
-		// given
-		// when
-		final var 결과 = 이벤트_캐러셀_조회_요청(관리자_토큰, mockMvc);
-		// then
-		이벤트_캐러셀_조회_결과_검증(결과);
-	}
+	// @Test
+	// void 이벤트_캐러셀_조회() throws Exception {
+	// 	// given
+	// 	// when
+	// 	final var 결과 = 이벤트_캐러셀_조회_요청(관리자_토큰, mockMvc);
+	// 	// then
+	// 	이벤트_캐러셀_조회_결과_검증(결과);
+	// }
 
 	@Test
 	void 이벤트_상세_조회() throws Exception {

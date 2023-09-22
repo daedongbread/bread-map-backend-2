@@ -66,13 +66,17 @@ public class CarouselManagerServiceImpl implements CarouselManagerService {
 
 	@Transactional
 	@Override
-	public void toggleCarousel(final Long carouselId) {
+	public void toggleCarousel(final Long carouselId, final boolean isCarousel) {
 
 		carouselRepository.findById(carouselId)
 			.ifPresent(carousel -> {
-				if (carousel.isCarouseled()) {
+				if (carousel.isCarouseled() == isCarousel)
+					return;
+
+				if (carousel.isCarouseled())
 					carousel.toggleCarousel(false, 0);
-				} else {
+
+				else {
 					final List<CarouselManager> carousels =
 						carouselRepository.findByCarouseledIsOrderByCarouselOrderAsc(true);
 

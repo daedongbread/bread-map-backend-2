@@ -25,7 +25,6 @@ public class Mapper {
 	public static EventCarouselResponse of(final CarouselInfo info) {
 		return new EventCarouselResponse(
 			info.managerId(),
-			info.title(),
 			info.order(),
 			info.bannerImage()
 		);

@@ -21,5 +21,5 @@ public interface CarouselManagerService {
 
 	List<CarouselInfo> getCarousels();
 
-	void toggleCarousel(final Long carouselId);
+	void toggleCarousel(final Long carouselId, final boolean isCarousel);
 }

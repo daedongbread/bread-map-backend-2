@@ -42,6 +42,7 @@ public class CarouselManagerController {
 		carouselManagerService.updateCarouselOrder(request.stream().map(Mapper::of).toList());
 	}
 
+	// 	@GetMapping("/v1/posts/carousels") migrate
 	@GetMapping("/carousels")
 	@ResponseStatus(HttpStatus.OK)
 	ApiResponse<List<EventCarouselResponse>> getCarousels() {

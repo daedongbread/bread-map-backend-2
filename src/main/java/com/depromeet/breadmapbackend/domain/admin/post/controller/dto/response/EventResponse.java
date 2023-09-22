@@ -16,10 +16,8 @@ public record EventResponse(
 	Long managerId,
 	boolean isPosted,
 	boolean isFixed,
-	boolean isCarousel,
 	String title,
 	String content,
-	String bannerImage,
 	List<String> images
 ) {
 
@@ -28,10 +26,8 @@ public record EventResponse(
 			managerMapper.getId(),
 			managerMapper.isPosted(),
 			managerMapper.isFixed(),
-			managerMapper.isCarousel(),
 			managerMapper.getPost().getTitle(),
 			managerMapper.getPost().getContent(),
-			managerMapper.getBannerImage(),
 			managerMapper.getPost().getImages()
 				.stream().map(PostImage::getImage).toList()
 		);

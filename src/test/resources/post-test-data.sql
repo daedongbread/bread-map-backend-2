@@ -99,9 +99,9 @@ insert into comment_like( id, created_at, modified_at,  comment_id, user_id ) va
 ;
 
 
-insert into post_manager_mapper (id,created_at , modified_at ,is_carousel,is_fixed, is_posted,post_id ,banner_image, carousel_order)values
-(111, '2023-01-01','2023-01-01',false, true, true, 224 , 'bannerImage1', 1),
-(112, '2023-01-01','2023-01-01',true, false, true, 225 , 'bannerImage2', 2)
+insert into post_manager_mapper (id,created_at , modified_at ,is_fixed, is_posted,post_id)values
+(111, '2023-01-01','2023-01-01', true, true, 224 ),
+(112, '2023-01-01','2023-01-01', false, true, 225 )
 ;
 
 insert into block_user (id,from_user_id,to_user_id) values
