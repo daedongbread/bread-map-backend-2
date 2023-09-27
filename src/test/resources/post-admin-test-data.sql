@@ -112,4 +112,6 @@ insert into post_manager_mapper (id,created_at , modified_at ,is_fixed, is_poste
 ;
 insert into carousel_manager (id,created_at,modified_at,banner_image,carousel_order,carousel_type,carouseled,target_id) values
 (111,  '2023-01-01','2023-01-01',  'image', 1,'EVENT', true, 224 ),
-(112,  '2023-01-01','2023-01-01',  'image2', 0,'EVENT', false, 234 );
+(112,  '2023-01-01','2023-01-01',  'image2', 0,'EVENT', false, 234 ),
+(113,  '2023-01-01','2023-01-01',  'image3', 0,'EVENT', false, 225 ),
+(114,  '2023-01-01','2023-01-01',  'image3', 0,'EVENT', false, 229 );
