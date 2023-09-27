@@ -50,6 +50,10 @@ TRUNCATE TABLE admin;
 ALTER TABLE admin
     ALTER COLUMN ID RESTART WITH 1;
 
+TRUNCATE TABLE carousel_manager;
+ALTER TABLE carousel_manager
+    ALTER COLUMN ID RESTART WITH 1;
+
 insert into admin (id,created_at,modified_at,email,password,role_type) values
     (111,  '2023-01-01', '2023-01-01', 'admin@email.com', 'test-password', 'ADMIN' )
 ;
@@ -106,3 +110,6 @@ insert into post_manager_mapper (id,created_at , modified_at ,is_fixed, is_poste
 (126, '2023-01-01','2023-01-01',  false, true, 239),
 (127, '2023-01-01','2023-01-01',  false, true, 240)
 ;
+insert into carousel_manager (id,created_at,modified_at,banner_image,carousel_order,carousel_type,carouseled,target_id) values
+(111,  '2023-01-01','2023-01-01',  'image', 1,'EVENT', true, 224 ),
+(112,  '2023-01-01','2023-01-01',  'image2', 0,'EVENT', false, 234 );
