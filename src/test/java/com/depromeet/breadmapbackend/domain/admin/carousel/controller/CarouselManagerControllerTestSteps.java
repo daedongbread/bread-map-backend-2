@@ -39,7 +39,7 @@ public class CarouselManagerControllerTestSteps {
                 .content(request).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + 관리자_토큰))
             .andDo(print())
-            .andDo(document("v1/admin/posts/order/update",
+            .andDo(document("v1/admin/carousels/order/update",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
