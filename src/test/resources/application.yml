@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   jwt:
     secret: secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret
     admin: jwtadminsecretkeyjwtadminsecretkeyjwtadminsecretkey

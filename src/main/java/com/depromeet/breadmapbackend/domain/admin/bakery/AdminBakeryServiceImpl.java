@@ -93,6 +93,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final CustomSGISKeyProperties customSGISKeyProperties;
 	private final CustomAWSS3Properties customAWSS3Properties;
+	private final UpdateBakerySQSService updateBakerySQSService; // TODO : migrate to AOP
+
+
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public AdminBakeryAlarmBar getBakeryAlarmBar() {

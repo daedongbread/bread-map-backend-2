@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -24,6 +25,7 @@ import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelect
 import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryCardDto;
 import com.depromeet.breadmapbackend.domain.bakery.view.BakeryViewRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.utils.TestLocalStackConfig;
 
 /**
  * BakeryServiceImplTest
@@ -34,6 +36,7 @@ import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
  */
 
 @SpringBootTest
+@Import({TestLocalStackConfig.class})
 class BakeryServiceImplTest {
 
 	@Autowired

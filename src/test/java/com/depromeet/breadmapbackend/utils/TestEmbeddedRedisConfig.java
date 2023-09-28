@@ -1,9 +1,9 @@
 package com.depromeet.breadmapbackend.utils;
+
 import javax.annotation.PostConstruct;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
@@ -12,10 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@ActiveProfiles({"default", "local"}) // TODO
-@Configuration
+@TestConfiguration
 @RequiredArgsConstructor
-public class EmbeddedRedisConfig {
+public class TestEmbeddedRedisConfig {
 
 	private static final String REDIS_DOCKER_IMAGE = "redis:6";
 	private final StringRedisTemplate redisTemplate;
