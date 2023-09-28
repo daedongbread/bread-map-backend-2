@@ -10,28 +10,28 @@ import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.PostManag
  * @since 2023/07/24
  */
 public record PostAdminResponse(
-	Long managerId,
-	String nickname,
-	Long userId,
-	String title,
-	boolean isFixed,
-	boolean isCarousel,
-	boolean isPosted,
-	String createdAt
+    Long managerId,
+    String nickname,
+    Long userId,
+    String title,
+    boolean isFixed,
+    boolean isCarousel,
+    boolean isPosted,
+    String createdAt
 
 ) {
 
-	public PostAdminResponse(final PostManagerMapperInfo info) {
-		this(
-			info.managerId(),
-			info.nickname(),
-			info.userId(),
-			info.title(),
-			info.isFixed(),
-			info.isCarousel(),
-			info.isPosted(),
-			info.createdAt()
-		);
-	}
+    public PostAdminResponse(final PostManagerMapperInfo info) {
+        this(
+            info.managerId(),
+            info.nickname(),
+            info.userId(),
+            info.title(),
+            info.isFixed(),
+            info.isCarousel(),
+            info.isPosted(),
+            info.createdAt()
+        );
+    }
 
 }
