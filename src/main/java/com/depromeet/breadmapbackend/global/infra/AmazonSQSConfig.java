@@ -18,10 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @Profile({"stage", "prod"})
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class AmazonSQSConfig {
 	@Value("${cloud.aws.region.static}")
-	private final String region;
+	private String region;
 
 	@Bean
 	@Primary
