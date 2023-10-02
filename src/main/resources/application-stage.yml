@@ -57,6 +57,9 @@ cloud:
         report: ${S3_DEFAULT_IMAGE_REPORT}
         flag: ${S3_DEFAULT_IMAGE_FLAG}
         user: ${S3_DEFAULT_IMAGE_USER}
+    open-search:
+      service-name: "stage-open-search"
+      host: "https://search-search-opensearch-ex4u7p7xj5m4qtqh7vy5dpjkha.ap-northeast-2.es.amazonaws.com"
 
 firebase:
   credentials: ${FIREBASE_CREDENTIALS}
@@ -79,7 +82,6 @@ admin:
     post:
       user-id: ${EVENT_POST_ADMIN_USER_ID}
 
-
 redis:
   poll-timeout:
     bakery-view: 5
@@ -87,3 +89,4 @@ redis:
 
 server:
   shutdown: graceful
+
