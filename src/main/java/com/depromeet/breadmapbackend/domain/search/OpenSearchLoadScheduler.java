@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadScheduler {
 
     private final OpenSearchService openSearchService;
-    @Scheduled(cron = "0 0 * * * *") // for test
-//    @Scheduled(cron = "0 0 1 * * *")
+//    @Scheduled(cron = "0 0 * * * *") // for test
+    @Scheduled(cron = "0 0 1 * * *")
     public void loadDailyData() throws IOException {
         Config config = Config.fromYAML(new File(ResourceUtils.getFile("classpath:singleNodeConfig.yaml").toURI()));
 
@@ -53,7 +53,7 @@ public class OpenSearchLoadScheduler {
 
     }
 
-    @Scheduled(cron = "0/30 * * * * *") // for test
+//    @Scheduled(cron = "0/30 * * * * *") // for test
     @Scheduled(cron = "0 0 * * * *")
     public void loadHourlyData() throws IOException {
         Config config = Config.fromYAML(new File(ResourceUtils.getFile("classpath:singleNodeConfig.yaml").toURI()));
