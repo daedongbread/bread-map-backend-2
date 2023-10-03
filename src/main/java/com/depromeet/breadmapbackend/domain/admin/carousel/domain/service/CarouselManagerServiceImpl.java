@@ -37,16 +37,18 @@ public class CarouselManagerServiceImpl implements CarouselManagerService {
 		final List<CarouselManager> carousels =
 			carouselRepository.findByCarouseledIsOrderByCarouselOrderAsc(true);
 
-		carousels.forEach(carousel -> {
-			final int order = carousels.indexOf(carousel);
-			if (order >= MAX_EVENT_CAROUSEL_COUNT) { // TODO : 정책 확인 필요
-				carousel.toggleCarousel(false, 0);
-			}
-			carousel.updateCarouselOrder(order + 1);
-		});
+		if (command.carouseled()) {
+			carousels.forEach(carousel -> {
+				final int order = carousels.indexOf(carousel);
+				if (order >= MAX_EVENT_CAROUSEL_COUNT) { // TODO : 정책 확인 필요
+					carousel.toggleCarousel(false, 0);
+				}
+				carousel.updateCarouselOrder(order + 2);
+			});
+		}
 
 		carouselRepository.save(
-			command.toCarousel(1)
+			command.toCarousel(command.carouseled() ? 1 : 0)
 		);
 
 	}
