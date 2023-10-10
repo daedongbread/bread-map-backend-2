@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface SearchLogService {
-    void saveRecentSearchLog(Long id, String name);
-    List<SearchLog> getRecentSearchLogs(Long id);
-    void deleteRecentSearchLog(Long id, String name, String createdAt);
+    void saveRecentSearchLog(String oauthId, String name);
+    List<SearchLog> getRecentSearchLogs(String oauthId);
+    void deleteRecentSearchLog(String oauthId, String name, String createdAt);
 }

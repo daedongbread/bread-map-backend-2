@@ -17,10 +17,7 @@ import org.opensearch.search.SearchHit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.*;
@@ -29,6 +26,9 @@ import static java.lang.Math.*;
 @Service
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
+
+    private final static Integer MAX_KEYWORD_SUGGESTION = 12;
+
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
     private final ReviewService reviewService;
@@ -36,11 +36,11 @@ public class SearchServiceImpl implements SearchService {
     private final OpenSearchService openSearchService;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SearchDto> searchDatabase(String oAuthId, String word, Double latitude, Double longitude) {
+    public List<SearchDto> searchDatabase(String oAuthId, String keyword, Double latitude, Double longitude) {
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        searchLogService.saveRecentSearchLog(me.getId(), word);
+        searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
-        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word.strip(), word.replaceAll(" ", ""), latitude, longitude, 10).stream()
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(keyword.strip(), keyword.replaceAll(" ", ""), latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakery(bakery)
                         .rating(bakeryRating(reviewService.getReviewList(me, bakery)))
@@ -54,8 +54,8 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<SearchEngineDto> searchEngine(String oAuthId, String keyword, Double userLat, Double userLng) {
-        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-        searchLogService.saveRecentSearchLog(me.getId(), keyword);
+        userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
         SearchResponse document = openSearchService.getDocumentByKeyword(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), keyword);
         List<SearchHit> searchHits = Arrays.stream(document.getHits().getHits()).toList();
@@ -82,6 +82,23 @@ public class SearchServiceImpl implements SearchService {
             list.add(build);
         }
         return list;
+    }
+
+    @Override
+    public HashSet<String> searchKeywordSuggestions(String word) {
+        HashSet<String> keywordSuggestions;
+        SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, word);
+        keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
+                .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
+                .collect(Collectors.toCollection(HashSet::new));
+
+        if(keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
+            SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, word);
+            for (SearchHit breadHit : breadSuggestions.getHits().getHits()) {
+                keywordSuggestions.add((String) breadHit.getSourceAsMap().get("breadName"));
+            }
+        }
+        return keywordSuggestions;
     }
 
     private Double bakeryRating(List<Review> reviewList) { // TODO

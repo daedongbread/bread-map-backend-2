@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
 import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -193,7 +194,6 @@ public class BakeryQueryRepository {
 								.where(review.bakery.id.eq(bakery.id))
 				))
 				.from(bakery)
-				.where(bakery.id.lt(20))
 				.fetch();
 	}
 
@@ -219,7 +219,7 @@ public class BakeryQueryRepository {
 				.from(bakery)
 				.innerJoin(product)
 				.on(bakery.id.eq(product.bakery.id))
-				.where(bakery.id.lt(20))
+				.where((product.productType.eq(ProductType.BREAD)))
 				.fetch();
 	}
 

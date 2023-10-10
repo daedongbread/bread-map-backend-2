@@ -20,10 +20,10 @@ public class SearchLogServiceImpl implements SearchLogService {
     private static final long RECENT_KEYWORD_SIZE = 3;
 
     @Override
-    public void saveRecentSearchLog(Long id, String keyword) {
+    public void saveRecentSearchLog(String oauthId, String keyword) {
         String now = LocalDateTime.now().toString();
 
-        String key = searchLogKey(id);
+        String key = searchLogKey(oauthId);
         SearchLog value = SearchLog.builder().
                 keyword(keyword).
                 createdAt(now).
@@ -38,15 +38,15 @@ public class SearchLogServiceImpl implements SearchLogService {
     }
 
     @Override
-    public List<SearchLog> getRecentSearchLogs(Long id) {
-        String key = searchLogKey(id);
+    public List<SearchLog> getRecentSearchLogs(String oauthId) {
+        String key = searchLogKey(oauthId);
         return redisTemplate.opsForList()
                         .range(key, 0, RECENT_KEYWORD_SIZE);
     }
 
     @Override
-    public void deleteRecentSearchLog(Long id, String keyword, String createdAt) {
-        String key = searchLogKey(id);
+    public void deleteRecentSearchLog(String oauthId, String keyword, String createdAt) {
+        String key = searchLogKey(oauthId);
         SearchLog value = SearchLog.builder()
                 .keyword(keyword)
                 .createdAt(createdAt)
@@ -59,7 +59,7 @@ public class SearchLogServiceImpl implements SearchLogService {
         }
     }
 
-    private String searchLogKey(Long userId) {
-        return "searchLog:" + userId;
+    private String searchLogKey(String oauthId) {
+        return "searchLog:" + oauthId;
     }
 }

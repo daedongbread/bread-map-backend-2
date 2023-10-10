@@ -6,11 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OpenSearchIndex {
-    BREAD_SEARCH("bread-search", "v1"),
-    BAKERY_SEARCH("bakery-search", "v1");
+    BREAD_SEARCH("bread-search", "v1","breadName"),
+    BAKERY_SEARCH("bakery-search", "v1","bakeryName");
 
     private final String lowerCase;
     private final String version;
+    private final String fieldName;
 
     public String getIndexNameWithVersion() {
         return lowerCase + "-" + version;
