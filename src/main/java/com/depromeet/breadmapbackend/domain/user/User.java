@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.depromeet.breadmapbackend.domain.flag.Flag;
+import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import com.depromeet.breadmapbackend.global.security.domain.RoleType;
@@ -68,6 +69,9 @@ public class User extends BaseEntity {
 
 	@Column(nullable = false)
 	private boolean isDeRegistered = false;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<NoticeToken> noticeTokens = new ArrayList<>();
 
 	public String getOAuthId() {
 		return this.oAuthInfo.getOAuthId();

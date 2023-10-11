@@ -7,8 +7,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
 import com.depromeet.breadmapbackend.domain.notice.NoticeType;
+import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentDto;
@@ -110,10 +110,8 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
 
 		eventPublisher.publishEvent(
-			NoticeEvent.builder()
-				.isAlarmOn(user.getIsAlarmOn())
-				.user(reviewComment.getUser())
-				.fromUser(user)
+			NoticeEventDto.builder()
+				.userId(user.getId())
 				.contentId(reviewComment.getId())
 				.content(reviewComment.getContent())
 				.noticeType(NoticeType.REVIEW_COMMENT_LIKE)
@@ -166,14 +164,13 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 		final Long targetedNoticeId = isReply ? parent.getId() : review.getId();
 		final String targetedNoticeContent = isReply ? parent.getContent() : review.getContent();
 
-		eventPublisher.publishEvent(NoticeEvent.builder()
-			.isAlarmOn(user.getIsAlarmOn())
-			.user(noticeReceiver)
-			.fromUser(user)
-			.contentId(targetedNoticeId)
-			.content(targetedNoticeContent)
-			.noticeType(noticeType)
-			.build());
+		eventPublisher.publishEvent(
+			NoticeEventDto.builder()
+				.userId(user.getId())
+				.contentId(targetedNoticeId)
+				.content(targetedNoticeContent)
+				.noticeType(noticeType)
+				.build());
 
 	}
 
