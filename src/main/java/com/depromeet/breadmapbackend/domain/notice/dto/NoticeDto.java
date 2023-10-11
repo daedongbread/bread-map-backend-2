@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 public class NoticeDto {
 	private Long noticeId;
 	private String image;
-	private Long fromUserId;
-	private String fromUserNickName;
 	private String title;
 	private Long contentId;
 	private String content;
@@ -27,8 +25,6 @@ public class NoticeDto {
 	public NoticeDto(String image, Boolean isFollow, Notice notice, String title) {
 		this.noticeId = notice.getId();
 		this.image = image;
-		this.fromUserId = notice.getFromUser().getId();
-		this.fromUserNickName = notice.getFromUser().getUserInfo().getNickName();
 		this.title = title;
 		this.contentId = notice.getContentId();
 		this.content = notice.getContent();

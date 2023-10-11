@@ -47,14 +47,12 @@ class NoticeControllerTest extends ControllerTest {
 
 		Notice notice1 = Notice.builder()
 			.user(savedUser)
-			.fromUser(savedFromUser)
 			.contentId(1L)
 			.content("content1")
 			.type(NoticeType.REVIEW_COMMENT)
 			.build();
 		Notice notice2 = Notice.builder()
 			.user(savedUser)
-			.fromUser(savedFromUser)
 			.type(NoticeType.FOLLOW)
 			.build();
 		noticeRepository.save(notice1);
