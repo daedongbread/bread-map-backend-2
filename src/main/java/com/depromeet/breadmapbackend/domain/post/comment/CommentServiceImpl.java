@@ -56,6 +56,14 @@ public class CommentServiceImpl implements CommentService {
 					.noticeType(NoticeType.REVIEW_COMMENT)
 					.build()
 			);
+		} else if (!command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(command.parentId())
+					.noticeType(NoticeType.RECOMMENT)
+					.build()
+			);
 		}
 
 		return savedComment;
@@ -110,6 +118,13 @@ public class CommentServiceImpl implements CommentService {
 		final Optional<CommentLike> commentLike = commentLikeRepository.findByCommentIdAndUserId(commentId, userId);
 		if (commentLike.isEmpty()) {
 			commentLikeRepository.save(new CommentLike(comment, userId));
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(comment.getId())
+					.noticeType(NoticeType.COMMENT_LIKE)
+					.build()
+			);
 			return 1;
 		} else {
 			commentLikeRepository.delete(commentLike.get());
