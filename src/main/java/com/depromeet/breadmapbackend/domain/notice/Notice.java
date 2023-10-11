@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.notice;
 
 import static javax.persistence.FetchType.*;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -33,38 +34,59 @@ public class Notice extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "fromUser_id")
-	private User fromUser;
-
-	//    /*
-	//     알림 주 내용
-	//     */
-	//    @Column(nullable = false)
-	//    private String title;
+	@Column(nullable = false)
+	private String title;
 
 	/*
 	 내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 유저 아이디
 	 */
+	@Nullable
+	@Column
 	private Long contentId;
 
-	/*
-	 내가 쓴 리뷰 내용(디자인엔 제목으로 나와있음) or 내가 쓴 댓글 내용
-	 팔로우/팔로잉 알람은 null
-	 */
+	@Nullable
+	@Column
 	private String content;
 
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private NoticeType type;
 
+	public static Notice createNoticeWithContent(
+		final User user,
+		final String title,
+		final Long contentId,
+		final String content,
+		final NoticeType type
+	) {
+		return Notice.builder()
+			.user(user)
+			.title(title)
+			.contentId(contentId)
+			.content(content)
+			.type(type)
+			.build();
+	}
+
+	public static Notice createNoticeWithOutContent(
+		final User user,
+		final String title,
+		final NoticeType type
+	) {
+		return Notice.builder()
+			.user(user)
+			.title(title)
+			.type(type)
+			.build();
+	}
+
 	@Builder
-	public Notice(User user, User fromUser, Long contentId, String content, NoticeType type) {
+	public Notice(final User user, final String title, @Nullable final Long contentId,
+		@Nullable final String content, final NoticeType type) {
 		this.user = user;
-		this.fromUser = fromUser;
+		this.title = title;
 		this.contentId = contentId;
 		this.content = content;
 		this.type = type;
 	}
-
 }
