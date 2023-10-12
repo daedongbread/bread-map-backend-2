@@ -38,4 +38,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 		+ "left join fetch u.noticeTokens nt ")
 	List<User> findUserWithNoticeTokens();
 
+	List<User> findByIdNotIn(List<Long> userIds);
 }

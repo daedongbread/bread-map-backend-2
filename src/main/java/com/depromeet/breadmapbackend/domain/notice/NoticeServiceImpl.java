@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import com.depromeet.breadmapbackend.domain.notice.dto.BasicNoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
-import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
@@ -38,7 +39,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Async("notice")
 	@TransactionalEventListener
 	@Transactional()
-	public void addNotice(final NoticeEventDto noticeEventDto) {
+	public void sendPushNotice(final NoticeEventDto noticeEventDto) {
 
 		final List<Notice> savedNotices = noticeRepository.saveAll(
 			noticeFactoryProcessor.createNotice(noticeEventDto)
@@ -59,48 +60,15 @@ public class NoticeServiceImpl implements NoticeService {
 			throw new RuntimeException(e);
 		}
 	}
-	//
-	// @Async("notice")
-	// public void addNotice(final NoticeEventDtoUserToUsers noticeEventUserToUsers) {
-	// 	final List<User> toUsers =
-	// 		userRepository.findUserWithNoticeTokensByUserIds(noticeEventUserToUsers.getToUserIds());
-	//
-	// 	final User fromUser = userRepository.findById(noticeEventUserToUsers.getFromUserId())
-	// 		.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-	//
-	// 	final List<Notice> savedNotices = noticeRepository.saveAll(noticeEventUserToUsers.toNotices(toUsers, fromUser));
-	//
-	// 	try {
-	// 		fcmService.sendMessageTo(
-	// 			generateNoticeDtoForFcm(
-	// 				getAlarmAllowedUserDeviceToken(savedNotices),
-	// 				noticeEventUserToUsers,
-	// 				fromUser
-	// 			)
-	// 		);
-	// 	} catch (FirebaseMessagingException e) {
-	// 		throw new RuntimeException(e);
-	// 	}
-	// }
-	//
-	// @Async("notice")
-	// public void addNoticeForUsers(final NoticeEventDtoSystemToUsers noticeEvent) {
-	// 	final List<User> noticeSendUsers = userRepository.findUserWithNoticeTokensByIsAlarmOn();
-	// 	final List<NoticeToken> noticeTokens = noticeTokenRepository.findByUserIn(noticeSendUsers);
-	// 	final List<Notice> notices = noticeSendUsers.stream()
-	// 		.map(noticeEvent::toNotice)
-	// 		.toList();
-	//
-	// 	final List<Notice> savedNotices = noticeRepository.saveAll(notices);
-	//
-	// 	try {
-	// 		fcmService.sendMessageTo(generateNoticeDtoForFcm(savedNotice));
-	// 	} catch (FirebaseMessagingException e) {
-	//
-	// 		throw new RuntimeException(e);
-	// 	}
-	//
-	// }
+
+	@Async("notice")
+	@TransactionalEventListener
+	@Transactional()
+	public void saveNotice(final BasicNoticeEventDto basicNoticeEventDto) {
+		final List<Notice> savedNotices = noticeRepository.saveAll(
+			noticeFactoryProcessor.createNotice(basicNoticeEventDto)
+		);
+	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public PageResponseDto<NoticeDto> getNoticeList(String oAuthId, NoticeDayType type, Long lastId, int page) {

@@ -7,8 +7,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentDto;
@@ -113,8 +113,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 			NoticeEventDto.builder()
 				.userId(user.getId())
 				.contentId(reviewComment.getId())
-				.content(reviewComment.getContent())
-				.noticeType(NoticeType.REVIEW_COMMENT_LIKE)
+				.noticeType(NoticeType.COMMENT_LIKE)
 				.build()
 		);
 	}
@@ -168,7 +167,6 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 			NoticeEventDto.builder()
 				.userId(user.getId())
 				.contentId(targetedNoticeId)
-				.content(targetedNoticeContent)
 				.noticeType(noticeType)
 				.build());
 

@@ -1,12 +1,12 @@
-package com.depromeet.breadmapbackend.domain.notice.factory;
+package com.depromeet.breadmapbackend.domain.notice.factory.push;
 
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import com.depromeet.breadmapbackend.domain.notice.Notice;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;

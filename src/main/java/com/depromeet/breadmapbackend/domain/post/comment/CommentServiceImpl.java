@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;

@@ -1,10 +1,10 @@
-package com.depromeet.breadmapbackend.domain.notice.factory;
+package com.depromeet.breadmapbackend.domain.notice.factory.push;
 
 import java.util.List;
 
 import com.depromeet.breadmapbackend.domain.notice.Notice;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 
 public interface NoticeFactory {
 

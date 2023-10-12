@@ -1,6 +1,6 @@
-package com.depromeet.breadmapbackend.domain.notice.type;
+package com.depromeet.breadmapbackend.domain.notice.dto;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 
 import lombok.Builder;
 
@@ -14,7 +14,6 @@ import lombok.Builder;
 
 public record NoticeEventDto(
 	Long contentId,
-	String content,
 	NoticeType noticeType,
 	Long userId
 ) {

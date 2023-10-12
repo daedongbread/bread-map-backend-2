@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.admin.post.domain.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventC
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.PostManagerMapperInfo;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.repository.PostAdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.service.PostAdminService;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -46,6 +49,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 	private final UserRepository userRepository;
 	private final CarouselManagerService carouselManagerService;
 	private final CarouselRepository carouselRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
 	public Page<PostManagerMapperInfo> getEventPosts(final int page) {
@@ -83,8 +87,8 @@ public class PostAdminServiceImpl implements PostAdminService {
 			.isFixed(command.isFixed())
 			.build();
 
-		final PostManagerMapper savedPostManagerMapper = postAdminRepository.savePostManagerMapper(
-			postManagerMapper);
+		final PostManagerMapper savedPostManagerMapper =
+			postAdminRepository.savePostManagerMapper(postManagerMapper);
 
 		carouselManagerService.saveCarousel(
 			new CreateCarouselCommand(
@@ -94,6 +98,14 @@ public class PostAdminServiceImpl implements PostAdminService {
 				command.isCarousel()
 			)
 		);
+		if (command.isPosted()) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.contentId(savedPostManagerMapper.getId())
+					.noticeType(NoticeType.EVENT)
+					.build()
+			);
+		}
 
 		return savedPostManagerMapper;
 	}
@@ -129,6 +141,14 @@ public class PostAdminServiceImpl implements PostAdminService {
 		carouselManagerService.toggleCarousel(carouselManager.getId(), command.isCarousel());
 		carouselManager.updateBannerImage(command.bannerImage());
 
+		if (command.isPosted()) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.contentId(postManagerMapper.getId())
+					.noticeType(NoticeType.EVENT)
+					.build()
+			);
+		}
 	}
 
 	@Override

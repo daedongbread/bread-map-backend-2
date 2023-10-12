@@ -4,8 +4,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
-import com.depromeet.breadmapbackend.domain.notice.type.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -39,7 +39,6 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
 			NoticeEventDto.builder()
 				.userId(user.getId())
 				.contentId(review.getId())
-				.content(review.getContent())
 				.noticeType(NoticeType.REVIEW_LIKE)
 				.build()
 		);

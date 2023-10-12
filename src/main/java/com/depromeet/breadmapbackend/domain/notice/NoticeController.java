@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.global.annotation.EnumCheck;

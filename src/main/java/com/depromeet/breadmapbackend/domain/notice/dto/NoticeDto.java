@@ -3,7 +3,7 @@ package com.depromeet.breadmapbackend.domain.notice.dto;
 import java.time.LocalDateTime;
 
 import com.depromeet.breadmapbackend.domain.notice.Notice;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 
 import lombok.Builder;
 import lombok.Getter;
