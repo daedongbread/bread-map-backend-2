@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.notice.factory.push;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
+import com.depromeet.breadmapbackend.domain.user.follow.Follow;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -44,10 +46,12 @@ public class FollowNoticeFactory implements NoticeFactory {
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 		final User fromUser = userRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-
-		return List.of(Notice.createNoticeWithOutContent(
+		final Optional<Follow> isFollow = followRepository.findByFromUserAndToUser(toUser, fromUser);
+		return List.of(Notice.createNoticeWithContent(
 			toUser,
 			NOTICE_TITLE_FORMAT.formatted(fromUser.getNickName()),
+			fromUser.getId(),
+			isFollow.isPresent() ? "FOLLOW" : "UNFOLLOW",
 			SUPPORT_TYPE
 		));
 	}

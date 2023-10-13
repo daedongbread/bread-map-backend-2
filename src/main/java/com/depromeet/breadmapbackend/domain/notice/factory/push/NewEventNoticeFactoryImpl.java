@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NewEventNoticeFactoryImpl implements NoticeFactory {
 
-	private static final String NOTICE_TITLE_FORMAT = "( 이벤트 ) %s";
+	private static final String NOTICE_TITLE_FORMAT = "신규 이벤트 알림!";
 	private static final NoticeType SUPPORT_TYPE = NoticeType.EVENT;
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
@@ -55,9 +55,11 @@ public class NewEventNoticeFactoryImpl implements NoticeFactory {
 				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 
 		return users.stream().map(
-				user -> Notice.createNoticeWithOutContent(
+				user -> Notice.createNoticeWithContent(
 					user,
-					NOTICE_TITLE_FORMAT.formatted(postManagerMapper.getPost().getTitle()),
+					NOTICE_TITLE_FORMAT,
+					postManagerMapper.getPost().getId(),
+					postManagerMapper.getPost().getTitle(),
 					SUPPORT_TYPE
 				)
 			)

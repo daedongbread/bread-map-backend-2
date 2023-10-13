@@ -24,7 +24,7 @@ class NoticeServiceImplTest extends NoticeServiceTest {
 		final NoticeDayType type = NoticeDayType.BEFORE;
 		final int page = 0;
 
-		final PageResponseDto<NoticeDto> result = sut.getNoticeList(oAuthId, type, null, page);
+		final PageResponseDto<NoticeDto> result = sut.getNoticeList(oAuthId, page);
 
 		assertResults(result);
 	}

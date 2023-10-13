@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class CurationNoticeFactory implements NoticeFactory {
-	private static final String NOTICE_TITLE_FORMAT = "%s월 %s번째 큐레이션 \"%s\"이 게시되었어요!";
+	private static final String NOTICE_TITLE_FORMAT = "%s월 %s번째 큐레이션 알림!";
 	private static final NoticeType SUPPORT_TYPE = NoticeType.CURATION;
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
@@ -57,10 +57,11 @@ public class CurationNoticeFactory implements NoticeFactory {
 			);
 
 		return users.stream().map(
-				user -> Notice.createNoticeWithOutContent(
+				user -> Notice.createNoticeWithContent(
 					user,
-					NOTICE_TITLE_FORMAT.formatted(now.getMonthValue(), thisMonthCurationOrder + 1,
-						curationFeed.getIntroduction()),
+					NOTICE_TITLE_FORMAT.formatted(now.getMonthValue(), thisMonthCurationOrder + 1),
+					curationFeed.getId(),
+					curationFeed.getIntroduction(),
 					SUPPORT_TYPE
 				)
 			)

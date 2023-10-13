@@ -2,7 +2,6 @@ package com.depromeet.breadmapbackend.domain.notice;
 
 import org.springframework.context.annotation.Import;
 
-import com.depromeet.breadmapbackend.domain.notice.factory.push.AddProductNoticeFactory;
 import com.depromeet.breadmapbackend.domain.notice.factory.push.CommentLikeNoticeFactory;
 import com.depromeet.breadmapbackend.domain.notice.factory.push.FollowNoticeFactory;
 import com.depromeet.breadmapbackend.domain.notice.factory.push.RecommentFactory;
@@ -21,7 +20,6 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	TestConfig.class,
 	AsyncConfig.class,
 	ReportBakeryAddNoticeFactory.class,
-	AddProductNoticeFactory.class,
 	FollowNoticeFactory.class,
 	RecommentFactory.class,
 	CommentLikeNoticeFactory.class,
