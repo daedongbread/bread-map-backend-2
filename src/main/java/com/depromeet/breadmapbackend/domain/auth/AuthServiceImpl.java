@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.depromeet.breadmapbackend.domain.auth.dto.LoginRequest;
 import com.depromeet.breadmapbackend.domain.auth.dto.LogoutRequest;
@@ -59,6 +60,8 @@ public class AuthServiceImpl implements AuthService {
 			user.getUserInfo().updateEmail(oidcUserInfo.getEmail());
 		if (user.getIsBlock())
 			throw new DaedongException(DaedongStatus.BLOCK_USER);
+
+		saveUsersDeviceToken(request.getDeviceToken(), user);
 
 		return createNewToken(oidcUserInfo.getOAuthId(), RoleType.USER);
 	}
@@ -129,7 +132,26 @@ public class AuthServiceImpl implements AuthService {
 		}
 		JwtToken reissueToken = createNewToken(oAuthId, user.getRoleType());
 		makeRefreshTokenInvalid(request.getRefreshToken()); // TODO : accessToken이 유효기간 남아 있으면?
+
+		saveUsersDeviceToken(request.getDeviceToken(), user);
+
 		return reissueToken;
+	}
+
+	private void saveUsersDeviceToken(final String request, final User user) {
+		if (StringUtils.hasText(request)) {
+			final Optional<NoticeToken> userDeviceToken =
+				noticeTokenRepository.findByUserAndDeviceToken(user, request);
+
+			if (userDeviceToken.isEmpty()) {
+				noticeTokenRepository.save(
+					NoticeToken.builder()
+						.deviceToken(request)
+						.user(user)
+						.build()
+				);
+			}
+		}
 	}
 
 	private JwtToken createNewToken(String oAuthId, RoleType roleType) {

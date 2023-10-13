@@ -1,18 +1,20 @@
 package com.depromeet.breadmapbackend.domain.user.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeTokenRequest {
-    @NotBlank(message = "기기 값은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
-    private String deviceToken;
+	@NotBlank(message = "알림 동의 여부", groups = ValidationGroups.NotEmptyGroup.class)
+	private boolean noticeAgree;
+	private String deviceToken;
 }
