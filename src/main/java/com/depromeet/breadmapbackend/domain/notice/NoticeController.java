@@ -30,9 +30,8 @@ public class NoticeController {
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<PageResponseDto<NoticeDto>> getNoticeList(
 		@CurrentUser String oAuthId,
-		@RequestParam(required = false) Long lastId,
 		@RequestParam int page
 	) {
-		return new ApiResponse<>(noticeService.getNoticeList(oAuthId, lastId, page));
+		return new ApiResponse<>(noticeService.getNoticeList(oAuthId, page));
 	}
 }

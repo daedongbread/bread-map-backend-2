@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.notice;
 import static com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import com.depromeet.breadmapbackend.domain.notice.dto.BasicNoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -65,31 +67,32 @@ public class NoticeServiceImpl implements NoticeService {
 	@TransactionalEventListener
 	@Transactional()
 	public void saveNotice(final BasicNoticeEventDto basicNoticeEventDto) {
-		final List<Notice> savedNotices = noticeRepository.saveAll(
+		noticeRepository.saveAll(
 			noticeFactoryProcessor.createNotice(basicNoticeEventDto)
 		);
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public PageResponseDto<NoticeDto> getNoticeList(String oAuthId, NoticeDayType type, Long lastId, int page) {
+	public PageResponseDto<NoticeDto> getNoticeList(String oAuthId, int page) {
 		User user = userRepository.findByOAuthId(oAuthId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		Page<Notice> content = noticeQueryRepository.findNotice(user, type, lastId, page);
+		Page<Notice> content = noticeQueryRepository.findNotice(user, page);
 		return PageResponseDto.of(
 			content,
 			content.getContent()
 				.stream()
-				.map(notice -> generateNoticeDtoFrom(user, notice))
+				.map(this::generateNoticeDtoFrom)
 				.collect(Collectors.toList())
 		);
 	}
 
-	private NoticeDto generateNoticeDtoFrom(final User user, final Notice notice) {
+	private NoticeDto generateNoticeDtoFrom(final Notice notice) {
 		return builder()
 			.image(noticeFactoryProcessor.getImage(notice))
 			.title(notice.getTitle())
 			.notice(notice)
+			.isFollow(notice.getType() == NoticeType.FOLLOW && Objects.equals(notice.getContent(), "FOLLOW"))
 			.build();
 	}
 

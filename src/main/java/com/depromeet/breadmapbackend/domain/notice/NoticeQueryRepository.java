@@ -23,18 +23,18 @@ public class NoticeQueryRepository {
 	private final JPAQueryFactory queryFactory;
 	private final Integer NOTICE_SIZE = 20;
 
-	public Page<Notice> findNotice(User user, Long lastId, int page) {
+	public Page<Notice> findNotice(User user, int page) {
 		Pageable pageable = PageRequest.of(page, NOTICE_SIZE);
 
 		List<Notice> content = queryFactory.selectFrom(notice)
-			.where(notice.user.eq(user)) // TODO
+			.where(notice.user.eq(user))
 			.orderBy(notice.createdAt.desc())
-			.offset(page)
+			.offset((long)page * NOTICE_SIZE)
 			.limit(NOTICE_SIZE)
 			.fetch();
 
 		Long count = queryFactory.select(notice.count()).from(notice)
-			.where(notice.user.eq(user)) // TODO
+			.where(notice.user.eq(user))
 			.fetchOne();
 
 		return new PageImpl<>(content, pageable, count);

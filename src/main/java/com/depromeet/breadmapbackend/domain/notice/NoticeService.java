@@ -10,5 +10,5 @@ public interface NoticeService {
 
 	void saveNotice(final BasicNoticeEventDto basicNoticeEventDto);
 
-	PageResponseDto<NoticeDto> getNoticeList(String oAuthId, NoticeDayType type, Long lastId, int page);
+	PageResponseDto<NoticeDto> getNoticeList(String oAuthId, int page);
 }
