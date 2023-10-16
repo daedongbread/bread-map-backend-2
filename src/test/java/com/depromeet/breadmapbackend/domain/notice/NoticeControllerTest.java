@@ -49,11 +49,14 @@ class NoticeControllerTest extends ControllerTest {
 		Notice notice1 = Notice.builder()
 			.user(savedUser)
 			.contentId(1L)
+			.title("testContest")
 			.content("content1")
 			.type(NoticeType.REVIEW_COMMENT)
 			.build();
 		Notice notice2 = Notice.builder()
 			.user(savedUser)
+			.contentId(savedFromUser.getId())
+			.title("testContest22")
 			.type(NoticeType.FOLLOW)
 			.build();
 		noticeRepository.save(notice1);
@@ -95,16 +98,13 @@ class NoticeControllerTest extends ControllerTest {
 
 	@Test
 	void getNoticeList() throws Exception {
-		mockMvc.perform(get("/v1/notices/{type}?page=0", NoticeDayType.TODAY.getCode())
+		mockMvc.perform(get("/v1/notices?page=0")
 				.header("Authorization", "Bearer " + token.getAccessToken()))
 			.andDo(print())
 			.andDo(document("v1/notice",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-				pathParameters(
-					parameterWithName("type").description("알림 날짜 타입 " +
-						"(today : 오늘 알림 조회, week :이번주 월요일부터 어제까지의 알림 조회 , before : 저번주 일요일 전의 알림 조회)")),
 				requestParameters(
 					parameterWithName("lastId").optional().description("지난 알림 마지막 고유 번호 (두번째 페이지부터 필요)"),
 					parameterWithName("page").description("현재 페이지 번호 (0부터)")),
@@ -117,8 +117,8 @@ class NoticeControllerTest extends ControllerTest {
 					fieldWithPath("data.contents").description("알람 리스트"),
 					fieldWithPath("data.contents.[].noticeId").description("알람 아이디"),
 					fieldWithPath("data.contents.[].image").description("알람 이미지").optional(),
-					fieldWithPath("data.contents.[].fromUserId").description("알람 발신 유저 고유 번호"),
-					fieldWithPath("data.contents.[].fromUserNickName").description("알람 발신 유저 닉네임"),
+					// fieldWithPath("data.contents.[].fromUserId").description("알람 발신 유저 고유 번호"),
+					// fieldWithPath("data.contents.[].fromUserNickName").description("알람 발신 유저 닉네임"),
 					fieldWithPath("data.contents.[].title").description("알람 제목"),
 					fieldWithPath("data.contents.[].contentId").description("알람 내용의 고유 번호 : " +
 						"(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)").optional(),

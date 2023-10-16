@@ -8,6 +8,8 @@ import com.depromeet.breadmapbackend.domain.notice.factory.push.RecommentFactory
 import com.depromeet.breadmapbackend.domain.notice.factory.push.ReportBakeryAddNoticeFactory;
 import com.depromeet.breadmapbackend.domain.notice.factory.push.ReviewCommentNoticeFactory;
 import com.depromeet.breadmapbackend.domain.notice.factory.push.ReviewLikeNoticeFactory;
+import com.depromeet.breadmapbackend.domain.post.comment.CommentQueryRepository;
+import com.depromeet.breadmapbackend.domain.post.comment.CommentRepositoryImpl;
 import com.depromeet.breadmapbackend.global.infra.AsyncConfig;
 import com.depromeet.breadmapbackend.utils.ServiceTest;
 import com.depromeet.breadmapbackend.utils.TestConfig;
@@ -24,7 +26,9 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	RecommentFactory.class,
 	CommentLikeNoticeFactory.class,
 	ReviewCommentNoticeFactory.class,
-	ReviewLikeNoticeFactory.class
+	ReviewLikeNoticeFactory.class,
+	CommentRepositoryImpl.class,
+	CommentQueryRepository.class
 })
 public abstract class NoticeServiceTest extends ServiceTest {
 }

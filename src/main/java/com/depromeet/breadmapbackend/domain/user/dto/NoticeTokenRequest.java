@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.user.dto;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeTokenRequest {
-	@NotBlank(message = "알림 동의 여부", groups = ValidationGroups.NotEmptyGroup.class)
+	@NotNull(message = "알림 동의 여부", groups = ValidationGroups.NotEmptyGroup.class)
 	private boolean noticeAgree;
 	private String deviceToken;
 }

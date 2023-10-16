@@ -14,6 +14,7 @@ import com.depromeet.breadmapbackend.domain.user.follow.Follow;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class FollowNoticeFactory implements NoticeFactory {
 	private static final NoticeType SUPPORT_TYPE = NoticeType.FOLLOW;
 	private final UserRepository userRepository;
 	private final FollowRepository followRepository;
+	private final CustomAWSS3Properties customAwss3Properties;
 
 	@Override
 	public boolean support(final NoticeType noticeType) {
@@ -34,10 +36,11 @@ public class FollowNoticeFactory implements NoticeFactory {
 	@Override
 	public String getImage(final Notice notice) {
 		assert notice.getContentId() != null;
-		return userRepository.findById(notice.getContentId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
-			.getUserInfo()
-			.getImage();
+		final Optional<User> follower = userRepository.findById(notice.getContentId());
+		final String s = follower.map(user -> user.getUserInfo().getImage())
+			.orElse(customAwss3Properties.getCloudFront() + "/" +
+				customAwss3Properties.getDefaultImage().getUser() + ".png");
+		return s;
 	}
 
 	@Override

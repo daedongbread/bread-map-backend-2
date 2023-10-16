@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
-import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
@@ -23,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoticeController {
 	private final NoticeService noticeService;
-	private final FcmService fcmService;
-	private final NoticeTokenRepository noticeTokenRepository;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
