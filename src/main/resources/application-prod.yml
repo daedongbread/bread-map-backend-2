@@ -83,6 +83,6 @@ redis:
 admin:
   event:
     post:
-      user-id: ${EVENT_POST_ADMIN_USER_ID}
+      user-id: 155
 server:
   shutdown: graceful
