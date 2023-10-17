@@ -76,11 +76,11 @@ public class PostAdminControllerTestSteps {
                 preprocessResponse(prettyPrint()),
                 requestHeaders(headerWithName("Authorization").description("관리자의 Access Token")),
                 requestFields(
-                    fieldWithPath("isPosted").optional().description("게시 여부 default = false"),
-                    fieldWithPath("isFixed").optional().description("고정 여부 default = false"),
-                    fieldWithPath("isCarousel").optional().description("캐러셀 여부 default = false"),
-                    fieldWithPath("title").description("이벤트 제목"),
-                    fieldWithPath("content").description("이벤트 내용"),
+                    fieldWithPath("isPosted").optional().description("게시 여부"),
+                    fieldWithPath("isFixed").optional().description("고정 여부"),
+                    fieldWithPath("isCarousel").optional().description("캐러셀 여부"),
+                    fieldWithPath("title").description("이벤트 제목 (10자 이상 40자 이하)"),
+                    fieldWithPath("content").description("이벤트 내용 (10자 이상 400자 이하)"),
                     fieldWithPath("bannerImage").description("이벤트 베너 이미지"),
                     fieldWithPath("images").description("이벤트 컨텐츠 이미지 리스")
                 ),

@@ -3,8 +3,6 @@ package com.depromeet.breadmapbackend.domain.admin.feed.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
-import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +10,9 @@ import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.category.repository.CategoryRepository;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
+import com.depromeet.breadmapbackend.domain.admin.feed.domain.Feed;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.FeedType;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.FeedAssembler;
 import com.depromeet.breadmapbackend.domain.admin.feed.dto.request.FeedRequestDto;
@@ -58,7 +58,6 @@ public class CurationFeedService implements FeedService {
 		feed.addAll(bakeries, curationBakeries);
 
 		CurationFeed newFeed = repository.save(feed);
-
 		return newFeed.getId();
 	}
 

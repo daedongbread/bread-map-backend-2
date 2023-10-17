@@ -126,7 +126,7 @@ public enum DaedongStatus {
 	CANNOT_LIKE_MORE_THAN_COUNT(INTERNAL_SERVER_ERROR, 50002, "cannot like more than 5"),
 	CANNOT_FIND_FEED_LIKE(INTERNAL_SERVER_ERROR, 50003, "you have never liked this feed"),
 	CANNOT_UNLIKE_UNDER_ZERO(INTERNAL_SERVER_ERROR, 50004, "cannot like under 0"),
-	;
+	CURATION_FEED_NOT_FOUND(INTERNAL_SERVER_ERROR, 50005, "cannot find curation");
 	private final HttpStatus status;
 	private final Integer code;
 	private final String description;
