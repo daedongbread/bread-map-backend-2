@@ -58,8 +58,9 @@ cloud:
         flag: ${S3_DEFAULT_IMAGE_FLAG}
         user: ${S3_DEFAULT_IMAGE_USER}
     open-search:
-      service-name: "stage-open-search"
-      host: "https://search-search-opensearch-ex4u7p7xj5m4qtqh7vy5dpjkha.ap-northeast-2.es.amazonaws.com"
+      id: ${OPEN_SEARCH_ID}
+      password: ${OPEN_SEARCH_PASSWORD}
+      host: ${OPEN_SEARCH_HOST}
 
 firebase:
   credentials: ${FIREBASE_CREDENTIALS}

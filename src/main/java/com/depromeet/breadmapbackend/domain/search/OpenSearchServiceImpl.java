@@ -29,9 +29,9 @@ import org.opensearch.common.settings.Settings;
 import org.opensearch.common.unit.TimeValue;
 import org.opensearch.index.query.BoolQueryBuilder;
 import org.opensearch.index.query.MatchPhrasePrefixQueryBuilder;
-import org.opensearch.index.query.MatchQueryBuilder;
 import org.opensearch.index.query.QueryBuilders;
 import org.opensearch.search.builder.SearchSourceBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -46,6 +46,15 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class OpenSearchServiceImpl implements OpenSearchService {
+
+    @Value("${cloud.aws.open-search.id}")
+    private String openSearchId;
+    @Value("${cloud.aws.open-search.password}")
+    private String openSearchPassword;
+    @Value("${cloud.aws.open-search.host}")
+    private String openSearchHost;
+    private final static Double LATITUDE_1KM = 1/109.958489;
+    private final static Double LONGITUDE_1KM = 1/88.74;
 
     private final BakeryQueryRepository bakeryQueryRepository;
 
@@ -114,34 +123,6 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             return response;
         }
     }
-//    @Override
-//    public SearchResponse getDocumentByKeyword(String indexName, String keyword) {
-//
-//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//        searchSourceBuilder.size(7);
-//        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-//        searchSourceBuilder.query(QueryBuilders.matchPhrasePrefixQuery("breadName", keyword));
-//        SearchRequest searchRequest = new SearchRequest();
-//        searchRequest.indices(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
-//        searchRequest.source(searchSourceBuilder);
-//
-//        SearchResponse response;
-//        try (RestHighLevelClient searchClient = searchClient()) {
-//            // perform the search
-//            response = searchClient.search(searchRequest, RequestOptions.DEFAULT);
-//
-//            if(response.getHits().getHits().length < 1) {
-//                searchSourceBuilder.query(QueryBuilders.matchPhrasePrefixQuery("bakeryName", keyword));
-//                searchRequest.source(searchSourceBuilder);
-//                response = searchClient.search(searchRequest, RequestOptions.DEFAULT);
-//            }
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return response;
-//    }
 
     @Override
     public SearchResponse getDocumentByKeyword(String indexName, String keyword) {
@@ -151,8 +132,6 @@ public class OpenSearchServiceImpl implements OpenSearchService {
                 .should(QueryBuilders.matchQuery("bakeryName", keyword))
                 .should(QueryBuilders.matchQuery("breadName", keyword))
                 .should(QueryBuilders.matchQuery("bakeryAddress", keyword));
-
-        // TODO: 만약 검색어가 지하철 역이면 범위 계산 쿼리 추가
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(7)
@@ -164,6 +143,27 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         SearchRequest searchRequest = new SearchRequest()
                 .indices(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion())
                 .source(searchSourceBuilder);
+
+        SearchResponse response;
+        try (RestHighLevelClient searchClient = searchClient()) {
+            response = searchClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return response;
+    }
+
+    @Override
+    public SearchResponse getDocumentByGeology(String indexName, Double latitude, Double longitude) {
+
+        BoolQueryBuilder query = QueryBuilders.boolQuery();
+        query.filter(QueryBuilders.rangeQuery("latitude").gte(latitude - LATITUDE_1KM).lte(latitude + LATITUDE_1KM));
+        query.filter(QueryBuilders.rangeQuery("longitude").gte(longitude - LONGITUDE_1KM).lte(longitude + LONGITUDE_1KM));
+
+        SearchRequest searchRequest = new SearchRequest(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
+        searchRequest.source(new SearchSourceBuilder().query(query));
 
         SearchResponse response;
         try (RestHighLevelClient searchClient = searchClient()) {
@@ -205,10 +205,9 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials("admin", "eoehdQkdrjator1@"));
+                new UsernamePasswordCredentials(openSearchId, openSearchPassword));
 
-        //Create a client.
-        RestClientBuilder builder = RestClient.builder(new HttpHost("search-search-opensearch-ex4u7p7xj5m4qtqh7vy5dpjkha.ap-northeast-2.es.amazonaws.com", 443, "https"))
+        RestClientBuilder builder = RestClient.builder(new HttpHost(openSearchHost, 443, "https"))
                 .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
         return new RestHighLevelClient(builder);
 
@@ -270,21 +269,3 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     }
 
 }
-
-//    @Override
-//    public GetResponse getDocument(String indexName, String id) {
-//        GetResponse response;
-//        try (RestHighLevelClient searchClient = searchClient()) {
-//            GetRequest getRequest;
-//            if(id == null) {
-//                getRequest = new GetRequest(indexName);
-//            } else {
-//                getRequest = new GetRequest(indexName, id);
-//            }
-//            response = searchClient.get(getRequest, RequestOptions.DEFAULT);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return response;
-//    }

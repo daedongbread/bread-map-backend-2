@@ -6,6 +6,8 @@ import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
+import com.depromeet.breadmapbackend.domain.subway.SubwayStation;
+import com.depromeet.breadmapbackend.domain.subway.SubwayStationRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -31,6 +33,8 @@ public class SearchServiceImpl implements SearchService {
 
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
+    private final SubwayStationRepository subwayStationRepository;
+
     private final ReviewService reviewService;
     private final SearchLogService searchLogService;
     private final OpenSearchService openSearchService;
@@ -57,7 +61,18 @@ public class SearchServiceImpl implements SearchService {
         userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
-        SearchResponse document = openSearchService.getDocumentByKeyword(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), keyword);
+        if (keyword.endsWith("역")) {
+            keyword = keyword.substring(0, keyword.length() - 1);
+        }
+
+        List<SubwayStation> subwayStationList = subwayStationRepository.findByName(keyword);
+        SearchResponse document;
+        if(!subwayStationList.isEmpty()) {
+            document = openSearchService.getDocumentByGeology(keyword, subwayStationList.get(0).getLatitude(), subwayStationList.get(0).getLongitude());
+        } else {
+            document = openSearchService.getDocumentByKeyword(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), keyword);
+        }
+
         List<SearchHit> searchHits = Arrays.stream(document.getHits().getHits()).toList();
 
         List<SearchEngineDto> list = new ArrayList<>();
@@ -67,8 +82,8 @@ public class SearchServiceImpl implements SearchService {
             double locationLng = Double.parseDouble((String) sourceAsMap.get("longitude"));
 
             SearchEngineDto build = SearchEngineDto.builder()
-                    .breadId(Long.parseLong((String) sourceAsMap.get("breadId")))
-                    .breadName((String) sourceAsMap.get("breadName"))
+                    .breadId(sourceAsMap.get("breadId") != null ? Long.parseLong((String) sourceAsMap.get("breadId")) : null)
+                    .breadName(sourceAsMap.get("breadName") != null ? (String) sourceAsMap.get("breadName") : null)
                     .bakeryId(Long.parseLong((String) sourceAsMap.get("bakeryId")))
                     .bakeryName((String) sourceAsMap.get("bakeryName"))
                     .address((String) sourceAsMap.get("bakeryAddress"))
@@ -76,11 +91,12 @@ public class SearchServiceImpl implements SearchService {
                             * cos(toRadians(locationLat))
                             * cos(toRadians(locationLng))) - toRadians(userLng)
                             + sin(toRadians(userLat))*sin(toRadians(locationLat)))*6371000)
-                    .rating(Double.valueOf((String) sourceAsMap.get("totalScore")))
+                    .rating(!sourceAsMap.get("totalScore").equals("null") ? Double.valueOf((String) sourceAsMap.get("totalScore")) : null)
                     .reviewNum(Integer.valueOf((String) sourceAsMap.get("reviewCount")))
                     .build();
             list.add(build);
         }
+
         return list;
     }
 

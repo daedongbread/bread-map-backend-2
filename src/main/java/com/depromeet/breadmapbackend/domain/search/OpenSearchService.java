@@ -14,6 +14,7 @@ public interface OpenSearchService {
     AcknowledgedResponse deleteIndex(String indexName) throws IOException;
     IndexResponse addDataToIndex(String indexName, HashMap<String, String> stringMapping) throws IOException;
     SearchResponse getDocumentByKeyword(String indexName, String keyword);
+    SearchResponse getDocumentByGeology(String indexName, Double latitude, Double longitude);
     SearchResponse getKeywordSuggestions(OpenSearchIndex openSearchIndex, String keyword);
 
     void loadData() throws IOException;
