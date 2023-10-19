@@ -214,16 +214,24 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     }
 
     @Override
-    public void loadData() throws IOException {
-        this.loadData(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.bakeryLoadDailyDataJPQLQuery());
-        log.info("========================= " + OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
+    public void loadEntireData() throws IOException {
+        this.convertLoadData(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.bakeryLoadEntireDataJPQLQuery());
+        log.info("========================= loadEntireData " + OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
 
-        this.loadData(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.breadLoadDailyDataJPQLQuery());
-        log.info("========================= " + OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
-
+        this.convertLoadData(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.breadLoadEntireDataJPQLQuery());
+        log.info("========================= loadEntireData " + OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
     }
 
-    private void loadData(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
+    @Override
+    public void loadHourlyData() throws IOException {
+        this.convertLoadData(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.bakeryLoadHourlyDataJPQLQuery());
+        log.info("========================= loadHourlyData " + OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
+
+        this.convertLoadData(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.breadLoadHourlyDataJPQLQuery());
+        log.info("========================= loadHourlyData " + OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
+    }
+
+    private void convertLoadData(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
         for (CommonLoadData loadItem : loadList) {
             HashMap<String, String> loadHashMap = new HashMap<>();
             loadHashMap.put("bakeryId", String.valueOf(loadItem.getBakeryId()));

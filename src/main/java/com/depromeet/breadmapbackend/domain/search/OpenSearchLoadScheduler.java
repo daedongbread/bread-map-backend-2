@@ -6,12 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -22,16 +19,14 @@ public class OpenSearchLoadScheduler {
 
     private final OpenSearchService openSearchService;
 //    @Scheduled(cron = "0 0 0/30 * * *") // for test
-    @Scheduled(cron = "0 0 1 * * *")
+    @Scheduled(cron = "0 0 0 1,15 * *")
     public void loadDailyData() throws IOException {
-        Config config = Config.fromYAML(new File(ResourceUtils.getFile("classpath:singleNodeConfig.yaml").toURI()));
-
-        RedissonClient client = Redisson.create(config);
+        RedissonClient client = Redisson.create();
 
         RLock lock = client.getLock("Load-Daily-Data");
         try {
 
-            if (lock.tryLock(1, TimeUnit.HOURS)) {
+            if (lock.tryLock(2, TimeUnit.HOURS)) {
                 log.info("========================= Loading daily data to search engine =========================");
 
                 openSearchService.deleteIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
@@ -40,7 +35,7 @@ public class OpenSearchLoadScheduler {
                 openSearchService.createIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
                 openSearchService.createIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
 
-                openSearchService.loadData();
+                openSearchService.loadEntireData();
                 System.out.println("Job loadDailyData executed by this instance");
             } else {
                 System.out.println("Job loadDailyData skipped by this instance");
@@ -56,9 +51,7 @@ public class OpenSearchLoadScheduler {
 //    @Scheduled(cron = "0/20 * * * * *") // for test
     @Scheduled(cron = "0 0 * * * *")
     public void loadHourlyData() throws IOException {
-        Config config = Config.fromYAML(new File(ResourceUtils.getFile("classpath:singleNodeConfig.yaml").toURI()));
-
-        RedissonClient client = Redisson.create(config);
+        RedissonClient client = Redisson.create();
 
         RLock dailyLock = client.getLock("Load-Daily-Data");
         RLock hourlyLock = client.getLock("Load-Hourly-Data");
@@ -67,7 +60,7 @@ public class OpenSearchLoadScheduler {
             if (!dailyLock.isLocked() && hourlyLock.tryLock(1, TimeUnit.HOURS)) {
                 log.info("========================= Loading hourly data to search engine =========================");
 
-                openSearchService.loadData();
+                openSearchService.loadHourlyData();
                 System.out.println("Job loadHourlyData executed by this instance");
             } else {
                 System.out.println("Job loadHourlyData skipped by this instance");

@@ -176,7 +176,55 @@ public class BakeryQueryRepository {
 					startDate.atTime(LocalTime.MAX))));
 	}
 
-	public List<BakeryLoadData> bakeryLoadDailyDataJPQLQuery() {
+	public List<BakeryLoadData> bakeryLoadHourlyDataJPQLQuery() {
+		return queryFactory
+				.select(Projections.constructor(BakeryLoadData.class
+						, bakery.id
+						, bakery.name
+						, bakery.address
+						, bakery.longitude
+						, bakery.latitude
+						, JPAExpressions
+								.select(reviewProductRating.rating.avg().as("totalScore"))
+								.from(reviewProductRating)
+								.where(reviewProductRating.bakery.id.eq(bakery.id))
+						, JPAExpressions
+								.select(review.count().as("reviewCount"))
+								.from(review)
+								.where(review.bakery.id.eq(bakery.id))
+				))
+				.from(bakery)
+				.where(bakery.createdAt.goe(LocalDateTime.now().minusHours(1)))
+				.fetch();
+	}
+
+	public List<BreadLoadData> breadLoadHourlyDataJPQLQuery() {
+		return queryFactory
+				.select(Projections.constructor(BreadLoadData.class
+						, product.id
+						, product.name
+						, bakery.id
+						, bakery.name
+						, bakery.address
+						, bakery.longitude
+						, bakery.latitude
+						, JPAExpressions
+								.select(reviewProductRating.rating.avg().coalesce(0d).as("totalScore"))
+								.from(reviewProductRating)
+								.where(reviewProductRating.bakery.id.eq(bakery.id))
+						, JPAExpressions
+								.select(review.count().coalesce(0L).as("reviewCount"))
+								.from(review)
+								.where(review.bakery.id.eq(bakery.id))
+				))
+				.from(bakery)
+				.innerJoin(product)
+				.on(bakery.id.eq(product.bakery.id))
+				.where((product.productType.eq(ProductType.BREAD)).and(bakery.createdAt.goe(LocalDateTime.now().minusHours(1))))
+				.fetch();
+	}
+
+	public List<BakeryLoadData> bakeryLoadEntireDataJPQLQuery() {
 		return queryFactory
 				.select(Projections.constructor(BakeryLoadData.class
 						, bakery.id
@@ -197,7 +245,7 @@ public class BakeryQueryRepository {
 				.fetch();
 	}
 
-	public List<BreadLoadData> breadLoadDailyDataJPQLQuery() {
+	public List<BreadLoadData> breadLoadEntireDataJPQLQuery() {
 		return queryFactory
 				.select(Projections.constructor(BreadLoadData.class
 						, product.id
@@ -222,14 +270,5 @@ public class BakeryQueryRepository {
 				.where((product.productType.eq(ProductType.BREAD)))
 				.fetch();
 	}
-
-	// private JPQLQuery<Double> avgRatingSubQuery(LocalDate startDate) {
-	// 	return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
-	// 		.from(reviewProductRating)
-	// 		.where(bakery.id.eq(reviewProductRating.bakery.id)
-	// 			.and(reviewProductRating.createdAt.between(
-	// 				startDate.minusDays(7).atStartOfDay(),
-	// 				startDate.atTime(LocalTime.MAX))));
-	// }
 
 }

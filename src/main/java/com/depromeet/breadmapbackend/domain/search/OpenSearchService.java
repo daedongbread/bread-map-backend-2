@@ -17,5 +17,7 @@ public interface OpenSearchService {
     SearchResponse getDocumentByGeology(String indexName, Double latitude, Double longitude);
     SearchResponse getKeywordSuggestions(OpenSearchIndex openSearchIndex, String keyword);
 
-    void loadData() throws IOException;
+    void loadEntireData() throws IOException;
+
+    void loadHourlyData() throws IOException;
 }
