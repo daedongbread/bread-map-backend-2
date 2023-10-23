@@ -1,9 +1,9 @@
 package com.depromeet.breadmapbackend.domain.search;
 
-import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
-import com.depromeet.breadmapbackend.domain.search.dto.SearchLog;
+import com.depromeet.breadmapbackend.domain.search.dto.*;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.KeywordSuggestionResponse;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.RecentKeywords;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationGroups;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Validated(ValidationSequence.class)
 @RestController
@@ -30,16 +30,31 @@ public class SearchV2Controller {
 
     @GetMapping("/keyword")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<SearchEngineDto>> searchKeyword(
+    public ApiResponse<SearchResultResponse> searchKeyword(
             @CurrentUser String oAuthId,
             @RequestParam
-            @Size(min=1, max=20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
+            @Size(min = 1, max = 20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
             String keyword,
             @RequestParam Double latitude,
-            @RequestParam Double longitude) {
-        List<SearchEngineDto> adminUserForEventPost = searchService.searchEngine(oAuthId, keyword, latitude, longitude);
+            @RequestParam Double longitude,
+            @RequestParam SearchType searchType) {
 
-        return new ApiResponse<>(adminUserForEventPost);
+        SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
+
+        SearchResultResponse searchResultResponse = searchService.searchEngine(oAuthId, keyword, latitude, longitude);
+
+        List<SearchEngineDto> searchEngineDtoList = searchResultResponse.getSearchEngineDtoList();
+
+        if (searchType == SearchType.DISTANCE) {
+            searchEngineDtoList.sort(new DistanceComparator());
+        } else {
+            searchEngineDtoList.sort(new ReviewComparator());
+        }
+
+        return new ApiResponse<>(builder
+                .searchEngineDtoList(searchEngineDtoList)
+                .subwayStationName(searchResultResponse.getSubwayStationName())
+                .build());
     }
 
     @GetMapping("/recent")
@@ -59,6 +74,9 @@ public class SearchV2Controller {
     public ApiResponse<KeywordSuggestionResponse> searchKeywordSuggestions(@RequestParam String keyword) {
         HashSet<String> keywordSuggestions = searchService.searchKeywordSuggestions(keyword);
 
-        return new ApiResponse<>(KeywordSuggestionResponse.builder().keywordSuggestions(keywordSuggestions).build());
+        List<String> tempSet = new ArrayList<>(keywordSuggestions);
+        Collections.sort(tempSet);
+
+        return new ApiResponse<>(KeywordSuggestionResponse.builder().keywordSuggestions(tempSet).build());
     }
 }

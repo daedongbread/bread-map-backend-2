@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OpenSearchIndex {
-    BREAD_SEARCH("bread-search", "v8","breadName"),
-    BAKERY_SEARCH("bakery-search", "v8","bakeryName");
+    BREAD_SEARCH("bread-search", "x1","breadName"),
+    BAKERY_SEARCH("bakery-search", "x1","bakeryName");
 
     private final String lowerCase;
     private final String version;

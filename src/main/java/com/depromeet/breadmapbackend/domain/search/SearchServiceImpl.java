@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
 import com.depromeet.breadmapbackend.domain.subway.SubwayStation;
 import com.depromeet.breadmapbackend.domain.subway.SubwayStationRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -51,15 +52,17 @@ public class SearchServiceImpl implements SearchService {
                         .reviewNum(reviewService.getReviewList(me, bakery).size())
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
-                                * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
+                                * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
+                                + sin(toRadians(latitude)) * sin(toRadians(bakery.getLatitude()))) * 6371000)).build())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SearchEngineDto> searchEngine(String oAuthId, String keyword, Double userLat, Double userLng) {
+    public SearchResultResponse searchEngine(String oAuthId, String keyword, Double userLat, Double userLng) {
         userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         searchLogService.saveRecentSearchLog(oAuthId, keyword);
+
+        SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
 
         if (keyword.endsWith("역")) {
             keyword = keyword.substring(0, keyword.length() - 1);
@@ -67,37 +70,49 @@ public class SearchServiceImpl implements SearchService {
 
         List<SubwayStation> subwayStationList = subwayStationRepository.findByName(keyword);
         SearchResponse document;
-        if(!subwayStationList.isEmpty()) {
+        if (!subwayStationList.isEmpty()) {
             document = openSearchService.getDocumentByGeology(keyword, subwayStationList.get(0).getLatitude(), subwayStationList.get(0).getLongitude());
+            builder.subwayStationName(keyword.concat("역"));
         } else {
             document = openSearchService.getDocumentByKeyword(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), keyword);
         }
 
         List<SearchHit> searchHits = Arrays.stream(document.getHits().getHits()).toList();
 
-        List<SearchEngineDto> list = new ArrayList<>();
-        for (SearchHit searchHit : searchHits) {
-            Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
-            double locationLat = Double.parseDouble((String) sourceAsMap.get("latitude"));
-            double locationLng = Double.parseDouble((String) sourceAsMap.get("longitude"));
+        List<SearchEngineDto> list = searchHits.stream()
+                .map(searchHit -> getSearchEngineDtoBuilder(userLat, userLng, searchHit))
+                .map(SearchEngineDto.SearchEngineDtoBuilder::build)
+                .collect(Collectors.toList());
 
-            SearchEngineDto build = SearchEngineDto.builder()
-                    .breadId(sourceAsMap.get("breadId") != null ? Long.parseLong((String) sourceAsMap.get("breadId")) : null)
-                    .breadName(sourceAsMap.get("breadName") != null ? (String) sourceAsMap.get("breadName") : null)
-                    .bakeryId(Long.parseLong((String) sourceAsMap.get("bakeryId")))
-                    .bakeryName((String) sourceAsMap.get("bakeryName"))
-                    .address((String) sourceAsMap.get("bakeryAddress"))
-                    .distance(floor(acos(cos(toRadians(userLat))
-                            * cos(toRadians(locationLat))
-                            * cos(toRadians(locationLng))) - toRadians(userLng)
-                            + sin(toRadians(userLat))*sin(toRadians(locationLat)))*6371000)
-                    .rating(!sourceAsMap.get("totalScore").equals("null") ? Double.valueOf((String) sourceAsMap.get("totalScore")) : null)
-                    .reviewNum(Integer.valueOf((String) sourceAsMap.get("reviewCount")))
-                    .build();
-            list.add(build);
+        return builder
+                .searchEngineDtoList(list)
+                .build();
+    }
+
+    private static SearchEngineDto.SearchEngineDtoBuilder getSearchEngineDtoBuilder(Double userLat, Double userLng, SearchHit searchHit) {
+        Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+        double locationLat = Double.parseDouble((String) sourceAsMap.get("latitude"));
+        double locationLng = Double.parseDouble((String) sourceAsMap.get("longitude"));
+
+        SearchEngineDto.SearchEngineDtoBuilder searchEngineDtoBuilder = SearchEngineDto.builder()
+                .bakeryId(Long.parseLong((String) sourceAsMap.get("bakeryId")))
+                .bakeryName((String) sourceAsMap.get("bakeryName"))
+                .address((String) sourceAsMap.get("bakeryAddress"))
+                .distance(floor(acos(cos(toRadians(userLat))
+                        * cos(toRadians(locationLat))
+                        * cos(toRadians(locationLng) - toRadians(userLng))
+                        + sin(toRadians(userLat)) * sin(toRadians(locationLat))) * 6371000))
+                .rating(!sourceAsMap.get("totalScore").equals("null") ? Double.valueOf((String) sourceAsMap.get("totalScore")) : null)
+                .reviewNum(Integer.valueOf((String) sourceAsMap.get("reviewCount")));
+
+
+        if (sourceAsMap.get("breadId") != null) {
+            searchEngineDtoBuilder
+                    .breadId(Long.parseLong((String) sourceAsMap.get("breadId")))
+                    .breadName((String) sourceAsMap.get("breadName"));
         }
 
-        return list;
+        return searchEngineDtoBuilder;
     }
 
     @Override
@@ -108,7 +123,7 @@ public class SearchServiceImpl implements SearchService {
                 .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
                 .collect(Collectors.toCollection(HashSet::new));
 
-        if(keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
+        if (keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
             SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, word);
             for (SearchHit breadHit : breadSuggestions.getHits().getHits()) {
                 keywordSuggestions.add((String) breadHit.getSourceAsMap().get("breadName"));
@@ -119,7 +134,7 @@ public class SearchServiceImpl implements SearchService {
 
     private Double bakeryRating(List<Review> reviewList) { // TODO
         return Math.floor(reviewList.stream().map(Review::getAverageRating).toList()
-                .stream().mapToDouble(Double::doubleValue).average().orElse(0)*10)/10.0;
+                .stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
     }
 
 }

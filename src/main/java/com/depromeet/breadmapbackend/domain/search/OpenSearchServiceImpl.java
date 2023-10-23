@@ -5,6 +5,7 @@ import com.depromeet.breadmapbackend.domain.bakery.BakeryQueryRepository;
 import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.CommonLoadData;
+import com.depromeet.breadmapbackend.domain.search.utils.UnicodeHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -131,6 +133,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         boolQuery
                 .should(QueryBuilders.matchQuery("bakeryName", keyword))
                 .should(QueryBuilders.matchQuery("breadName", keyword))
+                .should(QueryBuilders.matchQuery("chosung", keyword))
                 .should(QueryBuilders.matchQuery("bakeryAddress", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
@@ -233,19 +236,26 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
     private void convertLoadData(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
         for (CommonLoadData loadItem : loadList) {
+
+            String bakeryName = loadItem.getBakeryName();
+
             HashMap<String, String> loadHashMap = new HashMap<>();
             loadHashMap.put("bakeryId", String.valueOf(loadItem.getBakeryId()));
-            loadHashMap.put("bakeryName", loadItem.getBakeryName());
+            loadHashMap.put("bakeryName", bakeryName);
             loadHashMap.put("bakeryAddress", loadItem.getBakeryAddress());
             loadHashMap.put("longitude", String.valueOf(loadItem.getLongitude()));
             loadHashMap.put("latitude", String.valueOf(loadItem.getLatitude()));
             loadHashMap.put("totalScore", String.valueOf(loadItem.getTotalScore()));
             loadHashMap.put("reviewCount", String.valueOf(loadItem.getReviewCount()));
+            loadHashMap.put("chosung", UnicodeHandler.splitHangulToChosung(bakeryName).stream().map(Object::toString).collect(Collectors.joining()));
 
             if (loadItem instanceof BreadLoadData bread) {
                 String breadName = bread.getBreadName();
                 loadHashMap.put("breadId", String.valueOf(bread.getBreadId()));
-                loadHashMap.put("breadName", parseEndingWithNumberAndSizeInKorean(breadName));
+
+                String parsedBreadName = parseEndingWithNumberAndSizeInKorean(breadName);
+                loadHashMap.put("breadName", parsedBreadName);
+                loadHashMap.put("chosung", UnicodeHandler.splitHangulToChosung(parsedBreadName).stream().map(Object::toString).collect(Collectors.joining()));
             }
 
             this.addDataToIndex(indexName, loadHashMap);

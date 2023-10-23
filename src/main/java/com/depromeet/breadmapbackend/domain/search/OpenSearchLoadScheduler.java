@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.search;
 
-import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
@@ -18,27 +17,20 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadScheduler {
 
     private final OpenSearchService openSearchService;
-//    @Scheduled(cron = "0 0 0/30 * * *") // for test
+//    @Scheduled(cron = "0 0/30 * * * *") // for test
     @Scheduled(cron = "0 0 0 1,15 * *")
-    public void loadDailyData() throws IOException {
+    public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
 
-        RLock lock = client.getLock("Load-Daily-Data");
+        RLock lock = client.getLock("Load-Entire-Data");
         try {
 
             if (lock.tryLock(2, TimeUnit.HOURS)) {
-                log.info("========================= Loading daily data to search engine =========================");
-
-                openSearchService.deleteIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
-                openSearchService.deleteIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
-
-                openSearchService.createIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
-                openSearchService.createIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
-
+                log.info("========================= Loading entire data to search engine =========================");
                 openSearchService.loadEntireData();
-                System.out.println("Job loadDailyData executed by this instance");
+                System.out.println("Job loadEntireData executed by this instance");
             } else {
-                System.out.println("Job loadDailyData skipped by this instance");
+                System.out.println("Job loadEntireData skipped by this instance");
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -48,7 +40,7 @@ public class OpenSearchLoadScheduler {
 
     }
 
-//    @Scheduled(cron = "0/20 * * * * *") // for test
+//    @Scheduled(cron = "0 0/30 * * * *") // for test
     @Scheduled(cron = "0 0 * * * *")
     public void loadHourlyData() throws IOException {
         RedissonClient client = Redisson.create();
