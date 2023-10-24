@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.CommonLoadData;
 import com.depromeet.breadmapbackend.domain.search.utils.UnicodeHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
@@ -21,13 +22,11 @@ import org.opensearch.action.index.IndexResponse;
 import org.opensearch.action.search.SearchRequest;
 import org.opensearch.action.search.SearchResponse;
 import org.opensearch.action.support.master.AcknowledgedResponse;
-import org.opensearch.client.RequestOptions;
-import org.opensearch.client.RestClient;
-import org.opensearch.client.RestClientBuilder;
-import org.opensearch.client.RestHighLevelClient;
+import org.opensearch.client.*;
 import org.opensearch.client.indices.CreateIndexRequest;
 import org.opensearch.common.settings.Settings;
 import org.opensearch.common.unit.TimeValue;
+import org.opensearch.common.xcontent.XContentType;
 import org.opensearch.index.query.BoolQueryBuilder;
 import org.opensearch.index.query.MatchPhrasePrefixQueryBuilder;
 import org.opensearch.index.query.QueryBuilders;
@@ -104,6 +103,8 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
     @Override
     public IndexResponse addDataToIndex(String indexName, HashMap<String, String> stringMapping) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         IndexResponse response = null;
         //Adding data to the index.
         try (RestHighLevelClient searchClient = searchClient()) {
@@ -117,8 +118,12 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
             request.source(stringMapping);
 
+            Request requestDoc = new Request("POST", "/bakery-search-x1/_doc/");
+            requestDoc.setJsonEntity(objectMapper.writeValueAsString(stringMapping));
             try {
                 response = searchClient.index(request, RequestOptions.DEFAULT);
+                searchClient.getLowLevelClient().performRequest(requestDoc);
+
             } catch (ConnectException ce) {
                 log.debug("addDataToIndex :: " + ce.getMessage());
             }
@@ -131,10 +136,10 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 
         boolQuery
-                .should(QueryBuilders.matchQuery("bakeryName", keyword))
-                .should(QueryBuilders.matchQuery("breadName", keyword))
-                .should(QueryBuilders.matchQuery("chosung", keyword))
-                .should(QueryBuilders.matchQuery("bakeryAddress", keyword));
+                .should(QueryBuilders.termQuery("bakeryName", keyword))
+                .should(QueryBuilders.termQuery("breadName", keyword))
+                .should(QueryBuilders.termQuery("chosung", keyword))
+                .should(QueryBuilders.termQuery("bakeryAddress", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(7)
