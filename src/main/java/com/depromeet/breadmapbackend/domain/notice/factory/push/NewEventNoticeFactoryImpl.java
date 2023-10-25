@@ -60,6 +60,7 @@ public class NewEventNoticeFactoryImpl implements NoticeFactory {
 					NOTICE_TITLE_FORMAT,
 					postManagerMapper.getPost().getId(),
 					postManagerMapper.getPost().getTitle(),
+					null,
 					SUPPORT_TYPE
 				)
 			)

@@ -49,18 +49,30 @@ class NoticeControllerTest extends ControllerTest {
 		Notice notice1 = Notice.builder()
 			.user(savedUser)
 			.contentId(1L)
-			.title("testContest")
-			.content("content1")
-			.type(NoticeType.REVIEW_COMMENT)
+			.title("팔로우 알림")
+			.content("%s님이 회원님을 팔로우하기 시작했어요")
+			.contentParam("팔달산불나방")
+			.type(NoticeType.FOLLOW)
+			.extraParam("FOLLOW")
 			.build();
 		Notice notice2 = Notice.builder()
 			.user(savedUser)
 			.contentId(savedFromUser.getId())
-			.title("testContest22")
-			.type(NoticeType.FOLLOW)
+			.title("좋아요 알림")
+			.content("내 리뷰를 %s님이 좋아해요!")
+			.contentParam("치악산호랑이")
+			.type(NoticeType.REVIEW_LIKE)
+			.build();
+		Notice notice3 = Notice.builder()
+			.user(savedUser)
+			.contentId(savedFromUser.getId())
+			.title("큐레이션 추가 알림")
+			.content("8월 1번째 큐레이션입니닿ㅎㅎㅎㅎ")
+			.type(NoticeType.CURATION)
 			.build();
 		noticeRepository.save(notice1);
 		noticeRepository.save(notice2);
+		noticeRepository.save(notice3);
 	}
 
 	@AfterEach
@@ -70,31 +82,6 @@ class NoticeControllerTest extends ControllerTest {
 		followRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
 	}
-
-	//    @Test
-	//    void addNoticeToken() throws Exception {
-	//        // given
-	//        String object = objectMapper.writeValueAsString(
-	//                NoticeTokenRequest.builder().deviceToken("newDeviceToken").build());
-	//
-	//        // when
-	//        ResultActions result = mockMvc.perform(post("/v1/notices")
-	//                .header("Authorization", "Bearer " + token.getAccessToken())
-	//                .content(object)
-	//                .contentType(MediaType.APPLICATION_JSON)
-	//                .accept(MediaType.APPLICATION_JSON));
-	//
-	//        // then
-	//        result
-	//                .andDo(print())
-	//                .andDo(document("v1/notice/token/add",
-	//                        preprocessRequest(prettyPrint()),
-	//                        preprocessResponse(prettyPrint()),
-	//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-	//                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰"))
-	//                ))
-	//                .andExpect(status().isNoContent());
-	//    }
 
 	@Test
 	void getNoticeList() throws Exception {
@@ -124,6 +111,8 @@ class NoticeControllerTest extends ControllerTest {
 						"(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)").optional(),
 					fieldWithPath("data.contents.[].content").description("알람 세부 내용 : " +
 						"(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
+					fieldWithPath("data.contents.[].contentParam").description("알람 메시지 생성용 파라미터 ex) user nickName")
+						.optional(),
 					fieldWithPath("data.contents.[].isFollow").description("알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
 					fieldWithPath("data.contents.[].createdAt").description("알람 생성일"),
 					fieldWithPath("data.contents.[].noticeType").description("알람 타입 (" +
@@ -131,11 +120,13 @@ class NoticeControllerTest extends ControllerTest {
 						"REVIEW_COMMENT(\"리뷰 댓글\"), \n" +
 						"REVIEW_LIKE(\"리뷰 좋아요\"), \n" +
 						"RECOMMENT(\"대댓글\"), \n" +
-						"REVIEW_COMMENT_LIKE(\"리뷰 댓글 좋아요\"), \n" +
-						"ADD_BAKERY(\"제보한 빵집 추가\"), \n" +
-						"ADD_PRODUCT(\"제보한 상품 추가\"), \n" +
-						"FLAG_BAKERY_CHANGE(\"즐겨찾기 빵집 변동사항\"), \n" +
-						"FLAG_BAKERY_ADMIN_NOTICE(\"즐겨찾기 빵집 관리자 새 글\"))")
+						"COMMENT_LIKE(\"댓글 좋아요\"), \n" +
+						"REPORT_BAKERY_ADDED(\"제보한 빵집 추가\"), \n" +
+						"ADD_PRODUCT(\"제보한 빵 추가\"), \n" +
+						"EVENT(\"제보한 상품 추가\"), \n" +
+						"BAKERY_ADDED(\"빵집 추가\"), \n" +
+						"CURATION(\"큐레이션\"), \n"
+					)
 				)
 			))
 			.andExpect(status().isOk());

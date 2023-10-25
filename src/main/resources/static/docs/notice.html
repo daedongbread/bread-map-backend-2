@@ -472,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/notices?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk3NzE4OTMxLCJleHAiOjE2OTc3MjI1MzF9.T9zfAPWYWFlIRIA6zDbMrlZuRwvjFLBJ0MRyPfpxo90
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4MjAxODIxLCJleHAiOjE2OTgyMDU0MjF9.PrhkeqIPBYcqjC3yGuhMH7-hnBJREv7O3dy4ZPTh8rk
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -547,33 +547,45 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 703
+Content-Length: 1230
 
 {
   "data" : {
     "pageNumber" : 0,
-    "numberOfElements" : 2,
+    "numberOfElements" : 3,
     "size" : 20,
-    "totalElements" : 2,
+    "totalElements" : 3,
     "totalPages" : 1,
     "contents" : [ {
-      "noticeId" : 2,
-      "image" : "cloudfront/S3_DEFAULT_USER.png",
-      "title" : "testContest22",
+      "noticeId" : 3,
+      "image" : "cloudfront/S3_DEFAULT_REPORT.png",
+      "title" : "큐레이션 추가 알림",
       "contentId" : 2,
-      "content" : null,
+      "content" : "8월 1번째 큐레이션입니닿ㅎㅎㅎㅎ",
+      "contentParam" : null,
       "isFollow" : false,
-      "createdAt" : "2023-10-19T21:35:31.938919",
-      "noticeType" : "FOLLOW"
+      "createdAt" : "2023-10-25T11:43:41.888912",
+      "noticeType" : "CURATION"
+    }, {
+      "noticeId" : 2,
+      "image" : "cloudfront/S3_DEFAULT_LIKE.png",
+      "title" : "좋아요 알림",
+      "contentId" : 2,
+      "content" : "내 리뷰를 %s님이 좋아해요!",
+      "contentParam" : "치악산호랑이",
+      "isFollow" : false,
+      "createdAt" : "2023-10-25T11:43:41.888461",
+      "noticeType" : "REVIEW_LIKE"
     }, {
       "noticeId" : 1,
-      "image" : "cloudfront/S3_DEFAULT_COMMENT.png",
-      "title" : "testContest",
+      "image" : "cloudfront/S3_DEFAULT_USER.png",
+      "title" : "팔로우 알림",
       "contentId" : 1,
-      "content" : "content1",
-      "isFollow" : false,
-      "createdAt" : "2023-10-19T21:35:31.937789",
-      "noticeType" : "REVIEW_COMMENT"
+      "content" : "%s님이 회원님을 팔로우하기 시작했어요",
+      "contentParam" : "팔달산불나방",
+      "isFollow" : true,
+      "createdAt" : "2023-10-25T11:43:41.887927",
+      "noticeType" : "FOLLOW"
     } ]
   }
 }</code></pre>
@@ -654,6 +666,11 @@ Content-Length: 703
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 세부 내용 : (내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].contentParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알람 메시지 생성용 파라미터 ex) user nickName</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].isFollow</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 팔로우/팔로잉 알람일 때 팔로우 여부</p></td>
@@ -670,11 +687,12 @@ Content-Length: 703
 REVIEW_COMMENT("리뷰 댓글"),
 REVIEW_LIKE("리뷰 좋아요"),
 RECOMMENT("대댓글"),
-REVIEW_COMMENT_LIKE("리뷰 댓글 좋아요"),
-ADD_BAKERY("제보한 빵집 추가"),
-ADD_PRODUCT("제보한 상품 추가"),
-FLAG_BAKERY_CHANGE("즐겨찾기 빵집 변동사항"),
-FLAG_BAKERY_ADMIN_NOTICE("즐겨찾기 빵집 관리자 새 글"))</p></td>
+COMMENT_LIKE("댓글 좋아요"),
+REPORT_BAKERY_ADDED("제보한 빵집 추가"),
+ADD_PRODUCT("제보한 빵 추가"),
+EVENT("제보한 상품 추가"),
+BAKERY_ADDED("빵집 추가"),
+CURATION("큐레이션"),</p></td>
 </tr>
 </tbody>
 </table>

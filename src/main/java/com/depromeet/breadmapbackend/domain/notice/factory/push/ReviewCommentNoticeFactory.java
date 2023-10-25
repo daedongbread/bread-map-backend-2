@@ -21,7 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewCommentNoticeFactory implements NoticeFactory {
 
-	private static final String NOTICE_TITLE_FORMAT = "내 리뷰에 %s님이 댓글을 달았어요!";
+	private static final String NOTICE_TITLE_FORMAT = "댓글 알림";
+	private static final String NOTICE_CONTENT_FORMAT = "내 리뷰에 %s님이 댓글을 달았어요!";
 	private static final NoticeType SUPPORT_TYPE = NoticeType.REVIEW_COMMENT;
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
@@ -49,9 +50,10 @@ public class ReviewCommentNoticeFactory implements NoticeFactory {
 
 		return List.of(Notice.createNoticeWithContent(
 			review.getUser(),
-			NOTICE_TITLE_FORMAT.formatted(fromUser.getNickName()),
+			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
-			review.getContent(),
+			NOTICE_CONTENT_FORMAT,
+			fromUser.getNickName(),
 			noticeEventDto.noticeType()
 		));
 	}

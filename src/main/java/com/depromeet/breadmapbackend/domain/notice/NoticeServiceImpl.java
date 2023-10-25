@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import com.depromeet.breadmapbackend.domain.notice.dto.BasicNoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
@@ -63,15 +62,6 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 	}
 
-	@Async("notice")
-	@TransactionalEventListener
-	@Transactional()
-	public void saveNotice(final BasicNoticeEventDto basicNoticeEventDto) {
-		noticeRepository.saveAll(
-			noticeFactoryProcessor.createNotice(basicNoticeEventDto)
-		);
-	}
-
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public PageResponseDto<NoticeDto> getNoticeList(String oAuthId, int page) {
 		User user = userRepository.findByOAuthId(oAuthId)
@@ -92,7 +82,7 @@ public class NoticeServiceImpl implements NoticeService {
 			.image(noticeFactoryProcessor.getImage(notice))
 			.title(notice.getTitle())
 			.notice(notice)
-			.isFollow(notice.getType() == NoticeType.FOLLOW && Objects.equals(notice.getContent(), "FOLLOW"))
+			.isFollow(notice.getType() == NoticeType.FOLLOW && Objects.equals(notice.getExtraParam(), "FOLLOW"))
 			.build();
 	}
 
@@ -103,7 +93,9 @@ public class NoticeServiceImpl implements NoticeService {
 		return NoticeFcmDto.builder()
 			.fcmTokens(fcmTokens)
 			.title(notice.getTitle())
-			.content(notice.getContent())
+			.content(notice.getContentParam() != null && notice.getContent() != null
+				? notice.getContent().formatted(notice.getContentParam())
+				: notice.getContent())
 			.contentId(notice.getContentId())
 			.type(notice.getType())
 			.build();
