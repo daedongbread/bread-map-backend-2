@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ReportBakeryAddNoticeFactory implements NoticeFactory {
 
 	private static final String NOTICE_TITLE_FORMAT = "내가 제보한 빵집이 추가되었어요!";
+	// content : 빵집명
 	private static final NoticeType SUPPORT_TYPE = NoticeType.REPORT_BAKERY_ADDED;
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
@@ -52,6 +53,7 @@ public class ReportBakeryAddNoticeFactory implements NoticeFactory {
 			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			bakery.getName(),
+			null,
 			noticeEventDto.noticeType()
 		));
 	}
