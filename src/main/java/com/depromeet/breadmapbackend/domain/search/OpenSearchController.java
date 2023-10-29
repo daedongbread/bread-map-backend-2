@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.search;
 
-import com.depromeet.breadmapbackend.domain.admin.openSearch.dto.validation.LowerCase;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.request.OpenSearchAddDataRequest;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
@@ -28,12 +27,19 @@ public class OpenSearchController {
         return new ApiResponse<>(openSearchService.addDataToIndex(addDataRequest.getIndexName(), addDataRequest.getStringMapping()));
     }
 
-    @GetMapping
+    @GetMapping("/bread")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SearchResponse> getDocumentByKeyword(
-            @RequestParam @LowerCase String indexName,
+    public ApiResponse<SearchResponse> getBreadByKeyword(
             @RequestParam(required = false) String keyword) {
-        SearchResponse documentResponse = openSearchService.getDocumentByKeyword(indexName, keyword);
+        SearchResponse documentResponse = openSearchService.getBreadByKeyword(keyword);
+        return new ApiResponse<>(documentResponse);
+    }
+
+    @GetMapping("/bakery")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<SearchResponse> getBakeryByKeyword(
+            @RequestParam(required = false) String keyword) {
+        SearchResponse documentResponse = openSearchService.getBakeryByKeyword(keyword);
         return new ApiResponse<>(documentResponse);
     }
 }

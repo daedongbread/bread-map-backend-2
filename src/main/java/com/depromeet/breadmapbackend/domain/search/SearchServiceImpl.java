@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opensearch.action.search.SearchResponse;
 import org.opensearch.search.SearchHit;
+import org.opensearch.search.SearchHits;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,29 +65,43 @@ public class SearchServiceImpl implements SearchService {
 
         SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
 
-        if (keyword.endsWith("역")) {
-            keyword = keyword.substring(0, keyword.length() - 1);
-        }
+        keyword = processKeyword(keyword);
 
         List<SubwayStation> subwayStationList = subwayStationRepository.findByName(keyword);
         SearchResponse document;
+        List<SearchEngineDto> searchResults = new ArrayList<>();
+
         if (!subwayStationList.isEmpty()) {
             document = openSearchService.getDocumentByGeology(keyword, subwayStationList.get(0).getLatitude(), subwayStationList.get(0).getLongitude());
+            searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
             builder.subwayStationName(keyword.concat("역"));
         } else {
-            document = openSearchService.getDocumentByKeyword(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), keyword);
+            document = openSearchService.getBreadByKeyword(keyword);
+            searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
         }
 
-        List<SearchHit> searchHits = Arrays.stream(document.getHits().getHits()).toList();
-
-        List<SearchEngineDto> list = searchHits.stream()
-                .map(searchHit -> getSearchEngineDtoBuilder(userLat, userLng, searchHit))
-                .map(SearchEngineDto.SearchEngineDtoBuilder::build)
-                .collect(Collectors.toList());
+        if (searchResults.size() < 7) {
+            document = openSearchService.getBakeryByKeyword(keyword);
+            searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
+        }
 
         return builder
-                .searchEngineDtoList(list)
+                .searchEngineDtoList(searchResults)
                 .build();
+    }
+
+
+    private String processKeyword(String keyword) {
+        if (keyword.endsWith("역")) {
+            return keyword.substring(0, keyword.length() - 1);
+        }
+        return keyword;
+    }
+
+    private List<SearchEngineDto> getSearchEngineDtoList(SearchHits hits, Double userLat, Double userLng) {
+        return Arrays.stream(hits.getHits())
+                .map(searchHit -> getSearchEngineDtoBuilder(userLat, userLng, searchHit).build())
+                .collect(Collectors.toList());
     }
 
     private static SearchEngineDto.SearchEngineDtoBuilder getSearchEngineDtoBuilder(Double userLat, Double userLng, SearchHit searchHit) {
@@ -95,7 +110,7 @@ public class SearchServiceImpl implements SearchService {
         double locationLng = Double.parseDouble((String) sourceAsMap.get("longitude"));
 
         SearchEngineDto.SearchEngineDtoBuilder searchEngineDtoBuilder = SearchEngineDto.builder()
-                .bakeryId(Long.parseLong((String) sourceAsMap.get("bakeryId")))
+                .bakeryId(Long.valueOf((Integer) sourceAsMap.get("bakeryId")))
                 .bakeryName((String) sourceAsMap.get("bakeryName"))
                 .address((String) sourceAsMap.get("bakeryAddress"))
                 .distance(floor(acos(cos(toRadians(userLat))
@@ -108,7 +123,7 @@ public class SearchServiceImpl implements SearchService {
 
         if (sourceAsMap.get("breadId") != null) {
             searchEngineDtoBuilder
-                    .breadId(Long.parseLong((String) sourceAsMap.get("breadId")))
+                    .breadId(Long.valueOf((Integer) sourceAsMap.get("bakeryId")))
                     .breadName((String) sourceAsMap.get("breadName"));
         }
 
@@ -132,7 +147,7 @@ public class SearchServiceImpl implements SearchService {
         return keywordSuggestions;
     }
 
-    private Double bakeryRating(List<Review> reviewList) { // TODO
+    private Double bakeryRating(List<Review> reviewList) {
         return Math.floor(reviewList.stream().map(Review::getAverageRating).toList()
                 .stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
     }

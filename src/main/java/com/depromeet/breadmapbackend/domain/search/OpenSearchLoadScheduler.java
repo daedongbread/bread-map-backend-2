@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.search;
 
+import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadScheduler {
 
     private final OpenSearchService openSearchService;
-//    @Scheduled(cron = "0 0/30 * * * *") // for test
+//    @Scheduled(cron = "0 0/5 * * * *") // for test
     @Scheduled(cron = "0 0 0 1,15 * *")
     public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
@@ -27,6 +28,10 @@ public class OpenSearchLoadScheduler {
 
             if (lock.tryLock(2, TimeUnit.HOURS)) {
                 log.info("========================= Loading entire data to search engine =========================");
+
+                openSearchService.deleteAndCreateIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
+                openSearchService.deleteAndCreateIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
+
                 openSearchService.loadEntireData();
                 System.out.println("Job loadEntireData executed by this instance");
             } else {
@@ -45,7 +50,7 @@ public class OpenSearchLoadScheduler {
     public void loadHourlyData() throws IOException {
         RedissonClient client = Redisson.create();
 
-        RLock dailyLock = client.getLock("Load-Daily-Data");
+        RLock dailyLock = client.getLock("Load-Entire-Data");
         RLock hourlyLock = client.getLock("Load-Hourly-Data");
         try {
 

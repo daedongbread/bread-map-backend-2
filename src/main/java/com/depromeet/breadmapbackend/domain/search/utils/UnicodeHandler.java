@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.search.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,7 @@ public class UnicodeHandler {
 
     }
 
-    public static List<String> splitHangulToConsonant(String text) {
+    public static String splitHangulToConsonant(String text) {
 
         List<String> list = new ArrayList<>();
 
@@ -65,7 +66,7 @@ public class UnicodeHandler {
             }
 
         }
-        return list;
+        return String.join("", list);
 
     }
 

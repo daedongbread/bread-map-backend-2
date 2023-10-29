@@ -10,10 +10,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public interface OpenSearchService {
-    OpenSearchCreateIndexResponse createIndex(String indexName) throws IOException;
+    OpenSearchCreateIndexResponse deleteAndCreateIndex(String indexName) throws IOException;
     AcknowledgedResponse deleteIndex(String indexName) throws IOException;
     IndexResponse addDataToIndex(String indexName, HashMap<String, String> stringMapping) throws IOException;
-    SearchResponse getDocumentByKeyword(String indexName, String keyword);
+    SearchResponse getBakeryByKeyword(String keyword);
+    SearchResponse getBreadByKeyword(String keyword);
     SearchResponse getDocumentByGeology(String indexName, Double latitude, Double longitude);
     SearchResponse getKeywordSuggestions(OpenSearchIndex openSearchIndex, String keyword);
 
