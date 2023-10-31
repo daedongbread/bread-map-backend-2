@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.search;
 
-import com.depromeet.breadmapbackend.domain.search.dto.*;
+import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.KeywordSuggestionResponse;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.RecentKeywords;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
@@ -14,9 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 @Validated(ValidationSequence.class)
@@ -40,19 +37,10 @@ public class SearchV2Controller {
             @RequestParam SearchType searchType) {
 
         SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
-
-        SearchResultResponse searchResultResponse = searchService.searchEngine(oAuthId, keyword, latitude, longitude);
-
-        List<SearchEngineDto> searchEngineDtoList = searchResultResponse.getSearchEngineDtoList();
-
-        if (searchType == SearchType.DISTANCE) {
-            searchEngineDtoList.sort(new DistanceComparator());
-        } else {
-            searchEngineDtoList.sort(new ReviewComparator());
-        }
+        SearchResultResponse searchResultResponse = searchService.searchEngine(oAuthId, keyword, latitude, longitude, searchType);
 
         return new ApiResponse<>(builder
-                .searchEngineDtoList(searchEngineDtoList)
+                .searchEngineDtoList(searchResultResponse.getSearchEngineDtoList())
                 .subwayStationName(searchResultResponse.getSubwayStationName())
                 .build());
     }
@@ -62,21 +50,16 @@ public class SearchV2Controller {
     public ApiResponse<RecentKeywords> searchRecent(
             @CurrentUser String oAuthId
     ) {
-        List<SearchLog> adminUserForEventPost = searchLogService.getRecentSearchLogs(oAuthId);
-        List<String> recentKeywords = adminUserForEventPost.stream().map(SearchLog::getKeyword).toList();
-
-        return new ApiResponse<>(RecentKeywords.builder().recentKeywords(recentKeywords)
+        List<String> recentKeywords = searchLogService.getRecentSearchLogs(oAuthId);
+        return new ApiResponse<>(RecentKeywords.builder()
+                .recentKeywords(recentKeywords)
                 .build());
     }
 
     @GetMapping("/suggestions")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<KeywordSuggestionResponse> searchKeywordSuggestions(@RequestParam String keyword) {
-        HashSet<String> keywordSuggestions = searchService.searchKeywordSuggestions(keyword);
-
-        List<String> tempSet = new ArrayList<>(keywordSuggestions);
-        Collections.sort(tempSet);
-
-        return new ApiResponse<>(KeywordSuggestionResponse.builder().keywordSuggestions(tempSet).build());
+        List<String> keywordSuggestions = searchService.searchKeywordSuggestions(keyword);
+        return new ApiResponse<>(KeywordSuggestionResponse.builder().keywordSuggestions(keywordSuggestions).build());
     }
 }

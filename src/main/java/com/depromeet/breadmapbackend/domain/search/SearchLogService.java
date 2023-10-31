@@ -12,6 +12,6 @@ import java.util.List;
 
 public interface SearchLogService {
     void saveRecentSearchLog(String oauthId, String name);
-    List<SearchLog> getRecentSearchLogs(String oauthId);
+    List<String> getRecentSearchLogs(String oauthId);
     void deleteRecentSearchLog(String oauthId, String name, String createdAt);
 }

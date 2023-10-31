@@ -24,6 +24,6 @@ public class OpenSearchAdminController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<OpenSearchCreateIndexResponse> createIndex(
             @Valid @RequestBody OpenSearchCreateIndexRequest createIndexRequest) throws IOException {
-        return new ApiResponse<>(openSearchService.deleteAndCreateIndex(createIndexRequest.getIndexName()));
+        return new ApiResponse<>(openSearchService.deleteAndCreateIndex(createIndexRequest.getIndexName().toLowerCase()));
     }
 }

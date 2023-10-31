@@ -6,7 +6,7 @@ import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.CommonLoadData;
 import com.depromeet.breadmapbackend.domain.search.utils.HanguelJamoMorphTokenizer;
-import com.depromeet.breadmapbackend.domain.search.utils.UnicodeHandler;
+import com.depromeet.breadmapbackend.domain.search.utils.UnicodeHandleUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 ;
 
@@ -591,7 +590,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             loadHashMap.put("totalScore", String.valueOf(loadItem.getTotalScore()));
             loadHashMap.put("reviewCount", String.valueOf(loadItem.getReviewCount()));
             loadHashMap.put("chosung", tokenizer.chosungTokenizer(bakeryName));
-            loadHashMap.put("jamo", UnicodeHandler.splitHangulToConsonant(bakeryName));
+            loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(bakeryName));
             loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(bakeryName));
 
             if (loadItem instanceof BreadLoadData bread) {
@@ -601,7 +600,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
                 String parsedBreadName = parseEndingWithNumberAndSizeInKorean(breadName);
                 loadHashMap.put("breadName", parsedBreadName);
                 loadHashMap.put("chosung", tokenizer.chosungTokenizer(breadName));
-                loadHashMap.put("jamo", UnicodeHandler.splitHangulToConsonant(breadName));
+                loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(breadName));
                 loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(breadName));
             }
 

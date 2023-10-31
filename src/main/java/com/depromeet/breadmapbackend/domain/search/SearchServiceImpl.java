@@ -6,6 +6,7 @@ import com.depromeet.breadmapbackend.domain.review.ReviewService;
 import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
+import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
 import com.depromeet.breadmapbackend.domain.subway.SubwayStation;
 import com.depromeet.breadmapbackend.domain.subway.SubwayStationRepository;
@@ -59,39 +60,47 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchResultResponse searchEngine(String oAuthId, String keyword, Double userLat, Double userLng) {
+    public SearchResultResponse searchEngine(String oAuthId, String keyword, Double userLat, Double userLng, SearchType searchType) {
         userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
         SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
 
-        keyword = processKeyword(keyword);
+        keyword = checkEndingWithStation(keyword);
 
         List<SubwayStation> subwayStationList = subwayStationRepository.findByName(keyword);
         SearchResponse document;
-        List<SearchEngineDto> searchResults = new ArrayList<>();
 
         if (!subwayStationList.isEmpty()) {
             document = openSearchService.getDocumentByGeology(keyword, subwayStationList.get(0).getLatitude(), subwayStationList.get(0).getLongitude());
-            searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
             builder.subwayStationName(keyword.concat("역"));
         } else {
             document = openSearchService.getBreadByKeyword(keyword);
-            searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
         }
+
+        List<SearchEngineDto> searchResults = new ArrayList<>(getSearchEngineDtoList(document.getHits(), userLat, userLng));
 
         if (searchResults.size() < 7) {
             document = openSearchService.getBakeryByKeyword(keyword);
             searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
         }
 
+        resultSortBySearchType(searchType, searchResults);
+
         return builder
                 .searchEngineDtoList(searchResults)
                 .build();
     }
 
+    private static void resultSortBySearchType(SearchType searchType, List<SearchEngineDto> searchResults) {
+        if (searchType == SearchType.DISTANCE) {
+            searchResults.sort(Comparator.comparingDouble(SearchEngineDto::getDistance));
+        } else {
+            searchResults.sort((dto1, dto2) -> Double.compare(dto2.getReviewNum(), dto1.getReviewNum()));
+        }
+    }
 
-    private String processKeyword(String keyword) {
+    private String checkEndingWithStation(String keyword) {
         if (keyword.endsWith("역")) {
             return keyword.substring(0, keyword.length() - 1);
         }
@@ -131,7 +140,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public HashSet<String> searchKeywordSuggestions(String word) {
+    public List<String> searchKeywordSuggestions(String word) {
         HashSet<String> keywordSuggestions;
         SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, word);
         keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
@@ -144,7 +153,10 @@ public class SearchServiceImpl implements SearchService {
                 keywordSuggestions.add((String) breadHit.getSourceAsMap().get("breadName"));
             }
         }
-        return keywordSuggestions;
+
+        List<String> tempSet = new ArrayList<>(keywordSuggestions);
+        Collections.sort(tempSet);
+        return tempSet;
     }
 
     private Double bakeryRating(List<Review> reviewList) {

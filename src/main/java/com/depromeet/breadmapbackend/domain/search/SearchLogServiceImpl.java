@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -38,10 +39,12 @@ public class SearchLogServiceImpl implements SearchLogService {
     }
 
     @Override
-    public List<SearchLog> getRecentSearchLogs(String oauthId) {
+    public List<String> getRecentSearchLogs(String oauthId) {
         String key = searchLogKey(oauthId);
-        return redisTemplate.opsForList()
-                        .range(key, 0, RECENT_KEYWORD_SIZE);
+        List<SearchLog> range = redisTemplate.opsForList()
+                .range(key, 0, RECENT_KEYWORD_SIZE);
+
+        return Objects.requireNonNull(range).stream().map(SearchLog::getKeyword).toList();
     }
 
     @Override

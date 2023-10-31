@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile({"default"
-//		, "local"
-})
+@Profile({"default", "local"})
 @Configuration
 @RequiredArgsConstructor
 public class EmbeddedRedisConfig {

@@ -2,12 +2,8 @@ package com.depromeet.breadmapbackend.domain.search.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
-
-@Component
-public class UnicodeHandler {
+public class UnicodeHandleUtils {
 
     private static final int HANGEUL_BASE = 0xAC00;    // '가'
     private static final int HANGEUL_END = 0xD7AF;
