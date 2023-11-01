@@ -227,7 +227,7 @@ public class PostControllerTestSteps {
 					fieldWithPath("title").description("커뮤니티 글 제목"),
 					fieldWithPath("content").description("커뮤니티 글 내용"),
 					fieldWithPath("images").optional().description("커뮤니티 글 첨부 이미지"),
-					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK)")
+					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)")
 				)
 			));
 	}
@@ -246,7 +246,7 @@ public class PostControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
-					parameterWithName("postTopic").description("삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK)"),
+					parameterWithName("postTopic").description("삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)"),
 					parameterWithName("postId").description("삭제 대상 커뮤니티글 id")
 				)
 			));
