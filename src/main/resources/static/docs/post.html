@@ -516,7 +516,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/posts HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wmSP3WstHXaZDx-azIQpetX8I7pQlm7Y7EGor_VONtk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.9JFBvB1i7hl2_vEvjwt7rHxltgHbFSTFcr1Ek3Sk95Y
 Content-Length: 137
 Host: localhost:8080
 
@@ -595,7 +595,7 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postTopic</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, FREE_TALK)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)</p></td>
 </tr>
 </tbody>
 </table>
@@ -626,7 +626,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/posts/EVENT/224 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wmSP3WstHXaZDx-azIQpetX8I7pQlm7Y7EGor_VONtk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.9JFBvB1i7hl2_vEvjwt7rHxltgHbFSTFcr1Ek3Sk95Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -757,7 +757,7 @@ Content-Length: 497
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.postTopic</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK, EATEN_BREAD)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.title</code></p></td>
@@ -846,7 +846,7 @@ Content-Length: 497
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/posts/cards/ALL?reviewOffset=0&amp;postOffset=0&amp;page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wmSP3WstHXaZDx-azIQpetX8I7pQlm7Y7EGor_VONtk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.9JFBvB1i7hl2_vEvjwt7rHxltgHbFSTFcr1Ek3Sk95Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -993,7 +993,7 @@ Content-Length: 3072
       "commentCount" : 0,
       "thumbnail" : null,
       "postTopic" : "REVIEW",
-      "createdDate" : "2023-10-25T11:43:42.580667",
+      "createdDate" : "2023-11-01T22:52:29.667946",
       "bakeryInfo" : {
         "bakeryId" : 111,
         "name" : "수원빵집",
@@ -1187,7 +1187,7 @@ Content-Length: 3072
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].postTopic</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK, EATEN_BREAD)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].isUserLiked</code></p></td>
@@ -1241,7 +1241,7 @@ Content-Length: 3072
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/posts/hot HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wmSP3WstHXaZDx-azIQpetX8I7pQlm7Y7EGor_VONtk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.9JFBvB1i7hl2_vEvjwt7rHxltgHbFSTFcr1Ek3Sk95Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1323,7 +1323,7 @@ Content-Length: 1615
     "commentCount" : 0,
     "thumbnail" : null,
     "postTopic" : "REVIEW",
-    "createdDate" : "2023-10-25T11:43:42.420163",
+    "createdDate" : "2023-11-01T22:52:29.530561",
     "bakeryInfo" : {
       "bakeryId" : 111,
       "name" : "수원빵집",
@@ -1430,7 +1430,7 @@ Content-Length: 1615
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].postTopic</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK, EATEN_BREAD)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.[].createdDate</code></p></td>
@@ -1484,7 +1484,7 @@ Content-Length: 1615
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/posts/like/224 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wmSP3WstHXaZDx-azIQpetX8I7pQlm7Y7EGor_VONtk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.9JFBvB1i7hl2_vEvjwt7rHxltgHbFSTFcr1Ek3Sk95Y
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1603,7 +1603,7 @@ Content-Length: 16
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /v1/posts/999 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wmSP3WstHXaZDx-azIQpetX8I7pQlm7Y7EGor_VONtk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.9JFBvB1i7hl2_vEvjwt7rHxltgHbFSTFcr1Ek3Sk95Y
 Content-Length: 148
 Host: localhost:8080
 
@@ -1712,7 +1712,7 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postTopic</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, FREE_TALK)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">커뮤니티 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1776,7 +1776,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/posts/BREAD_STORY/222 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8yMjIiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMiwiZXhwIjoxNjk4MjA1NDIyfQ.wjAgVaYlBt1lW-qHdZVYanThKDv4DJuema9pjToqOfo
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8yMjIiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc0OSwiZXhwIjoxNjk4ODUwMzQ5fQ.FhdQody8v0MaiDJo__7UpZ480QWomx-K6Mcxrh47L3M
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1829,7 +1829,7 @@ Host: localhost:8080</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postTopic</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>postId</code></p></td>
@@ -1890,7 +1890,7 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMywiZXhwIjoxNjk4MjA1NDIzfQ.ar50Evgm6R-jMNb5-bQciW3kBftke7uc_do3nIIHrJQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc1MCwiZXhwIjoxNjk4ODUwMzUwfQ.mDV1bShPgjtUBOQb1Yq_HbyhVPuZbwvFXa2vz5eJHqk
 Content-Length: 153
 Host: localhost:8080
 
@@ -2014,7 +2014,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/comments/BREAD_STORY/222/0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMywiZXhwIjoxNjk4MjA1NDIzfQ.ar50Evgm6R-jMNb5-bQciW3kBftke7uc_do3nIIHrJQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc1MCwiZXhwIjoxNjk4ODUwMzUwfQ.mDV1bShPgjtUBOQb1Yq_HbyhVPuZbwvFXa2vz5eJHqk
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2366,7 +2366,7 @@ Content-Length: 3931
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/comments/111 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMywiZXhwIjoxNjk4MjA1NDIzfQ.ar50Evgm6R-jMNb5-bQciW3kBftke7uc_do3nIIHrJQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc1MCwiZXhwIjoxNjk4ODUwMzUwfQ.mDV1bShPgjtUBOQb1Yq_HbyhVPuZbwvFXa2vz5eJHqk
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2452,7 +2452,7 @@ X-Frame-Options: DENY</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /v1/comments HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMywiZXhwIjoxNjk4MjA1NDIzfQ.ar50Evgm6R-jMNb5-bQciW3kBftke7uc_do3nIIHrJQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc1MCwiZXhwIjoxNjk4ODUwMzUwfQ.mDV1bShPgjtUBOQb1Yq_HbyhVPuZbwvFXa2vz5eJHqk
 Content-Length: 70
 Host: localhost:8080
 
@@ -2548,7 +2548,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/comments/like/111 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMywiZXhwIjoxNjk4MjA1NDIzfQ.ar50Evgm6R-jMNb5-bQciW3kBftke7uc_do3nIIHrJQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc1MCwiZXhwIjoxNjk4ODUwMzUwfQ.mDV1bShPgjtUBOQb1Yq_HbyhVPuZbwvFXa2vz5eJHqk
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2679,7 +2679,7 @@ Content-Length: 16
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/reports/BREAD_STORY/222 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODIwMTgyMywiZXhwIjoxNjk4MjA1NDIzfQ.ar50Evgm6R-jMNb5-bQciW3kBftke7uc_do3nIIHrJQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBUFBMRV8xMTEiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlhdCI6MTY5ODg0Njc1MCwiZXhwIjoxNjk4ODUwMzUwfQ.mDV1bShPgjtUBOQb1Yq_HbyhVPuZbwvFXa2vz5eJHqk
 Content-Length: 57
 Host: localhost:8080
 
@@ -2823,7 +2823,7 @@ X-Frame-Options: DENY</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-10-19 10:50:59 +0900
+Last updated 2023-08-29 00:26:05 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
