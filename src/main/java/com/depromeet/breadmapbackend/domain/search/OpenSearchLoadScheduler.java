@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadScheduler {
 
     private final OpenSearchService openSearchService;
-    @Scheduled(cron = "0 0/5 * * * *") // for test
-//    @Scheduled(cron = "0 0 0 1,15 * *")
+//    @Scheduled(cron = "0 0/5 * * * *") // for test
+    @Scheduled(cron = "0 0 0 1,15 * *")
     public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
 

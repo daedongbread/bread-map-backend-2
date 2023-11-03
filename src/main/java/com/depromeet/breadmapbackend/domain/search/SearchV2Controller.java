@@ -28,7 +28,7 @@ public class SearchV2Controller {
     @GetMapping("/keyword")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<SearchResultResponse> searchKeyword(
-//            @CurrentUser String oAuthId,
+            @CurrentUser String oAuthId,
             @RequestParam
             @Size(min = 1, max = 20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
             String keyword,
@@ -37,9 +37,7 @@ public class SearchV2Controller {
             @RequestParam SearchType searchType) {
 
         SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
-        SearchResultResponse searchResultResponse = searchService.searchEngine(
-                "ADMIN_USER_FOR_EVENT_POST"
-                , keyword, latitude, longitude, searchType);
+        SearchResultResponse searchResultResponse = searchService.searchEngine(oAuthId, keyword, latitude, longitude, searchType);
 
         return new ApiResponse<>(builder
                 .searchResultDtoList(searchResultResponse.getSearchResultDtoList())
