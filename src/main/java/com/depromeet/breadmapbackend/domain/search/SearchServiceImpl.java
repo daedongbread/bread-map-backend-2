@@ -2,11 +2,9 @@ package com.depromeet.breadmapbackend.domain.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
-import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
-import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
-import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
-import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
+import com.depromeet.breadmapbackend.domain.search.dto.*;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
 import com.depromeet.breadmapbackend.domain.subway.SubwayStation;
 import com.depromeet.breadmapbackend.domain.subway.SubwayStationRepository;
@@ -37,6 +35,7 @@ public class SearchServiceImpl implements SearchService {
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
     private final SubwayStationRepository subwayStationRepository;
+    private final ReviewQueryRepository reviewQueryRepository;
 
     private final ReviewService reviewService;
     private final SearchLogService searchLogService;
@@ -85,16 +84,50 @@ public class SearchServiceImpl implements SearchService {
             searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
         }
 
-        resultSortBySearchType(searchType, searchResults);
+        List<BakeryReviewScoreDto> bakeriesReviews = reviewQueryRepository.getBakeriesReview(SearchEngineDto.extractBakeryIdList(searchResults));
+        List<SearchResultDto> searchResultDtos = mergeSearchEngineAndReview(searchResults, bakeriesReviews);
+
+        resultSortBySearchType(searchType, searchResultDtos);
 
         return builder
-                .searchEngineDtoList(searchResults)
+                .searchResultDtoList(searchResultDtos)
                 .build();
     }
 
-    private static void resultSortBySearchType(SearchType searchType, List<SearchEngineDto> searchResults) {
+    private static List<SearchResultDto> mergeSearchEngineAndReview(List<SearchEngineDto> searchResults, List<BakeryReviewScoreDto> bakeriesReviews) {
+
+        List<SearchResultDto> searchResultDtos = new ArrayList<>();
+
+        for (SearchEngineDto searchResultDto : searchResults) {
+            SearchResultDto.SearchResultDtoBuilder searchResultDtoBuilder = SearchResultDto.builder();
+            searchResultDtoBuilder
+                    .bakeryId(searchResultDto.getBakeryId())
+                    .bakeryName(searchResultDto.getBakeryName())
+                    .address(searchResultDto.getAddress())
+                    .distance(searchResultDto.getDistance())
+                    .reviewNum(0L) // init
+                    .totalScore(0d); // init
+            if (searchResultDto.getBreadId() != null) {
+                searchResultDtoBuilder
+                        .breadId(searchResultDto.getBreadId())
+                        .breadName(searchResultDto.getBreadName());
+            }
+
+            for (BakeryReviewScoreDto bakeryReviewScoreDto : bakeriesReviews) {
+                if (searchResultDto.getBakeryId().equals(bakeryReviewScoreDto.getBakeryId())) {
+                    searchResultDtoBuilder.reviewNum(bakeryReviewScoreDto.getReviewCount());
+                    searchResultDtoBuilder.totalScore(bakeryReviewScoreDto.getTotalScore());
+                }
+            }
+            searchResultDtos.add(searchResultDtoBuilder.build());
+        }
+
+        return searchResultDtos;
+    }
+
+    private static void resultSortBySearchType(SearchType searchType, List<SearchResultDto> searchResults) {
         if (searchType == SearchType.DISTANCE) {
-            searchResults.sort(Comparator.comparingDouble(SearchEngineDto::getDistance));
+            searchResults.sort(Comparator.comparingDouble(SearchResultDto::getDistance));
         } else {
             searchResults.sort((dto1, dto2) -> Double.compare(dto2.getReviewNum(), dto1.getReviewNum()));
         }
@@ -125,9 +158,7 @@ public class SearchServiceImpl implements SearchService {
                 .distance(floor(acos(cos(toRadians(userLat))
                         * cos(toRadians(locationLat))
                         * cos(toRadians(locationLng) - toRadians(userLng))
-                        + sin(toRadians(userLat)) * sin(toRadians(locationLat))) * 6371000))
-                .rating(!sourceAsMap.get("totalScore").equals("null") ? Double.valueOf((String) sourceAsMap.get("totalScore")) : null)
-                .reviewNum(Integer.valueOf((String) sourceAsMap.get("reviewCount")));
+                        + sin(toRadians(userLat)) * sin(toRadians(locationLat))) * 6371000));
 
 
         if (sourceAsMap.get("breadId") != null) {

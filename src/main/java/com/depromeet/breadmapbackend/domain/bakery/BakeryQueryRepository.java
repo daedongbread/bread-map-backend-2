@@ -176,54 +176,6 @@ public class BakeryQueryRepository {
 					startDate.atTime(LocalTime.MAX))));
 	}
 
-	public List<BakeryLoadData> bakeryLoadHourlyDataJPQLQuery() {
-		return queryFactory
-				.select(Projections.constructor(BakeryLoadData.class
-						, bakery.id
-						, bakery.name
-						, bakery.address
-						, bakery.longitude
-						, bakery.latitude
-						, JPAExpressions
-								.select(reviewProductRating.rating.avg().as("totalScore"))
-								.from(reviewProductRating)
-								.where(reviewProductRating.bakery.id.eq(bakery.id))
-						, JPAExpressions
-								.select(review.count().as("reviewCount"))
-								.from(review)
-								.where(review.bakery.id.eq(bakery.id))
-				))
-				.from(bakery)
-				.where(bakery.createdAt.goe(LocalDateTime.now().minusHours(1)))
-				.fetch();
-	}
-
-	public List<BreadLoadData> breadLoadHourlyDataJPQLQuery() {
-		return queryFactory
-				.select(Projections.constructor(BreadLoadData.class
-						, product.id
-						, product.name
-						, bakery.id
-						, bakery.name
-						, bakery.address
-						, bakery.longitude
-						, bakery.latitude
-						, JPAExpressions
-								.select(reviewProductRating.rating.avg().coalesce(0d).as("totalScore"))
-								.from(reviewProductRating)
-								.where(reviewProductRating.bakery.id.eq(bakery.id))
-						, JPAExpressions
-								.select(review.count().coalesce(0L).as("reviewCount"))
-								.from(review)
-								.where(review.bakery.id.eq(bakery.id))
-				))
-				.from(bakery)
-				.innerJoin(product)
-				.on(bakery.id.eq(product.bakery.id))
-				.where((product.productType.eq(ProductType.BREAD)).and(bakery.createdAt.goe(LocalDateTime.now().minusHours(1))))
-				.fetch();
-	}
-
 	public List<BakeryLoadData> bakeryLoadEntireDataJPQLQuery() {
 		return queryFactory
 				.select(Projections.constructor(BakeryLoadData.class
@@ -232,14 +184,6 @@ public class BakeryQueryRepository {
 						, bakery.address
 						, bakery.longitude
 						, bakery.latitude
-						, JPAExpressions
-								.select(reviewProductRating.rating.avg().as("totalScore"))
-								.from(reviewProductRating)
-								.where(reviewProductRating.bakery.id.eq(bakery.id))
-						, JPAExpressions
-								.select(review.count().as("reviewCount"))
-								.from(review)
-								.where(review.bakery.id.eq(bakery.id))
 				))
 				.from(bakery)
 				.fetch();
@@ -255,14 +199,6 @@ public class BakeryQueryRepository {
 						, bakery.address
 						, bakery.longitude
 						, bakery.latitude
-						, JPAExpressions
-								.select(reviewProductRating.rating.avg().coalesce(0d).as("totalScore"))
-								.from(reviewProductRating)
-								.where(reviewProductRating.bakery.id.eq(bakery.id))
-						, JPAExpressions
-								.select(review.count().coalesce(0L).as("reviewCount"))
-								.from(review)
-								.where(review.bakery.id.eq(bakery.id))
 				))
 				.from(bakery)
 				.innerJoin(product)

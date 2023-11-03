@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
+import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -92,6 +95,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private final S3Uploader s3Uploader;
 	private final SgisClient sgisClient;
 	private final ApplicationEventPublisher eventPublisher;
+	private final OpenSearchEventPublisher openSearchEventPublisher;
 	private final CustomSGISKeyProperties customSGISKeyProperties;
 	private final CustomAWSS3Properties customAWSS3Properties;
 	private final UpdateBakerySQSService updateBakerySQSService; // TODO : migrate to AOP
@@ -223,20 +227,22 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		if (bakery.getStatus().equals(BakeryStatus.POSTING)) {
 			if (pioneer != null) {
 				eventPublisher.publishEvent(
-					NoticeEventDto.builder()
-						.userId(pioneer.getId())
-						.contentId(bakery.getId())
-						.noticeType(NoticeType.REPORT_BAKERY_ADDED)
-						.build()
+						NoticeEventDto.builder()
+								.userId(pioneer.getId())
+								.contentId(bakery.getId())
+								.noticeType(NoticeType.REPORT_BAKERY_ADDED)
+								.build()
 				);
 			}
 			eventPublisher.publishEvent(
-				BasicNoticeEventDto.builder()
-					.userId(pioneer != null ? pioneer.getId() : null)
-					.contentId(bakery.getId())
-					.noticeType(NoticeType.BAKERY_ADDED)
-					.build()
+					BasicNoticeEventDto.builder()
+							.userId(pioneer != null ? pioneer.getId() : null)
+							.contentId(bakery.getId())
+							.noticeType(NoticeType.BAKERY_ADDED)
+							.build()
 			);
+
+			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
 		}
 
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
@@ -257,6 +263,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			images,
 			request.getFacilityInfoList(), request.getStatus());
 
+		openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
+
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
 			for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
 				Product product;
@@ -274,6 +282,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					product.update(productUpdateRequest.getProductType(), productUpdateRequest.getProductName(),
 						productUpdateRequest.getPrice(), productUpdateRequest.getImage());
 				}
+
+				openSearchEventPublisher.publishSaveBread(new BreadLoadData(product.getId(), product.getName(), bakeryId, bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
 			}
 		}
 	}

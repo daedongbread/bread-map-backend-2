@@ -1,34 +1,34 @@
 package com.depromeet.breadmapbackend.domain.review;
 
-import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
-import static com.depromeet.breadmapbackend.domain.review.QReview.*;
-import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
-import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.*;
-import static com.querydsl.core.group.GroupBy.*;
-
-import java.util.List;
-import java.util.Map;
-
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
+import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.search.dto.BakeryReviewScoreDto;
+import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.exception.DaedongException;
+import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.QBakery;
-import com.depromeet.breadmapbackend.domain.bakery.product.Product;
-import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.global.exception.DaedongException;
-import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
+import static com.depromeet.breadmapbackend.domain.review.QReview.review;
+import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.reviewProductRating;
+import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.blockUser;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 @Slf4j
 @Repository
@@ -72,7 +72,7 @@ public class ReviewQueryRepository {
 				bakery.in(bakeries))
 			.transform(groupBy(review.bakery.id).as(list(review)));
 
-	}
+    }
 
 	public List<Review> findReviewList(User me, Bakery targetBakery) {
 		return queryFactory.selectFrom(review)
@@ -247,14 +247,32 @@ public class ReviewQueryRepository {
 			throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
 	}
 
-	private OrderSpecifier<?> orderType(ReviewSortType sortBy) {
-		if (sortBy.equals(ReviewSortType.LATEST)) {
-			return review.createdAt.desc();
-		} else if (sortBy.equals(ReviewSortType.HIGH)) {
-			return reviewProductRating.rating.avg().desc();
-		} else if (sortBy.equals(ReviewSortType.LOW)) {
-			return reviewProductRating.rating.avg().asc();
-		} else
-			throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
-	}
+    private OrderSpecifier<?> orderType(ReviewSortType sortBy) {
+        if (sortBy.equals(ReviewSortType.LATEST)) {
+            return review.createdAt.desc();
+        } else if (sortBy.equals(ReviewSortType.HIGH)) {
+            return reviewProductRating.rating.avg().desc();
+        } else if (sortBy.equals(ReviewSortType.LOW)) {
+            return reviewProductRating.rating.avg().asc();
+        } else
+            throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
+    }
+
+    public List<BakeryReviewScoreDto> getBakeriesReview(List<Long> bakeryIds) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                BakeryReviewScoreDto.class,
+                                review.bakery.id.as("bakeryId"),
+                                reviewProductRating.rating.avg().coalesce(0d).as("totalScore"),
+                                review.count().coalesce(0L).as("reviewCount")
+                        )
+                )
+                .from(review)
+                .innerJoin(reviewProductRating).on(review.id.eq(reviewProductRating.review.id))
+                .where(review.bakery.id.in(bakeryIds))
+                .groupBy(review.bakery.id)
+                .fetch();
+    }
+
 }

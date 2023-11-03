@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class BakeryLoadData extends CommonLoadData{
-    public BakeryLoadData(Long bakeryId, String bakeryName, String bakeryAddress, Double longitude, Double latitude, Double totalScore, Long reviewCount) {
-        super(bakeryId, bakeryName, bakeryAddress, longitude, latitude, totalScore, reviewCount);
+    public BakeryLoadData(Long bakeryId, String bakeryName, String bakeryAddress, Double longitude, Double latitude) {
+        super(bakeryId, bakeryName, bakeryAddress, longitude, latitude);
     }
 }

@@ -1,11 +1,9 @@
 package com.depromeet.breadmapbackend.domain.search;
 
 import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
-import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
 
-import java.util.HashSet;
 import java.util.List;
 
 public interface SearchService {

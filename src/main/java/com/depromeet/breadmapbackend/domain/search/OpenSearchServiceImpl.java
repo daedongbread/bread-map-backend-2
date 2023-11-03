@@ -3,6 +3,7 @@ package com.depromeet.breadmapbackend.domain.search;
 import com.depromeet.breadmapbackend.domain.admin.openSearch.dto.response.OpenSearchCreateIndexResponse;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryQueryRepository;
 import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.CommonLoadData;
 import com.depromeet.breadmapbackend.domain.search.utils.HanguelJamoMorphTokenizer;
@@ -15,7 +16,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.opensearch.OpenSearchException;
 import org.opensearch.OpenSearchStatusException;
 import org.opensearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.opensearch.action.bulk.BulkRequest;
@@ -23,13 +23,15 @@ import org.opensearch.action.index.IndexRequest;
 import org.opensearch.action.index.IndexResponse;
 import org.opensearch.action.search.SearchRequest;
 import org.opensearch.action.search.SearchResponse;
-import org.opensearch.action.support.master.AcknowledgedResponse;
 import org.opensearch.client.*;
 import org.opensearch.client.indices.CreateIndexRequest;
 import org.opensearch.common.unit.TimeValue;
 import org.opensearch.common.xcontent.XContentFactory;
 import org.opensearch.common.xcontent.XContentType;
-import org.opensearch.index.query.*;
+import org.opensearch.index.query.BoolQueryBuilder;
+import org.opensearch.index.query.MatchPhrasePrefixQueryBuilder;
+import org.opensearch.index.query.QueryBuilders;
+import org.opensearch.index.reindex.DeleteByQueryRequest;
 import org.opensearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -233,18 +235,18 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     }
 
     @Override
-    public AcknowledgedResponse deleteIndex(String indexName) throws IOException {
-        AcknowledgedResponse acknowledgedResponse = new AcknowledgedResponse(false);
+    public void deleteIndex(OpenSearchIndex openSearchIndex, Long targetId) throws IOException {
         //Adding data to the index.
         try (RestHighLevelClient searchClient = searchClient()) {
-            try {
-                DeleteIndexRequest request = new DeleteIndexRequest(indexName); //Add a document to the custom-index we created.
-                acknowledgedResponse = searchClient.indices().delete(request, RequestOptions.DEFAULT);
-            } catch (OpenSearchException ose) {
-                log.debug("deleteIndex :: " + ose.getDetailedMessage());
+            DeleteByQueryRequest request = new DeleteByQueryRequest(openSearchIndex.name());
+            if(OpenSearchIndex.BAKERY_SEARCH == openSearchIndex) {
+                request.setQuery(QueryBuilders.termQuery("bakeryId", "bakeryId"+targetId));
+
+            } else if(OpenSearchIndex.BREAD_SEARCH == openSearchIndex) {
+                request.setQuery(QueryBuilders.termQuery("breadId", "breadId"+targetId));
             }
 
-            return acknowledgedResponse;
+            searchClient.deleteByQuery(request, RequestOptions.DEFAULT);
         }
     }
 
@@ -556,23 +558,15 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
     @Override
     public void loadEntireData() throws IOException {
-        this.convertLoadData(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.bakeryLoadEntireDataJPQLQuery());
+        this.convertDataAndLoadToEngine(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.bakeryLoadEntireDataJPQLQuery());
         log.info("========================= loadEntireData " + OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
 
-        this.convertLoadData(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.breadLoadEntireDataJPQLQuery());
+        this.convertDataAndLoadToEngine(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.breadLoadEntireDataJPQLQuery());
         log.info("========================= loadEntireData " + OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
     }
 
     @Override
-    public void loadHourlyData() throws IOException {
-        this.convertLoadData(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.bakeryLoadHourlyDataJPQLQuery());
-        log.info("========================= loadHourlyData " + OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
-
-        this.convertLoadData(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion(), bakeryQueryRepository.breadLoadHourlyDataJPQLQuery());
-        log.info("========================= loadHourlyData " + OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion() + " has been finished =========================");
-    }
-
-    private void convertLoadData(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
+    public void convertDataAndLoadToEngine(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
 
         final BulkRequest bulkRequest = new BulkRequest();
         final HanguelJamoMorphTokenizer tokenizer = HanguelJamoMorphTokenizer.getInstance();
@@ -587,11 +581,12 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             loadHashMap.put("bakeryAddress", loadItem.getBakeryAddress());
             loadHashMap.put("longitude", String.valueOf(loadItem.getLongitude()));
             loadHashMap.put("latitude", String.valueOf(loadItem.getLatitude()));
-            loadHashMap.put("totalScore", String.valueOf(loadItem.getTotalScore()));
-            loadHashMap.put("reviewCount", String.valueOf(loadItem.getReviewCount()));
-            loadHashMap.put("chosung", tokenizer.chosungTokenizer(bakeryName));
-            loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(bakeryName));
-            loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(bakeryName));
+
+            if(loadItem instanceof BakeryLoadData) {
+                loadHashMap.put("chosung", tokenizer.chosungTokenizer(bakeryName));
+                loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(bakeryName));
+                loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(bakeryName));
+            }
 
             if (loadItem instanceof BreadLoadData bread) {
                 String breadName = bread.getBreadName();

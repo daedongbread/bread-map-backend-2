@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -15,7 +18,11 @@ public class SearchEngineDto {
     private Long breadId;
     private String breadName;
     private String address;
-    private Double rating;
-    private Integer reviewNum;
     private Double distance;
+
+    public static List<Long> extractBakeryIdList(List<SearchEngineDto> searchEngineDtoList) {
+        return searchEngineDtoList.stream()
+                .map(SearchEngineDto::getBakeryId)
+                .collect(Collectors.toList());
+    }
 }

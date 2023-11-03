@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadScheduler {
 
     private final OpenSearchService openSearchService;
-//    @Scheduled(cron = "0 0/5 * * * *") // for test
-    @Scheduled(cron = "0 0 0 1,15 * *")
+    @Scheduled(cron = "0 0/5 * * * *") // for test
+//    @Scheduled(cron = "0 0 0 1,15 * *")
     public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
 
@@ -41,31 +41,6 @@ public class OpenSearchLoadScheduler {
             Thread.currentThread().interrupt();
         } finally {
             lock.unlock();
-        }
-
-    }
-
-//    @Scheduled(cron = "0 0/30 * * * *") // for test
-    @Scheduled(cron = "0 0 * * * *")
-    public void loadHourlyData() throws IOException {
-        RedissonClient client = Redisson.create();
-
-        RLock dailyLock = client.getLock("Load-Entire-Data");
-        RLock hourlyLock = client.getLock("Load-Hourly-Data");
-        try {
-
-            if (!dailyLock.isLocked() && hourlyLock.tryLock(1, TimeUnit.HOURS)) {
-                log.info("========================= Loading hourly data to search engine =========================");
-
-                openSearchService.loadHourlyData();
-                System.out.println("Job loadHourlyData executed by this instance");
-            } else {
-                System.out.println("Job loadHourlyData skipped by this instance");
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            hourlyLock.unlock();
         }
 
     }

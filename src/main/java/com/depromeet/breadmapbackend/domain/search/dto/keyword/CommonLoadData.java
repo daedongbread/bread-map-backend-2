@@ -11,6 +11,4 @@ public class CommonLoadData {
     private String bakeryAddress;
     private Double longitude;
     private Double latitude;
-    private Double totalScore;
-    private Long reviewCount;
 }

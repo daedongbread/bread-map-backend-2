@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
 	private final FollowRepository followRepository;
 	private final ProductAddReportRepository productAddReportRepository;
 	private final CommentQueryRepository commentQueryRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Review> getReviewList(User me, Bakery bakery) {

@@ -1,6 +1,6 @@
 package com.depromeet.breadmapbackend.domain.search.dto.keyword.response;
 
-import com.depromeet.breadmapbackend.domain.search.dto.SearchEngineDto;
+import com.depromeet.breadmapbackend.domain.search.dto.SearchResultDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +15,6 @@ import java.util.List;
 public class SearchResultResponse {
 
     private String subwayStationName;
-    private List<SearchEngineDto> searchEngineDtoList;
+    private List<SearchResultDto> searchResultDtoList;
 
 }
