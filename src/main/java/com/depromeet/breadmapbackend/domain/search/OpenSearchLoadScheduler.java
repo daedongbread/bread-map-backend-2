@@ -33,9 +33,9 @@ public class OpenSearchLoadScheduler {
                 openSearchService.deleteAndCreateIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
 
                 openSearchService.loadEntireData();
-                System.out.println("Job loadEntireData executed by this instance");
+                log.info("Job loadEntireData executed by this instance");
             } else {
-                System.out.println("Job loadEntireData skipped by this instance");
+                log.info("Job loadEntireData skipped by this instance");
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

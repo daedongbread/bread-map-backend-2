@@ -36,13 +36,9 @@ public class SearchV2Controller {
             @RequestParam Double longitude,
             @RequestParam SearchType searchType) {
 
-        SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
         SearchResultResponse searchResultResponse = searchService.searchEngine(oAuthId, keyword, latitude, longitude, searchType);
 
-        return new ApiResponse<>(builder
-                .searchResultDtoList(searchResultResponse.getSearchResultDtoList())
-                .subwayStationName(searchResultResponse.getSubwayStationName())
-                .build());
+        return new ApiResponse<>(searchResultResponse);
     }
 
     @GetMapping("/recent")
