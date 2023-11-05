@@ -490,12 +490,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 49
+Content-Length: 73
 Host: localhost:8080
 
 {
   "type" : "GOOGLE",
-  "idToken" : "oAuthId1"
+  "idToken" : "oAuthId1",
+  "deviceToken" : null
 }</code></pre>
 </div>
 </div>
@@ -532,6 +533,12 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idToken</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deviceToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알림 전송용 디바이스 토큰</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -556,8 +563,8 @@ Content-Length: 408
 {
   "data" : {
     "userId" : 1,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTc1NjAyNDB9.Vc538HhRyMn5PjgjfTj3tKETMKdo0GiGkHZ6WAtpCbo",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwNTYzNDJ9.HuaNfU9QufG5AHaqyCKjJccXkdfrxUcLrtG4tdkkwuo",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -703,8 +710,8 @@ Content-Length: 408
 {
   "data" : {
     "userId" : 1,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTc1NjAyNDB9.Vc538HhRyMn5PjgjfTj3tKETMKdo0GiGkHZ6WAtpCbo",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwNTYzNDJ9.HuaNfU9QufG5AHaqyCKjJccXkdfrxUcLrtG4tdkkwuo",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -763,12 +770,13 @@ Content-Length: 408
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/reissue HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 329
+Content-Length: 353
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTc1NjAyNDB9.Vc538HhRyMn5PjgjfTj3tKETMKdo0GiGkHZ6WAtpCbo"
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwNTYzNDJ9.HuaNfU9QufG5AHaqyCKjJccXkdfrxUcLrtG4tdkkwuo",
+  "deviceToken" : null
 }</code></pre>
 </div>
 </div>
@@ -805,6 +813,12 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deviceToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알림 전송용 디바이스 토큰</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -829,8 +843,8 @@ Content-Length: 408
 {
   "data" : {
     "userId" : 1,
-    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No",
-    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTc1NjAyNDB9.Vc538HhRyMn5PjgjfTj3tKETMKdo0GiGkHZ6WAtpCbo",
+    "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM",
+    "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwNTYzNDJ9.HuaNfU9QufG5AHaqyCKjJccXkdfrxUcLrtG4tdkkwuo",
     "accessTokenExpiredDate" : 3600000
   }
 }</code></pre>
@@ -888,14 +902,14 @@ Content-Length: 408
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /v1/auth/logout HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM
 Accept: application/json
 Content-Length: 363
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTc1NjAyNDB9.Vc538HhRyMn5PjgjfTj3tKETMKdo0GiGkHZ6WAtpCbo",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwNTYzNDJ9.HuaNfU9QufG5AHaqyCKjJccXkdfrxUcLrtG4tdkkwuo",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>
@@ -993,14 +1007,14 @@ X-Frame-Options: DENY</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /v1/auth HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM
 Accept: application/json
 Content-Length: 363
 Host: localhost:8080
 
 {
-  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQwLCJleHAiOjE2OTYzNTQyNDB9.cda90zaEPUiB0-xHhXMmhq1L8iUop6vBCH01rYio0No",
-  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTc1NjAyNDB9.Vc538HhRyMn5PjgjfTj3tKETMKdo0GiGkHZ6WAtpCbo",
+  "accessToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQyLCJleHAiOjE2OTg4NTAzNDJ9.T9tUSwpurpO2MIiXjhnhAeXJjakGdhosMcbe24K8YfM",
+  "refreshToken" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwNTYzNDJ9.HuaNfU9QufG5AHaqyCKjJccXkdfrxUcLrtG4tdkkwuo",
   "deviceToken" : "deviceToken1"
 }</code></pre>
 </div>

@@ -49,6 +49,14 @@ public class Notice extends BaseEntity {
 	@Column
 	private String content;
 
+	@Nullable
+	@Column
+	private String contentParam;
+
+	@Nullable
+	@Column
+	private String extraParam;
+
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private NoticeType type;
@@ -58,6 +66,7 @@ public class Notice extends BaseEntity {
 		final String title,
 		final Long contentId,
 		final String content,
+		final String contentParam,
 		final NoticeType type
 	) {
 		return Notice.builder()
@@ -65,29 +74,40 @@ public class Notice extends BaseEntity {
 			.title(title)
 			.contentId(contentId)
 			.content(content)
+			.contentParam(contentParam)
 			.type(type)
 			.build();
 	}
 
-	public static Notice createNoticeWithOutContent(
+	public static Notice createNoticeWithContentAndExtraParam(
 		final User user,
 		final String title,
+		final Long contentId,
+		final String content,
+		final String contentParam,
+		final String extraParam,
 		final NoticeType type
 	) {
 		return Notice.builder()
 			.user(user)
 			.title(title)
+			.contentId(contentId)
+			.content(content)
+			.contentParam(contentParam)
 			.type(type)
 			.build();
 	}
 
 	@Builder
 	public Notice(final User user, final String title, @Nullable final Long contentId,
-		@Nullable final String content, final NoticeType type) {
+		@Nullable final String content, @Nullable final String contentParam,
+		@Nullable final String extraParam, final NoticeType type) {
 		this.user = user;
 		this.title = title;
 		this.contentId = contentId;
 		this.content = content;
+		this.contentParam = contentParam;
+		this.extraParam = extraParam;
 		this.type = type;
 	}
 }

@@ -62,6 +62,7 @@ public class CurationNoticeFactory implements NoticeFactory {
 					NOTICE_TITLE_FORMAT.formatted(now.getMonthValue(), thisMonthCurationOrder + 1),
 					curationFeed.getId(),
 					curationFeed.getIntroduction(),
+					null,
 					SUPPORT_TYPE
 				)
 			)

@@ -39,7 +39,7 @@ public class CurationPushNotificationScheduler {
 	private final ApplicationEventPublisher eventPublisher;
 	private final CurationFeedRepository curationFeedRepository;
 
-	@Scheduled(cron = "0/10 * * * * *")
+	@Scheduled(cron = "0 14 * * * *")
 	@Transactional
 	public void publishCurationPushNotificationEvent() {
 		log.info("========================= Send Curation Notification =========================");

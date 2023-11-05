@@ -22,7 +22,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowNoticeFactory implements NoticeFactory {
 
-	private static final String NOTICE_TITLE_FORMAT = "%s님이 회원님을 팔로우하기 시작했어요";
+	private static final String NOTICE_CONTENT_FORMAT = "%s님이 회원님을 팔로우하기 시작했어요";
+	private static final String NOTICE_TITLE_FORMAT = "팔로우 알림";
 	private static final NoticeType SUPPORT_TYPE = NoticeType.FOLLOW;
 	private final UserRepository userRepository;
 	private final FollowRepository followRepository;
@@ -50,10 +51,13 @@ public class FollowNoticeFactory implements NoticeFactory {
 		final User fromUser = userRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 		final Optional<Follow> isFollow = followRepository.findByFromUserAndToUser(toUser, fromUser);
-		return List.of(Notice.createNoticeWithContent(
+
+		return List.of(Notice.createNoticeWithContentAndExtraParam(
 			toUser,
-			NOTICE_TITLE_FORMAT.formatted(fromUser.getNickName()),
+			NOTICE_TITLE_FORMAT,
 			fromUser.getId(),
+			NOTICE_CONTENT_FORMAT,
+			fromUser.getNickName(),
 			isFollow.isPresent() ? "FOLLOW" : "UNFOLLOW",
 			SUPPORT_TYPE
 		));

@@ -471,8 +471,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_알림_조회_api_get_http_request"><a class="link" href="#_알림_조회_api_get_http_request">Example Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/notices/today?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk2MzUwNjQ4LCJleHAiOjE2OTYzNTQyNDh9.TePxSD0jOyyzmIlyT6lpc0SZw2waINK-bKQvRvUC8u8
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/notices?page=0 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjk4ODQ2NzQ5LCJleHAiOjE2OTg4NTAzNDl9.gJcxobC5CozlN_fV6Tdk7W3pOlUJcn7xzH_JqxOSQRo
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -503,32 +503,8 @@ Host: localhost:8080</code></pre>
 </div>
 <div class="sect3">
 <h4 id="_알림_조회_api_get_path_parameters"><a class="link" href="#_알림_조회_api_get_path_parameters">Path parameters</a></h4>
-<div class="sect4">
-<h5 id="_엔드_포인트"><a class="link" href="#_엔드_포인트">엔드 포인트</a></h5>
 <div class="paragraph">
-<p>/v1/notices/{type}</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_요청_path_파라미터"><a class="link" href="#_요청_path_파라미터">요청 PATH 파라미터</a></h5>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">파라미터</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">알림 날짜 타입 (today : 오늘 알림 조회, week :이번주 월요일부터 어제까지의 알림 조회 , before : 저번주 일요일 전의 알림 조회)</p></td>
-</tr>
-</tbody>
-</table>
+<p>Snippet path-parameters not found for operation::v1/notice</p>
 </div>
 </div>
 <div class="sect3">
@@ -571,37 +547,45 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 879
+Content-Length: 1230
 
 {
   "data" : {
     "pageNumber" : 0,
-    "numberOfElements" : 2,
+    "numberOfElements" : 3,
     "size" : 20,
-    "totalElements" : 2,
+    "totalElements" : 3,
     "totalPages" : 1,
     "contents" : [ {
+      "noticeId" : 3,
+      "image" : "cloudfront/S3_DEFAULT_REPORT.png",
+      "title" : "큐레이션 추가 알림",
+      "contentId" : 2,
+      "content" : "8월 1번째 큐레이션입니닿ㅎㅎㅎㅎ",
+      "contentParam" : null,
+      "isFollow" : false,
+      "createdAt" : "2023-11-01T22:52:29.053243",
+      "noticeType" : "CURATION"
+    }, {
       "noticeId" : 2,
-      "image" : null,
-      "fromUserId" : 2,
-      "fromUserNickName" : "nickname2",
-      "title" : "nickname2님이 회원님을 팔로우하기 시작했어요",
-      "contentId" : null,
-      "content" : null,
-      "isFollow" : true,
-      "createdAt" : "2023-10-04T01:30:48.527715",
-      "noticeType" : "FOLLOW"
+      "image" : "cloudfront/S3_DEFAULT_LIKE.png",
+      "title" : "좋아요 알림",
+      "contentId" : 2,
+      "content" : "내 리뷰를 %s님이 좋아해요!",
+      "contentParam" : "치악산호랑이",
+      "isFollow" : false,
+      "createdAt" : "2023-11-01T22:52:29.052746",
+      "noticeType" : "REVIEW_LIKE"
     }, {
       "noticeId" : 1,
-      "image" : "cloudfront/S3_DEFAULT_COMMENT.png",
-      "fromUserId" : 2,
-      "fromUserNickName" : "nickname2",
-      "title" : "nickname2님이 댓글을 달았어요!",
+      "image" : "cloudfront/S3_DEFAULT_USER.png",
+      "title" : "팔로우 알림",
       "contentId" : 1,
-      "content" : "content1",
+      "content" : "%s님이 회원님을 팔로우하기 시작했어요",
+      "contentParam" : "팔달산불나방",
       "isFollow" : true,
-      "createdAt" : "2023-10-04T01:30:48.526557",
-      "noticeType" : "REVIEW_COMMENT"
+      "createdAt" : "2023-11-01T22:52:29.052183",
+      "noticeType" : "FOLLOW"
     } ]
   }
 }</code></pre>
@@ -667,16 +651,6 @@ Content-Length: 879
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 이미지</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].fromUserId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">알람 발신 유저 고유 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].fromUserNickName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">알람 발신 유저 닉네임</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].title</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 제목</p></td>
@@ -690,6 +664,11 @@ Content-Length: 879
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 세부 내용 : (내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].contentParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알람 메시지 생성용 파라미터 ex) user nickName</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].isFollow</code></p></td>
@@ -708,11 +687,12 @@ Content-Length: 879
 REVIEW_COMMENT("리뷰 댓글"),
 REVIEW_LIKE("리뷰 좋아요"),
 RECOMMENT("대댓글"),
-REVIEW_COMMENT_LIKE("리뷰 댓글 좋아요"),
-ADD_BAKERY("제보한 빵집 추가"),
-ADD_PRODUCT("제보한 상품 추가"),
-FLAG_BAKERY_CHANGE("즐겨찾기 빵집 변동사항"),
-FLAG_BAKERY_ADMIN_NOTICE("즐겨찾기 빵집 관리자 새 글"))</p></td>
+COMMENT_LIKE("댓글 좋아요"),
+REPORT_BAKERY_ADDED("제보한 빵집 추가"),
+ADD_PRODUCT("제보한 빵 추가"),
+EVENT("제보한 상품 추가"),
+BAKERY_ADDED("빵집 추가"),
+CURATION("큐레이션"),</p></td>
 </tr>
 </tbody>
 </table>
@@ -725,7 +705,7 @@ FLAG_BAKERY_ADMIN_NOTICE("즐겨찾기 빵집 관리자 새 글"))</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-10 15:54:48 +0900
+Last updated 2023-10-12 22:54:13 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

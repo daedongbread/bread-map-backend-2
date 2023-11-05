@@ -53,7 +53,6 @@ import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImage;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReport;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportRepository;
-import com.depromeet.breadmapbackend.domain.notice.dto.BasicNoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
@@ -235,11 +234,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 				);
 			}
 			eventPublisher.publishEvent(
-					BasicNoticeEventDto.builder()
-							.userId(pioneer != null ? pioneer.getId() : null)
-							.contentId(bakery.getId())
-							.noticeType(NoticeType.BAKERY_ADDED)
-							.build()
+				NoticeEventDto.builder()
+					.userId(pioneer != null ? pioneer.getId() : null)
+					.contentId(bakery.getId())
+					.noticeType(NoticeType.BAKERY_ADDED)
+					.build()
 			);
 
 			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
