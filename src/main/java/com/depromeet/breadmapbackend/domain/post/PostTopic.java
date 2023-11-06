@@ -14,6 +14,7 @@ public enum PostTopic {
 	ALL,
 	REVIEW,
 	EVENT,
+	EATEN_BREAD,
 	BREAD_STORY,
 	FREE_TALK,
 	;

@@ -2,10 +2,13 @@ package com.depromeet.breadmapbackend.domain.post.comment;
 
 import java.util.Optional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
@@ -33,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 	private final CommentLikeRepository commentLikeRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional
 	@Override
@@ -42,7 +46,27 @@ public class CommentServiceImpl implements CommentService {
 			userRepository.findById(userId)
 				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
 		);
-		return commentRepository.save(comment);
+		final Comment savedComment = commentRepository.save(comment);
+
+		if (command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(command.postId())
+					.noticeType(NoticeType.REVIEW_COMMENT)
+					.build()
+			);
+		} else if (!command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(command.parentId())
+					.noticeType(NoticeType.RECOMMENT)
+					.build()
+			);
+		}
+
+		return savedComment;
 	}
 
 	@Override
@@ -94,6 +118,13 @@ public class CommentServiceImpl implements CommentService {
 		final Optional<CommentLike> commentLike = commentLikeRepository.findByCommentIdAndUserId(commentId, userId);
 		if (commentLike.isEmpty()) {
 			commentLikeRepository.save(new CommentLike(comment, userId));
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(comment.getId())
+					.noticeType(NoticeType.COMMENT_LIKE)
+					.build()
+			);
 			return 1;
 		} else {
 			commentLikeRepository.delete(commentLike.get());

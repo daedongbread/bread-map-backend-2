@@ -50,8 +50,8 @@ import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImage;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryReportImageRepository;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReport;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryUpdateReportRepository;
-import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewImageRepository;
@@ -93,6 +93,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final CustomSGISKeyProperties customSGISKeyProperties;
 	private final CustomAWSS3Properties customAWSS3Properties;
+	private final UpdateBakerySQSService updateBakerySQSService; // TODO : migrate to AOP
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public AdminBakeryAlarmBar getBakeryAlarmBar() {
@@ -159,8 +160,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 
 	private SgisGeocodeDto getGeocode(String accessToken, String address) {
 		SgisGeocodeDto geocode = sgisClient.getGeocode(accessToken, address);
-		if (geocode.getResult() == null)
-			throw new FeignException();
+		if (geocode.getResult() == null) {
+			throw new DaedongException(DaedongStatus.NO_SEARCH_RESULT, address);
+		}
 		return geocode;
 	}
 
@@ -217,17 +219,25 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 				productRepository.save(product);
 			}
 		}
-		if (pioneer != null && bakery.getStatus().equals(BakeryStatus.POSTING))
+		if (bakery.getStatus().equals(BakeryStatus.POSTING)) {
+			if (pioneer != null) {
+				eventPublisher.publishEvent(
+					NoticeEventDto.builder()
+						.userId(pioneer.getId())
+						.contentId(bakery.getId())
+						.noticeType(NoticeType.REPORT_BAKERY_ADDED)
+						.build()
+				);
+			}
 			eventPublisher.publishEvent(
-				NoticeEvent.builder()
-					.isAlarmOn(pioneer.getIsAlarmOn())
-					.user(pioneer)
-					.fromUser(pioneer)
+				NoticeEventDto.builder()
+					.userId(pioneer != null ? pioneer.getId() : null)
 					.contentId(bakery.getId())
-					.content(bakery.getName())
-					.noticeType(NoticeType.ADD_BAKERY)
+					.noticeType(NoticeType.BAKERY_ADDED)
 					.build()
 			);
+		}
+
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
 	}
 

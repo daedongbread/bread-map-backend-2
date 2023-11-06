@@ -24,7 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class PostControllerTestSteps {
 
-	public static ResultActions 빵_이야기_작성_요청(final PostRequest 글_작성_데이터, final String 사용자_토큰, final MockMvc mockMvc,
+	public static ResultActions 빵_이야기_작성_요청(final PostRequest 글_작성_데이터, final String 사용자_토큰,
+		final MockMvc mockMvc,
 		final ObjectMapper objectMapper) throws Exception {
 		final String request = objectMapper.writeValueAsString(글_작성_데이터);
 		return mockMvc.perform(post("/v1/posts")
@@ -39,7 +40,7 @@ public class PostControllerTestSteps {
 					fieldWithPath("title").description("빵 이야기 제목"),
 					fieldWithPath("content").description("빵 이야기 내용"),
 					fieldWithPath("images").optional().description("빵 이야기 첨부 이미지"),
-					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK)")
+					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)")
 				)
 			));
 	}
@@ -65,7 +66,8 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.[].likeCount").description("커뮤니티 좋아요 개수"),
 					fieldWithPath("data.[].commentCount").description("커뮤니티 댓글 개수"),
 					fieldWithPath("data.[].thumbnail").optional().description("커뮤니티 글 썸네일"),
-					fieldWithPath("data.[].postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
+					fieldWithPath("data.[].postTopic").description(
+						"커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK, EATEN_BREAD)"),
 					fieldWithPath("data.[].createdDate").description("커뮤니티 작성 일자"),
 					fieldWithPath("data.[].isUserLiked").description("조회 요청 유저 해당 글 좋아요 여부"),
 					fieldWithPath("data.[].isUserCommented").description("조회 요청 유저 해당 글 댓글 여부"),
@@ -98,10 +100,12 @@ public class PostControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
-					parameterWithName("all").description("커뮤니티 토픽 종류 (ALL, REVIEW, BREAD_STORY, EVENT, FREE_TALK)")),
+					parameterWithName("all").description(
+						"커뮤니티 토픽 종류 (ALL, REVIEW, BREAD_STORY, EVENT, FREE_TALK)")),
 				requestParameters(
 					parameterWithName("reviewOffset").optional().description("마지막 조회 리뷰 고유 번호 default = 0"),
-					parameterWithName("postOffset").optional().description("리뷰 제외 모든 커뮤니티글의 마지 고유 번호 default = 0"),
+					parameterWithName("postOffset").optional()
+						.description("리뷰 제외 모든 커뮤니티글의 마지 고유 번호 default = 0"),
 					parameterWithName("page").optional().description("페이지 번호 default = 0")),
 				responseFields(
 					fieldWithPath("data.pageNumber").description("현재 페이지 (0부터 시작)"),
@@ -123,11 +127,12 @@ public class PostControllerTestSteps {
 					fieldWithPath("data.contents.[].commentCount").description("커뮤니티 댓글 개수"),
 					fieldWithPath("data.contents.[].thumbnail").optional().description("커뮤니티 글 썸네일"),
 					fieldWithPath("data.contents.[].postTopic").description(
-						"커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
+						"커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK, EATEN_BREAD)"),
 					fieldWithPath("data.contents.[].isUserLiked").description("조회 요청 유저 해당 글 좋아요 여부"),
 					fieldWithPath("data.contents.[].isUserCommented").description("조회 요청 유저 해당 글 댓글 여부"),
 					fieldWithPath("data.contents.[].createdDate").description("커뮤니티 작성 일자"),
-					fieldWithPath("data.contents.[].bakeryInfo").optional().description("postTopic이 REVIEW일 경우 빵집 정보"),
+					fieldWithPath("data.contents.[].bakeryInfo").optional()
+						.description("postTopic이 REVIEW일 경우 빵집 정보"),
 					fieldWithPath("data.contents.[].bakeryInfo.bakeryId").optional()
 						.description("postTopic이 REVIEW일 경우 빵집 고유 번호"),
 					fieldWithPath("data.contents.[].bakeryInfo.name").optional()
@@ -141,7 +146,8 @@ public class PostControllerTestSteps {
 			));
 	}
 
-	public static ResultActions 빵_이야기_상세_조회_요청(final int 빵_이야기_고유_번호, final PostTopic postTopic, final String 사용자_토큰,
+	public static ResultActions 빵_이야기_상세_조회_요청(final int 빵_이야기_고유_번호, final PostTopic postTopic,
+		final String 사용자_토큰,
 		final MockMvc mockMvc) throws
 		Exception {
 		return mockMvc.perform(get("/v1/posts/{postTopic}/{postId}", postTopic.name(), 빵_이야기_고유_번호)
@@ -157,7 +163,8 @@ public class PostControllerTestSteps {
 						"커뮤니티 토픽 종류 (ALL, REVIEW, BREAD-STORY, EVENT, FREE-TALK)")),
 				responseFields(
 					fieldWithPath("data.postId").description("빵 이야기 고유 번호"),
-					fieldWithPath("data.postTopic").description("커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK)"),
+					fieldWithPath("data.postTopic").description(
+						"커뮤니티 타입 (BREAD_STORY, EVENT, REVIEW, FREE_TALK, EATEN_BREAD)"),
 					fieldWithPath("data.title").description("빵 이야기 제목"),
 					fieldWithPath("data.writerInfo").description("빵 이야기 작성자 정보"),
 					fieldWithPath("data.writerInfo.userId").description("빵 이야기 작성자 고유 번호"),
@@ -220,7 +227,7 @@ public class PostControllerTestSteps {
 					fieldWithPath("title").description("커뮤니티 글 제목"),
 					fieldWithPath("content").description("커뮤니티 글 내용"),
 					fieldWithPath("images").optional().description("커뮤니티 글 첨부 이미지"),
-					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK)")
+					fieldWithPath("postTopic").description("커뮤니티 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)")
 				)
 			));
 	}
@@ -239,28 +246,10 @@ public class PostControllerTestSteps {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				pathParameters(
-					parameterWithName("postTopic").description("삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK)"),
+					parameterWithName("postTopic").description("삭제 대상 커뮤니티글 타입 (BREAD_STORY, FREE_TALK, EATEN_BREAD)"),
 					parameterWithName("postId").description("삭제 대상 커뮤니티글 id")
 				)
 			));
 	}
 
-	public static ResultActions 이벤트_캐러셀_조회_요청(
-		final String 사용자_토큰,
-		final MockMvc mockMvc
-	) throws Exception {
-		return mockMvc.perform(get("/v1/posts/carousels")
-				.header("Authorization", "Bearer " + 사용자_토큰))
-			.andDo(print())
-			.andDo(document("v1/posts/carousels",
-				preprocessRequest(prettyPrint()),
-				preprocessResponse(prettyPrint()),
-				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-				responseFields(
-					fieldWithPath("data.[].order").description("이벤트 캐러셀 순서"),
-					fieldWithPath("data.[].title").description("이밴트 캐러셀 타이틀"),
-					fieldWithPath("data.[].images").description("이밴트 캐러셀 배너 이미지")
-				)
-			));
-	}
 }

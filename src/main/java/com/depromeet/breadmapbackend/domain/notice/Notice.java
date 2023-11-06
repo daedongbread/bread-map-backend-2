@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.notice;
 
 import static javax.persistence.FetchType.*;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 
@@ -33,38 +35,79 @@ public class Notice extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne(fetch = LAZY, optional = false)
-	@JoinColumn(name = "fromUser_id")
-	private User fromUser;
-
-	//    /*
-	//     알림 주 내용
-	//     */
-	//    @Column(nullable = false)
-	//    private String title;
+	@Column(nullable = false)
+	private String title;
 
 	/*
 	 내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 유저 아이디
 	 */
+	@Nullable
+	@Column
 	private Long contentId;
 
-	/*
-	 내가 쓴 리뷰 내용(디자인엔 제목으로 나와있음) or 내가 쓴 댓글 내용
-	 팔로우/팔로잉 알람은 null
-	 */
+	@Nullable
+	@Column
 	private String content;
+
+	@Nullable
+	@Column
+	private String contentParam;
+
+	@Nullable
+	@Column
+	private String extraParam;
 
 	@Column(nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private NoticeType type;
 
-	@Builder
-	public Notice(User user, User fromUser, Long contentId, String content, NoticeType type) {
-		this.user = user;
-		this.fromUser = fromUser;
-		this.contentId = contentId;
-		this.content = content;
-		this.type = type;
+	public static Notice createNoticeWithContent(
+		final User user,
+		final String title,
+		final Long contentId,
+		final String content,
+		final String contentParam,
+		final NoticeType type
+	) {
+		return Notice.builder()
+			.user(user)
+			.title(title)
+			.contentId(contentId)
+			.content(content)
+			.contentParam(contentParam)
+			.type(type)
+			.build();
 	}
 
+	public static Notice createNoticeWithContentAndExtraParam(
+		final User user,
+		final String title,
+		final Long contentId,
+		final String content,
+		final String contentParam,
+		final String extraParam,
+		final NoticeType type
+	) {
+		return Notice.builder()
+			.user(user)
+			.title(title)
+			.contentId(contentId)
+			.content(content)
+			.contentParam(contentParam)
+			.type(type)
+			.build();
+	}
+
+	@Builder
+	public Notice(final User user, final String title, @Nullable final Long contentId,
+		@Nullable final String content, @Nullable final String contentParam,
+		@Nullable final String extraParam, final NoticeType type) {
+		this.user = user;
+		this.title = title;
+		this.contentId = contentId;
+		this.content = content;
+		this.contentParam = contentParam;
+		this.extraParam = extraParam;
+		this.type = type;
+	}
 }

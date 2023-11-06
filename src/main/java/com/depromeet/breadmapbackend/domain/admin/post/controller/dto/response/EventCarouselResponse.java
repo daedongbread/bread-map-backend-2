@@ -9,7 +9,6 @@ package com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response;
  */
 public record EventCarouselResponse(
 	Long managerId,
-	String title,
 	int order,
 	String bannerImage
 

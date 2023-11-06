@@ -74,7 +74,8 @@ class AuthControllerTest extends ControllerTest {
 				preprocessResponse(prettyPrint()),
 				requestFields(
 					fieldWithPath("type").description("idToken 프로바이더 (GOOGLE, KAKAO, APPLE)"),
-					fieldWithPath("idToken").description("idToken")
+					fieldWithPath("idToken").description("idToken"),
+					fieldWithPath("deviceToken").description("알림 전송용 디바이스 토큰")
 				),
 				responseFields(
 					fieldWithPath("data.userId").description("유저 고유 번호"),
@@ -143,7 +144,8 @@ class AuthControllerTest extends ControllerTest {
 				preprocessResponse(prettyPrint()),
 				requestFields(
 					fieldWithPath("accessToken").description("엑세스 토큰"),
-					fieldWithPath("refreshToken").description("리프레시 토큰")
+					fieldWithPath("refreshToken").description("리프레시 토큰"),
+					fieldWithPath("deviceToken").description("알림 전송용 디바이스 토큰")
 				),
 				responseFields(
 					fieldWithPath("data.userId").description("유저 고유 번호"),

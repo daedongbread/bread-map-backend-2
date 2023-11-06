@@ -3,18 +3,24 @@ package com.depromeet.breadmapbackend.domain.admin.post.domain.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselManager;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselType;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.CreateCarouselCommand;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.service.CarouselManagerService;
+import com.depromeet.breadmapbackend.domain.admin.carousel.repository.CarouselRepository;
 import com.depromeet.breadmapbackend.domain.admin.post.controller.dto.response.EventResponse;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.PostManagerMapper;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.EventCommand;
-import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.command.UpdateEventOrderCommand;
-import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.PostManagerMapperInfo;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.repository.PostAdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.service.PostAdminService;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -41,11 +47,25 @@ public class PostAdminServiceImpl implements PostAdminService {
 	private Long adminUserId;
 	private final PostAdminRepository postAdminRepository;
 	private final UserRepository userRepository;
+	private final CarouselManagerService carouselManagerService;
+	private final CarouselRepository carouselRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
 	public Page<PostManagerMapperInfo> getEventPosts(final int page) {
-		return postAdminRepository.findPostManagerMappers(page)
-			.map(PostManagerMapperInfo::new);
+		Page<PostManagerMapper> postManagerMappers = postAdminRepository.findPostManagerMappers(page);
+
+		List<Long> postIdList = postManagerMappers.map(pmm -> pmm.getPost().getId()).toList();
+		List<CarouselManager> carouselManagers = carouselRepository.findByTargetIdIn(postIdList);
+
+		return postManagerMappers.map(pmm ->
+			new PostManagerMapperInfo(
+				pmm,
+				carouselManagers.stream()
+					.filter(cm -> cm.getTargetId().equals(pmm.getPost().getId())).findFirst()
+					.map(CarouselManager::isCarouseled).orElse(false)
+			)
+		);
 	}
 
 	@Transactional
@@ -55,21 +75,39 @@ public class PostAdminServiceImpl implements PostAdminService {
 
 		final User adminUser = userRepository.findById(adminUserId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		if (command.isFixed())
+		if (command.isFixed()) {
 			postAdminRepository.findFixedPost().ifPresent(PostManagerMapper::unFix);
+		}
 
 		final Post savePost = command.toEventPost(adminUser);
 
 		final PostManagerMapper postManagerMapper = PostManagerMapper.builder()
 			.post(command.images() != null ? savePost.addImages(command.images()) : savePost)
 			.isPosted(command.isPosted())
-			.isCarousel(command.isCarousel())
 			.isFixed(command.isFixed())
-			.bannerImage(command.bannerImage())
-			.carouselOrder(getCarouselOrder(command))
 			.build();
 
-		return postAdminRepository.savePostManagerMapper(postManagerMapper);
+		final PostManagerMapper savedPostManagerMapper =
+			postAdminRepository.savePostManagerMapper(postManagerMapper);
+
+		carouselManagerService.saveCarousel(
+			new CreateCarouselCommand(
+				CarouselType.EVENT,
+				savedPostManagerMapper.getId(),
+				command.bannerImage(),
+				command.isCarousel()
+			)
+		);
+		if (command.isPosted()) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.contentId(savedPostManagerMapper.getId())
+					.noticeType(NoticeType.EVENT)
+					.build()
+			);
+		}
+
+		return savedPostManagerMapper;
 	}
 
 	@Override
@@ -82,47 +120,46 @@ public class PostAdminServiceImpl implements PostAdminService {
 	public void updateEventPost(final EventCommand command, final Long managerId) {
 		validateEventStatus(command);
 
-		if (command.isFixed())
-			postAdminRepository.findFixedPost().ifPresent(PostManagerMapper::unFix);
-
 		final PostManagerMapper postManagerMapper = postAdminRepository.findPostManagerMapperById(managerId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 
-		updateCarouselStatus(command, postManagerMapper);
+		final CarouselManager carouselManager =
+			carouselRepository.findByTargetIdAndCarouselType(postManagerMapper.getId(),
+					CarouselType.EVENT)
+				.orElseThrow(() -> new DaedongException(DaedongStatus.CAROUSEL_NOT_FOUND));
+
+		if (command.isFixed()) {
+			postAdminRepository.findFixedPost().ifPresent(PostManagerMapper::unFix);
+		}
 
 		postManagerMapper.getPost().update(command.content(), command.title(), command.images());
 
 		postManagerMapper.update(
 			command.isFixed(),
-			command.isPosted(),
-			command.isCarousel(),
-			command.bannerImage()
+			command.isPosted()
 		);
-	}
+		carouselManagerService.toggleCarousel(carouselManager.getId(), command.isCarousel());
+		carouselManager.updateBannerImage(command.bannerImage());
 
-	@Transactional
-	@Override
-	public void updateEventOrder(final List<UpdateEventOrderCommand> commands) {
-		final List<PostManagerMapper> carouselPosts = postAdminRepository.findCarouselPosts();
-		carouselPosts
-			.forEach(post -> commands.stream()
-				.filter(command -> command.managerId().equals(post.getId()))
-				.findFirst()
-				.ifPresent(command -> post.updateCarouselOrder(command.order())));
-	}
-
-	@Override
-	public List<EventCarouselInfo> getCarousels() {
-		return postAdminRepository.findCarouselPosts()
-			.stream()
-			.map(EventCarouselInfo::of)
-			.toList();
+		if (command.isPosted()) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.contentId(postManagerMapper.getId())
+					.noticeType(NoticeType.EVENT)
+					.build()
+			);
+		}
 	}
 
 	@Override
 	public EventResponse getEventPost(final Long managerId) {
 		return postAdminRepository.findPostManagerMapperById(managerId)
-			.map(EventResponse::of)
+			.map(manager -> {
+				final CarouselManager carouselManager = carouselRepository.findByTargetIdAndCarouselType(
+						manager.getId(), CarouselType.EVENT)
+					.orElseThrow(() -> new DaedongException(DaedongStatus.CAROUSEL_NOT_FOUND));
+				return EventResponse.of(manager, carouselManager);
+			})
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 	}
 
@@ -133,36 +170,4 @@ public class PostAdminServiceImpl implements PostAdminService {
 			}
 		}
 	}
-
-	private Integer getCarouselOrder(final EventCommand command) {
-		if (command.isCarousel()) {
-			final List<PostManagerMapper> carouselPosts = postAdminRepository.findCarouselPosts();
-			if (carouselPosts.size() >= MAX_EVENT_CAROUSEL_COUNT) {
-				throw new DaedongException(DaedongStatus.CAROUSEL_POST_COUNT_EXCEEDED);
-			}
-			return carouselPosts.size() + 1;
-		}
-		return null;
-	}
-
-	private void updateCarouselStatus(final EventCommand command, final PostManagerMapper postManagerMapper) {
-		if (command.isCarousel() && !postManagerMapper.isCarousel()) {
-			postManagerMapper.updateCarouselOrder(getCarouselOrder(command));
-		} else if (!command.isCarousel() && postManagerMapper.isCarousel()) {
-			final List<PostManagerMapper> carouselPosts = postAdminRepository.findCarouselPosts();
-			boolean flag = false;
-			for (PostManagerMapper carouselPost : carouselPosts) {
-				if (flag) {
-					carouselPost.updateCarouselOrder(carouselPost.getCarouselOrder() - 1);
-				}
-
-				if (!flag && carouselPost.getId().equals(postManagerMapper.getId())) {
-					carouselPost.updateCarouselOrder(null);
-					flag = true;
-				}
-
-			}
-		}
-	}
-
 }

@@ -1,10 +1,19 @@
 package com.depromeet.breadmapbackend.global.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class DaedongException extends RuntimeException {
-    private final DaedongStatus daedongStatus;
+	private final DaedongStatus daedongStatus;
+	private final String[] args;
+
+	public DaedongException(final DaedongStatus daedongStatus, final String... args) {
+		this.daedongStatus = daedongStatus;
+		this.args = args;
+	}
+
+	public DaedongException(final DaedongStatus daedongStatus) {
+		this.daedongStatus = daedongStatus;
+		this.args = null;
+	}
 }

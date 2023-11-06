@@ -2,15 +2,14 @@ package com.depromeet.breadmapbackend.domain.notice;
 
 import org.springframework.context.annotation.Import;
 
-import com.depromeet.breadmapbackend.domain.notice.content.AddBakeryNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.AddProductNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.FlagBakeryAdminNoticeNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.FlagBakeryChangeNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.FollowNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.RecommentContent;
-import com.depromeet.breadmapbackend.domain.notice.content.ReviewCommentLikeNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.ReviewCommentNoticeContent;
-import com.depromeet.breadmapbackend.domain.notice.content.ReviewLikeNoticeContent;
+import com.depromeet.breadmapbackend.domain.notice.factory.push.CommentLikeNoticeFactory;
+import com.depromeet.breadmapbackend.domain.notice.factory.push.FollowNoticeFactory;
+import com.depromeet.breadmapbackend.domain.notice.factory.push.RecommentFactory;
+import com.depromeet.breadmapbackend.domain.notice.factory.push.ReportBakeryAddNoticeFactory;
+import com.depromeet.breadmapbackend.domain.notice.factory.push.ReviewCommentNoticeFactory;
+import com.depromeet.breadmapbackend.domain.notice.factory.push.ReviewLikeNoticeFactory;
+import com.depromeet.breadmapbackend.domain.post.comment.CommentQueryRepository;
+import com.depromeet.breadmapbackend.domain.post.comment.CommentRepositoryImpl;
 import com.depromeet.breadmapbackend.global.infra.AsyncConfig;
 import com.depromeet.breadmapbackend.utils.ServiceTest;
 import com.depromeet.breadmapbackend.utils.TestConfig;
@@ -19,18 +18,17 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	NoticeServiceImpl.class,
 	NoticeQueryRepository.class,
 	FcmService.class,
-	NoticeContentProcessorImpl.class,
+	NoticeFactoryProcessorImpl.class,
 	TestConfig.class,
 	AsyncConfig.class,
-	AddBakeryNoticeContent.class,
-	AddProductNoticeContent.class,
-	FlagBakeryAdminNoticeNoticeContent.class,
-	FlagBakeryChangeNoticeContent.class,
-	FollowNoticeContent.class,
-	RecommentContent.class,
-	ReviewCommentLikeNoticeContent.class,
-	ReviewCommentNoticeContent.class,
-	ReviewLikeNoticeContent.class
+	ReportBakeryAddNoticeFactory.class,
+	FollowNoticeFactory.class,
+	RecommentFactory.class,
+	CommentLikeNoticeFactory.class,
+	ReviewCommentNoticeFactory.class,
+	ReviewLikeNoticeFactory.class,
+	CommentRepositoryImpl.class,
+	CommentQueryRepository.class
 })
 public abstract class NoticeServiceTest extends ServiceTest {
 }

@@ -72,7 +72,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@Import({AmazonS3MockConfig.class})
+// @Import({AmazonS3MockConfig.class})
+@Import({TestLocalStackConfig.class})
 public abstract class ControllerTest {
 	@Autowired
 	protected MockMvc mockMvc;

@@ -1,6 +1,5 @@
 package com.depromeet.breadmapbackend.domain.review.comment;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -25,8 +24,6 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
-import com.depromeet.breadmapbackend.domain.notice.NoticeEvent;
-import com.depromeet.breadmapbackend.domain.notice.NoticeType;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.comment.dto.ReviewCommentRequest;
 import com.depromeet.breadmapbackend.domain.review.comment.like.ReviewCommentLike;
@@ -146,12 +143,6 @@ class ReviewCommentControllerTest extends ControllerTest {
 				)
 			))
 			.andExpect(status().isCreated());
-
-		final NoticeEvent noticeEvent = events.stream(NoticeEvent.class).findFirst().orElseThrow();
-		assertThat(noticeEvent.getNoticeType()).isEqualTo(NoticeType.REVIEW_COMMENT);
-		assertThat(noticeEvent.getUser()).isEqualTo(review.getUser());
-		assertThat(noticeEvent.getContent()).isEqualTo(review.getContent());
-
 	}
 
 	@Test

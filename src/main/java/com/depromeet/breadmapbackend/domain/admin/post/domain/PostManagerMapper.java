@@ -37,25 +37,16 @@ public class PostManagerMapper extends BaseEntity {
 	private Post post;
 	private boolean isFixed;
 	private boolean isPosted;
-	private boolean isCarousel;
-	private String bannerImage;
-	private Integer carouselOrder;
 
 	@Builder
 	public PostManagerMapper(
 		final Post post,
 		final boolean isFixed,
-		final boolean isPosted,
-		final boolean isCarousel,
-		final String bannerImage,
-		final Integer carouselOrder
+		final boolean isPosted
 	) {
 		this.post = post;
 		this.isFixed = isFixed;
 		this.isPosted = isPosted;
-		this.isCarousel = isCarousel;
-		this.bannerImage = bannerImage;
-		this.carouselOrder = carouselOrder;
 	}
 
 	public void unFix() {
@@ -64,17 +55,10 @@ public class PostManagerMapper extends BaseEntity {
 
 	public void update(
 		final boolean isFixed,
-		final boolean isPosted,
-		final boolean isCarousel,
-		final String bannerImage
+		final boolean isPosted
 	) {
 		this.isFixed = isFixed;
 		this.isPosted = isPosted;
-		this.isCarousel = isCarousel;
-		this.bannerImage = bannerImage;
 	}
 
-	public void updateCarouselOrder(final Integer carouselOrder) {
-		this.carouselOrder = carouselOrder;
-	}
 }

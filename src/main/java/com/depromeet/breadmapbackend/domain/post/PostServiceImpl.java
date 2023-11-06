@@ -11,7 +11,6 @@ import com.depromeet.breadmapbackend.domain.admin.post.domain.repository.PostAdm
 import com.depromeet.breadmapbackend.domain.post.comment.CommentRepository;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
-import com.depromeet.breadmapbackend.domain.post.dto.EventCarouselInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostDetailInfo;
 import com.depromeet.breadmapbackend.domain.post.dto.PostRegisterCommand;
 import com.depromeet.breadmapbackend.domain.post.dto.PostUpdateCommand;
@@ -126,14 +125,6 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	@Override
-	public List<EventCarouselInfo> getEventCarousels() {
-		return postAdminRepository.findCarouselPosts().stream()
-			.map(EventCarouselInfo::of)
-			.toList();
-
-	}
-
 	private Long getSelectedPostCount(final Page<CommunityCardInfo> communityCards) {
 		return communityCards.stream()
 			// .skip(isThereFixedEvent(communityCards))
@@ -164,7 +155,7 @@ public class PostServiceImpl implements PostService {
 	) {
 		return switch (page.topic()) {
 			case ALL -> postRepository.findAllCommunityCards(page, userId);
-			case BREAD_STORY, FREE_TALK -> postRepository.findUserBoardCards(page, userId);
+			case BREAD_STORY, FREE_TALK, EATEN_BREAD -> postRepository.findUserBoardCards(page, userId);
 			case REVIEW -> postRepository.findReviewCards(page, userId);
 			case EVENT -> postRepository.findEventCards(page, userId);
 		};

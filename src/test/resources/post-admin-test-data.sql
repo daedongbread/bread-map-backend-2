@@ -50,6 +50,10 @@ TRUNCATE TABLE admin;
 ALTER TABLE admin
     ALTER COLUMN ID RESTART WITH 1;
 
+TRUNCATE TABLE carousel_manager;
+ALTER TABLE carousel_manager
+    ALTER COLUMN ID RESTART WITH 1;
+
 insert into admin (id,created_at,modified_at,email,password,role_type) values
     (111,  '2023-01-01', '2023-01-01', 'admin@email.com', 'test-password', 'ADMIN' )
 ;
@@ -87,22 +91,27 @@ insert into post_image (id, created_at, modified_at, image, is_registered, post_
 (223, '2023-01-01', '2023-01-01', 'iamge 222 2', true, 227)
 ;
 
-insert into post_manager_mapper (id,created_at , modified_at ,is_carousel,is_fixed, is_posted,post_id,banner_image, carousel_order)values
-(111, '2023-01-01','2023-01-01',false, true, true, 224 , 'bannerImage24', null),
-(112, '2023-01-01','2023-01-01',true, false, true, 225 , 'bannerImage25', 2),
-(113, '2023-01-01','2023-01-01',true, false, true, 226 , 'bannerImage26', 1),
-(114, '2023-01-01','2023-01-01',true, false, true, 227 , 'bannerImage27', 4),
-(115, '2023-01-01','2023-01-01',true, false, true, 228 , 'bannerImage28', 5),
-(116, '2023-01-01','2023-01-01',true, false, true, 229 , 'bannerImage29', 6),
-(117, '2023-01-01','2023-01-01',true, false, true, 230 , 'bannerImage30', 7),
-(118, '2023-01-01','2023-01-01',true, false, true, 231 , 'bannerImage31', 8),
-(119, '2023-01-01','2023-01-01',true, false, true, 232 , 'bannerImage32', 9),
-(120, '2023-01-01','2023-01-01',true, false, true, 233 , 'bannerImage33', 10),
-(121, '2023-01-01','2023-01-01',true, false, true, 234 , 'bannerImage34', 13),
-(122, '2023-01-01','2023-01-01',true, false, true, 235 , 'bannerImage35', 12),
-(123, '2023-01-01','2023-01-01',true, false, true, 236 , 'bannerImage36', 11),
-(124, '2023-01-01','2023-01-01',true, false, true, 237 , 'bannerImage37', 14),
-(125, '2023-01-01','2023-01-01',true, false, true, 238 , 'bannerImage38', 15),
-(126, '2023-01-01','2023-01-01',true, false, true, 239 , 'bannerImage39', 16),
-(127, '2023-01-01','2023-01-01',true, false, true, 240 , 'bannerImage40', 3)
+insert into post_manager_mapper (id,created_at , modified_at ,is_fixed, is_posted,post_id)values
+(111, '2023-01-01','2023-01-01',  true, true, 224 ),
+(112, '2023-01-01','2023-01-01',  false, true, 225),
+(113, '2023-01-01','2023-01-01',  false, true, 226),
+(114, '2023-01-01','2023-01-01',  false, true, 227),
+(115, '2023-01-01','2023-01-01',  false, true, 228),
+(116, '2023-01-01','2023-01-01',  false, true, 229),
+(117, '2023-01-01','2023-01-01',  false, true, 230),
+(118, '2023-01-01','2023-01-01',  false, true, 231),
+(119, '2023-01-01','2023-01-01',  false, true, 232),
+(120, '2023-01-01','2023-01-01',  false, true, 233),
+(121, '2023-01-01','2023-01-01',  false, true, 234),
+(122, '2023-01-01','2023-01-01',  false, true, 235),
+(123, '2023-01-01','2023-01-01',  false, true, 236),
+(124, '2023-01-01','2023-01-01',  false, true, 237),
+(125, '2023-01-01','2023-01-01',  false, true, 238),
+(126, '2023-01-01','2023-01-01',  false, true, 239),
+(127, '2023-01-01','2023-01-01',  false, true, 240)
 ;
+insert into carousel_manager (id,created_at,modified_at,banner_image,carousel_order,carousel_type,carouseled,target_id) values
+(111,  '2023-01-01','2023-01-01',  'image', 1,'EVENT', true, 111 ),
+(112,  '2023-01-01','2023-01-01',  'image2', 0,'EVENT', false, 121 ),
+(113,  '2023-01-01','2023-01-01',  'image3', 0,'EVENT', false, 112 ),
+(114,  '2023-01-01','2023-01-01',  'image3', 0,'EVENT', false, 116 );

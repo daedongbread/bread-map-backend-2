@@ -9,11 +9,13 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingResponse;
 import com.depromeet.breadmapbackend.domain.admin.ranking.dto.RankingUpdateRequest;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
+import com.depromeet.breadmapbackend.utils.TestLocalStackConfig;
 
 /**
  * AdminRankingServiceImplTest
@@ -23,6 +25,7 @@ import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
  * @since 2023/07/19
  */
 @SpringBootTest
+@Import({TestLocalStackConfig.class})
 class AdminRankingServiceImplTest {
 
 	@Autowired

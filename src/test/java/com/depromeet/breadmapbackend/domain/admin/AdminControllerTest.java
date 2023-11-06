@@ -139,7 +139,8 @@ class AdminControllerTest extends ControllerTest {
 				preprocessResponse(prettyPrint()),
 				requestFields(
 					fieldWithPath("accessToken").description("엑세스 토큰"),
-					fieldWithPath("refreshToken").description("리프레시 토큰")
+					fieldWithPath("refreshToken").description("리프레시 토큰"),
+					fieldWithPath("deviceToken").description("알림 전송용 디바이스 토큰")
 				),
 				responseFields(
 					fieldWithPath("data.userId").description("유저 고유 번호"),

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
 import com.depromeet.breadmapbackend.domain.user.OAuthInfo;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -47,18 +48,31 @@ class NoticeControllerTest extends ControllerTest {
 
 		Notice notice1 = Notice.builder()
 			.user(savedUser)
-			.fromUser(savedFromUser)
 			.contentId(1L)
-			.content("content1")
-			.type(NoticeType.REVIEW_COMMENT)
+			.title("팔로우 알림")
+			.content("%s님이 회원님을 팔로우하기 시작했어요")
+			.contentParam("팔달산불나방")
+			.type(NoticeType.FOLLOW)
+			.extraParam("FOLLOW")
 			.build();
 		Notice notice2 = Notice.builder()
 			.user(savedUser)
-			.fromUser(savedFromUser)
-			.type(NoticeType.FOLLOW)
+			.contentId(savedFromUser.getId())
+			.title("좋아요 알림")
+			.content("내 리뷰를 %s님이 좋아해요!")
+			.contentParam("치악산호랑이")
+			.type(NoticeType.REVIEW_LIKE)
+			.build();
+		Notice notice3 = Notice.builder()
+			.user(savedUser)
+			.contentId(savedFromUser.getId())
+			.title("큐레이션 추가 알림")
+			.content("8월 1번째 큐레이션입니닿ㅎㅎㅎㅎ")
+			.type(NoticeType.CURATION)
 			.build();
 		noticeRepository.save(notice1);
 		noticeRepository.save(notice2);
+		noticeRepository.save(notice3);
 	}
 
 	@AfterEach
@@ -69,43 +83,15 @@ class NoticeControllerTest extends ControllerTest {
 		userRepository.deleteAllInBatch();
 	}
 
-	//    @Test
-	//    void addNoticeToken() throws Exception {
-	//        // given
-	//        String object = objectMapper.writeValueAsString(
-	//                NoticeTokenRequest.builder().deviceToken("newDeviceToken").build());
-	//
-	//        // when
-	//        ResultActions result = mockMvc.perform(post("/v1/notices")
-	//                .header("Authorization", "Bearer " + token.getAccessToken())
-	//                .content(object)
-	//                .contentType(MediaType.APPLICATION_JSON)
-	//                .accept(MediaType.APPLICATION_JSON));
-	//
-	//        // then
-	//        result
-	//                .andDo(print())
-	//                .andDo(document("v1/notice/token/add",
-	//                        preprocessRequest(prettyPrint()),
-	//                        preprocessResponse(prettyPrint()),
-	//                        requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-	//                        requestFields(fieldWithPath("deviceToken").description("디바이스 토큰"))
-	//                ))
-	//                .andExpect(status().isNoContent());
-	//    }
-
 	@Test
 	void getNoticeList() throws Exception {
-		mockMvc.perform(get("/v1/notices/{type}?page=0", NoticeDayType.TODAY.getCode())
+		mockMvc.perform(get("/v1/notices?page=0")
 				.header("Authorization", "Bearer " + token.getAccessToken()))
 			.andDo(print())
 			.andDo(document("v1/notice",
 				preprocessRequest(prettyPrint()),
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
-				pathParameters(
-					parameterWithName("type").description("알림 날짜 타입 " +
-						"(today : 오늘 알림 조회, week :이번주 월요일부터 어제까지의 알림 조회 , before : 저번주 일요일 전의 알림 조회)")),
 				requestParameters(
 					parameterWithName("lastId").optional().description("지난 알림 마지막 고유 번호 (두번째 페이지부터 필요)"),
 					parameterWithName("page").description("현재 페이지 번호 (0부터)")),
@@ -118,13 +104,15 @@ class NoticeControllerTest extends ControllerTest {
 					fieldWithPath("data.contents").description("알람 리스트"),
 					fieldWithPath("data.contents.[].noticeId").description("알람 아이디"),
 					fieldWithPath("data.contents.[].image").description("알람 이미지").optional(),
-					fieldWithPath("data.contents.[].fromUserId").description("알람 발신 유저 고유 번호"),
-					fieldWithPath("data.contents.[].fromUserNickName").description("알람 발신 유저 닉네임"),
+					// fieldWithPath("data.contents.[].fromUserId").description("알람 발신 유저 고유 번호"),
+					// fieldWithPath("data.contents.[].fromUserNickName").description("알람 발신 유저 닉네임"),
 					fieldWithPath("data.contents.[].title").description("알람 제목"),
 					fieldWithPath("data.contents.[].contentId").description("알람 내용의 고유 번호 : " +
 						"(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)").optional(),
 					fieldWithPath("data.contents.[].content").description("알람 세부 내용 : " +
 						"(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
+					fieldWithPath("data.contents.[].contentParam").description("알람 메시지 생성용 파라미터 ex) user nickName")
+						.optional(),
 					fieldWithPath("data.contents.[].isFollow").description("알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
 					fieldWithPath("data.contents.[].createdAt").description("알람 생성일"),
 					fieldWithPath("data.contents.[].noticeType").description("알람 타입 (" +
@@ -132,11 +120,13 @@ class NoticeControllerTest extends ControllerTest {
 						"REVIEW_COMMENT(\"리뷰 댓글\"), \n" +
 						"REVIEW_LIKE(\"리뷰 좋아요\"), \n" +
 						"RECOMMENT(\"대댓글\"), \n" +
-						"REVIEW_COMMENT_LIKE(\"리뷰 댓글 좋아요\"), \n" +
-						"ADD_BAKERY(\"제보한 빵집 추가\"), \n" +
-						"ADD_PRODUCT(\"제보한 상품 추가\"), \n" +
-						"FLAG_BAKERY_CHANGE(\"즐겨찾기 빵집 변동사항\"), \n" +
-						"FLAG_BAKERY_ADMIN_NOTICE(\"즐겨찾기 빵집 관리자 새 글\"))")
+						"COMMENT_LIKE(\"댓글 좋아요\"), \n" +
+						"REPORT_BAKERY_ADDED(\"제보한 빵집 추가\"), \n" +
+						"ADD_PRODUCT(\"제보한 빵 추가\"), \n" +
+						"EVENT(\"제보한 상품 추가\"), \n" +
+						"BAKERY_ADDED(\"빵집 추가\"), \n" +
+						"CURATION(\"큐레이션\"), \n"
+					)
 				)
 			))
 			.andExpect(status().isOk());

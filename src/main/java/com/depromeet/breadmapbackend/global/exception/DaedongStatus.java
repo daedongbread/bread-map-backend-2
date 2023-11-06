@@ -60,6 +60,7 @@ public enum DaedongStatus {
 	BAKERY_IMAGE_CANNOT_MORE_THAN_TWO(BAD_REQUEST, 40111, "bakery images cannot bigger than 2"),
 
 	USER_NOT_REGISTERED(BAD_REQUEST, 40111, "user is deregistered"),
+	NO_SEARCH_RESULT(BAD_REQUEST, 40112, "no search result address : %s"),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
@@ -96,6 +97,7 @@ public enum DaedongStatus {
 	PRODUCT_ADD_REPORT_IMAGE_NOT_FOUND(NOT_FOUND, 40495,
 		"product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
 	POST_NOT_FOUND(NOT_FOUND, 40495, "Post not found"),
+	CAROUSEL_NOT_FOUND(NOT_FOUND, 40496, "Carousel not found"),
 
 	// 409 CONFLICT
 	ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때
@@ -122,7 +124,7 @@ public enum DaedongStatus {
 	CANNOT_LIKE_MORE_THAN_COUNT(INTERNAL_SERVER_ERROR, 50002, "cannot like more than 5"),
 	CANNOT_FIND_FEED_LIKE(INTERNAL_SERVER_ERROR, 50003, "you have never liked this feed"),
 	CANNOT_UNLIKE_UNDER_ZERO(INTERNAL_SERVER_ERROR, 50004, "cannot like under 0"),
-	;
+	CURATION_FEED_NOT_FOUND(INTERNAL_SERVER_ERROR, 50005, "cannot find curation");
 	private final HttpStatus status;
 	private final Integer code;
 	private final String description;

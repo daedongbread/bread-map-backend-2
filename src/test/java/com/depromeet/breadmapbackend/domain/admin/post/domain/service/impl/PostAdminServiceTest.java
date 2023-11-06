@@ -2,6 +2,7 @@ package com.depromeet.breadmapbackend.domain.admin.post.domain.service.impl;
 
 import org.springframework.context.annotation.Import;
 
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.service.CarouselManagerServiceImpl;
 import com.depromeet.breadmapbackend.domain.admin.post.repository.PostAdminRepositoryImpl;
 import com.depromeet.breadmapbackend.domain.notice.FcmService;
 import com.depromeet.breadmapbackend.global.infra.AsyncConfig;
@@ -20,7 +21,8 @@ import com.depromeet.breadmapbackend.utils.TestConfig;
 	FcmService.class,
 	TestConfig.class,
 	AsyncConfig.class,
-	PostAdminRepositoryImpl.class
+	PostAdminRepositoryImpl.class,
+	CarouselManagerServiceImpl.class
 })
 public abstract class PostAdminServiceTest extends ServiceTest {
 
