@@ -11,8 +11,7 @@ import org.springframework.http.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -58,8 +57,10 @@ class SearchV2ControllerTest extends ControllerTest {
                 .subwayStationName("역삼역")
                 .searchResultDtoList(searchResultDtoList)
                 .build();
+
         when(searchService.searchEngine(eq(oAuthId), eq(keyword), eq(latitude), eq(longitude), eq(searchType)))
                 .thenReturn(expectedResult);
+        verify(searchService).searchEngine(oAuthId, keyword, latitude, longitude, searchType);
 
         mockMvc.perform(get("/v2/search/keyword")
                         .param("oAuthId", oAuthId)
@@ -101,6 +102,7 @@ class SearchV2ControllerTest extends ControllerTest {
         List<String> keywordSuggestions = new ArrayList<>();
         when(searchService.searchKeywordSuggestions(eq(keyword)))
                 .thenReturn(keywordSuggestions);
+        verify(searchService).searchKeywordSuggestions(keyword);
 
         mockMvc.perform(get("/v2/search/suggestions")
                         .param("keyword", keyword)
