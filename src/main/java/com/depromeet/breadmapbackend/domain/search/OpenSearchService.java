@@ -5,7 +5,6 @@ import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.CommonLoadData;
 import org.opensearch.action.index.IndexResponse;
 import org.opensearch.action.search.SearchResponse;
-import org.opensearch.action.support.master.AcknowledgedResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
