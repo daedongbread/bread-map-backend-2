@@ -419,6 +419,7 @@ public class PostQueryRepository {
 							where user_id = :userId 
 							group by post_id ) t6 on t1.id = t6.post_id							
 			   where %s
+			   and t1.is_hide is false
 			   and t3.to_user_id is null
 			   and true = case when t4.is_posted is true then true 
 			       	     	   when t4.id is null then true
@@ -482,7 +483,7 @@ public class PostQueryRepository {
 							group by post_id, post_topic ) t6 on t1.id = t6.post_id		
 											and t6.post_topic = 'REVIEW'						
 			   where t4.to_user_id is null
-			  	 and t1.is_hide is true
+			  	 and t1.is_hide is false
 			   %s
 				order by t1.created_at desc , t1.id desc
 				limit :limit offset :reviewOffset		
@@ -499,7 +500,7 @@ public class PostQueryRepository {
 							  from block_user
 							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
 				   where t2.to_user_id is null
-				   	and t1.is_hide is true
+				   	and t1.is_hide is false
 				   
 				   union all
 			   
@@ -511,6 +512,7 @@ public class PostQueryRepository {
 							  									and t1.post_topic = 'EVENT'
 					left join post_manager_mapper t3 on t1.id = t3.post_id 
 				   where t2.to_user_id is null
+				    and t1.is_hide is false
 				   and true = case when t3.is_posted is true then true
 			                         	   when t3.id is null then true
 			                         	   else false
@@ -531,6 +533,7 @@ public class PostQueryRepository {
 			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id		
 			left join post_manager_mapper t3 on t1.id = t3.post_id	
 			where (post_topic = :postTopic or post_topic ='EVENT')
+			 and t1.is_hide is false
 			  and true = case when t3.is_posted is true
 									 and t3.is_fixed is true then true
 							   when t3.id is null then true
@@ -551,6 +554,7 @@ public class PostQueryRepository {
 			inner join post_manager_mapper t3 on t1.id = t3.post_id
 			where  post_topic ='EVENT'
 			  and t3.is_posted is true
+			   and t1.is_hide is false
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource();
 		return jdbcTemplate.queryForObject(sql, param, Long.class);
@@ -568,7 +572,7 @@ public class PostQueryRepository {
 			 			  from block_user
 			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id										
 			    where t2.to_user_id is null
-			     	and t1.is_hide is true
+			     	and t1.is_hide is false
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("userId", userId);
