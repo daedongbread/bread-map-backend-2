@@ -482,6 +482,7 @@ public class PostQueryRepository {
 							group by post_id, post_topic ) t6 on t1.id = t6.post_id		
 											and t6.post_topic = 'REVIEW'						
 			   where t4.to_user_id is null
+			  	 and t1.is_hide is true
 			   %s
 				order by t1.created_at desc , t1.id desc
 				limit :limit offset :reviewOffset		
@@ -498,6 +499,7 @@ public class PostQueryRepository {
 							  from block_user
 							  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id			
 				   where t2.to_user_id is null
+				   	and t1.is_hide is true
 				   
 				   union all
 			   
@@ -566,6 +568,7 @@ public class PostQueryRepository {
 			 			  from block_user
 			 			  where from_user_id = :userId) t2 on t1.user_id = t2.to_user_id										
 			    where t2.to_user_id is null
+			     	and t1.is_hide is true
 			""";
 		final MapSqlParameterSource param = new MapSqlParameterSource()
 			.addValue("userId", userId);
