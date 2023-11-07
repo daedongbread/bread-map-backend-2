@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public enum ReportType {
 	FREE_TALK,
 	BREAD_STORY,
+	EATEN_BREAD,
 	REVIEW,
 	COMMENT;
 
