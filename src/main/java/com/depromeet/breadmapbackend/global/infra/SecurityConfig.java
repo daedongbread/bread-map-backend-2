@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/v1/admin/join", "/v1/admin/login", "/v1/admin/reissue", "/v1/admin/test").permitAll()
 			.antMatchers("/h2-console/**", "/favicon.ico", "/v1/actuator/health").permitAll()
 			.antMatchers("/v1/bakeries/**", "/v1/flags/**", "/v1/reviews/**", "/v1/users/**", "/v1/notices/**",
-				"/v1/search/**", "/v1/images/**", "/v1/auth/**").hasAuthority(RoleType.USER.getCode())
+				"/v1/search/**", "/v1/images/**", "/v1/auth/**", "/v1/posts/**").hasAuthority(RoleType.USER.getCode())
 			.antMatchers("/v1/admin/**").hasAuthority(RoleType.ADMIN.getCode())
 			//                .antMatchers("/**").hasAnyAuthority(RoleType.USER.getCode())
 			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
