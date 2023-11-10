@@ -126,6 +126,10 @@ class SearchV2ControllerTest extends ControllerTest {
         String keyword = "베이커리";
 
         List<String> keywordSuggestions = new ArrayList<>();
+        keywordSuggestions.add("test1");
+        keywordSuggestions.add("test2");
+        keywordSuggestions.add("test3");
+        
         when(searchService.searchKeywordSuggestions(eq(keyword)))
                 .thenReturn(keywordSuggestions);
 
