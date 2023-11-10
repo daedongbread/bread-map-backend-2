@@ -21,8 +21,7 @@ public class NoticeFactoryProcessorImpl implements NoticeFactoryProcessor {
 	@Override
 	public String getImage(final Notice notice) {
 		NoticeFactory noticeFactory = routingNoticeContentCaller(notice.getType());
-		final String image = noticeFactory.getImage(notice);
-		return image;
+		return noticeFactory.getImage(notice);
 	}
 
 	@Override
@@ -32,10 +31,9 @@ public class NoticeFactoryProcessorImpl implements NoticeFactoryProcessor {
 	}
 
 	private NoticeFactory routingNoticeContentCaller(final NoticeType noticeType) {
-		final NoticeFactory noticeFactory = noticeFactoryList.stream()
+		return noticeFactoryList.stream()
 			.filter(noticeContent -> noticeContent.support(noticeType))
 			.findFirst()
 			.orElseThrow(() -> new DaedongException(DaedongStatus.NOTICE_TYPE_EXCEPTION));
-		return noticeFactory;
 	}
 }
