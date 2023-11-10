@@ -475,9 +475,6 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
         boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
 
-//        String renamedSource = source.replace("inputKeyword", keyword);
-//        QueryBuilder stringQuery = QueryBuilders.queryStringQuery(renamedSource);
-
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(7)
                 .timeout(new TimeValue(60, TimeUnit.SECONDS))
