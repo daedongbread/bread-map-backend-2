@@ -8,7 +8,6 @@ package com.depromeet.breadmapbackend.domain.admin.search.dto;
  * @since 11/10/23
  */
 public record HotKeywordResponse(
-	Long id,
 	String keyword,
 	int rank
 ) {

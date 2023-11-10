@@ -68,7 +68,6 @@ class AdminHotKeywordControllerTest extends ControllerTest {
 				preprocessResponse(prettyPrint()),
 				requestHeaders(headerWithName("Authorization").description("유저의 Access Token")),
 				responseFields(
-					fieldWithPath("data.[].id").description("인기 검색어 id"),
 					fieldWithPath("data.[].keyword").description("인기 검색어"),
 					fieldWithPath("data.[].rank").description("순위")
 				)

@@ -14,7 +14,6 @@ public class Mapper {
 
 	public static HotKeywordResponse of(HotKeyword hotKeywords) {
 		return new HotKeywordResponse(
-			hotKeywords.getId(),
 			hotKeywords.getKeyword(),
 			hotKeywords.getRank()
 		);

@@ -298,3 +298,22 @@ operation::v1/admin/carousels[snippets='http-request,request-headers,response-fi
 === 케러셀 순서 수정 API [PATCH]
 
 operation::v1/admin/carousels/order/update[snippets='http-request,request-headers,request-fields,http-response']
+
+== Admin Hot Keyword APIs
+
+- 인기 검색어 순위 조회 API [GET]
+- 인기 검색어 변경 API [PUT]
+- 검색어 검색 횟수 조회 API [GET]
+
+
+=== 인기 검색어 순위 조회 API [GET]
+
+operation::v1/admin/search/hot-keywords/rank[snippets='http-request,request-headers,response-fields,http-response']
+
+=== 검색어 검색 횟수 조회 API [GET]
+
+operation::v1/admin/search/hot-keywords[snippets='http-request,request-headers,request-parameters,response-fields,http-response']
+
+=== 인기 검색어 변경 API [PUT]
+
+operation::v1/admin/search/hot-keywords/rank/update[snippets='http-request,request-headers,request-fields,http-response']
