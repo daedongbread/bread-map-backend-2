@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -38,7 +39,7 @@ class SearchV2ControllerTest extends ControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private DataSource dataSource;
-    @Mock
+    @MockBean
     private SearchService searchService;
 
     private String userToken;
