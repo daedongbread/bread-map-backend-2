@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review.like;
 
+import java.util.Objects;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,13 +37,16 @@ public class ReviewLikeServiceImpl implements ReviewLikeService {
 
 		reviewLikeRepository.save(ReviewLike.builder().review(review).user(user).build());
 
-		eventPublisher.publishEvent(
-			NoticeEventDto.builder()
-				.userId(user.getId())
-				.contentId(review.getId())
-				.noticeType(NoticeType.REVIEW_LIKE)
-				.build()
-		);
+		if (!Objects.equals(user.getId(), review.getUser().getId())) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(user.getId())
+					.contentId(review.getId())
+					.noticeType(NoticeType.REVIEW_LIKE)
+					.build()
+			);
+		}
+
 	}
 
 	@Transactional(rollbackFor = Exception.class)
