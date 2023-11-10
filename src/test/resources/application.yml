@@ -99,6 +99,9 @@ cloud:
         report: S3_DEFAULT_REPORT
         flag: S3_DEFAULT_FLAG
         user: S3_DEFAULT_USER
+        curation: defaultImage/defaultCuration
+        event: defaultImage/defaultEvent
+        breadAdd: defaultImage/defaultBreadAdd
 
 firebase:
   credentials: FIREBASE_CREDENTIALS
