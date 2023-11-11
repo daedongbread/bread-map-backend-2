@@ -48,7 +48,7 @@ public class NoticeServiceImpl implements NoticeService {
 		final List<String> deviceTokens = savedNotices.stream()
 			.filter(notice -> notice.getUser().getIsAlarmOn() && !notice.getUser().getNoticeTokens().isEmpty())
 			.flatMap(notice -> notice.getUser().getNoticeTokens().stream().map(NoticeToken::getDeviceToken))
-			.toList();
+			.distinct().toList();
 
 		try {
 			fcmService.sendMessageTo(
