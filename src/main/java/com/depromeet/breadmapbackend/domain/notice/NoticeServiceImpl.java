@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -36,7 +37,9 @@ public class NoticeServiceImpl implements NoticeService {
 	private final FcmService fcmService;
 	private final NoticeFactoryProcessor noticeFactoryProcessor;
 
+	@Async("notice")
 	@TransactionalEventListener
+	@Transactional
 	public void sendPushNotice(final NoticeEventDto noticeEventDto) {
 
 		final List<Notice> savedNotices = noticeRepository.saveAll(
@@ -45,7 +48,7 @@ public class NoticeServiceImpl implements NoticeService {
 		final List<String> deviceTokens = savedNotices.stream()
 			.filter(notice -> notice.getUser().getIsAlarmOn() && !notice.getUser().getNoticeTokens().isEmpty())
 			.flatMap(notice -> notice.getUser().getNoticeTokens().stream().map(NoticeToken::getDeviceToken))
-			.toList();
+			.distinct().toList();
 
 		try {
 			fcmService.sendMessageTo(

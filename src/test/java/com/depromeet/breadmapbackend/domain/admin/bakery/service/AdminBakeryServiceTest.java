@@ -66,7 +66,10 @@ public class AdminBakeryServiceTest {
 		"like default image",
 		"report default image",
 		"flag default image",
-		"user default image");
+		"user default image",
+		"curation default image",
+		"event default image",
+		"bread add default image");
 
 	@BeforeEach
 	void setup() {

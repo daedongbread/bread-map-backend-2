@@ -38,7 +38,7 @@ public class CurationNoticeFactory implements NoticeFactory {
 	@Override
 	public String getImage(final Notice notice) {
 		return customAwss3Properties.getCloudFront() + "/" +
-			customAwss3Properties.getDefaultImage().getReport()
+			customAwss3Properties.getDefaultImage().getCuration()
 			+ ".png";
 	}
 
