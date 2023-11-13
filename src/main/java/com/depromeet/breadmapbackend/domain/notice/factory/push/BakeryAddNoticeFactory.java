@@ -45,7 +45,7 @@ public class BakeryAddNoticeFactory implements NoticeFactory {
 
 		final Bakery bakery = bakeryRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-		final List<User> users = userRepository.findUserWithNoticeTokens();
+		final List<User> users = userRepository.findUserByIsDeRegisteredFalse();
 
 		return users.stream().map(
 				user -> Notice.createNoticeWithContent(

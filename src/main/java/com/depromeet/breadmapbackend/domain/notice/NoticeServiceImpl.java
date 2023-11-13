@@ -17,6 +17,7 @@ import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.notice.token.NoticeToken;
+import com.depromeet.breadmapbackend.domain.notice.token.NoticeTokenRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
@@ -36,6 +37,7 @@ public class NoticeServiceImpl implements NoticeService {
 	private final UserRepository userRepository;
 	private final FcmService fcmService;
 	private final NoticeFactoryProcessor noticeFactoryProcessor;
+	private final NoticeTokenRepository noticeTokenRepository;
 
 	@Async("notice")
 	@TransactionalEventListener
@@ -45,15 +47,18 @@ public class NoticeServiceImpl implements NoticeService {
 		final List<Notice> savedNotices = noticeRepository.saveAll(
 			noticeFactoryProcessor.createNotice(noticeEventDto)
 		);
-		final List<String> deviceTokens = savedNotices.stream()
-			.filter(notice -> notice.getUser().getIsAlarmOn() && !notice.getUser().getNoticeTokens().isEmpty())
-			.flatMap(notice -> notice.getUser().getNoticeTokens().stream().map(NoticeToken::getDeviceToken))
-			.distinct().toList();
+		final List<User> alarmOnUserIds = savedNotices.stream()
+			.map(Notice::getUser)
+			.filter(User::getIsAlarmOn)
+			.toList();
+
+		final List<String> deviceTokensToSend = noticeTokenRepository.findByUserIn(alarmOnUserIds)
+			.stream().map(NoticeToken::getDeviceToken).distinct().toList();
 
 		try {
 			fcmService.sendMessageTo(
 				generateNoticeDtoForFcm(
-					deviceTokens,
+					deviceTokensToSend,
 					savedNotices.get(0)
 				)
 			);
