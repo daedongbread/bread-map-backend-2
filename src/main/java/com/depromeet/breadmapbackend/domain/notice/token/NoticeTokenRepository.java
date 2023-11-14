@@ -16,6 +16,8 @@ public interface NoticeTokenRepository extends JpaRepository<NoticeToken, Long> 
 
 	Optional<NoticeToken> findByDeviceToken(String deviceToken);
 
+	List<NoticeToken> findAllByDeviceToken(String deviceToken);
+
 	@Query("select nt from NoticeToken nt where nt.user.id = :userId")
 	List<NoticeToken> findByUser(@Param("userId") Long user);
 
@@ -24,6 +26,8 @@ public interface NoticeTokenRepository extends JpaRepository<NoticeToken, Long> 
 	@Query("select nt "
 		+ "from NoticeToken nt "
 		+ "join fetch nt.user u "
-		+ "where u in :noticeSendUsers")
+		+ "where u in :noticeSendUsers "
+		+ "and nt.deviceToken is not null")
 	List<NoticeToken> findByUserIn(@Param("noticeSendUsers") List<User> noticeSendUsers);
+
 }
