@@ -14,9 +14,4 @@ public class OpenSearchBreadEvent extends ApplicationEvent {
         super(source);
         this.breadLoadData = breadLoadData;
     }
-
-    public OpenSearchBreadEvent(Object source, Long breadId) {
-        super(source);
-        this.breadId = breadId;
-    }
 }

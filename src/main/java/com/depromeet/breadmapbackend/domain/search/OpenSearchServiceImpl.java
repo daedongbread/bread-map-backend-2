@@ -251,6 +251,16 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     }
 
     @Override
+    public void deleteAllBreads(Long bakeryId) throws IOException {
+        try (RestHighLevelClient searchClient = searchClient()) {
+            DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
+            deleteByQueryRequest.setQuery(QueryBuilders.matchQuery("bakeryId", bakeryId));
+
+            searchClient.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
+        }
+    }
+
+    @Override
     public IndexResponse addDataToIndex(String indexName, HashMap<String, String> stringMapping) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 

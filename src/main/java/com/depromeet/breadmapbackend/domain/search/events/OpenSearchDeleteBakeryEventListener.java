@@ -9,11 +9,11 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OpenSearchDeleteEventListener implements ApplicationListener<OpenSearchDeleteEvent> {
+public class OpenSearchDeleteBakeryEventListener implements ApplicationListener<OpenSearchDeleteBakeryEvent> {
     private final OpenSearchService openSearchService;
 
     @Override
-    public void onApplicationEvent(OpenSearchDeleteEvent event) {
+    public void onApplicationEvent(OpenSearchDeleteBakeryEvent event) {
         try {
             openSearchService.deleteIndex(event.getOpenSearchIndex(), event.targetId);
         } catch (IOException e) {

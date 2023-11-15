@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
@@ -254,17 +255,23 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 
 		List<String> images = getImagesIfExistsOrGetDefaultImage(request.getImages());
 
+		BakeryStatus status = request.getStatus();
+		if(status == BakeryStatus.POSTING) {
+			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
+		} else if(status == BakeryStatus.UNPOSTING) {
+			openSearchEventPublisher.publishDeleteBakery(bakeryId);
+		}
+
 		bakery.update(request.getName(),
 			request.getAddress(), request.getDetailedAddress(), request.getLatitude(), request.getLongitude(),
 			request.getHours(),
 			request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
 			request.getPhoneNumber(), request.getCheckPoint(), request.getNewBreadTime(),
 			images,
-			request.getFacilityInfoList(), request.getStatus());
-
-		openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
+			request.getFacilityInfoList(), status);
 
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
+			openSearchEventPublisher.publishDeleteAllProducts(bakeryId);
 			for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
 				Product product;
 				if (productUpdateRequest.getProductId() == null) { // 새로운 product 일 때

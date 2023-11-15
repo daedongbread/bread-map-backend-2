@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.search.events;
 
+import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,14 @@ public class OpenSearchEventPublisher {
         applicationEventPublisher.publishEvent(publishSaveBread);
     }
 
-    public void publishDeleteBread(final Long breadId) {
-        OpenSearchBreadEvent publishDeleteBread = new OpenSearchBreadEvent(this, breadId);
-        applicationEventPublisher.publishEvent(publishDeleteBread);
+    public void publishDeleteBakery(final Long bakeryId) {
+        OpenSearchDeleteBakeryEvent publishDeleteBakery = new OpenSearchDeleteBakeryEvent(this, OpenSearchIndex.BAKERY_SEARCH, bakeryId);
+        applicationEventPublisher.publishEvent(publishDeleteBakery);
     }
+
+    public void publishDeleteAllProducts(final Long bakeryId) {
+        OpenSearchDeleteBakeryEvent publishDeleteBakery = new OpenSearchDeleteBakeryEvent(this, OpenSearchIndex.BAKERY_SEARCH, bakeryId);
+        applicationEventPublisher.publishEvent(publishDeleteBakery);
+    }
+
 }

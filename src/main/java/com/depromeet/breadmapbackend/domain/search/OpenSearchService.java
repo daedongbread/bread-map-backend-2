@@ -13,6 +13,8 @@ import java.util.List;
 public interface OpenSearchService {
     OpenSearchCreateIndexResponse deleteAndCreateIndex(String indexName) throws IOException;
     void deleteIndex(OpenSearchIndex openSearchIndex, Long targetId) throws IOException;
+    void deleteAllBreads(Long bakeryId) throws IOException;
+
     IndexResponse addDataToIndex(String indexName, HashMap<String, String> stringMapping) throws IOException;
     SearchResponse getBakeryByKeyword(String keyword);
     SearchResponse getBreadByKeyword(String keyword);
