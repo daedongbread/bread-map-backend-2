@@ -24,7 +24,7 @@ public class EmbeddedRedisConfig {
 	static {
 		GenericContainer<?> REDIS_CONTAINER =
 			new GenericContainer<>(DockerImageName.parse(REDIS_DOCKER_IMAGE))
-				.waitingFor( Wait.forLogMessage(".*Ready to accept connections.*\\n", 1))
+				.waitingFor(Wait.forLogMessage(".*Ready to accept connections.*\\n", 1))
 				.withExposedPorts(6379)
 				.withReuse(true);
 
@@ -32,17 +32,15 @@ public class EmbeddedRedisConfig {
 
 		System.setProperty("spring.redis.host", REDIS_CONTAINER.getHost());
 		System.setProperty("spring.redis.port", REDIS_CONTAINER.getMappedPort(6379).toString());
-
-
 	}
 
 	@PostConstruct
-	public void setUp(){
+	public void setUp() {
 		try {
 			redisTemplate.opsForStream()
 				.createGroup("bakery-view-event", "bakery-view-event:group");
 		} catch (Exception e) {
-			log.info("bakery-view-event:group already exists : {} ",e.getMessage());
+			log.info("bakery-view-event:group already exists : {} ", e.getMessage());
 		}
 	}
 }

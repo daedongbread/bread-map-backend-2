@@ -50,15 +50,17 @@ public class CommentServiceImpl implements CommentService {
 		final Comment savedComment = commentRepository.save(comment);
 
 		if (!Objects.equals(comment.getUser().getId(), userId)) {
-			if (command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
+			if (command.isFirstDepth()) {
 				eventPublisher.publishEvent(
 					NoticeEventDto.builder()
 						.userId(userId)
 						.contentId(command.postId())
-						.noticeType(NoticeType.REVIEW_COMMENT)
+						.noticeType(command.postTopic() == PostTopic.REVIEW
+							? NoticeType.REVIEW_COMMENT
+							: NoticeType.COMMUNITY_COMMENT)
 						.build()
 				);
-			} else if (!command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
+			} else {
 				eventPublisher.publishEvent(
 					NoticeEventDto.builder()
 						.userId(userId)

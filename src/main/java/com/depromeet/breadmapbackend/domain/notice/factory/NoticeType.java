@@ -17,6 +17,8 @@ public enum NoticeType {
 	FLAG_BAKERY_ADMIN_NOTICE("즐겨찾기 빵집 관리자 새 글"),
 	EVENT("이벤트"),
 	BAKERY_ADDED("빵집 추가"),
+	COMMUNITY_LIKE("커뮤니티글 좋아요"),
+	COMMUNITY_COMMENT("커뮤니티 댓글"),
 	CURATION("큐레이션");
 
 	private final String code;
