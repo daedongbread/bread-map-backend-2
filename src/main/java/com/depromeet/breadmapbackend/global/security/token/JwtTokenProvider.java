@@ -63,9 +63,13 @@ public class JwtTokenProvider {
 	public JwtToken createJwtToken(String oAuthId, String role) {
 		Long id = null;
 		if (role.equals(RoleType.USER.getCode())) {
-			id = 80L;
+			id = userRepository.findByOAuthId(oAuthId)
+				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
+				.getId();
 		} else if (role.equals(RoleType.ADMIN.getCode())) {
-			id = 1L;
+			id = adminRepository.findByEmail(oAuthId)
+				.orElseThrow(() -> new DaedongException(DaedongStatus.ADMIN_NOT_FOUND))
+				.getId();
 		}
 
 		Claims claims = Jwts.claims().setSubject(oAuthId);
