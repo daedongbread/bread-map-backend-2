@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentQuery;
@@ -55,8 +54,8 @@ public class CommentRepositoryImpl implements CommentRepository {
 	}
 
 	@Override
-	public List<Long> findCommentIdListByPost(final Post post) {
-		return commentJpaRepository.findCommentIdListByPost(post);
+	public List<Long> findCommentIdListByPostId(final Long postId) {
+		return commentJpaRepository.findCommentIdListByPostId(postId);
 	}
 
 	@Override

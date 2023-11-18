@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
+import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.domain.post.PostRepository;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
@@ -17,6 +18,8 @@ import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLike;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
+import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -39,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
 	private final UserRepository userRepository;
 	private final CommentLikeRepository commentLikeRepository;
 	private final PostRepository postRepository;
+	private final ReviewRepository reviewRepository;
 	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional
@@ -47,34 +51,54 @@ public class CommentServiceImpl implements CommentService {
 		validateCommentCommand(command);
 		final Comment comment = command.toEntity(
 			userRepository.findById(userId)
-				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND)),
-			postRepository.findById(command.postId())
-				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND))
+				.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND))
 		);
 		final Comment savedComment = commentRepository.save(comment);
 
-		if (!Objects.equals(comment.getPost().getUser().getId(), userId)) {
-			if (command.isFirstDepth()) {
-				eventPublisher.publishEvent(
-					NoticeEventDto.builder()
-						.userId(userId)
-						.contentId(command.postId())
-						.noticeType(command.postTopic() == PostTopic.REVIEW
-							? NoticeType.REVIEW_COMMENT
-							: NoticeType.COMMUNITY_COMMENT)
-						.build()
-				);
-			} else {
-				eventPublisher.publishEvent(
-					NoticeEventDto.builder()
-						.userId(userId)
-						.contentId(command.parentId())
-						.noticeType(NoticeType.RECOMMENT)
-						.build()
-				);
+		if (isUserAuthorOfPostAndReview(command, userId, savedComment))
+			return savedComment;
+
+		if (command.isFirstDepth()) {
+
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(command.postId())
+					.noticeType(command.postTopic() == PostTopic.REVIEW
+						? NoticeType.REVIEW_COMMENT
+						: NoticeType.COMMUNITY_COMMENT)
+					.build()
+			);
+		} else {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(userId)
+					.contentId(command.parentId())
+					.noticeType(NoticeType.RECOMMENT)
+					.build()
+			);
+		}
+
+		return savedComment;
+	}
+
+	private boolean isUserAuthorOfPostAndReview(final Command command, final Long userId, final Comment savedComment) {
+		if (command.postTopic() == PostTopic.REVIEW) {
+
+			final Review review = reviewRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+			if (review.getUser().getId().equals(userId)) {
+				return true;
+			}
+		} else {
+			final Post post = postRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+
+			if (post.getUser().getId().equals(userId)) {
+				return true;
 			}
 		}
-		return savedComment;
+		return false;
 	}
 
 	@Override

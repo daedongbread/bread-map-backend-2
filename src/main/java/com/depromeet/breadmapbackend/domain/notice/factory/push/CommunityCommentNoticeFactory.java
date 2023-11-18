@@ -23,7 +23,7 @@ public class CommunityCommentNoticeFactory implements NoticeFactory {
 
 	private static final String COMMENT_TITLE_FORMAT = "댓글 알림";
 	private static final String COMMENT_CONTENT_FORMAT = "내 게시글에 %s님이 댓글을 달았어요!";
-	private static final NoticeType SUPPORT_TYPE = NoticeType.REVIEW_COMMENT;
+	private static final NoticeType SUPPORT_TYPE = NoticeType.COMMUNITY_COMMENT;
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
 	private final PostRepository postRepository;
@@ -44,7 +44,7 @@ public class CommunityCommentNoticeFactory implements NoticeFactory {
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
 
 		final Post post = postRepository.findById(noticeEventDto.contentId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
