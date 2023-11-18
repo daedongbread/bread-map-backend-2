@@ -325,7 +325,7 @@ class PostServiceImplTest extends PostServiceTest {
 				PostLike.class)
 			.setParameter("postId", postId)
 			.getResultList();
-		final List<Comment> commentResult = em.createQuery("select c from Comment c where c.post.id =:postId",
+		final List<Comment> commentResult = em.createQuery("select c from Comment c where c.postId =:postId",
 				Comment.class)
 			.setParameter("postId", postId)
 			.getResultList();

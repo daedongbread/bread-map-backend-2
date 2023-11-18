@@ -95,7 +95,7 @@ public class PostServiceImpl implements PostService {
 		final Post post = postRepository.findByPostIdAndUserIdAndPostTopic(postId, userId, topic)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 
-		final List<Long> commentIdListToDelete = commentRepository.findCommentIdListByPost(post);
+		final List<Long> commentIdListToDelete = commentRepository.findCommentIdListByPostId(postId);
 
 		commentRepository.deleteAllByIdInBatch(commentIdListToDelete);
 		commentLikeRepository.deleteAllByCommentIdList(commentIdListToDelete);
