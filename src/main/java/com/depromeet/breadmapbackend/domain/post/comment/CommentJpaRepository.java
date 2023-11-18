@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.depromeet.breadmapbackend.domain.post.Post;
+
 /**
  * CommentJpaRepository
  *
@@ -19,11 +21,11 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
 	Optional<Comment> findByIdAndUserId(Long commentId, Long userId);
 
 	@Modifying
-	@Query("delete from Comment c where c.postId = :postId")
-	void deleteByPostId(@Param("postId") Long postId);
+	@Query("delete from Comment c where c.post = :post")
+	void deleteByPostId(@Param("post") Post post);
 
-	@Query("select c.id from Comment c where c.postId = :postId")
-	List<Long> findCommentIdListByPostId(@Param("postId") Long postId);
+	@Query("select c.id from Comment c where c.post = :post")
+	List<Long> findCommentIdListByPost(@Param("post") Post post);
 
 	Optional<Comment> findByIdAndPostId(Long commentId, Long postId);
 }

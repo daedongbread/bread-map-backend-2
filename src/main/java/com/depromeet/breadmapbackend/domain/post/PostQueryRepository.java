@@ -81,7 +81,7 @@ public class PostQueryRepository {
 						.where(postLike.post.id.eq(post.id)),
 					JPAExpressions.select(comment.count().coalesce(0L))
 						.from(comment)
-						.where(comment.postId.eq(post.id)
+						.where(comment.post.eq(post)
 							.and(comment.postTopic.eq(topic))),
 					JPAExpressions.select(review.count().coalesce(0L))
 						.from(review)
@@ -101,7 +101,7 @@ public class PostQueryRepository {
 						.otherwise(false),
 					new CaseBuilder().when(JPAExpressions.select(comment.count())
 							.from(comment)
-							.where(comment.postId.eq(post.id)
+							.where(comment.post.eq(post)
 								.and(comment.user.id.eq(post.user.id))).goe(1L)).then(true)
 						.otherwise(false)
 				))
@@ -296,7 +296,7 @@ public class PostQueryRepository {
 			.on(post.id.eq(postLike.post.id)
 				.and(postLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
 			.leftJoin(comment)
-			.on(post.id.eq(comment.postId)
+			.on(post.id.eq(comment.post.id)
 				.and(comment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now()))
 				.and(comment.postTopic.eq(post.postTopic)))
 			.leftJoin(blockUser).on(blockUser.toUser.id.eq(post.user.id).and(blockUser.fromUser.id.eq(userId)))
@@ -316,7 +316,7 @@ public class PostQueryRepository {
 			.on(review.id.eq(reviewLike.review.id)
 				.and(reviewLike.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now())))
 			.leftJoin(comment)
-			.on(review.id.eq(comment.postId)
+			.on(review.id.eq(comment.post.id)
 				.and(comment.createdAt.between(LocalDateTime.now().minusDays(3), LocalDateTime.now()))
 				.and(comment.postTopic.eq(PostTopic.REVIEW)))
 			.leftJoin(blockUser).on(blockUser.toUser.id.eq(review.user.id).and(blockUser.fromUser.id.eq(userId)))

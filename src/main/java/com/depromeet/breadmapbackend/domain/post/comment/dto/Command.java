@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.post.comment.dto;
 
+import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.Comment;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -20,10 +21,10 @@ public record Command(
 	Long targetCommentUserId
 ) {
 
-	public Comment toEntity(final User user) {
+	public Comment toEntity(final User user, final Post post) {
 		return new Comment(
 			user,
-			postId,
+			post,
 			content,
 			isFirstDepth,
 			isFirstDepth ? 0 : parentId,

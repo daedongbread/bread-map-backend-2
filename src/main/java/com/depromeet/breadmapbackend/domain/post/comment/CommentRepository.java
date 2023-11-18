@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import com.depromeet.breadmapbackend.domain.post.Post;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 
@@ -29,7 +30,7 @@ public interface CommentRepository {
 
 	void deleteAllByIdInBatch(List<Long> commentIdList);
 
-	List<Long> findCommentIdListByPostId(Long postId);
+	List<Long> findCommentIdListByPost(Post post);
 
 	Optional<Comment> findById(Long id);
 
