@@ -38,4 +38,5 @@ public interface PostRepository {
 
 	Optional<Post> findByPostIdAndPostTopic(Long postId, String postTopic);
 
+	Optional<Post> findById(Long postId);
 }

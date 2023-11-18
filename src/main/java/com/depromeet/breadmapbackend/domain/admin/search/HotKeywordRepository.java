@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 11/10/23
  */
 public interface HotKeywordRepository extends JpaRepository<HotKeyword, Long> {
-	List<HotKeyword> findAllByOrderByRankAsc();
+	List<HotKeyword> findAllByOrderByRankingAsc();
 }

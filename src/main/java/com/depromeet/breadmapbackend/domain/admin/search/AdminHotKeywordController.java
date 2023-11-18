@@ -48,7 +48,7 @@ public class AdminHotKeywordController {
 	@GetMapping("/rank")
 	ApiResponse<List<HotKeywordResponse>> getHotKeywords() {
 		return new ApiResponse<>(
-			adminHotKeywordService.getHotKeywordsRank()
+			adminHotKeywordService.getHotKeywordsRanking()
 				.stream()
 				.map(Mapper::of)
 				.toList()
@@ -58,7 +58,7 @@ public class AdminHotKeywordController {
 	@PutMapping("/rank")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	void updateHotKeywords(@RequestBody HotKeywordUpdateRequest request) {
-		adminHotKeywordService.updateHotKeywordsRank(
+		adminHotKeywordService.updateHotKeywordsRanking(
 			request.HotKeywordList()
 				.stream()
 				.map(HotKeywordUpdateRequest.HotKeywordInfo::toEntity)
