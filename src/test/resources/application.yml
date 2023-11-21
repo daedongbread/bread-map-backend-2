@@ -102,6 +102,10 @@ cloud:
         curation: defaultImage/defaultCuration
         event: defaultImage/defaultEvent
         breadAdd: defaultImage/defaultBreadAdd
+    open-search:
+      id: OPEN_SEARCH_ID
+      password: OPEN_SEARCH_PASSWORD
+      host: OPEN_SEARCH_HOST
 
 firebase:
   credentials: FIREBASE_CREDENTIALS

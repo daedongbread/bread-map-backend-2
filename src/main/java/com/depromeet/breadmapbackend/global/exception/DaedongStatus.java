@@ -66,6 +66,8 @@ public enum DaedongStatus {
 	ALREADY_EXIST_KEYWORD(BAD_REQUEST, 40112, "이미 존재하는 인기 검색어 입니다."),
 	NOT_EXISTS_SORT_TYPE(BAD_REQUEST, 40112, "존재하지 않는 정렬 타입 입니다."),
 
+	SEARCH_LOG_NOT_EXIST(BAD_REQUEST, 40113, "keyword search log not found."),
+
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
 	TOKEN_INVALID_EXCEPTION(UNAUTHORIZED, 40101, "invalid token"), // access or refresh token이 유효하지 않을 때

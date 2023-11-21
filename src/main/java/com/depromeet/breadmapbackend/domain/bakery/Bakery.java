@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.depromeet.breadmapbackend.domain.bakery.ranking.ScoredBakery;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.util.StringUtils;
 
