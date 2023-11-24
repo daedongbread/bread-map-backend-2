@@ -4,6 +4,10 @@ import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
+import com.depromeet.breadmapbackend.global.security.token.JwtToken;
+import com.depromeet.breadmapbackend.global.security.token.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -19,7 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ConfigurationPropertiesScan
 @SpringBootApplication
 @EnableScheduling
+//@RequiredArgsConstructor
 public class BreadMapBackendApplication {
+
+//	private final JwtTokenProvider jwtTokenProvider;
 	@PostConstruct
 	public void started() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
@@ -33,4 +40,13 @@ public class BreadMapBackendApplication {
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
+
+//	@PostConstruct
+//	public PasswordEncoder passwordEncoder() {
+//		JwtToken adminUserForEventPost = jwtTokenProvider.createJwtToken("ADMIN_USER_FOR_EVENT_POST", RoleType.USER.getCode());
+//		System.out.println("passwordEncoder :: ================" + adminUserForEventPost.getAccessToken());
+//
+//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//
+//	}
 }

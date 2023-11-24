@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +15,11 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
+@Profile("prod")
 @RequiredArgsConstructor
-public class OpenSearchLoadScheduler {
+public class OpenSearchLoadProdScheduler {
 
     private final OpenSearchService openSearchService;
-//    @Scheduled(cron = "0 0/5 * * * *") // for test
     @Scheduled(cron = "0 0 0 1,15 * *")
     public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
