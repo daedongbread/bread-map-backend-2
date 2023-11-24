@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-@Profile("!prod")
+@Profile({"default", "local", "stage"})
 @RequiredArgsConstructor
 public class OpenSearchLoadTestScheduler {
 
