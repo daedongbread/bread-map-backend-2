@@ -23,8 +23,10 @@ public class CommentLikeNoticeFactory implements NoticeFactory {
 
 	private static final String NOTICE_CONTENT_FORMAT = "내 댓글을 %s님이 좋아해요!";
 	private static final String NOTICE_TITLE_FORMAT = "댓글 좋아요 알림";
-	private static final List<NoticeType> SUPPORT_TYPE = List.of(NoticeType.COMMENT_LIKE,
-		NoticeType.REVIEW_COMMENT_LIKE);
+	private static final List<NoticeType> SUPPORT_TYPE = List.of(
+		NoticeType.COMMENT_LIKE,
+		NoticeType.REVIEW_COMMENT_LIKE
+	);
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
 	private final CommentRepository commentRepository;

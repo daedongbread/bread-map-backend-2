@@ -55,7 +55,9 @@ public class CommentServiceImpl implements CommentService {
 		);
 		final Comment savedComment = commentRepository.save(comment);
 
-		if (command.isFirstDepth() && isUserAuthorOfPostAndReview(command, userId))
+		final boolean userAuthorOfPostAndReview = isUserAuthorOfPostAndReview(command, userId);
+
+		if (command.isFirstDepth() && userAuthorOfPostAndReview)
 			return savedComment;
 
 		eventPublisher.publishEvent(
@@ -68,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
 					: NoticeType.COMMUNITY_COMMENT)
 				.build()
 		);
-		if (!command.isFirstDepth()) {
+		if (!command.isFirstDepth() && userAuthorOfPostAndReview) {
 			eventPublisher.publishEvent(
 				NoticeEventDto.builder()
 					.userId(userId)
@@ -154,7 +156,7 @@ public class CommentServiceImpl implements CommentService {
 						.subContentId(comment.getPostId())
 						.noticeType(comment.getPostTopic() == PostTopic.REVIEW
 							? NoticeType.REVIEW_COMMENT_LIKE
-							: NoticeType.COMMUNITY_LIKE
+							: NoticeType.COMMENT_LIKE
 						)
 						.build()
 				);
