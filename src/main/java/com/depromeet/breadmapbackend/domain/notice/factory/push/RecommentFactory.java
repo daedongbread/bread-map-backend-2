@@ -23,14 +23,14 @@ public class RecommentFactory implements NoticeFactory {
 
 	private static final String NOTICE_CONTENT_FORMAT = "내 댓글에 %s님이 대댓글을 달았어요!";
 	private static final String NOTICE_TITLE_FORMAT = "대댓글 알림";
-	private static final NoticeType SUPPORT_TYPE = NoticeType.RECOMMENT;
+	private static final List<NoticeType> SUPPORT_TYPE = List.of(NoticeType.RECOMMENT, NoticeType.REVIEW_RECOMMENT);
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
 	private final CommentRepository commentRepository;
 
 	@Override
 	public boolean support(final NoticeType noticeType) {
-		return SUPPORT_TYPE == noticeType;
+		return SUPPORT_TYPE.contains(noticeType);
 	}
 
 	@Override
@@ -42,18 +42,19 @@ public class RecommentFactory implements NoticeFactory {
 
 	@Override
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
-		final Comment comment = commentRepository.findById(noticeEventDto.contentId())
+		final Comment comment = commentRepository.findById(noticeEventDto.subContentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContent(
+		return List.of(Notice.createNoticeWithContentAndSubContentId(
 			comment.getUser(),
 			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			NOTICE_CONTENT_FORMAT,
 			fromUser.getNickName(),
-			noticeEventDto.noticeType()
+			noticeEventDto.noticeType(),
+			comment.getPostId()
 		));
 	}
 

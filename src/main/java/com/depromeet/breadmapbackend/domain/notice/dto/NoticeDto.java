@@ -19,6 +19,7 @@ public class NoticeDto {
 	private String content;
 	private String contentParam;
 	private Boolean isFollow;
+	private Long subContentId;
 	private LocalDateTime createdAt;
 	private NoticeType noticeType;
 
@@ -33,5 +34,6 @@ public class NoticeDto {
 		this.isFollow = isFollow;
 		this.createdAt = notice.getCreatedAt();
 		this.noticeType = notice.getType();
+		this.subContentId = notice.getSubContentId();
 	}
 }

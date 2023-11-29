@@ -13,6 +13,7 @@ public class NoticeFcmDto {
 	private final String title;
 	private final String content;
 	private final Long contentId;
+	private final Long subContentId;
 	private final NoticeType type;
 
 	@Builder
@@ -21,12 +22,14 @@ public class NoticeFcmDto {
 		final String title,
 		final String content,
 		final Long contentId,
+		final Long subContentId,
 		final NoticeType type
 	) {
 		this.fcmTokens = fcmTokens;
 		this.title = title;
 		this.content = content;
 		this.contentId = contentId;
+		this.subContentId = subContentId;
 		this.type = type;
 	}
 }

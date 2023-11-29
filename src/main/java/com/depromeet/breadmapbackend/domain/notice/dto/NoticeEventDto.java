@@ -14,6 +14,8 @@ import lombok.Builder;
 
 public record NoticeEventDto(
 	Long contentId,
+	Long subContentId,
+	Long extraContentId,
 	NoticeType noticeType,
 	Long userId
 ) {

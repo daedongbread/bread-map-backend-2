@@ -38,10 +38,9 @@ public class FollowNoticeFactory implements NoticeFactory {
 	public String getImage(final Notice notice) {
 		assert notice.getContentId() != null;
 		final Optional<User> follower = userRepository.findById(notice.getContentId());
-		final String s = follower.map(user -> user.getUserInfo().getImage())
+		return follower.map(user -> user.getUserInfo().getImage())
 			.orElse(customAwss3Properties.getCloudFront() + "/" +
 				customAwss3Properties.getDefaultImage().getUser() + ".png");
-		return s;
 	}
 
 	@Override
