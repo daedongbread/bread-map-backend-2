@@ -23,14 +23,15 @@ public class CommentLikeNoticeFactory implements NoticeFactory {
 
 	private static final String NOTICE_CONTENT_FORMAT = "내 댓글을 %s님이 좋아해요!";
 	private static final String NOTICE_TITLE_FORMAT = "댓글 좋아요 알림";
-	private static final NoticeType SUPPORT_TYPE = NoticeType.COMMENT_LIKE;
+	private static final List<NoticeType> SUPPORT_TYPE = List.of(NoticeType.COMMENT_LIKE,
+		NoticeType.REVIEW_COMMENT_LIKE);
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
 	private final CommentRepository commentRepository;
 
 	@Override
 	public boolean support(final NoticeType noticeType) {
-		return SUPPORT_TYPE == noticeType;
+		return SUPPORT_TYPE.contains(noticeType);
 	}
 
 	@Override
@@ -47,13 +48,14 @@ public class CommentLikeNoticeFactory implements NoticeFactory {
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContent(
+		return List.of(Notice.createNoticeWithContentAndSubContentId(
 			comment.getUser(),
 			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			NOTICE_CONTENT_FORMAT,
 			fromUser.getNickName(),
-			noticeEventDto.noticeType()
+			noticeEventDto.noticeType(),
+			noticeEventDto.subContentId()
 		));
 	}
 }

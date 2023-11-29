@@ -43,18 +43,19 @@ public class ReviewCommentNoticeFactory implements NoticeFactory {
 	@Override
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
 
-		final Review review = reviewRepository.findById(noticeEventDto.contentId())
+		final Review review = reviewRepository.findById(noticeEventDto.subContentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContent(
+		return List.of(Notice.createNoticeWithContentAndSubContentId(
 			review.getUser(),
 			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			NOTICE_CONTENT_FORMAT,
 			fromUser.getNickName(),
-			noticeEventDto.noticeType()
+			noticeEventDto.noticeType(),
+			noticeEventDto.subContentId()
 		));
 	}
 }

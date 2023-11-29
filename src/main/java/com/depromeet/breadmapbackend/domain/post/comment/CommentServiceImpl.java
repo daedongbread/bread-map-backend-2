@@ -55,26 +55,28 @@ public class CommentServiceImpl implements CommentService {
 		);
 		final Comment savedComment = commentRepository.save(comment);
 
-		if (isUserAuthorOfPostAndReview(command, userId, savedComment))
+		if (command.isFirstDepth() && isUserAuthorOfPostAndReview(command, userId))
 			return savedComment;
 
-		if (command.isFirstDepth()) {
-
+		eventPublisher.publishEvent(
+			NoticeEventDto.builder()
+				.userId(userId)
+				.contentId(savedComment.getId())
+				.subContentId(command.postId())
+				.noticeType(command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_COMMENT
+					: NoticeType.COMMUNITY_COMMENT)
+				.build()
+		);
+		if (!command.isFirstDepth()) {
 			eventPublisher.publishEvent(
 				NoticeEventDto.builder()
 					.userId(userId)
-					.contentId(command.postId())
+					.contentId(savedComment.getId())
+					.subContentId(command.parentId())
 					.noticeType(command.postTopic() == PostTopic.REVIEW
-						? NoticeType.REVIEW_COMMENT
-						: NoticeType.COMMUNITY_COMMENT)
-					.build()
-			);
-		} else {
-			eventPublisher.publishEvent(
-				NoticeEventDto.builder()
-					.userId(userId)
-					.contentId(command.parentId())
-					.noticeType(NoticeType.RECOMMENT)
+						? NoticeType.REVIEW_RECOMMENT
+						: NoticeType.RECOMMENT)
 					.build()
 			);
 		}
@@ -82,23 +84,17 @@ public class CommentServiceImpl implements CommentService {
 		return savedComment;
 	}
 
-	private boolean isUserAuthorOfPostAndReview(final Command command, final Long userId, final Comment savedComment) {
+	private boolean isUserAuthorOfPostAndReview(final Command command, final Long userId) {
 		if (command.postTopic() == PostTopic.REVIEW) {
 
 			final Review review = reviewRepository.findById(command.postId())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
-			if (review.getUser().getId().equals(userId)) {
-				return true;
-			}
+			return review.getUser().getId().equals(userId);
 		} else {
 			final Post post = postRepository.findById(command.postId())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
-
-			if (post.getUser().getId().equals(userId)) {
-				return true;
-			}
+			return post.getUser().getId().equals(userId);
 		}
-		return false;
 	}
 
 	@Override
@@ -155,7 +151,11 @@ public class CommentServiceImpl implements CommentService {
 					NoticeEventDto.builder()
 						.userId(userId)
 						.contentId(comment.getId())
-						.noticeType(NoticeType.COMMENT_LIKE)
+						.subContentId(comment.getPostId())
+						.noticeType(comment.getPostTopic() == PostTopic.REVIEW
+							? NoticeType.REVIEW_COMMENT_LIKE
+							: NoticeType.COMMUNITY_LIKE
+						)
 						.build()
 				);
 			return 1;
@@ -183,7 +183,7 @@ public class CommentServiceImpl implements CommentService {
 			if (command.targetCommentUserId() == 0)
 				throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID);
 
-			commentRepository.findByIdAndPostId(command.parentId(), command.postId())
+			commentRepository.findByIdAndPostIdAndPostTopic(command.parentId(), command.postId(), command.postTopic())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
 
 			userRepository.findById(command.targetCommentUserId())
