@@ -28,7 +28,7 @@ public class NoticeQueryRepository {
 
 		List<Notice> content = queryFactory.selectFrom(notice)
 			.where(notice.user.eq(user))
-			.orderBy(notice.createdAt.desc())
+			.orderBy(notice.id.desc())
 			.offset((long)page * NOTICE_SIZE)
 			.limit(NOTICE_SIZE)
 			.fetch();

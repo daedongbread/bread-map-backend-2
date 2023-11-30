@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
 
 		final boolean userAuthorOfPostAndReview = isUserAuthorOfPostAndReview(command, userId);
 
-		if (userAuthorOfPostAndReview)
+		if (userAuthorOfPostAndReview && command.isFirstDepth())
 			return savedComment;
 
 		if (isCaseOfUserReceiveTwoNotices(command)) {
