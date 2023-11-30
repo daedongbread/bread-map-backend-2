@@ -55,33 +55,75 @@ public class CommentServiceImpl implements CommentService {
 		);
 		final Comment savedComment = commentRepository.save(comment);
 
-		if (command.isFirstDepth() && isUserAuthorOfPostAndReview(command, userId))
+		final boolean userAuthorOfPostAndReview = isUserAuthorOfPostAndReview(command, userId);
+
+		if (command.isFirstDepth() && userAuthorOfPostAndReview)
 			return savedComment;
 
-		eventPublisher.publishEvent(
-			NoticeEventDto.builder()
-				.userId(userId)
-				.contentId(savedComment.getId())
-				.subContentId(command.postId())
-				.noticeType(command.postTopic() == PostTopic.REVIEW
-					? NoticeType.REVIEW_COMMENT
-					: NoticeType.COMMUNITY_COMMENT)
-				.build()
+		if (isCaseOfUserReceiveTwoNotices(command)) {
+			publishEvent(
+				userId,
+				savedComment.getId(),
+				command.parentId(),
+				command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_RECOMMENT
+					: NoticeType.RECOMMENT
+			);
+			return savedComment;
+		}
+		publishEvent(
+			userId,
+			savedComment.getId(),
+			command.postId(),
+			command.postTopic() == PostTopic.REVIEW
+				? NoticeType.REVIEW_COMMENT
+				: NoticeType.COMMUNITY_COMMENT
 		);
-		if (!command.isFirstDepth()) {
-			eventPublisher.publishEvent(
-				NoticeEventDto.builder()
-					.userId(userId)
-					.contentId(savedComment.getId())
-					.subContentId(command.parentId())
-					.noticeType(command.postTopic() == PostTopic.REVIEW
-						? NoticeType.REVIEW_RECOMMENT
-						: NoticeType.RECOMMENT)
-					.build()
+		
+		if (!command.isFirstDepth() && userAuthorOfPostAndReview) {
+			publishEvent(
+				userId,
+				savedComment.getId(),
+				command.parentId(),
+				command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_RECOMMENT
+					: NoticeType.RECOMMENT
 			);
 		}
 
 		return savedComment;
+	}
+
+	private void publishEvent(Long userId, Long contentId, Long subContentId, NoticeType noticeType) {
+		eventPublisher.publishEvent(
+			NoticeEventDto.builder()
+				.userId(userId)
+				.contentId(contentId)
+				.subContentId(subContentId)
+				.noticeType(noticeType)
+				.build()
+		);
+	}
+
+	private boolean isCaseOfUserReceiveTwoNotices(
+		final Command command
+	) {
+		if (command.isFirstDepth())
+			return false;
+
+		final Comment parentComment = commentRepository.findById(command.parentId())
+			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
+
+		if (command.postTopic() == PostTopic.REVIEW) {
+			final Review review = reviewRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+			return parentComment.getUser().getId().equals(review.getUser().getId());
+		} else {
+			final Post post = postRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+
+			return parentComment.getUser().getId().equals(post.getUser().getId());
+		}
 	}
 
 	private boolean isUserAuthorOfPostAndReview(final Command command, final Long userId) {
@@ -154,7 +196,7 @@ public class CommentServiceImpl implements CommentService {
 						.subContentId(comment.getPostId())
 						.noticeType(comment.getPostTopic() == PostTopic.REVIEW
 							? NoticeType.REVIEW_COMMENT_LIKE
-							: NoticeType.COMMUNITY_LIKE
+							: NoticeType.COMMENT_LIKE
 						)
 						.build()
 				);

@@ -472,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/notices?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzAwMDA4ODIyLCJleHAiOjE3MDAwMTI0MjJ9.UtflVDRobCMz0ohnHOmWBp-3mOoOdxjjeS1GxDdOSm0
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzAxMjY3NjAzLCJleHAiOjE3MDEyNzEyMDN9.mmf1iqtAnkV_QWiIes61s8ZE47qv1SV9-CIONkjwzWs
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -547,7 +547,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1241
+Content-Length: 1329
 
 {
   "data" : {
@@ -564,7 +564,8 @@ Content-Length: 1241
       "content" : "8월 1번째 큐레이션입니닿ㅎㅎㅎㅎ",
       "contentParam" : null,
       "isFollow" : false,
-      "createdAt" : "2023-11-15T09:40:22.080995",
+      "subContentId" : null,
+      "createdAt" : "2023-11-29T23:20:03.875171",
       "noticeType" : "CURATION"
     }, {
       "noticeId" : 2,
@@ -574,7 +575,8 @@ Content-Length: 1241
       "content" : "내 리뷰를 %s님이 좋아해요!",
       "contentParam" : "치악산호랑이",
       "isFollow" : false,
-      "createdAt" : "2023-11-15T09:40:22.080099",
+      "subContentId" : null,
+      "createdAt" : "2023-11-29T23:20:03.874664",
       "noticeType" : "REVIEW_LIKE"
     }, {
       "noticeId" : 1,
@@ -583,8 +585,9 @@ Content-Length: 1241
       "contentId" : 1,
       "content" : "%s님이 회원님을 팔로우하기 시작했어요",
       "contentParam" : "팔달산불나방",
-      "isFollow" : true,
-      "createdAt" : "2023-11-15T09:40:22.079156",
+      "isFollow" : false,
+      "subContentId" : null,
+      "createdAt" : "2023-11-29T23:20:03.874089",
       "noticeType" : "FOLLOW"
     } ]
   }
@@ -661,6 +664,11 @@ Content-Length: 1241
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 내용의 고유 번호 : (내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].subContentId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알람 내용의 부모 고유 번호 : (댓글달린 게시글 or 리뷰의 id)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 세부 내용 : (내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)</p></td>
@@ -686,8 +694,12 @@ Content-Length: 1241
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 타입 (FOLLOW("팔로우"),
 REVIEW_COMMENT("리뷰 댓글"),
 REVIEW_LIKE("리뷰 좋아요"),
-RECOMMENT("대댓글"),
-COMMENT_LIKE("댓글 좋아요"),
+REVIEW_RECOMMENT("리뷰 대댓글"),
+REVIEW_COMMENT_LIKE("리뷰 댓글 좋아요"),
+RECOMMENT("커뮤니티 대댓글"),
+COMMENT_LIKE("커뮤니티 댓글 좋아요"),
+COMMUNITY_LIKE("커뮤니티글 좋아요"),
+COMMUNITY_COMMENT("커뮤니티 댓글"),
 REPORT_BAKERY_ADDED("제보한 빵집 추가"),
 ADD_PRODUCT("제보한 빵 추가"),
 EVENT("제보한 상품 추가"),
@@ -705,7 +717,7 @@ CURATION("큐레이션"),</p></td>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-08-03 11:12:49 +0900
+Last updated 2023-10-12 22:54:13 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
