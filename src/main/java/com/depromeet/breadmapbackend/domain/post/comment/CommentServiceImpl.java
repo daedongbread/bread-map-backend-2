@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
 
 		final boolean userAuthorOfPostAndReview = isUserAuthorOfPostAndReview(command, userId);
 
-		if (command.isFirstDepth() && userAuthorOfPostAndReview)
+		if (userAuthorOfPostAndReview)
 			return savedComment;
 
 		if (isCaseOfUserReceiveTwoNotices(command)) {
@@ -71,16 +71,17 @@ public class CommentServiceImpl implements CommentService {
 			);
 			return savedComment;
 		}
-		publishEvent(
-			userId,
-			savedComment.getId(),
-			command.postId(),
-			command.postTopic() == PostTopic.REVIEW
-				? NoticeType.REVIEW_COMMENT
-				: NoticeType.COMMUNITY_COMMENT
-		);
-		
-		if (!command.isFirstDepth() && userAuthorOfPostAndReview) {
+
+		if (command.isFirstDepth()) {
+			publishEvent(
+				userId,
+				savedComment.getId(),
+				command.postId(),
+				command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_COMMENT
+					: NoticeType.COMMUNITY_COMMENT
+			);
+		} else {
 			publishEvent(
 				userId,
 				savedComment.getId(),
@@ -90,7 +91,6 @@ public class CommentServiceImpl implements CommentService {
 					: NoticeType.RECOMMENT
 			);
 		}
-
 		return savedComment;
 	}
 
