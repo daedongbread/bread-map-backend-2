@@ -25,26 +25,21 @@ public class SearchLogServiceImpl implements SearchLogService {
         String now = LocalDateTime.now().toString();
 
         String key = searchLogKey(oauthId);
-        SearchLog value = SearchLog.builder().
-                keyword(keyword).
-                createdAt(now).
-                build();
-
         Long size = redisTemplate.opsForList().size(key);
         if (size == RECENT_KEYWORD_SIZE) {
             redisTemplate.opsForList().rightPop(key);
         }
 
-        redisTemplate.opsForList().leftPush(key, value);
+        redisTemplate.opsForList().leftPush(key, keyword);
     }
 
     @Override
     public List<String> getRecentSearchLogs(String oauthId) {
         String key = searchLogKey(oauthId);
-        List<SearchLog> range = redisTemplate.opsForList()
+        List<String> range = redisTemplate.opsForList()
                 .range(key, 0, RECENT_KEYWORD_SIZE);
 
-        return Objects.requireNonNull(range).stream().map(SearchLog::getKeyword).toList();
+        return Objects.requireNonNull(range).stream().toList();
     }
 
     @Override
