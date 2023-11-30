@@ -57,10 +57,4 @@ public class ReportBakeryAddNoticeFactory implements NoticeFactory {
 			noticeEventDto.noticeType()
 		));
 	}
-
-	//
-	// @Override
-	// public String getTitle(final String... titleFragment) {
-	// 	return NOTICE_TITLE_FORMAT;
-	// }
 }
