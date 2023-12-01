@@ -15,6 +15,7 @@ public class NoticeFcmDto {
 	private final Long contentId;
 	private final Long subContentId;
 	private final NoticeType type;
+	private final String extraParam;
 
 	@Builder
 	public NoticeFcmDto(
@@ -23,7 +24,8 @@ public class NoticeFcmDto {
 		final String content,
 		final Long contentId,
 		final Long subContentId,
-		final NoticeType type
+		final NoticeType type,
+		final String extraParam
 	) {
 		this.fcmTokens = fcmTokens;
 		this.title = title;
@@ -31,5 +33,6 @@ public class NoticeFcmDto {
 		this.contentId = contentId;
 		this.subContentId = subContentId;
 		this.type = type;
+		this.extraParam = extraParam;
 	}
 }

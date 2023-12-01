@@ -50,14 +50,15 @@ public class CommentLikeNoticeFactory implements NoticeFactory {
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContentAndSubContentId(
+		return List.of(Notice.createNoticeWithContentAndSubContentIdAndExtraParam(
 			comment.getUser(),
 			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			NOTICE_CONTENT_FORMAT,
 			fromUser.getNickName(),
 			noticeEventDto.noticeType(),
-			noticeEventDto.subContentId()
+			noticeEventDto.subContentId(),
+			comment.getPostTopic().name()
 		));
 	}
 }

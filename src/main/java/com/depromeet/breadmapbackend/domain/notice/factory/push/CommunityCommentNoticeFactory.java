@@ -48,14 +48,15 @@ public class CommunityCommentNoticeFactory implements NoticeFactory {
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContentAndSubContentId(
+		return List.of(Notice.createNoticeWithContentAndSubContentIdAndExtraParam(
 			post.getUser(),
 			COMMENT_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			COMMENT_CONTENT_FORMAT,
 			fromUser.getNickName(),
 			noticeEventDto.noticeType(),
-			noticeEventDto.subContentId()
+			noticeEventDto.subContentId(),
+			post.getPostTopic().name()
 		));
 	}
 }

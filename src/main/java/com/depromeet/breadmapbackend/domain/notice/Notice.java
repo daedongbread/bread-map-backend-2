@@ -83,14 +83,15 @@ public class Notice extends BaseEntity {
 			.build();
 	}
 
-	public static Notice createNoticeWithContentAndSubContentId(
+	public static Notice createNoticeWithContentAndSubContentIdAndExtraParam(
 		final User user,
 		final String title,
 		final Long contentId,
 		final String content,
 		final String contentParam,
 		final NoticeType type,
-		final Long subContentId
+		final Long subContentId,
+		final String extraParam
 	) {
 		return Notice.builder()
 			.user(user)
@@ -100,6 +101,7 @@ public class Notice extends BaseEntity {
 			.content(content)
 			.contentParam(contentParam)
 			.type(type)
+			.extraParam(extraParam)
 			.build();
 	}
 

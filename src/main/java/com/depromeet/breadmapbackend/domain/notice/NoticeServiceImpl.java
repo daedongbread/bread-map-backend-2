@@ -117,6 +117,7 @@ public class NoticeServiceImpl implements NoticeService {
 			.contentId(notice.getContentId())
 			.subContentId(notice.getSubContentId())
 			.type(notice.getType())
+			.extraParam(notice.getExtraParam())
 			.build();
 	}
 

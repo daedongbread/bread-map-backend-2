@@ -472,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /v1/notices?page=0 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzAxMjY3NjAzLCJleHAiOjE3MDEyNzEyMDN9.mmf1iqtAnkV_QWiIes61s8ZE47qv1SV9-CIONkjwzWs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvQXV0aElkMSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzAxNDE1NDYyLCJleHAiOjE3MDE0MTkwNjJ9.8jId54Q7QCB9atj3zZeY_8a4OezBQ4bzb_HRDfBNUIg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -547,7 +547,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1329
+Content-Length: 1414
 
 {
   "data" : {
@@ -565,8 +565,9 @@ Content-Length: 1329
       "contentParam" : null,
       "isFollow" : false,
       "subContentId" : null,
-      "createdAt" : "2023-11-29T23:20:03.875171",
-      "noticeType" : "CURATION"
+      "createdAt" : "2023-12-01T16:24:22.829492",
+      "noticeType" : "CURATION",
+      "extraParam" : null
     }, {
       "noticeId" : 2,
       "image" : "cloudfront/S3_DEFAULT_LIKE.png",
@@ -576,8 +577,9 @@ Content-Length: 1329
       "contentParam" : "치악산호랑이",
       "isFollow" : false,
       "subContentId" : null,
-      "createdAt" : "2023-11-29T23:20:03.874664",
-      "noticeType" : "REVIEW_LIKE"
+      "createdAt" : "2023-12-01T16:24:22.828962",
+      "noticeType" : "REVIEW_LIKE",
+      "extraParam" : null
     }, {
       "noticeId" : 1,
       "image" : "cloudfront/S3_DEFAULT_USER.png",
@@ -587,8 +589,9 @@ Content-Length: 1329
       "contentParam" : "팔달산불나방",
       "isFollow" : false,
       "subContentId" : null,
-      "createdAt" : "2023-11-29T23:20:03.874089",
-      "noticeType" : "FOLLOW"
+      "createdAt" : "2023-12-01T16:24:22.828367",
+      "noticeType" : "FOLLOW",
+      "extraParam" : "FOLLOW"
     } ]
   }
 }</code></pre>
@@ -687,6 +690,11 @@ Content-Length: 1329
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].createdAt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">알람 생성일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].extraParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">추가 파라미터 개시글 관련 알림일때 해당 게시글의 postTopic</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents.[].noticeType</code></p></td>
