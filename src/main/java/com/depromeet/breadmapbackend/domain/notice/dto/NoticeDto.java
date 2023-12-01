@@ -22,6 +22,7 @@ public class NoticeDto {
 	private Long subContentId;
 	private LocalDateTime createdAt;
 	private NoticeType noticeType;
+	private String extraParam;
 
 	@Builder
 	public NoticeDto(String image, Boolean isFollow, Notice notice, String title) {
@@ -35,5 +36,6 @@ public class NoticeDto {
 		this.createdAt = notice.getCreatedAt();
 		this.noticeType = notice.getType();
 		this.subContentId = notice.getSubContentId();
+		this.extraParam = notice.getExtraParam();
 	}
 }

@@ -29,7 +29,8 @@ public class FcmService {
 						Map.of(
 							"contentId", dto.getContentId().toString(),
 							"subContentId", dto.getSubContentId() != null ? dto.getSubContentId().toString() : "",
-							"type", dto.getType().toString()
+							"type", dto.getType().toString(),
+							"extraParam", dto.getExtraParam()
 						)
 					)
 					.addAllTokens(dto.getFcmTokens())

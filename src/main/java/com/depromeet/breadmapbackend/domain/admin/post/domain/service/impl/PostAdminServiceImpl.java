@@ -122,6 +122,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 
 		final PostManagerMapper postManagerMapper = postAdminRepository.findPostManagerMapperById(managerId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+		final boolean beforePostStatus = postManagerMapper.isPosted();
 
 		final CarouselManager carouselManager =
 			carouselRepository.findByTargetIdAndCarouselType(postManagerMapper.getId(),
@@ -141,7 +142,7 @@ public class PostAdminServiceImpl implements PostAdminService {
 		carouselManagerService.toggleCarousel(carouselManager.getId(), command.isCarousel());
 		carouselManager.updateBannerImage(command.bannerImage());
 
-		if (command.isPosted()) {
+		if (!beforePostStatus && command.isPosted()) {
 			eventPublisher.publishEvent(
 				NoticeEventDto.builder()
 					.contentId(postManagerMapper.getId())

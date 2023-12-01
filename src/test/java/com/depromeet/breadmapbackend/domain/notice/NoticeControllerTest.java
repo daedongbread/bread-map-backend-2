@@ -117,6 +117,8 @@ class NoticeControllerTest extends ControllerTest {
 						.optional(),
 					fieldWithPath("data.contents.[].isFollow").description("알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
 					fieldWithPath("data.contents.[].createdAt").description("알람 생성일"),
+					fieldWithPath("data.contents.[].extraParam").description("추가 파라미터 개시글 관련 알림일때 해당 게시글의 postTopic")
+						.optional(),
 					fieldWithPath("data.contents.[].noticeType").description("알람 타입 (" +
 						"FOLLOW(\"팔로우\"), \n" +
 						"REVIEW_COMMENT(\"리뷰 댓글\"), \n" +
