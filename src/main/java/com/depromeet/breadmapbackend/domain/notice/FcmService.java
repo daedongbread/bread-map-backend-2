@@ -30,7 +30,7 @@ public class FcmService {
 							"contentId", dto.getContentId().toString(),
 							"subContentId", dto.getSubContentId() != null ? dto.getSubContentId().toString() : "",
 							"type", dto.getType().toString(),
-							"extraParam", dto.getExtraParam()
+							"extraParam", dto.getExtraParam() != null ? dto.getExtraParam() : ""
 						)
 					)
 					.addAllTokens(dto.getFcmTokens())
