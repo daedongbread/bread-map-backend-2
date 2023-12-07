@@ -104,8 +104,6 @@ class NoticeControllerTest extends ControllerTest {
 					fieldWithPath("data.contents").description("알람 리스트"),
 					fieldWithPath("data.contents.[].noticeId").description("알람 아이디"),
 					fieldWithPath("data.contents.[].image").description("알람 이미지").optional(),
-					// fieldWithPath("data.contents.[].fromUserId").description("알람 발신 유저 고유 번호"),
-					// fieldWithPath("data.contents.[].fromUserNickName").description("알람 발신 유저 닉네임"),
 					fieldWithPath("data.contents.[].title").description("알람 제목"),
 					fieldWithPath("data.contents.[].contentId").description("알람 내용의 고유 번호 : " +
 						"(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)").optional(),

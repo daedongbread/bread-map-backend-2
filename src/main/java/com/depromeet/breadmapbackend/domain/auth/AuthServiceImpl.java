@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
 			throw new DaedongException(DaedongStatus.BLOCK_USER);
 
 		saveUsersDeviceToken(request.getDeviceToken(), user);
-
+		user.updateLastAccessedAt();
 		return createNewToken(oidcUserInfo.getOAuthId(), RoleType.USER);
 	}
 
@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
 		makeRefreshTokenInvalid(request.getRefreshToken()); // TODO : accessToken이 유효기간 남아 있으면?
 
 		saveUsersDeviceToken(request.getDeviceToken(), user);
-
+		user.updateLastAccessedAt();
 		return reissueToken;
 	}
 
