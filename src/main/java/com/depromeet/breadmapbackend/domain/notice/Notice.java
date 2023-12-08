@@ -47,6 +47,10 @@ public class Notice extends BaseEntity {
 
 	@Nullable
 	@Column
+	private Long subContentId;
+
+	@Nullable
+	@Column
 	private String content;
 
 	@Nullable
@@ -79,6 +83,28 @@ public class Notice extends BaseEntity {
 			.build();
 	}
 
+	public static Notice createNoticeWithContentAndSubContentIdAndExtraParam(
+		final User user,
+		final String title,
+		final Long contentId,
+		final String content,
+		final String contentParam,
+		final NoticeType type,
+		final Long subContentId,
+		final String extraParam
+	) {
+		return Notice.builder()
+			.user(user)
+			.title(title)
+			.contentId(contentId)
+			.subContentId(subContentId)
+			.content(content)
+			.contentParam(contentParam)
+			.type(type)
+			.extraParam(extraParam)
+			.build();
+	}
+
 	public static Notice createNoticeWithContentAndExtraParam(
 		final User user,
 		final String title,
@@ -94,6 +120,7 @@ public class Notice extends BaseEntity {
 			.contentId(contentId)
 			.content(content)
 			.contentParam(contentParam)
+			.extraParam(extraParam)
 			.type(type)
 			.build();
 	}
@@ -101,9 +128,10 @@ public class Notice extends BaseEntity {
 	@Builder
 	public Notice(final User user, final String title, @Nullable final Long contentId,
 		@Nullable final String content, @Nullable final String contentParam,
-		@Nullable final String extraParam, final NoticeType type) {
+		@Nullable final String extraParam, final NoticeType type, @Nullable final Long subContentId) {
 		this.user = user;
 		this.title = title;
+		this.subContentId = subContentId;
 		this.contentId = contentId;
 		this.content = content;
 		this.contentParam = contentParam;

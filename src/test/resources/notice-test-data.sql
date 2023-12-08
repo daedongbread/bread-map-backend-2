@@ -11,8 +11,9 @@ ALTER TABLE NOTICE
 
 
 insert into USER (is_de_registered,id, created_at, modified_at, role_type, is_block, is_marketing_info_reception_agreed, is_alarm_on, oauth_type, oauth_id, nick_name, email, gender, image)values
-(false, 111,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_111', 'nick_name', 'test@apple.com' , 'MALE', 'image'),
-(false, 112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'image')
+(false, 111,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_111', 'nick_name', 'test@apple.com' , 'MALE', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png'),
+(false, 112,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_222', 'nick_name222', 'test@apple.com' , 'MALE', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png'),
+(false, 1111,  '2023-01-01', '2023-01-01', 'USER', false,  true, false, 'APPLE', 'APPLE_233', 'nick_name22332', 'tes3t@apple.com' , 'MALE', 'https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png')
 ;
 
 

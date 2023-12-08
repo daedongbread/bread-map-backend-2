@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
+import com.depromeet.breadmapbackend.domain.post.Post;
+import com.depromeet.breadmapbackend.domain.post.PostRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
@@ -19,14 +19,13 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class ReportBakeryAddNoticeFactory implements NoticeFactory {
-
-	private static final String NOTICE_TITLE_FORMAT = "내가 제보한 빵집이 추가되었어요!";
-	// content : 빵집명
-	private static final NoticeType SUPPORT_TYPE = NoticeType.REPORT_BAKERY_ADDED;
+public class CommunityLikeNoticeFactory implements NoticeFactory {
+	private static final String COMMUNITY_CONTENT_FORMAT = "내 게시글을 %s님이 좋아해요!";
+	private static final String COMMUNITY_TITLE_FORMAT = "좋아요 알림";
+	private static final NoticeType SUPPORT_TYPE = NoticeType.COMMUNITY_LIKE;
 	private final CustomAWSS3Properties customAwss3Properties;
 	private final UserRepository userRepository;
-	private final BakeryRepository bakeryRepository;
+	private final PostRepository postRepository;
 
 	@Override
 	public boolean support(final NoticeType noticeType) {
@@ -36,25 +35,26 @@ public class ReportBakeryAddNoticeFactory implements NoticeFactory {
 	@Override
 	public String getImage(final Notice notice) {
 		return customAwss3Properties.getCloudFront() + "/" +
-			customAwss3Properties.getDefaultImage().getBreadAdd()
+			customAwss3Properties.getDefaultImage().getLike()
 			+ ".png";
 	}
 
 	@Override
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
-
-		final User toUser = userRepository.findById(noticeEventDto.userId())
+		final Post post = postRepository.findById(noticeEventDto.contentId())
+			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		final Bakery bakery = bakeryRepository.findById(noticeEventDto.contentId())
-			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContent(
-			toUser,
-			NOTICE_TITLE_FORMAT,
+		return List.of(Notice.createNoticeWithContentAndExtraParam(
+			post.getUser(),
+			COMMUNITY_TITLE_FORMAT,
 			noticeEventDto.contentId(),
-			bakery.getName(),
-			null,
+			COMMUNITY_CONTENT_FORMAT,
+			fromUser.getNickName(),
+			post.getPostTopic().name(),
 			noticeEventDto.noticeType()
+
 		));
 	}
 }

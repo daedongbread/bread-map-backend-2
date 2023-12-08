@@ -26,13 +26,13 @@ class AdminHotKeywordServiceImplTest extends AdminHotKeywordServiceTest {
 		final List<HotKeyword> request = List.of(HotKeyword.createSearchKeyword("test", 2),
 			HotKeyword.createSearchKeyword("빵빠라라빵", 1));
 		//when
-		sut.updateHotKeywordsRank(request);
+		sut.updateHotKeywordsRanking(request);
 
 		//then
 		final List<HotKeyword> result = em.createQuery(
 			"select h "
 				+ "from HotKeyword h "
-				+ "order by h.rank asc ", HotKeyword.class
+				+ "order by h.ranking asc ", HotKeyword.class
 		).getResultList();
 
 		Assertions.assertThat(result.size()).isEqualTo(2);
