@@ -31,8 +31,8 @@ public class HotKeyword extends BaseEntity {
 
 	private String keyword;
 	private int rank;
-	
-	public HotKeyword(final String keyword, final int ranking) {
+
+	public HotKeyword(final String keyword, final int rank) {
 		this.keyword = keyword;
 		this.rank = rank;
 	}

@@ -14,6 +14,6 @@ public class HotKeywordServiceImpl implements HotKeywordService {
 	private final HotKeywordRepository hotKeywordRepository;
 	@Override
 	public List<HotKeyword> getHotKeywordsRanking() {
-		return hotKeywordRepository.findAllByOrderByRankingAsc();
+		return hotKeywordRepository.findAllByOrderByRankAsc();
 	}
 }
