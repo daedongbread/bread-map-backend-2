@@ -7,7 +7,6 @@ import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
@@ -32,6 +31,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SearchV2ControllerTest extends ControllerTest {
@@ -47,6 +47,7 @@ class SearchV2ControllerTest extends ControllerTest {
     private void setUpTestDate() throws Exception {
         try (final Connection connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("user-test-data.sql"));
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("hot-keyword-test-data.sql"));
         }
     }
 
@@ -121,33 +122,22 @@ class SearchV2ControllerTest extends ControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-// TODO: github CI test check... mock 객체 return이 안됨
-//    @Test
-//    void searchKeywordSuggestions() throws Exception {
-//        String keyword = "베이커리";
-//
-//        List<String> keywordSuggestions = new ArrayList<>();
-//        keywordSuggestions.add("test1");
-//        keywordSuggestions.add("test2");
-//        keywordSuggestions.add("test3");
-//
-//        when(searchService.searchKeywordSuggestions(eq(keyword)))
-//                .thenReturn(keywordSuggestions);
-//
-//        mockMvc.perform(get("/v2/search/suggestions")
-//                        .param("keyword", keyword)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andDo(document("v2/search/suggestions",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestParameters(
-//                                parameterWithName("keyword").description("검색 키워드")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("data.keywordSuggestions").description("추천 검색어 리스트")
-//                        )
-//                ))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    void getHotKeywords() throws Exception {
+        mockMvc.perform(get("/v2/search/rank"))
+                .andDo(print())
+                .andDo(document("v2/search/rank",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("data.searchResultDtoList.[].keyword").description("키워드"),
+                                fieldWithPath("data.searchResultDtoList.[].rank").description("순위")
+                        )
+                ))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].keyword").isString())
+                .andExpect(jsonPath("$.data[0].rank").isNumber());
+    }
+
 }
