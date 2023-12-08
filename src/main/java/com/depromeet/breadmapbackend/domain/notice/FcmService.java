@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.notice;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeFcmDto;
@@ -23,6 +25,14 @@ public class FcmService {
 			FirebaseMessaging.getInstance().sendMulticastAsync(
 				MulticastMessage.builder()
 					.setNotification(new Notification(dto.getTitle(), dto.getContent()))
+					.putAllData(
+						Map.of(
+							"contentId", dto.getContentId().toString(),
+							"subContentId", dto.getSubContentId() != null ? dto.getSubContentId().toString() : "",
+							"type", dto.getType().toString(),
+							"extraParam", dto.getExtraParam() != null ? dto.getExtraParam() : ""
+						)
+					)
 					.addAllTokens(dto.getFcmTokens())
 					.setAndroidConfig(
 						AndroidConfig.builder()

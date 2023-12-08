@@ -44,7 +44,7 @@ public class CurationNoticeFactory implements NoticeFactory {
 
 	@Override
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
-		final List<User> users = userRepository.findUserWithNoticeTokens();
+		final List<User> users = userRepository.findUserByIsDeRegisteredFalse();
 		final LocalDate now = LocalDate.now();
 		final CurationFeed curationFeed = curationFeedRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.CURATION_FEED_NOT_FOUND));

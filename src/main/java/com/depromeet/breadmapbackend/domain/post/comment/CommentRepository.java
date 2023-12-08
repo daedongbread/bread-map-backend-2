@@ -33,5 +33,5 @@ public interface CommentRepository {
 
 	Optional<Comment> findById(Long id);
 
-	Optional<Comment> findByIdAndPostId(Long commentId, Long postId);
+	Optional<Comment> findByIdAndPostIdAndPostTopic(Long commentId, Long postId, PostTopic postTopic);
 }

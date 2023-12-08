@@ -12,8 +12,8 @@ import java.util.List;
 public interface AdminHotKeywordService {
 	List<Keyword> getHotKeywords(SortType sortType);
 
-	List<HotKeyword> getHotKeywordsRank();
+	List<HotKeyword> getHotKeywordsRanking();
 
-	void updateHotKeywordsRank(List<HotKeyword> hotKeywords);
+	void updateHotKeywordsRanking(List<HotKeyword> hotKeywords);
 
 }

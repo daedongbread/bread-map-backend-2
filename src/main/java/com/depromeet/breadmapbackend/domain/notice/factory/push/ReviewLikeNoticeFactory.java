@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.depromeet.breadmapbackend.domain.notice.Notice;
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
+import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
@@ -46,12 +47,13 @@ public class ReviewLikeNoticeFactory implements NoticeFactory {
 		final User fromUser = userRepository.findById(noticeEventDto.userId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 
-		return List.of(Notice.createNoticeWithContent(
+		return List.of(Notice.createNoticeWithContentAndExtraParam(
 			review.getUser(),
 			NOTICE_TITLE_FORMAT,
 			noticeEventDto.contentId(),
 			NOTICE_CONTENT_FORMAT,
 			fromUser.getNickName(),
+			PostTopic.REVIEW.name(),
 			noticeEventDto.noticeType()
 		));
 	}

@@ -1,5 +1,20 @@
 package com.depromeet.breadmapbackend.domain.review;
 
+import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
+import static com.depromeet.breadmapbackend.domain.review.QReview.*;
+import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.*;
+import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.*;
+import static com.querydsl.core.group.GroupBy.*;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
@@ -12,23 +27,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
-import static com.depromeet.breadmapbackend.domain.review.QReview.review;
-import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.reviewProductRating;
-import static com.depromeet.breadmapbackend.domain.user.block.QBlockUser.blockUser;
-import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 
 @Slf4j
 @Repository
@@ -38,7 +39,6 @@ public class ReviewQueryRepository {
 	private final int BAKERY_REVIEW_SIZE = 5;
 	private final int PRODUCT_REVIEW_SIZE = 5;
 	private final int USER_REVIEW_SIZE = 5;
-
 
 	public List<Review> findByUserIdAndBakery(Long userId, Bakery targetBakery) {
 		return queryFactory
@@ -56,7 +56,6 @@ public class ReviewQueryRepository {
 			.fetch();
 	}
 
-
 	public Map<Long, List<Review>> findReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
 		return queryFactory
 			.selectFrom(review)
@@ -72,7 +71,7 @@ public class ReviewQueryRepository {
 				bakery.in(bakeries))
 			.transform(groupBy(review.bakery.id).as(list(review)));
 
-    }
+	}
 
 	public List<Review> findReviewList(User me, Bakery targetBakery) {
 		return queryFactory.selectFrom(review)
@@ -212,7 +211,8 @@ public class ReviewQueryRepository {
 			.limit(USER_REVIEW_SIZE)
 			.fetch();
 
-		Long count = queryFactory.select(review.count()).from(review)
+		int count = Math.toIntExact(queryFactory.select(review.id.countDistinct())
+			.from(review)
 			.where(review.user.notIn(
 					JPAExpressions.select(blockUser.toUser)
 						.from(blockUser)
@@ -223,7 +223,7 @@ public class ReviewQueryRepository {
 				review.isDelete.isFalse(),
 				review.isBlock.isFalse())
 			//review.createdAt.before(firstTime))
-			.fetchOne();
+			.fetchFirst());
 
 		return new PageImpl<>(content, pageable, count);
 	}
@@ -247,32 +247,32 @@ public class ReviewQueryRepository {
 			throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
 	}
 
-    private OrderSpecifier<?> orderType(ReviewSortType sortBy) {
-        if (sortBy.equals(ReviewSortType.LATEST)) {
-            return review.createdAt.desc();
-        } else if (sortBy.equals(ReviewSortType.HIGH)) {
-            return reviewProductRating.rating.avg().desc();
-        } else if (sortBy.equals(ReviewSortType.LOW)) {
-            return reviewProductRating.rating.avg().asc();
-        } else
-            throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
-    }
+	private OrderSpecifier<?> orderType(ReviewSortType sortBy) {
+		if (sortBy.equals(ReviewSortType.LATEST)) {
+			return review.createdAt.desc();
+		} else if (sortBy.equals(ReviewSortType.HIGH)) {
+			return reviewProductRating.rating.avg().desc();
+		} else if (sortBy.equals(ReviewSortType.LOW)) {
+			return reviewProductRating.rating.avg().asc();
+		} else
+			throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
+	}
 
-    public List<BakeryReviewScoreDto> getBakeriesReview(List<Long> bakeryIds) {
-        return queryFactory
-                .select(
-                        Projections.constructor(
-                                BakeryReviewScoreDto.class,
-                                review.bakery.id.as("bakeryId"),
-                                reviewProductRating.rating.avg().coalesce(0d).as("totalScore"),
-                                review.count().coalesce(0L).as("reviewCount")
-                        )
-                )
-                .from(review)
-                .innerJoin(reviewProductRating).on(review.id.eq(reviewProductRating.review.id))
-                .where(review.bakery.id.in(bakeryIds))
-                .groupBy(review.bakery.id)
-                .fetch();
-    }
+	public List<BakeryReviewScoreDto> getBakeriesReview(List<Long> bakeryIds) {
+		return queryFactory
+			.select(
+				Projections.constructor(
+					BakeryReviewScoreDto.class,
+					review.bakery.id.as("bakeryId"),
+					reviewProductRating.rating.avg().coalesce(0d).as("totalScore"),
+					review.count().coalesce(0L).as("reviewCount")
+				)
+			)
+			.from(review)
+			.innerJoin(reviewProductRating).on(review.id.eq(reviewProductRating.review.id))
+			.where(review.bakery.id.in(bakeryIds))
+			.groupBy(review.bakery.id)
+			.fetch();
+	}
 
 }

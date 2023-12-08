@@ -10,12 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
+import com.depromeet.breadmapbackend.domain.post.Post;
+import com.depromeet.breadmapbackend.domain.post.PostRepository;
 import com.depromeet.breadmapbackend.domain.post.PostTopic;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.Command;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.CommentInfo;
 import com.depromeet.breadmapbackend.domain.post.comment.dto.UpdateCommand;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLike;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
+import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -37,6 +41,8 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 	private final CommentLikeRepository commentLikeRepository;
+	private final PostRepository postRepository;
+	private final ReviewRepository reviewRepository;
 	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional
@@ -49,26 +55,88 @@ public class CommentServiceImpl implements CommentService {
 		);
 		final Comment savedComment = commentRepository.save(comment);
 
-		if (!Objects.equals(comment.getUser().getId(), userId)) {
-			if (command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
-				eventPublisher.publishEvent(
-					NoticeEventDto.builder()
-						.userId(userId)
-						.contentId(command.postId())
-						.noticeType(NoticeType.REVIEW_COMMENT)
-						.build()
-				);
-			} else if (!command.isFirstDepth() && command.postTopic() == PostTopic.REVIEW) {
-				eventPublisher.publishEvent(
-					NoticeEventDto.builder()
-						.userId(userId)
-						.contentId(command.parentId())
-						.noticeType(NoticeType.RECOMMENT)
-						.build()
-				);
-			}
+		final boolean userAuthorOfPostAndReview = isUserAuthorOfPostAndReview(command, userId);
+
+		if (userAuthorOfPostAndReview && command.isFirstDepth())
+			return savedComment;
+
+		if (isCaseOfUserReceiveTwoNotices(command)) {
+			publishEvent(
+				userId,
+				savedComment.getId(),
+				command.parentId(),
+				command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_RECOMMENT
+					: NoticeType.RECOMMENT
+			);
+			return savedComment;
+		}
+
+		if (command.isFirstDepth()) {
+			publishEvent(
+				userId,
+				savedComment.getId(),
+				command.postId(),
+				command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_COMMENT
+					: NoticeType.COMMUNITY_COMMENT
+			);
+		} else {
+			publishEvent(
+				userId,
+				savedComment.getId(),
+				command.parentId(),
+				command.postTopic() == PostTopic.REVIEW
+					? NoticeType.REVIEW_RECOMMENT
+					: NoticeType.RECOMMENT
+			);
 		}
 		return savedComment;
+	}
+
+	private void publishEvent(Long userId, Long contentId, Long subContentId, NoticeType noticeType) {
+		eventPublisher.publishEvent(
+			NoticeEventDto.builder()
+				.userId(userId)
+				.contentId(contentId)
+				.subContentId(subContentId)
+				.noticeType(noticeType)
+				.build()
+		);
+	}
+
+	private boolean isCaseOfUserReceiveTwoNotices(
+		final Command command
+	) {
+		if (command.isFirstDepth())
+			return false;
+
+		final Comment parentComment = commentRepository.findById(command.parentId())
+			.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
+
+		if (command.postTopic() == PostTopic.REVIEW) {
+			final Review review = reviewRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+			return parentComment.getUser().getId().equals(review.getUser().getId());
+		} else {
+			final Post post = postRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+
+			return parentComment.getUser().getId().equals(post.getUser().getId());
+		}
+	}
+
+	private boolean isUserAuthorOfPostAndReview(final Command command, final Long userId) {
+		if (command.postTopic() == PostTopic.REVIEW) {
+
+			final Review review = reviewRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.REVIEW_NOT_FOUND));
+			return review.getUser().getId().equals(userId);
+		} else {
+			final Post post = postRepository.findById(command.postId())
+				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
+			return post.getUser().getId().equals(userId);
+		}
 	}
 
 	@Override
@@ -125,7 +193,11 @@ public class CommentServiceImpl implements CommentService {
 					NoticeEventDto.builder()
 						.userId(userId)
 						.contentId(comment.getId())
-						.noticeType(NoticeType.COMMENT_LIKE)
+						.subContentId(comment.getPostId())
+						.noticeType(comment.getPostTopic() == PostTopic.REVIEW
+							? NoticeType.REVIEW_COMMENT_LIKE
+							: NoticeType.COMMENT_LIKE
+						)
 						.build()
 				);
 			return 1;
@@ -153,7 +225,7 @@ public class CommentServiceImpl implements CommentService {
 			if (command.targetCommentUserId() == 0)
 				throw new DaedongException(DaedongStatus.SECOND_DEPTH_COMMENT_SHOULD_HAVE_TARGET_USER_ID);
 
-			commentRepository.findByIdAndPostId(command.parentId(), command.postId())
+			commentRepository.findByIdAndPostIdAndPostTopic(command.parentId(), command.postId(), command.postTopic())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.COMMENT_NOT_FOUND));
 
 			userRepository.findById(command.targetCommentUserId())

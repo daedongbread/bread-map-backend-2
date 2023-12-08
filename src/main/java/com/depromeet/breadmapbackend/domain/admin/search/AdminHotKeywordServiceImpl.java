@@ -39,12 +39,12 @@ public class AdminHotKeywordServiceImpl implements AdminHotKeywordService {
 	}
 
 	@Override
-	public List<HotKeyword> getHotKeywordsRank() {
-		return hotKeywordRepository.findAllByOrderByRankAsc();
+	public List<HotKeyword> getHotKeywordsRanking() {
+		return hotKeywordRepository.findAllByOrderByRankingAsc();
 	}
 
 	@Override
-	public void updateHotKeywordsRank(final List<HotKeyword> hotKeywords) {
+	public void updateHotKeywordsRanking(final List<HotKeyword> hotKeywords) {
 		checkDuplicateKeywords(hotKeywords);
 		checkDuplicateRank(hotKeywords);
 
@@ -62,7 +62,7 @@ public class AdminHotKeywordServiceImpl implements AdminHotKeywordService {
 
 	private void checkDuplicateRank(final List<HotKeyword> hotKeywords) {
 		Map<Integer, Long> keywordCount = hotKeywords.stream()
-			.collect(Collectors.groupingBy(HotKeyword::getRank, Collectors.counting()));
+			.collect(Collectors.groupingBy(HotKeyword::getRanking, Collectors.counting()));
 		if (keywordCount.values().stream().anyMatch(count -> count > 1)) {
 			throw new DaedongException(DaedongStatus.DUPLICATED_RANK);
 		}

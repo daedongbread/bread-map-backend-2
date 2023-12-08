@@ -34,14 +34,10 @@ public class HotKeyword extends BaseEntity {
 	
 	public HotKeyword(final String keyword, final int ranking) {
 		this.keyword = keyword;
-		this.rank = rank;
+		this.ranking = ranking;
 	}
 
 	public static HotKeyword createSearchKeyword(final String keyword, final int rank) {
 		return new HotKeyword(keyword, rank);
-	}
-
-	public void updateRank(final int rank) {
-		this.rank = rank;
 	}
 }

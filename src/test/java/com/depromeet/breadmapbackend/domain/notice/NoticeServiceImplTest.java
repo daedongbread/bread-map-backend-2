@@ -44,14 +44,11 @@ class NoticeServiceImplTest extends NoticeServiceTest {
 
 		assertThat(result.getContents().stream().map(NoticeDto::getImage))
 			.containsExactly(
-				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
-					customAWSS3Properties.getDefaultImage().getUser()),
-				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
-					customAWSS3Properties.getDefaultImage().getUser()),
+				"https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png",
+				"https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png",
 				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
 					customAWSS3Properties.getDefaultImage().getLike()),
-				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
-					customAWSS3Properties.getDefaultImage().getUser()),
+				"https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png",
 				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
 					customAWSS3Properties.getDefaultImage().getLike()),
 				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
@@ -60,8 +57,7 @@ class NoticeServiceImplTest extends NoticeServiceTest {
 					customAWSS3Properties.getDefaultImage().getLike()),
 				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
 					customAWSS3Properties.getDefaultImage().getComment()),
-				"%s/%s.png".formatted(customAWSS3Properties.getCloudFront(),
-					customAWSS3Properties.getDefaultImage().getUser())
+				"https://d2a72lvyl71dvx.cloudfront.net/defaultImage/defaultUser.png"
 			);
 	}
 }

@@ -66,3 +66,4 @@ public class SearchLogServiceImpl implements SearchLogService {
         return "searchLog:" + oauthId;
     }
 }
+
