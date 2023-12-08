@@ -22,7 +22,7 @@ operation::v1/search/search[snippets='http-request,request-headers,request-param
 === 자동완성 검색어 추천 API [GET]
 operation::v2/search/suggestions[snippets='http-request,request-parameters,http-response,response-fields']
 
-=== 인기검색어 검색 테스트 API [GET]
+=== 인기검색어 조회 API [GET]
 operation::v2/search/rank/[snippets='http-request,http-response,response-fields']
 
 == OpenSearch Query 테스트용 End Point
