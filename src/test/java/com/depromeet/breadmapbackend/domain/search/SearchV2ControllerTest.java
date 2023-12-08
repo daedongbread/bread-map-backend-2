@@ -24,15 +24,12 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SearchV2ControllerTest extends ControllerTest {
     @Autowired
@@ -41,13 +38,11 @@ class SearchV2ControllerTest extends ControllerTest {
     private DataSource dataSource;
     @MockBean
     private SearchService searchService;
-
     private String userToken;
 
     private void setUpTestDate() throws Exception {
         try (final Connection connection = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("user-test-data.sql"));
-            ScriptUtils.executeSqlScript(connection, new ClassPathResource("hot-keyword-test-data.sql"));
         }
     }
 
@@ -121,23 +116,4 @@ class SearchV2ControllerTest extends ControllerTest {
                 ))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    @Test
-    void getHotKeywords() throws Exception {
-        mockMvc.perform(get("/v2/search/rank"))
-                .andDo(print())
-                .andDo(document("v2/search/rank",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("data.searchResultDtoList.[].keyword").description("키워드"),
-                                fieldWithPath("data.searchResultDtoList.[].rank").description("순위")
-                        )
-                ))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data[0].keyword").isString())
-                .andExpect(jsonPath("$.data[0].rank").isNumber());
-    }
-
 }

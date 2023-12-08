@@ -38,6 +38,7 @@ class FakeSearchV2ControllerTest extends ControllerTest {
 	private void setUpTestDate() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("user-test-data.sql"));
+			ScriptUtils.executeSqlScript(connection, new ClassPathResource("hot-keyword-test-data.sql"));
 		}
 	}
 
