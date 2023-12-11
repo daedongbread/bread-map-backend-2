@@ -17,12 +17,13 @@ import org.springframework.stereotype.Repository;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
-import com.depromeet.breadmapbackend.domain.bakery.QBakery;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
+import com.depromeet.breadmapbackend.domain.search.dto.BakeryReviewScoreDto;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -39,7 +40,6 @@ public class ReviewQueryRepository {
 	private final int PRODUCT_REVIEW_SIZE = 5;
 	private final int USER_REVIEW_SIZE = 5;
 
-
 	public List<Review> findByUserIdAndBakery(Long userId, Bakery targetBakery) {
 		return queryFactory
 			.selectFrom(review)
@@ -55,7 +55,6 @@ public class ReviewQueryRepository {
 				))
 			.fetch();
 	}
-
 
 	public Map<Long, List<Review>> findReviewListInBakeries(final Long userId, final List<Bakery> bakeries) {
 		return queryFactory
@@ -212,7 +211,8 @@ public class ReviewQueryRepository {
 			.limit(USER_REVIEW_SIZE)
 			.fetch();
 
-		Long count = queryFactory.select(review.count()).from(review)
+		int count = Math.toIntExact(queryFactory.select(review.id.countDistinct())
+			.from(review)
 			.where(review.user.notIn(
 					JPAExpressions.select(blockUser.toUser)
 						.from(blockUser)
@@ -223,7 +223,7 @@ public class ReviewQueryRepository {
 				review.isDelete.isFalse(),
 				review.isBlock.isFalse())
 			//review.createdAt.before(firstTime))
-			.fetchOne();
+			.fetchFirst());
 
 		return new PageImpl<>(content, pageable, count);
 	}
@@ -257,4 +257,22 @@ public class ReviewQueryRepository {
 		} else
 			throw new DaedongException(DaedongStatus.REVIEW_SORT_TYPE_EXCEPTION);
 	}
+
+	public List<BakeryReviewScoreDto> getBakeriesReview(List<Long> bakeryIds) {
+		return queryFactory
+			.select(
+				Projections.constructor(
+					BakeryReviewScoreDto.class,
+					review.bakery.id.as("bakeryId"),
+					reviewProductRating.rating.avg().coalesce(0d).as("totalScore"),
+					review.count().coalesce(0L).as("reviewCount")
+				)
+			)
+			.from(review)
+			.innerJoin(reviewProductRating).on(review.id.eq(reviewProductRating.review.id))
+			.where(review.bakery.id.in(bakeryIds))
+			.groupBy(review.bakery.id)
+			.fetch();
+	}
+
 }

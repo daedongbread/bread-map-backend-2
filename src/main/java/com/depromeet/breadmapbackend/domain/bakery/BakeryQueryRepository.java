@@ -1,30 +1,12 @@
 package com.depromeet.breadmapbackend.domain.bakery;
 
-import static com.depromeet.breadmapbackend.domain.bakery.QBakery.*;
-import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.*;
-import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryAddReport.*;
-import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.*;
-import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.*;
-import static com.depromeet.breadmapbackend.domain.bakery.view.QBakeryView.*;
-import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.*;
-import static com.depromeet.breadmapbackend.domain.review.QReview.*;
-import static com.depromeet.breadmapbackend.domain.user.QUser.*;
-import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
-
 import com.depromeet.breadmapbackend.domain.admin.bakery.param.AdminBakeryFilter;
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBase;
 import com.depromeet.breadmapbackend.domain.bakery.dto.CoordinateRange;
 import com.depromeet.breadmapbackend.domain.bakery.dto.NewBakeryDto;
+import com.depromeet.breadmapbackend.domain.bakery.product.ProductType;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import com.querydsl.core.BooleanBuilder;
@@ -34,8 +16,30 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+
+import static com.depromeet.breadmapbackend.domain.bakery.QBakery.bakery;
+import static com.depromeet.breadmapbackend.domain.bakery.product.QProduct.product;
+import static com.depromeet.breadmapbackend.domain.bakery.product.report.QProductAddReport.productAddReport;
+import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryAddReport.bakeryAddReport;
+import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryReportImage.bakeryReportImage;
+import static com.depromeet.breadmapbackend.domain.bakery.report.QBakeryUpdateReport.bakeryUpdateReport;
+import static com.depromeet.breadmapbackend.domain.bakery.view.QBakeryView.bakeryView;
+import static com.depromeet.breadmapbackend.domain.flag.QFlagBakery.flagBakery;
+import static com.depromeet.breadmapbackend.domain.review.QReview.review;
+import static com.depromeet.breadmapbackend.domain.review.QReviewProductRating.reviewProductRating;
+import static com.depromeet.breadmapbackend.domain.user.QUser.user;
+import static com.depromeet.breadmapbackend.domain.user.follow.QFollow.follow;
 
 @Repository
 @RequiredArgsConstructor
@@ -172,13 +176,35 @@ public class BakeryQueryRepository {
 					startDate.atTime(LocalTime.MAX))));
 	}
 
-	// private JPQLQuery<Double> avgRatingSubQuery(LocalDate startDate) {
-	// 	return JPAExpressions.select(reviewProductRating.rating.avg().coalesce(0.0))
-	// 		.from(reviewProductRating)
-	// 		.where(bakery.id.eq(reviewProductRating.bakery.id)
-	// 			.and(reviewProductRating.createdAt.between(
-	// 				startDate.minusDays(7).atStartOfDay(),
-	// 				startDate.atTime(LocalTime.MAX))));
-	// }
+	public List<BakeryLoadData> bakeryLoadEntireDataJPQLQuery() {
+		return queryFactory
+				.select(Projections.constructor(BakeryLoadData.class
+						, bakery.id
+						, bakery.name
+						, bakery.address
+						, bakery.longitude
+						, bakery.latitude
+				))
+				.from(bakery)
+				.fetch();
+	}
+
+	public List<BreadLoadData> breadLoadEntireDataJPQLQuery() {
+		return queryFactory
+				.select(Projections.constructor(BreadLoadData.class
+						, product.id
+						, product.name
+						, bakery.id
+						, bakery.name
+						, bakery.address
+						, bakery.longitude
+						, bakery.latitude
+				))
+				.from(bakery)
+				.innerJoin(product)
+				.on(bakery.id.eq(product.bakery.id))
+				.where((product.productType.eq(ProductType.BREAD)))
+				.fetch();
+	}
 
 }

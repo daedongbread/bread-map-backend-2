@@ -1,13 +1,16 @@
 package com.depromeet.breadmapbackend.domain.post;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.breadmapbackend.domain.admin.post.domain.repository.PostAdminRepository;
+import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
+import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.post.comment.CommentRepository;
 import com.depromeet.breadmapbackend.domain.post.comment.like.CommentLikeRepository;
 import com.depromeet.breadmapbackend.domain.post.dto.CommunityCardInfo;
@@ -40,7 +43,7 @@ public class PostServiceImpl implements PostService {
 	private final CommentRepository commentRepository;
 	private final CommentLikeRepository commentLikeRepository;
 	private final ReportRepository reportRepository;
-	private final PostAdminRepository postAdminRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
 	@Transactional
@@ -113,11 +116,20 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	@Override
 	public int toggle(final Long postId, final Long userId) {
-		final Post post = postLikeRepository.findById(postId)
+		final Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));
 		final Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUserId(postId, userId);
 		if (postLike.isEmpty()) {
 			postLikeRepository.save(new PostLike(post, userId));
+			if (!Objects.equals(userId, post.getUser().getId())) {
+				eventPublisher.publishEvent(
+					NoticeEventDto.builder()
+						.userId(userId)
+						.contentId(post.getId())
+						.noticeType(NoticeType.COMMUNITY_LIKE)
+						.build()
+				);
+			}
 			return 1;
 		} else {
 			postLikeRepository.delete(postLike.get());

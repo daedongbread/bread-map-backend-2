@@ -38,13 +38,13 @@ public class CurationNoticeFactory implements NoticeFactory {
 	@Override
 	public String getImage(final Notice notice) {
 		return customAwss3Properties.getCloudFront() + "/" +
-			customAwss3Properties.getDefaultImage().getReport()
+			customAwss3Properties.getDefaultImage().getCuration()
 			+ ".png";
 	}
 
 	@Override
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
-		final List<User> users = userRepository.findUserWithNoticeTokens();
+		final List<User> users = userRepository.findUserByIsDeRegisteredFalse();
 		final LocalDate now = LocalDate.now();
 		final CurationFeed curationFeed = curationFeedRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.CURATION_FEED_NOT_FOUND));

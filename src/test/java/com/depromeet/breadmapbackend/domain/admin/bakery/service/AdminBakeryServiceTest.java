@@ -10,11 +10,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
+import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,6 +55,9 @@ public class AdminBakeryServiceTest {
 	private CustomAWSS3Properties customAWSS3Properties;
 	@Mock
 	private ApplicationEventPublisher eventPublisher;
+	@Mock
+	private OpenSearchEventPublisher openSearchEventPublisher;
+
 	private List<Bakery> bakeries;
 	private List<Product> products;
 	private CustomAWSS3Properties.DefaultImage defaultImage = new CustomAWSS3Properties.DefaultImage(
@@ -60,7 +66,10 @@ public class AdminBakeryServiceTest {
 		"like default image",
 		"report default image",
 		"flag default image",
-		"user default image");
+		"user default image",
+		"curation default image",
+		"event default image",
+		"bread add default image");
 
 	@BeforeEach
 	void setup() {
@@ -192,6 +201,10 @@ public class AdminBakeryServiceTest {
 
 		verify(bakeryRepository, times(1))
 			.existsByNameAndAddress(addRequest.getName(), addRequest.getAddress());
+
+		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
+		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
+
 	}
 
 	@DisplayName("addBakery - 이미지 0개 등록 테스트")
@@ -241,6 +254,9 @@ public class AdminBakeryServiceTest {
 
 		verify(bakeryRepository, times(1))
 			.existsByNameAndAddress(addRequest.getName(), addRequest.getAddress());
+
+		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
+		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
 	}
 
 	@DisplayName("updateBakery 테스트")
@@ -301,6 +317,9 @@ public class AdminBakeryServiceTest {
 			"2023-08-2700:00:00", "update check point"
 		);
 
+		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
+		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
+
 	}
 
 	@DisplayName("updateBakery 테스트 - 수정 이미지가 0개일 경우 기본 이미지 1개를 삽입한다")
@@ -345,5 +364,8 @@ public class AdminBakeryServiceTest {
 		assertThat(bakeries.get(0).getImages()).hasSize(1);
 		assertThat(bakeries.get(0).getImages().get(0)).contains(
 			customAWSS3Properties.getCloudFront() + "/" + customAWSS3Properties.getDefaultImage().getBakery());
+
+		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
+		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
 	}
 }

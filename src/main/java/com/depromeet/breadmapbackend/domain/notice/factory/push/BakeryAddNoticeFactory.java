@@ -36,7 +36,7 @@ public class BakeryAddNoticeFactory implements NoticeFactory {
 	@Override
 	public String getImage(final Notice notice) {
 		return customAwss3Properties.getCloudFront() + "/" +
-			customAwss3Properties.getDefaultImage().getBakery()
+			customAwss3Properties.getDefaultImage().getBreadAdd()
 			+ ".png";
 	}
 
@@ -45,9 +45,10 @@ public class BakeryAddNoticeFactory implements NoticeFactory {
 
 		final Bakery bakery = bakeryRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.BAKERY_NOT_FOUND));
-		final List<User> users = userRepository.findUserWithNoticeTokens();
-
-		return users.stream().map(
+		final List<User> users = userRepository.findUserByIsDeRegisteredFalse();
+		return users.stream()
+			.filter(user -> !user.getId().equals(noticeEventDto.userId()))
+			.map(
 				user -> Notice.createNoticeWithContent(
 					user,
 					NOTICE_TITLE_FORMAT.formatted(bakery.getName()),

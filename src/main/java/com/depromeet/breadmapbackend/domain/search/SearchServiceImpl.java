@@ -1,99 +1,198 @@
 package com.depromeet.breadmapbackend.domain.search;
 
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
-import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
 import com.depromeet.breadmapbackend.domain.review.Review;
+import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
+import com.depromeet.breadmapbackend.domain.search.dto.*;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
+import com.depromeet.breadmapbackend.domain.subway.SubwayStation;
+import com.depromeet.breadmapbackend.domain.subway.SubwayStationRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.global.infra.properties.CustomRedisProperties;
-import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.opensearch.action.search.SearchResponse;
+import org.opensearch.search.SearchHit;
+import org.opensearch.search.SearchHits;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.*;
-import static java.lang.Math.toRadians;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
+
+    private final static Integer MAX_KEYWORD_SUGGESTION = 12;
+
     private final BakeryRepository bakeryRepository;
     private final UserRepository userRepository;
-    private final ReviewService reviewService;
-    private final StringRedisTemplate redisTemplate;
-    private final CustomRedisProperties customRedisProperties;
+    private final SubwayStationRepository subwayStationRepository;
+    private final ReviewQueryRepository reviewQueryRepository;
 
-//    @Transactional(readOnly = true, rollbackFor = Exception.class)
-//    public List<SearchDto> autoComplete(String oAuthId, String word, Double latitude, Double longitude) {
-//        User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-//
-//        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word.strip(), word.replaceAll(" ", ""), latitude, longitude, 10).stream()
-//                .map(bakery -> SearchDto.builder()
-//                        .bakery(bakery)
-//                        .reviewNum(reviewService.getReviewList(me, bakery).size())
-//                        .distance(floor(acos(cos(toRadians(latitude))
-//                                * cos(toRadians(bakery.getLatitude()))
-//                                * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
-//                                + sin(toRadians(latitude)) * sin(toRadians(bakery.getLatitude()))) * 6371000)).build())
-//                .collect(Collectors.toList());
-//    }
+    private final ReviewService reviewService;
+    private final SearchLogService searchLogService;
+    private final OpenSearchService openSearchService;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SearchDto> search(String oAuthId, String word, Double latitude, Double longitude) {
+    public List<SearchDto> searchDatabase(String oAuthId, String keyword, Double latitude, Double longitude) {
         User me = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
-//        ZSetOperations<String, String> redisRecentSearch = redisTemplate.opsForZSet();
-//        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSSSSS")); // timestamp로!!
-//        redisRecentSearch.add(customRedisProperties.getKey().getRecent() + ":" + oAuthId, word, Double.parseDouble(time));
-//        redisRecentSearch.removeRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, -(10 + 1), -(10 + 1));
-
-        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(word.strip(), word.replaceAll(" ", ""), latitude, longitude, 10).stream()
+        return bakeryRepository.find10ByNameContainsIgnoreCaseAndStatusOrderByDistance(keyword.strip(), keyword.replaceAll(" ", ""), latitude, longitude, 10).stream()
                 .map(bakery -> SearchDto.builder()
                         .bakery(bakery)
                         .rating(bakeryRating(reviewService.getReviewList(me, bakery)))
                         .reviewNum(reviewService.getReviewList(me, bakery).size())
                         .distance(floor(acos(cos(toRadians(latitude))
                                 * cos(toRadians(bakery.getLatitude()))
-                                * cos(toRadians(bakery.getLongitude())- toRadians(longitude))
-                                + sin(toRadians(latitude))*sin(toRadians(bakery.getLatitude())))*6371000)).build())
+                                * cos(toRadians(bakery.getLongitude()) - toRadians(longitude))
+                                + sin(toRadians(latitude)) * sin(toRadians(bakery.getLatitude()))) * 6371000)).build())
                 .collect(Collectors.toList());
     }
 
-    private Double bakeryRating(List<Review> reviewList) { // TODO
-        return Math.floor(reviewList.stream().map(Review::getAverageRating).collect(Collectors.toList())
-                .stream().mapToDouble(Double::doubleValue).average().orElse(0)*10)/10.0;
+    @Override
+    public SearchResultResponse searchEngine(String oAuthId, String keyword, Double userLat, Double userLng, SearchType searchType) {
+        userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        searchLogService.saveRecentSearchLog(oAuthId, keyword);
+
+        SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
+
+        keyword = checkEndingWithStation(keyword);
+
+        List<SubwayStation> subwayStationList = subwayStationRepository.findByName(keyword);
+        SearchResponse document;
+
+        if (!subwayStationList.isEmpty()) {
+            document = openSearchService.getDocumentByGeology(keyword, subwayStationList.get(0).getLatitude(), subwayStationList.get(0).getLongitude());
+            builder.subwayStationName(keyword.concat("역"));
+        } else {
+            document = openSearchService.getBreadByKeyword(keyword);
+        }
+
+        List<SearchEngineDto> searchResults = new ArrayList<>(getSearchEngineDtoList(document.getHits(), userLat, userLng));
+
+        if (searchResults.size() < 7) {
+            document = openSearchService.getBakeryByKeyword(keyword);
+            searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
+        }
+
+        List<BakeryReviewScoreDto> bakeriesReviews = reviewQueryRepository.getBakeriesReview(SearchEngineDto.extractBakeryIdList(searchResults));
+        List<SearchResultDto> searchResultDtos = mergeSearchEngineAndReview(searchResults, bakeriesReviews);
+
+        resultSortBySearchType(searchType, searchResultDtos);
+
+        return builder
+                .searchResultDtoList(searchResultDtos)
+                .build();
     }
 
-//    @Transactional(readOnly = true, rollbackFor = Exception.class)
-//    public List<String> recentKeywords(String oAuthId) {
-//        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-//        return new ArrayList<>(Objects.requireNonNull(
-//                redisTemplate.opsForZSet().reverseRange(customRedisProperties.getKey().getRecent() + ":" + oAuthId, 0, -1)));
-//    }
-//
-//    @Transactional(rollbackFor = Exception.class)
-//    public void deleteRecentKeyword(String oAuthId, String keyword) {
-//        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-//        redisTemplate.opsForZSet().remove(customRedisProperties.getKey().getRecent() + ":" + oAuthId, keyword);
-//    }
-//
-//    @Transactional(rollbackFor = Exception.class)
-//    public void deleteRecentKeywordAll(String oAuthId) {
-//        if(userRepository.findByOAuthId(oAuthId).isEmpty()) throw new DaedongException(DaedongStatus.USER_NOT_FOUND);
-//        redisTemplate.delete(customRedisProperties.getKey().getRecent() + ":" + oAuthId);
-//    }
+    private static List<SearchResultDto> mergeSearchEngineAndReview(List<SearchEngineDto> searchResults, List<BakeryReviewScoreDto> bakeriesReviews) {
+
+        List<SearchResultDto> searchResultDtos = new ArrayList<>();
+
+        for (SearchEngineDto searchResultDto : searchResults) {
+            SearchResultDto.SearchResultDtoBuilder searchResultDtoBuilder = SearchResultDto.builder();
+            searchResultDtoBuilder
+                    .bakeryId(searchResultDto.getBakeryId())
+                    .bakeryName(searchResultDto.getBakeryName())
+                    .address(searchResultDto.getAddress())
+                    .distance(searchResultDto.getDistance())
+                    .reviewNum(0L) // init
+                    .totalScore(0d); // init
+            if (searchResultDto.getBreadId() != null) {
+                searchResultDtoBuilder
+                        .breadId(searchResultDto.getBreadId())
+                        .breadName(searchResultDto.getBreadName());
+            }
+
+            for (BakeryReviewScoreDto bakeryReviewScoreDto : bakeriesReviews) {
+                if (searchResultDto.getBakeryId().equals(bakeryReviewScoreDto.getBakeryId())) {
+                    searchResultDtoBuilder.reviewNum(bakeryReviewScoreDto.getReviewCount());
+                    searchResultDtoBuilder.totalScore(bakeryReviewScoreDto.getTotalScore());
+                }
+            }
+            searchResultDtos.add(searchResultDtoBuilder.build());
+        }
+
+        return searchResultDtos;
+    }
+
+    private static void resultSortBySearchType(SearchType searchType, List<SearchResultDto> searchResults) {
+        if (searchType == SearchType.DISTANCE) {
+            searchResults.sort(Comparator.comparingDouble(SearchResultDto::getDistance));
+        } else {
+            searchResults.sort((dto1, dto2) -> Double.compare(dto2.getReviewNum(), dto1.getReviewNum()));
+        }
+    }
+
+    private String checkEndingWithStation(String keyword) {
+        if (keyword.endsWith("역")) {
+            return keyword.substring(0, keyword.length() - 1);
+        }
+        return keyword;
+    }
+
+    private List<SearchEngineDto> getSearchEngineDtoList(SearchHits hits, Double userLat, Double userLng) {
+        return Arrays.stream(hits.getHits())
+                .map(searchHit -> getSearchEngineDtoBuilder(userLat, userLng, searchHit).build())
+                .collect(Collectors.toList());
+    }
+
+    private static SearchEngineDto.SearchEngineDtoBuilder getSearchEngineDtoBuilder(Double userLat, Double userLng, SearchHit searchHit) {
+        Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+        double locationLat = Double.parseDouble((String) sourceAsMap.get("latitude"));
+        double locationLng = Double.parseDouble((String) sourceAsMap.get("longitude"));
+
+        SearchEngineDto.SearchEngineDtoBuilder searchEngineDtoBuilder = SearchEngineDto.builder()
+                .bakeryId(Long.valueOf((Integer) sourceAsMap.get("bakeryId")))
+                .bakeryName((String) sourceAsMap.get("bakeryName"))
+                .address((String) sourceAsMap.get("bakeryAddress"))
+                .distance(floor(acos(cos(toRadians(userLat))
+                        * cos(toRadians(locationLat))
+                        * cos(toRadians(locationLng) - toRadians(userLng))
+                        + sin(toRadians(userLat)) * sin(toRadians(locationLat))) * 6371000));
+
+
+        if (sourceAsMap.get("breadId") != null) {
+            searchEngineDtoBuilder
+                    .breadId(Long.valueOf((Integer) sourceAsMap.get("bakeryId")))
+                    .breadName((String) sourceAsMap.get("breadName"));
+        }
+
+        return searchEngineDtoBuilder;
+    }
+
+    @Override
+    public List<String> searchKeywordSuggestions(String word) {
+        HashSet<String> keywordSuggestions;
+        SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, word);
+        keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
+                .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
+                .collect(Collectors.toCollection(HashSet::new));
+
+        if (keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
+            SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, word);
+            for (SearchHit breadHit : breadSuggestions.getHits().getHits()) {
+                keywordSuggestions.add((String) breadHit.getSourceAsMap().get("breadName"));
+            }
+        }
+
+        List<String> tempSet = new ArrayList<>(keywordSuggestions);
+        Collections.sort(tempSet);
+        return tempSet;
+    }
+
+    private Double bakeryRating(List<Review> reviewList) {
+        return Math.floor(reviewList.stream().map(Review::getAverageRating).toList()
+                .stream().mapToDouble(Double::doubleValue).average().orElse(0) * 10) / 10.0;
+    }
+
 }

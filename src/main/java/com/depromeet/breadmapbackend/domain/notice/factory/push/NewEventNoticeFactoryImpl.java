@@ -43,13 +43,13 @@ public class NewEventNoticeFactoryImpl implements NoticeFactory {
 	@Override
 	public String getImage(final Notice notice) {
 		return customAwss3Properties.getCloudFront() + "/" +
-			customAwss3Properties.getDefaultImage().getFlag()
+			customAwss3Properties.getDefaultImage().getEvent()
 			+ ".png";  // TODO 이벤트 아이콘 이미지 변경
 	}
 
 	@Override
 	public List<Notice> createNotice(final NoticeEventDto noticeEventDto) {
-		final List<User> users = userRepository.findUserWithNoticeTokens();
+		final List<User> users = userRepository.findUserByIsDeRegisteredFalse();
 		final PostManagerMapper postManagerMapper =
 			postAdminRepository.findPostManagerMapperById(noticeEventDto.contentId())
 				.orElseThrow(() -> new DaedongException(DaedongStatus.POST_NOT_FOUND));

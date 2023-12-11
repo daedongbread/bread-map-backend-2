@@ -2,8 +2,6 @@ package com.depromeet.breadmapbackend.domain.post.like;
 
 import java.util.Optional;
 
-import com.depromeet.breadmapbackend.domain.post.Post;
-
 /**
  * PostLikeRepository
  *
@@ -19,6 +17,4 @@ public interface PostLikeRepository {
 	void delete(PostLike postLike);
 
 	void deleteByPostId(Long postId);
-
-	Optional<Post> findById(Long postId);
 }

@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.review.comment;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -49,7 +50,9 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
 		final ReviewComment parent = getParent(request);
 		saveNewComment(request, user, review, parent);
-		publishNotice(user, review, parent);
+		if (!Objects.equals(user.getId(), review.getUser().getId())) {
+			publishNotice(user, review, parent);
+		}
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -109,13 +112,15 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 			throw new DaedongException(DaedongStatus.REVIEW_COMMENT_LIKE_DUPLICATE_EXCEPTION);
 		ReviewCommentLike.builder().reviewComment(reviewComment).user(user).build();
 
-		eventPublisher.publishEvent(
-			NoticeEventDto.builder()
-				.userId(user.getId())
-				.contentId(reviewComment.getId())
-				.noticeType(NoticeType.COMMENT_LIKE)
-				.build()
-		);
+		if (!Objects.equals(user.getId(), reviewComment.getUser().getId())) {
+			eventPublisher.publishEvent(
+				NoticeEventDto.builder()
+					.userId(user.getId())
+					.contentId(reviewComment.getId())
+					.noticeType(NoticeType.COMMENT_LIKE)
+					.build()
+			);
+		}
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -159,9 +164,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 	private void publishNotice(final User user, final Review review, final ReviewComment parent) {
 		final boolean isReply = parent != null;
 		final NoticeType noticeType = isReply ? NoticeType.RECOMMENT : NoticeType.REVIEW_COMMENT;
-		final User noticeReceiver = isReply ? parent.getUser() : review.getUser();
 		final Long targetedNoticeId = isReply ? parent.getId() : review.getId();
-		final String targetedNoticeContent = isReply ? parent.getContent() : review.getContent();
 
 		eventPublisher.publishEvent(
 			NoticeEventDto.builder()

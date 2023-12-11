@@ -57,6 +57,13 @@ cloud:
         report: ${S3_DEFAULT_IMAGE_REPORT}
         flag: ${S3_DEFAULT_IMAGE_FLAG}
         user: ${S3_DEFAULT_IMAGE_USER}
+        curation: ${S3_DEFAULT_IMAGE_CURATION}
+        event: ${S3_DEFAULT_IMAGE_EVENT}
+        breadAdd: ${S3_DEFAULT_IMAGE_BREAD_ADD}
+    open-search:
+      id: ${OPEN_SEARCH_ID}
+      password: ${OPEN_SEARCH_PASSWORD}
+      host: ${OPEN_SEARCH_HOST}
 
 firebase:
   credentials: ${FIREBASE_CREDENTIALS}
@@ -79,7 +86,6 @@ admin:
     post:
       user-id: ${EVENT_POST_ADMIN_USER_ID}
 
-
 redis:
   poll-timeout:
     bakery-view: 5
@@ -87,3 +93,4 @@ redis:
 
 server:
   shutdown: graceful
+

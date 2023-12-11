@@ -88,10 +88,10 @@ public class UserServiceImpl implements UserService {
 			}
 			return new AlarmDto(user.alarmOn());
 		} else {
-			if (noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).isPresent()) {
-				noticeTokenRepository.delete(
-					noticeTokenRepository.findByUserAndDeviceToken(user, request.getDeviceToken()).get());
-			}
+			noticeTokenRepository.deleteAllInBatch(
+				noticeTokenRepository.findAllByDeviceToken(request.getDeviceToken())
+			);
+
 			return new AlarmDto(user.alarmOff());
 		}
 	}

@@ -35,8 +35,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("select u "
 		+ "from User u "
-		+ "left join fetch u.noticeTokens nt ")
-	List<User> findUserWithNoticeTokens();
+		+ "where u.isDeRegistered = false ")
+	List<User> findUserByIsDeRegisteredFalse();
 
 	List<User> findByIdNotIn(List<Long> userIds);
 }

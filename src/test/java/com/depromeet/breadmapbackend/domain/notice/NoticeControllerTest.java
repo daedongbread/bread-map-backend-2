@@ -104,23 +104,29 @@ class NoticeControllerTest extends ControllerTest {
 					fieldWithPath("data.contents").description("알람 리스트"),
 					fieldWithPath("data.contents.[].noticeId").description("알람 아이디"),
 					fieldWithPath("data.contents.[].image").description("알람 이미지").optional(),
-					// fieldWithPath("data.contents.[].fromUserId").description("알람 발신 유저 고유 번호"),
-					// fieldWithPath("data.contents.[].fromUserNickName").description("알람 발신 유저 닉네임"),
 					fieldWithPath("data.contents.[].title").description("알람 제목"),
 					fieldWithPath("data.contents.[].contentId").description("알람 내용의 고유 번호 : " +
 						"(내가 쓴 리뷰 아이디 or 내가 쓴 댓글 아이디 or 팔로우한 유저 아이디)").optional(),
+					fieldWithPath("data.contents.[].subContentId").description("알람 내용의 부모 고유 번호 : " +
+						"(댓글달린 게시글 or 리뷰의 id)").optional(),
 					fieldWithPath("data.contents.[].content").description("알람 세부 내용 : " +
 						"(내가 쓴 리뷰 내용 or 내가 쓴 댓글 내용, 팔로우/팔로잉 알람일 땐 null)").optional(),
 					fieldWithPath("data.contents.[].contentParam").description("알람 메시지 생성용 파라미터 ex) user nickName")
 						.optional(),
 					fieldWithPath("data.contents.[].isFollow").description("알람 팔로우/팔로잉 알람일 때 팔로우 여부"),
 					fieldWithPath("data.contents.[].createdAt").description("알람 생성일"),
+					fieldWithPath("data.contents.[].extraParam").description("추가 파라미터 개시글 관련 알림일때 해당 게시글의 postTopic")
+						.optional(),
 					fieldWithPath("data.contents.[].noticeType").description("알람 타입 (" +
 						"FOLLOW(\"팔로우\"), \n" +
 						"REVIEW_COMMENT(\"리뷰 댓글\"), \n" +
 						"REVIEW_LIKE(\"리뷰 좋아요\"), \n" +
-						"RECOMMENT(\"대댓글\"), \n" +
-						"COMMENT_LIKE(\"댓글 좋아요\"), \n" +
+						"REVIEW_RECOMMENT(\"리뷰 대댓글\"), \n" +
+						"REVIEW_COMMENT_LIKE(\"리뷰 댓글 좋아요\"), \n" +
+						"RECOMMENT(\"커뮤니티 대댓글\"), \n" +
+						"COMMENT_LIKE(\"커뮤니티 댓글 좋아요\"), \n" +
+						"COMMUNITY_LIKE(\"커뮤니티글 좋아요\"), \n" +
+						"COMMUNITY_COMMENT(\"커뮤니티 댓글\"), \n" +
 						"REPORT_BAKERY_ADDED(\"제보한 빵집 추가\"), \n" +
 						"ADD_PRODUCT(\"제보한 빵 추가\"), \n" +
 						"EVENT(\"제보한 상품 추가\"), \n" +

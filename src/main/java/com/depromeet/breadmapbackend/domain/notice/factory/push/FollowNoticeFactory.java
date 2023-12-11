@@ -10,7 +10,6 @@ import com.depromeet.breadmapbackend.domain.notice.dto.NoticeEventDto;
 import com.depromeet.breadmapbackend.domain.notice.factory.NoticeType;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
-import com.depromeet.breadmapbackend.domain.user.follow.Follow;
 import com.depromeet.breadmapbackend.domain.user.follow.FollowRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
@@ -38,10 +37,9 @@ public class FollowNoticeFactory implements NoticeFactory {
 	public String getImage(final Notice notice) {
 		assert notice.getContentId() != null;
 		final Optional<User> follower = userRepository.findById(notice.getContentId());
-		final String s = follower.map(user -> user.getUserInfo().getImage())
+		return follower.map(user -> user.getUserInfo().getImage())
 			.orElse(customAwss3Properties.getCloudFront() + "/" +
 				customAwss3Properties.getDefaultImage().getUser() + ".png");
-		return s;
 	}
 
 	@Override
@@ -50,15 +48,13 @@ public class FollowNoticeFactory implements NoticeFactory {
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
 		final User fromUser = userRepository.findById(noticeEventDto.contentId())
 			.orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
-		final Optional<Follow> isFollow = followRepository.findByFromUserAndToUser(toUser, fromUser);
 
-		return List.of(Notice.createNoticeWithContentAndExtraParam(
+		return List.of(Notice.createNoticeWithContent(
 			toUser,
 			NOTICE_TITLE_FORMAT,
 			fromUser.getId(),
 			NOTICE_CONTENT_FORMAT,
 			fromUser.getNickName(),
-			isFollow.isPresent() ? "FOLLOW" : "UNFOLLOW",
 			SUPPORT_TYPE
 		));
 	}

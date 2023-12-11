@@ -39,7 +39,7 @@ public class SearchController {
             @Size(min=1, max=20, message = "1자 이상, 20자 이하 입력해주세요.", groups = ValidationGroups.SizeCheckGroup.class)
             String word,
             @RequestParam Double latitude, @RequestParam Double longitude) {
-        return new ApiResponse<>(searchService.search(oAuthId, word, latitude, longitude));
+        return new ApiResponse<>(searchService.searchDatabase(oAuthId, word, latitude, longitude));
     }
 
 //    @GetMapping("/keywords")

@@ -7,6 +7,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
+import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -91,6 +95,7 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 	private final S3Uploader s3Uploader;
 	private final SgisClient sgisClient;
 	private final ApplicationEventPublisher eventPublisher;
+	private final OpenSearchEventPublisher openSearchEventPublisher;
 	private final CustomSGISKeyProperties customSGISKeyProperties;
 	private final CustomAWSS3Properties customAWSS3Properties;
 	private final UpdateBakerySQSService updateBakerySQSService; // TODO : migrate to AOP
@@ -222,11 +227,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		if (bakery.getStatus().equals(BakeryStatus.POSTING)) {
 			if (pioneer != null) {
 				eventPublisher.publishEvent(
-					NoticeEventDto.builder()
-						.userId(pioneer.getId())
-						.contentId(bakery.getId())
-						.noticeType(NoticeType.REPORT_BAKERY_ADDED)
-						.build()
+						NoticeEventDto.builder()
+								.userId(pioneer.getId())
+								.contentId(bakery.getId())
+								.noticeType(NoticeType.REPORT_BAKERY_ADDED)
+								.build()
 				);
 			}
 			eventPublisher.publishEvent(
@@ -236,6 +241,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					.noticeType(NoticeType.BAKERY_ADDED)
 					.build()
 			);
+
+			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
 		}
 
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
@@ -248,15 +255,23 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 
 		List<String> images = getImagesIfExistsOrGetDefaultImage(request.getImages());
 
+		BakeryStatus status = request.getStatus();
+		if(status == BakeryStatus.POSTING) {
+			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
+		} else if(status == BakeryStatus.UNPOSTING) {
+			openSearchEventPublisher.publishDeleteBakery(bakeryId);
+		}
+
 		bakery.update(request.getName(),
 			request.getAddress(), request.getDetailedAddress(), request.getLatitude(), request.getLongitude(),
 			request.getHours(),
 			request.getWebsiteURL(), request.getInstagramURL(), request.getFacebookURL(), request.getBlogURL(),
 			request.getPhoneNumber(), request.getCheckPoint(), request.getNewBreadTime(),
 			images,
-			request.getFacilityInfoList(), request.getStatus());
+			request.getFacilityInfoList(), status);
 
 		if (request.getProductList() != null && !request.getProductList().isEmpty()) { // TODO
+			openSearchEventPublisher.publishDeleteAllProducts(bakeryId);
 			for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
 				Product product;
 				if (productUpdateRequest.getProductId() == null) { // 새로운 product 일 때
@@ -273,6 +288,8 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					product.update(productUpdateRequest.getProductType(), productUpdateRequest.getProductName(),
 						productUpdateRequest.getPrice(), productUpdateRequest.getImage());
 				}
+
+				openSearchEventPublisher.publishSaveBread(new BreadLoadData(product.getId(), product.getName(), bakeryId, bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
 			}
 		}
 	}

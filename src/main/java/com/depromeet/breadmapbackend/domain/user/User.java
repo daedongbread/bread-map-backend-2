@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +73,12 @@ public class User extends BaseEntity {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<NoticeToken> noticeTokens = new ArrayList<>();
+
+	private LocalDateTime lastAccessedAt = LocalDateTime.now();
+
+	public void updateLastAccessedAt() {
+		this.lastAccessedAt = LocalDateTime.now();
+	}
 
 	public String getOAuthId() {
 		return this.oAuthInfo.getOAuthId();
