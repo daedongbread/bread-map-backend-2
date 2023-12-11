@@ -7,10 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
-import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
-import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
-import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,6 +57,9 @@ import com.depromeet.breadmapbackend.domain.review.ReviewImage;
 import com.depromeet.breadmapbackend.domain.review.ReviewImageRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRatingRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewRepository;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
+import com.depromeet.breadmapbackend.domain.search.dto.keyword.BreadLoadData;
+import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.S3Uploader;
 import com.depromeet.breadmapbackend.global.dto.PageResponseDto;
@@ -227,11 +226,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		if (bakery.getStatus().equals(BakeryStatus.POSTING)) {
 			if (pioneer != null) {
 				eventPublisher.publishEvent(
-						NoticeEventDto.builder()
-								.userId(pioneer.getId())
-								.contentId(bakery.getId())
-								.noticeType(NoticeType.REPORT_BAKERY_ADDED)
-								.build()
+					NoticeEventDto.builder()
+						.userId(pioneer.getId())
+						.contentId(bakery.getId())
+						.noticeType(NoticeType.REPORT_BAKERY_ADDED)
+						.build()
 				);
 			}
 			eventPublisher.publishEvent(
@@ -242,7 +241,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 					.build()
 			);
 
-			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
+			openSearchEventPublisher.publishSaveBakery(
+				new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(),
+					bakery.getLatitude()));
 		}
 
 		return BakeryAddDto.builder().bakeryId(bakery.getId()).build();
@@ -256,9 +257,11 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 		List<String> images = getImagesIfExistsOrGetDefaultImage(request.getImages());
 
 		BakeryStatus status = request.getStatus();
-		if(status == BakeryStatus.POSTING) {
-			openSearchEventPublisher.publishSaveBakery(new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
-		} else if(status == BakeryStatus.UNPOSTING) {
+		if (status == BakeryStatus.POSTING) {
+			openSearchEventPublisher.publishSaveBakery(
+				new BakeryLoadData(bakery.getId(), bakery.getName(), bakery.getAddress(), bakery.getLongitude(),
+					bakery.getLatitude()));
+		} else if (status == BakeryStatus.UNPOSTING) {
 			openSearchEventPublisher.publishDeleteBakery(bakeryId);
 		}
 
@@ -275,13 +278,30 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 			for (BakeryUpdateRequest.ProductUpdateRequest productUpdateRequest : request.getProductList()) {
 				Product product;
 				if (productUpdateRequest.getProductId() == null) { // 새로운 product 일 때
+					ProductAddReport productAddReport = null;
+					if (productUpdateRequest.getReportId() != null)
+						productAddReport =
+							productAddReportRepository.findById(productUpdateRequest.getReportId())
+								.orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_ADD_REPORT_NOT_FOUND));
+
 					product = Product.builder()
 						.productType(productUpdateRequest.getProductType())
 						.name(productUpdateRequest.getProductName())
 						.price(productUpdateRequest.getPrice())
 						.image(productUpdateRequest.getImage())
-						.bakery(bakery).build(); // TODO
+						.bakery(bakery)
+						.productAddReport(productAddReport)
+						.build(); // TODO
 					productRepository.save(product);
+
+					if (productAddReport != null) {
+						eventPublisher.publishEvent(
+							NoticeEventDto.builder()
+								.userId(productAddReport.getUser().getId())
+								.contentId(productAddReport.getId())
+								.noticeType(NoticeType.ADD_PRODUCT)
+								.build());
+					}
 				} else { // 기존 product 일 때
 					product = productRepository.findById(productUpdateRequest.getProductId())
 						.orElseThrow(() -> new DaedongException(DaedongStatus.PRODUCT_NOT_FOUND));
@@ -289,7 +309,9 @@ public class AdminBakeryServiceImpl implements AdminBakeryService {
 						productUpdateRequest.getPrice(), productUpdateRequest.getImage());
 				}
 
-				openSearchEventPublisher.publishSaveBread(new BreadLoadData(product.getId(), product.getName(), bakeryId, bakery.getName(), bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
+				openSearchEventPublisher.publishSaveBread(
+					new BreadLoadData(product.getId(), product.getName(), bakeryId, bakery.getName(),
+						bakery.getAddress(), bakery.getLongitude(), bakery.getLatitude()));
 			}
 		}
 	}
