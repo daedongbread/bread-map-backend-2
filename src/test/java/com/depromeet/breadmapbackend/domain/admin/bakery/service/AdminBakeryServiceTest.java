@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
-import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
+import com.depromeet.breadmapbackend.domain.admin.bakery.handler.OpenSearchEventPublisher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
