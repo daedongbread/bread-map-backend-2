@@ -11,10 +11,10 @@ import java.util.Collections;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OpenSearchBakeryEventListener implements ApplicationListener<OpenSearchBakeryEvent> {
+public class OpenSearchBakeryEventListener implements ApplicationListener<BakeryCreationEvent> {
     private final OpenSearchService openSearchService;
     @Override
-    public void onApplicationEvent(OpenSearchBakeryEvent event) {
+    public void onApplicationEvent(BakeryCreationEvent event) {
         try {
             openSearchService.convertDataAndLoadToEngine(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion(), Collections.singletonList(event.getBakeryLoadData()));
         } catch (IOException e) {

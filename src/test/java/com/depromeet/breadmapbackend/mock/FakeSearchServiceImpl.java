@@ -1,12 +1,12 @@
 package com.depromeet.breadmapbackend.mock;
 
-import java.util.List;
-
 import com.depromeet.breadmapbackend.domain.search.SearchService;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchResultDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
+
+import java.util.List;
 
 /**
  * FakeSearchServiceImpl

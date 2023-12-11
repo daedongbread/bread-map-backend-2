@@ -32,3 +32,4 @@ operation::v1/search-engine/document/bread[snippets='http-request,request-parame
 
 === 빵집명으로 검색 테스트 API [GET]
 operation::v1/search-engine/document/bakery[snippets='http-request,request-parameters,http-response,response-fields']
+
