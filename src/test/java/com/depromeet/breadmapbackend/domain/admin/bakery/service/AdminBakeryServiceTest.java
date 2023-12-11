@@ -23,7 +23,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
 
@@ -45,6 +48,8 @@ public class AdminBakeryServiceTest {
 	private BakeryRepository bakeryRepository;
 	@Mock
 	private CustomAWSS3Properties customAWSS3Properties;
+	@Mock
+	private ApplicationEventPublisher eventPublisher;
 
 	private List<Bakery> bakeries;
 	private List<Product> products;
@@ -61,6 +66,8 @@ public class AdminBakeryServiceTest {
 
 	@BeforeEach
 	void setup() {
+
+//		MockitoAnnotations.openMocks(this);
 
 		List<String> images1 = List.of("bakery test image 1", "bakery test image 2");
 		List<String> images2 = List.of("bakery test image 1");
@@ -139,6 +146,8 @@ public class AdminBakeryServiceTest {
 		verify(customAWSS3Properties, times(bakeries.get(0).getImages().size()))
 			.getDefaultImage();
 
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
+
 	}
 
 	@DisplayName("addBakery 테스트")
@@ -190,6 +199,8 @@ public class AdminBakeryServiceTest {
 		verify(bakeryRepository, times(1))
 			.existsByNameAndAddress(addRequest.getName(), addRequest.getAddress());
 
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
+
 	}
 
 	@DisplayName("addBakery - 이미지 0개 등록 테스트")
@@ -239,6 +250,8 @@ public class AdminBakeryServiceTest {
 
 		verify(bakeryRepository, times(1))
 			.existsByNameAndAddress(addRequest.getName(), addRequest.getAddress());
+
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
 
 	}
 
@@ -344,5 +357,8 @@ public class AdminBakeryServiceTest {
 		assertThat(bakeries.get(0).getImages()).hasSize(1);
 		assertThat(bakeries.get(0).getImages().get(0)).contains(
 			customAWSS3Properties.getCloudFront() + "/" + customAWSS3Properties.getDefaultImage().getBakery());
+
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
+
 	}
 }
