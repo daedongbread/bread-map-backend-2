@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.admin.carousel.domain.service;
 
 import java.util.List;
 
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselManager;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselType;
 import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.CreateCarouselCommand;
 import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.UpdateCarouselOrderCommand;
 import com.depromeet.breadmapbackend.domain.admin.post.domain.dto.info.CarouselInfo;
@@ -22,4 +24,6 @@ public interface CarouselManagerService {
 	List<CarouselInfo> getCarousels();
 
 	void toggleCarousel(final Long carouselId, final boolean isCarousel);
+
+	CarouselManager getCarouselByTargetIdAndCarouselType(final Long carouselId, final CarouselType carouselType);
 }

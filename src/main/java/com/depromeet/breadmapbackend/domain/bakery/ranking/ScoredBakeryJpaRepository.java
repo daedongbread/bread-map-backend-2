@@ -21,6 +21,7 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 		+ "from ScoredBakery sb "
 		+ "join fetch sb.bakery b "
 		+ "where sb.calculatedDate = :calculatedDate "
+		+ "and b.status = 'POSTING' "
 		+ "order by sb.rank asc ")
 	List<ScoredBakery> findScoredBakeryByCalculatedDate(
 		@Param("calculatedDate") final LocalDate calculatedDate,
@@ -30,7 +31,8 @@ public interface ScoredBakeryJpaRepository extends JpaRepository<ScoredBakery, L
 	@Query("select sb "
 		+ "from ScoredBakery sb "
 		+ "join fetch sb.bakery b "
-		+ "where sb.calculatedDate between :startDate and :endDate")
+		+ "where sb.calculatedDate between :startDate and :endDate "
+		+ "and b.status = 'POSTING' ")
 	List<ScoredBakery> findScoredBakeryWithStartDate(
 		@Param("startDate") final LocalDate startDate,
 		@Param("endDate") final LocalDate endDate
