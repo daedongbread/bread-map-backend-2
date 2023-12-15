@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselManager;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselType;
 import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.CreateCarouselCommand;
 import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.UpdateCarouselOrderCommand;
 import com.depromeet.breadmapbackend.domain.admin.carousel.repository.CarouselRepository;
@@ -94,6 +95,15 @@ public class CarouselManagerServiceImpl implements CarouselManagerService {
 					);
 				}
 			});
+	}
+
+	@Override
+	public CarouselManager getCarouselByTargetIdAndCarouselType(
+		final Long carouselId,
+		final CarouselType carouselType
+	) {
+		return carouselRepository.findByTargetIdAndCarouselType(carouselId, carouselType)
+			.orElseThrow(() -> new DaedongException(DaedongStatus.CAROUSEL_NOT_FOUND));
 	}
 
 	@Override
