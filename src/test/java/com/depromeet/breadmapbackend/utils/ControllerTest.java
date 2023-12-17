@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
 import com.depromeet.breadmapbackend.domain.admin.AdminService;
+import com.depromeet.breadmapbackend.domain.admin.carousel.repository.CarouselRepository;
 import com.depromeet.breadmapbackend.domain.admin.category.repository.CategoryRepository;
 import com.depromeet.breadmapbackend.domain.admin.category.service.CategoryService;
 import com.depromeet.breadmapbackend.domain.admin.feed.repository.CurationBakeryRepository;
@@ -226,6 +227,9 @@ public abstract class ControllerTest {
 
 	@Autowired
 	DataSource dataSource;
+
+	@Autowired
+	protected CarouselRepository carouselRepository;
 
 	@BeforeEach
 	void beforeEach() throws Exception {

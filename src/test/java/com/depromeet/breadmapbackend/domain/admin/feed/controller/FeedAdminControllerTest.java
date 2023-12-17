@@ -30,6 +30,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselManager;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselType;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationFeed;
@@ -209,6 +211,7 @@ public class FeedAdminControllerTest extends ControllerTest {
 		categoryRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
 		adminRepository.deleteAllInBatch();
+		carouselRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -355,6 +358,15 @@ public class FeedAdminControllerTest extends ControllerTest {
 	void 큐레이션피드_수정_테스트() throws Exception {
 
 		//given
+		final CarouselManager carouselManager = CarouselManager.builder()
+			.targetId(curation.getId())
+			.carouseled(true)
+			.carouselType(CarouselType.CURATION)
+			.bannerImage(customAWSS3Properties.getCloudFront() + "/" + "productImage.jpg")
+			.carouselOrder(1)
+			.build();
+
+		carouselRepository.save(carouselManager);
 
 		CommonFeedRequestDto updateCommon = CommonFeedRequestDto.builder()
 			.subTitle("업데이트된 큐레이션 테스트 피드")

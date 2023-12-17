@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.depromeet.breadmapbackend.domain.admin.Admin;
 import com.depromeet.breadmapbackend.domain.admin.AdminRepository;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.CarouselType;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.dto.command.CreateCarouselCommand;
+import com.depromeet.breadmapbackend.domain.admin.carousel.domain.service.CarouselManagerService;
 import com.depromeet.breadmapbackend.domain.admin.category.domain.Category;
 import com.depromeet.breadmapbackend.domain.admin.category.repository.CategoryRepository;
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
@@ -42,6 +45,7 @@ public class CurationFeedService implements FeedService {
 	private final CategoryRepository categoryRepository;
 	private final ProductRepository productRepository;
 	private final FlagBakeryRepository flagBakeryRepository;
+	private final CarouselManagerService carouselManagerService;
 
 	@Transactional
 	@Override
@@ -58,6 +62,16 @@ public class CurationFeedService implements FeedService {
 		feed.addAll(bakeries, curationBakeries);
 
 		CurationFeed newFeed = repository.save(feed);
+
+		carouselManagerService.saveCarousel(
+			new CreateCarouselCommand(
+				CarouselType.CURATION,
+				newFeed.getId(),
+				requestDto.getCommon().getThumbnailUrl(),
+				true
+			)
+		);
+
 		return newFeed.getId();
 	}
 
@@ -74,6 +88,9 @@ public class CurationFeedService implements FeedService {
 		List<CurationBakery> curationBakeries = FeedAssembler.toCurationBakery(feed, bakeries, updateDto);
 
 		feed.update(updateFeed, bakeries, curationBakeries);
+
+		carouselManagerService.getCarouselByTargetIdAndCarouselType(feedId, CarouselType.CURATION)
+			.updateBannerImage(updateDto.getCommon().getThumbnailUrl());
 	}
 
 	@Override

@@ -9,15 +9,15 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-public class OpenSearchDeleteBakeryEventListener implements ApplicationListener<OpenSearchDeleteBakeryEvent> {
+public class OpenSearchDeleteBakeryEventListener implements ApplicationListener<BakeryDeletionEvent> {
     private final OpenSearchService openSearchService;
 
     @Override
-    public void onApplicationEvent(OpenSearchDeleteBakeryEvent event) {
+    public void onApplicationEvent(BakeryDeletionEvent event) {
         try {
-            openSearchService.deleteIndex(event.getOpenSearchIndex(), event.targetId);
+            openSearchService.deleteIndex(event.getOpenSearchIndex(), event.bakeryId);
         } catch (IOException e) {
-            log.error("====== onApplicationEvent Starting with " + event.getOpenSearchIndex() + event.getTargetId() + " has been error");
+            log.error("====== onApplicationEvent Starting with " + event.getOpenSearchIndex() + event.getBakeryId() + " has been error");
         }
     }
 }

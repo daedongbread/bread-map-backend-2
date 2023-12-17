@@ -1,17 +1,9 @@
 package com.depromeet.breadmapbackend.domain.search;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.sql.Connection;
-
-import javax.sql.DataSource;
-
+import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
+import com.depromeet.breadmapbackend.global.security.domain.RoleType;
+import com.depromeet.breadmapbackend.utils.ControllerTest;
+import com.depromeet.breadmapbackend.utils.TestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +13,18 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
-import com.depromeet.breadmapbackend.global.security.domain.RoleType;
-import com.depromeet.breadmapbackend.utils.ControllerTest;
-import com.depromeet.breadmapbackend.utils.TestConfig;
+import javax.sql.DataSource;
+import java.sql.Connection;
+
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(TestConfig.class)
 class FakeSearchV2ControllerTest extends ControllerTest {
@@ -38,6 +38,7 @@ class FakeSearchV2ControllerTest extends ControllerTest {
 	private void setUpTestDate() throws Exception {
 		try (final Connection connection = dataSource.getConnection()) {
 			ScriptUtils.executeSqlScript(connection, new ClassPathResource("user-test-data.sql"));
+			ScriptUtils.executeSqlScript(connection, new ClassPathResource("hot-keyword-test-data.sql"));
 		}
 	}
 
@@ -90,7 +91,6 @@ class FakeSearchV2ControllerTest extends ControllerTest {
 			.andExpect(status().isOk());
 	}
 
-	// TODO: github CI test check... mock 객체 return이 안됨
 	@Test
 	void searchKeywordSuggestions() throws Exception {
 		String keyword = "베이커리";

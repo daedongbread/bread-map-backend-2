@@ -1,5 +1,7 @@
 package com.depromeet.breadmapbackend.domain.search;
 
+import com.depromeet.breadmapbackend.domain.admin.search.Mapper;
+import com.depromeet.breadmapbackend.domain.admin.search.dto.HotKeywordResponse;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.KeywordSuggestionResponse;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.RecentKeywords;
@@ -24,6 +26,7 @@ public class SearchV2Controller {
 
     private final SearchService searchService;
     private final SearchLogService searchLogService;
+    private final HotKeywordService hotKeywordService;
 
     @GetMapping("/keyword")
     @ResponseStatus(HttpStatus.OK)
@@ -58,4 +61,15 @@ public class SearchV2Controller {
         List<String> keywordSuggestions = searchService.searchKeywordSuggestions(keyword);
         return new ApiResponse<>(KeywordSuggestionResponse.builder().keywordSuggestions(keywordSuggestions).build());
     }
+
+    @GetMapping("/rank")
+    public ApiResponse<List<HotKeywordResponse>> getHotKeywords() {
+        return new ApiResponse<>(
+                hotKeywordService.getHotKeywordsRanking()
+                        .stream()
+                        .map(Mapper::of)
+                        .toList()
+        );
+    }
+
 }
