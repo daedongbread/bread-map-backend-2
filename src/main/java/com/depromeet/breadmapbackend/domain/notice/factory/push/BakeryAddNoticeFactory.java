@@ -30,7 +30,7 @@ public class BakeryAddNoticeFactory implements NoticeFactory {
 
 	@Override
 	public boolean support(final NoticeType noticeType) {
-		return SUPPORT_TYPE == noticeType;
+		return false;// SUPPORT_TYPE == noticeType;
 	}
 
 	@Override

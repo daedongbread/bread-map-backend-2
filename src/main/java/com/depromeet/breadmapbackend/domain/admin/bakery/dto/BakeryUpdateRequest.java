@@ -64,5 +64,6 @@ public class BakeryUpdateRequest {
 		@NotBlank(message = "빵 가격은 필수 값입니다.", groups = ValidationGroups.NotEmptyGroup.class)
 		private String price;
 		private String image;
+		private Long reportId;
 	}
 }

@@ -16,8 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.bakery.product.report.ProductAddReport;
 import com.depromeet.breadmapbackend.domain.review.ReviewProductRating;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
@@ -58,8 +60,12 @@ public class Product extends BaseEntity {
 	@Convert(converter = BooleanToYNConverter.class)
 	private boolean isTrue;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	private ProductAddReport productAddReport;
+
 	@Builder
-	private Product(Long id, ProductType productType, String name, String price, String image, Bakery bakery, Boolean isTrue) {
+	private Product(Long id, ProductType productType, String name, String price, String image, Bakery bakery,
+		Boolean isTrue, ProductAddReport productAddReport) {
 		this.id = id;
 		this.productType = productType;
 		this.name = name;
@@ -71,6 +77,7 @@ public class Product extends BaseEntity {
 		else
 			this.isTrue = isTrue;
 		this.bakery.getProductList().add(this);
+		this.productAddReport = productAddReport;
 	}
 
 	public void update(ProductType productType, String name, String price, String image) {
