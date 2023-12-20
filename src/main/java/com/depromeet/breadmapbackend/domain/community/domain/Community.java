@@ -101,8 +101,5 @@ public abstract class Community {
 		this.images = images;
 		this.bakery = bakery;
 		this.tempBakerySource = tempBakerySource;
-		this.isBlock = isBlock;
-		this.isHide = isHide;
-		this.isDelete = isDelete;
 	}
 }
