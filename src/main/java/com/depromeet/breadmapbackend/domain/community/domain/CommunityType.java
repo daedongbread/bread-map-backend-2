@@ -8,4 +8,12 @@ package com.depromeet.breadmapbackend.domain.community.domain;
  * @since 12/20/23
  */
 public enum CommunityType {
+	REVIEW,
+	BREAD_PILGRIMAGE,
+	BRAG_BREAD,
+	BAKING,
+	BREAD_TALK,
+	ONE_DAY_CLASS,
+	BREAD_GROUP_BUY,
+	EVENT
 }
