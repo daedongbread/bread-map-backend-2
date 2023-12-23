@@ -85,7 +85,12 @@ class FakeSearchV2ControllerTest extends ControllerTest {
 					fieldWithPath("data.searchResultDtoList.[].address").description("빵집 주소"),
 					fieldWithPath("data.searchResultDtoList.[].totalScore").description("빵집 점수"),
 					fieldWithPath("data.searchResultDtoList.[].reviewNum").description("빵집 리뷰 갯수"),
-					fieldWithPath("data.searchResultDtoList.[].distance").description("빵집까지 거리")
+					fieldWithPath("data.searchResultDtoList.[].distance").description("빵집까지 거리"),
+					fieldWithPath("data.searchResultDtoList.[].latitude").description("위도"),
+					fieldWithPath("data.searchResultDtoList.[].longitude").description("경도"),
+					fieldWithPath("data.searchResultDtoList.[].bakeryImageUrl").description("빵집 이미지 URL"),
+					fieldWithPath("data.searchResultDtoList.[].flagCount").description("깃발 갯수"),
+					fieldWithPath("data.searchResultDtoList.[].flagColor").description("깃발 색깔")
 				)
 			))
 			.andExpect(status().isOk());
