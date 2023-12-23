@@ -2,6 +2,8 @@ package com.depromeet.breadmapbackend.domain.search.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -15,4 +17,11 @@ public class SearchResultDto {
     private Double distance;
     private Long reviewNum;
     private Double totalScore;
+
+    private Double latitude;
+    private Double longitude;
+    private List<String> bakeryImageUrl;
+
+    private Integer flagCount;
+    private String flagColor;
 }
