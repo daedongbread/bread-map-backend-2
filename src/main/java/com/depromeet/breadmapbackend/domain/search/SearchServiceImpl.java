@@ -1,6 +1,10 @@
 package com.depromeet.breadmapbackend.domain.search;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
+import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
@@ -36,6 +40,8 @@ public class SearchServiceImpl implements SearchService {
     private final UserRepository userRepository;
     private final SubwayStationRepository subwayStationRepository;
     private final ReviewQueryRepository reviewQueryRepository;
+    private final FlagBakeryRepository flagBakeryRepository;
+    private final FlagRepository flagRepository;
 
     private final ReviewService reviewService;
     private final SearchLogService searchLogService;
@@ -60,7 +66,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResultResponse searchEngine(String oAuthId, String keyword, Double userLat, Double userLng, SearchType searchType) {
-        userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
         SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
@@ -84,8 +90,10 @@ public class SearchServiceImpl implements SearchService {
             searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
         }
 
-        List<BakeryReviewScoreDto> bakeriesReviews = reviewQueryRepository.getBakeriesReview(SearchEngineDto.extractBakeryIdList(searchResults));
-        List<SearchResultDto> searchResultDtos = mergeSearchEngineAndReview(searchResults, bakeriesReviews);
+        List<Long> bakeryIds = SearchEngineDto.extractBakeryIdList(searchResults);
+        List<BakeryReviewScoreDto> bakeriesReviews = reviewQueryRepository.getBakeriesReview(bakeryIds);
+
+        List<SearchResultDto> searchResultDtos = this.mergeSearchEngineAndAdditionalInfo(searchResults, user.getId(), bakeriesReviews);
 
         resultSortBySearchType(searchType, searchResultDtos);
 
@@ -94,12 +102,28 @@ public class SearchServiceImpl implements SearchService {
                 .build();
     }
 
-    private static List<SearchResultDto> mergeSearchEngineAndReview(List<SearchEngineDto> searchResults, List<BakeryReviewScoreDto> bakeriesReviews) {
+    private List<SearchResultDto> mergeSearchEngineAndAdditionalInfo(List<SearchEngineDto> searchResults, Long userId, List<BakeryReviewScoreDto> bakeriesReviews) {
 
         List<SearchResultDto> searchResultDtos = new ArrayList<>();
 
         for (SearchEngineDto searchResultDto : searchResults) {
             SearchResultDto.SearchResultDtoBuilder searchResultDtoBuilder = SearchResultDto.builder();
+
+            Optional<Bakery> bakeryOptional = bakeryRepository.findById(searchResultDto.getBakeryId());
+            if(bakeryOptional.isPresent()) {
+                searchResultDtoBuilder
+                        .latitude(bakeryOptional.get().getLatitude())
+                        .longitude(bakeryOptional.get().getLongitude())
+                        .bakeryImageUrl(bakeryOptional.get().getImages());
+
+                searchResultDtoBuilder.flagCount(flagBakeryRepository.countFlagNum(bakeryOptional.get()));
+
+                Optional<FlagBakery> flagBakeryOptional = flagBakeryRepository.findByBakeryAndUserId(bakeryOptional.get(), userId);
+                if(flagBakeryOptional.isPresent()) {
+                    searchResultDtoBuilder.flagColor(flagBakeryOptional.get().getFlag().getColor().getCode());
+                }
+            }
+
             searchResultDtoBuilder
                     .bakeryId(searchResultDto.getBakeryId())
                     .bakeryName(searchResultDto.getBakeryName())
@@ -107,6 +131,7 @@ public class SearchServiceImpl implements SearchService {
                     .distance(searchResultDto.getDistance())
                     .reviewNum(0L) // init
                     .totalScore(0d); // init
+
             if (searchResultDto.getBreadId() != null) {
                 searchResultDtoBuilder
                         .breadId(searchResultDto.getBreadId())
