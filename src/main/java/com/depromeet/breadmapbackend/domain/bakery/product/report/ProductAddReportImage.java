@@ -16,7 +16,7 @@ public class ProductAddReportImage extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productAddReport_id")
+    @JoinColumn(name = "product_add_report_id")
     private ProductAddReport productAddReport;
 
     @ManyToOne(fetch = FetchType.LAZY)
