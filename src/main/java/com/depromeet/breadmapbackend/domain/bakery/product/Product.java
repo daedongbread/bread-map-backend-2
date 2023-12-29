@@ -60,8 +60,12 @@ public class Product extends BaseEntity {
 	@Convert(converter = BooleanToYNConverter.class)
 	private boolean isTrue;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	private ProductAddReport productAddReport;
+
 	@Builder
-	private Product(Long id, ProductType productType, String name, String price, String image, Bakery bakery, Boolean isTrue) {
+	private Product(Long id, ProductType productType, String name, String price, String image, Bakery bakery,
+					Boolean isTrue, ProductAddReport productAddReport) {
 		this.id = id;
 		this.productType = productType;
 		this.name = name;
@@ -73,6 +77,7 @@ public class Product extends BaseEntity {
 		else
 			this.isTrue = isTrue;
 		this.bakery.getProductList().add(this);
+		this.productAddReport = productAddReport;
 	}
 
 	public void update(ProductType productType, String name, String price, String image) {
@@ -84,6 +89,6 @@ public class Product extends BaseEntity {
 
 	public Double getAverageRating() {
 		return Math.floor(this.reviewProductRatingList.stream()
-			.mapToLong(ReviewProductRating::getRating).average().orElse(0) * 10) / 10.0;
+				.mapToLong(ReviewProductRating::getRating).average().orElse(0) * 10) / 10.0;
 	}
 }
