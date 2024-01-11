@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadTestScheduler {
 
     private final OpenSearchService openSearchService;
-    @Scheduled(cron = "0 0 0/6 * * *") // for local test
+    @Scheduled(cron = "0 0/20 0/24 * * *") // for local test
     public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
 

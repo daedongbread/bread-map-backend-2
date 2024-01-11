@@ -36,13 +36,13 @@ public class SearchLogServiceImpl implements SearchLogService {
             redisTemplate.opsForList().rightPop(key);
         }
 
-        redisTemplate.opsForList().leftPush(key, value);
+        redisTemplate.opsForList().leftPush(key, keyword);
     }
 
     @Override
     public List<String> getRecentSearchLogs(String oauthId) {
         String key = searchLogKey(oauthId);
-        List<SearchLog> range = new ArrayList<>();
+        List<String> range = new ArrayList<>();
 
         try {
             range = redisTemplate.opsForList()
@@ -50,8 +50,8 @@ public class SearchLogServiceImpl implements SearchLogService {
         } catch (Exception e) {
             log.error("getRecentSearchLogs error: " + key);
         }
-        
-        return Objects.requireNonNull(range).stream().map(SearchLog::getKeyword).toList();
+
+        return range;
     }
 
     @Override
