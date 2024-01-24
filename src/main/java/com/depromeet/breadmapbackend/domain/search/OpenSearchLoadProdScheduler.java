@@ -39,8 +39,11 @@ public class OpenSearchLoadProdScheduler {
                 log.info("Job loadEntireData skipped by this instance");
             }
         } catch (InterruptedException e) {
+            log.error("Job loadEntireData error" + e.getMessage());
+            lock.unlock();
             Thread.currentThread().interrupt();
         } finally {
+            log.info("Job loadEntireData reached finally");
             lock.unlock();
         }
 
