@@ -18,6 +18,7 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.opensearch.action.search.SearchResponse;
 import org.opensearch.search.SearchHit;
 import org.opensearch.search.SearchHits;
@@ -95,11 +96,33 @@ public class SearchServiceImpl implements SearchService {
 
         List<SearchResultDto> searchResultDtos = this.mergeSearchEngineAndAdditionalInfo(searchResults, user.getId(), bakeriesReviews);
 
+        // 인기순/거리순 정렬
         resultSortBySearchType(searchType, searchResultDtos);
+
+        // keyword 위치 정렬
+        String finalKeyword = keyword;
+        Comparator<SearchResultDto> customComparator = getSearchResultDtoComparator(finalKeyword);
+        searchResultDtos.sort(customComparator);
 
         return builder
                 .searchResultDtoList(searchResultDtos)
                 .build();
+    }
+
+    @NotNull
+    private static Comparator<SearchResultDto> getSearchResultDtoComparator(String finalKeyword) {
+        return (s1, s2) -> {
+            int index1 = s1.getBakeryName().indexOf(finalKeyword);
+            int index2 = s2.getBakeryName().indexOf(finalKeyword);
+
+            if (index1 < 0) {
+                return 1;
+            } else if (index2 < 0) {
+                return -1;
+            } else {
+                return Integer.compare(index1, index2);
+            }
+        };
     }
 
     private List<SearchResultDto> mergeSearchEngineAndAdditionalInfo(List<SearchEngineDto> searchResults, Long userId, List<BakeryReviewScoreDto> bakeriesReviews) {
