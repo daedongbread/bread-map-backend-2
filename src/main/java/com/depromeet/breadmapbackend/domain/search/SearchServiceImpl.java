@@ -4,7 +4,6 @@ import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
-import com.depromeet.breadmapbackend.domain.flag.FlagRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
@@ -18,7 +17,6 @@ import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.opensearch.action.search.SearchResponse;
 import org.opensearch.search.SearchHit;
 import org.opensearch.search.SearchHits;
@@ -42,7 +40,6 @@ public class SearchServiceImpl implements SearchService {
     private final SubwayStationRepository subwayStationRepository;
     private final ReviewQueryRepository reviewQueryRepository;
     private final FlagBakeryRepository flagBakeryRepository;
-    private final FlagRepository flagRepository;
 
     private final ReviewService reviewService;
     private final SearchLogService searchLogService;
@@ -101,28 +98,22 @@ public class SearchServiceImpl implements SearchService {
 
         // keyword 위치 정렬
         String finalKeyword = keyword;
-        Comparator<SearchResultDto> customComparator = getSearchResultDtoComparator(finalKeyword);
-        searchResultDtos.sort(customComparator);
-
-        return builder
-                .searchResultDtoList(searchResultDtos)
-                .build();
-    }
-
-    @NotNull
-    private static Comparator<SearchResultDto> getSearchResultDtoComparator(String finalKeyword) {
-        return (s1, s2) -> {
-            int index1 = s1.getBakeryName().indexOf(finalKeyword);
-            int index2 = s2.getBakeryName().indexOf(finalKeyword);
+        searchResultDtos.sort((dto1, dto2) -> {
+            int index1 = dto1.getBakeryName().indexOf(finalKeyword);
+            int index2 = dto2.getBakeryName().indexOf(finalKeyword);
 
             if (index1 < 0) {
                 return 1;
             } else if (index2 < 0) {
                 return -1;
             } else {
-                return Integer.compare(index1, index2);
+                return Integer.compare(index2, index1);
             }
-        };
+        });
+
+        return builder
+                .searchResultDtoList(searchResultDtos)
+                .build();
     }
 
     private List<SearchResultDto> mergeSearchEngineAndAdditionalInfo(List<SearchEngineDto> searchResults, Long userId, List<BakeryReviewScoreDto> bakeriesReviews) {
@@ -219,23 +210,37 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<String> searchKeywordSuggestions(String word) {
-        HashSet<String> keywordSuggestions;
-        SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, word);
-        keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
+    public List<String> searchKeywordSuggestions(String keyword) {
+
+        SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, keyword);
+        HashSet<String> keywordSuggestionList = Arrays.stream(bakerySuggestions.getHits().getHits())
                 .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
                 .collect(Collectors.toCollection(HashSet::new));
+        HashSet<String> keywordSuggestions = new HashSet<>(keywordSuggestionList);
 
         if (keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
-            SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, word);
+            SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, keyword);
             for (SearchHit breadHit : breadSuggestions.getHits().getHits()) {
                 keywordSuggestions.add((String) breadHit.getSourceAsMap().get("breadName"));
             }
         }
 
-        List<String> tempSet = new ArrayList<>(keywordSuggestions);
-        Collections.sort(tempSet);
-        return tempSet;
+        List<String> sortedResult = new ArrayList<>(keywordSuggestions);
+        sortedResult.sort((s1, s2) -> {
+            int index1 = s1.indexOf(keyword);
+            int index2 = s2.indexOf(keyword);
+
+            if (index1 < 0) {
+                return 1;
+            } else if (index2 < 0) {
+                return -1;
+            } else {
+                return Integer.compare(index2, index1);
+            }
+        });
+
+        sortedResult.add(0, keyword);
+        return sortedResult;
     }
 
     private Double bakeryRating(List<Review> reviewList) {
