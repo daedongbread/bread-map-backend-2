@@ -27,7 +27,7 @@ public class OpenSearchLoadProdScheduler {
         RLock lock = client.getLock("Load-Entire-Data");
         try {
 
-            if (lock.tryLock(2, TimeUnit.HOURS)) {
+            if (lock.tryLock(1, TimeUnit.HOURS)) {
                 log.info("========================= Loading entire data to search engine =========================");
 
                 openSearchService.deleteAndCreateIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());

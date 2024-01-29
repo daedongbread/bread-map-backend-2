@@ -20,14 +20,14 @@ import java.util.concurrent.TimeUnit;
 public class OpenSearchLoadTestScheduler {
 
     private final OpenSearchService openSearchService;
-    @Scheduled(cron = "0 0/30 0/24 * * *") // for local test
+    @Scheduled(cron = "0 0 0/6 * * *") // for local test
     public void loadEntireData() throws IOException {
         RedissonClient client = Redisson.create();
 
         RLock lock = client.getLock("Load-Entire-Data");
         try {
 
-            if (lock.tryLock(2, TimeUnit.HOURS)) {
+            if (lock.tryLock(1, TimeUnit.HOURS)) {
                 log.info("========================= Loading entire data to search engine =========================");
 
                 openSearchService.deleteAndCreateIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
@@ -38,7 +38,7 @@ public class OpenSearchLoadTestScheduler {
             } else {
                 log.info("Job loadEntireData skipped by this instance");
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             log.error("Job loadEntireData error" + e.getMessage());
             lock.unlock();
             Thread.currentThread().interrupt();
