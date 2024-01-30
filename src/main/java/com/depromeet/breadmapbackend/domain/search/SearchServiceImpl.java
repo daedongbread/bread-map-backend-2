@@ -238,9 +238,7 @@ public class SearchServiceImpl implements SearchService {
             }
         });
 
-        if(sortedResult.size() > 1) {
-            sortedResult.add(0, keyword);
-        }
+        sortedResult.add(0, keyword);
 
         return sortedResult;
     }
