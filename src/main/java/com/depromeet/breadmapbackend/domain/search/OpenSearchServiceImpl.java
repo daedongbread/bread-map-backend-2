@@ -545,12 +545,27 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
     @Override
     public SearchResponse getKeywordSuggestions(OpenSearchIndex openSearchIndex, String keyword) {
-        MatchPhrasePrefixQueryBuilder matchPhrasePrefixQueryBuilder = QueryBuilders.matchPhrasePrefixQuery(openSearchIndex.getFieldName(), keyword);
+
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+
+        // Create match queries for different fields
+        boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(12)
                 .timeout(new TimeValue(60, TimeUnit.SECONDS))
-                .query(matchPhrasePrefixQueryBuilder);
+                .query(boolQuery);
 
         SearchRequest searchRequest = new SearchRequest()
                 .indices(openSearchIndex.getIndexNameWithVersion())

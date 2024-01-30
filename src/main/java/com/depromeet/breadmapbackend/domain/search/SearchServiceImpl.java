@@ -213,10 +213,9 @@ public class SearchServiceImpl implements SearchService {
     public List<String> searchKeywordSuggestions(String keyword) {
 
         SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, keyword);
-        HashSet<String> keywordSuggestionList = Arrays.stream(bakerySuggestions.getHits().getHits())
+        HashSet<String> keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
                 .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
                 .collect(Collectors.toCollection(HashSet::new));
-        HashSet<String> keywordSuggestions = new HashSet<>(keywordSuggestionList);
 
         if (keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
             SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, keyword);
@@ -239,7 +238,10 @@ public class SearchServiceImpl implements SearchService {
             }
         });
 
-        sortedResult.add(0, keyword);
+        if(sortedResult.size() > 1) {
+            sortedResult.add(0, keyword);
+        }
+
         return sortedResult;
     }
 
