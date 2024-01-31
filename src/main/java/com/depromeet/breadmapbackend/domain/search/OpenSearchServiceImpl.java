@@ -60,6 +60,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     private final static Double LONGITUDE_1KM = 1 / 88.74;
 
     private final BakeryQueryRepository bakeryQueryRepository;
+    final HanguelJamoMorphTokenizer tokenizer = HanguelJamoMorphTokenizer.getInstance();
 
     @Override
     public OpenSearchCreateIndexResponse deleteAndCreateIndex(String indexName) throws IOException {
@@ -388,15 +389,18 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         boolQuery.should(QueryBuilders.matchQuery("bakeryName.keyword", keyword));
         boolQuery.should(QueryBuilders.matchQuery("bakeryAddress", keyword));
         boolQuery.should(QueryBuilders.matchQuery("bakeryAddress.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
         boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
@@ -491,15 +495,18 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         // Create match queries for different fields
         boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
         boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
         boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
@@ -551,15 +558,18 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         // Create match queries for different fields
         boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
         boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
         boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
@@ -608,7 +618,6 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     public void convertDataAndLoadToEngine(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
 
         final BulkRequest bulkRequest = new BulkRequest();
-        final HanguelJamoMorphTokenizer tokenizer = HanguelJamoMorphTokenizer.getInstance();
 
         for (CommonLoadData loadItem : loadList) {
 
@@ -618,6 +627,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             loadHashMap.put("bakeryId", loadItem.getBakeryId());
             loadHashMap.put("bakeryName", bakeryName);
             loadHashMap.put("description", bakeryName);
+            loadHashMap.put("indexName", bakeryName);
             loadHashMap.put("bakeryAddress", loadItem.getBakeryAddress());
             loadHashMap.put("longitude", String.valueOf(loadItem.getLongitude()));
             loadHashMap.put("latitude", String.valueOf(loadItem.getLatitude()));
@@ -632,6 +642,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
                 String breadName = bread.getBreadName();
                 loadHashMap.put("breadId", bread.getBreadId());
                 loadHashMap.put("description", breadName);
+                loadHashMap.put("indexName", breadName);
 
                 String parsedBreadName = parseEndingWithNumberAndSizeInKorean(breadName);
                 loadHashMap.put("breadName", parsedBreadName);
