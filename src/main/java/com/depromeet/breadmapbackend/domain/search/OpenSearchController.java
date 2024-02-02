@@ -1,5 +1,6 @@
 package com.depromeet.breadmapbackend.domain.search;
 
+import com.depromeet.breadmapbackend.domain.search.dto.OpenSearchIndex;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.request.OpenSearchAddDataRequest;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
@@ -26,6 +27,19 @@ public class OpenSearchController {
             @Valid @RequestBody OpenSearchAddDataRequest addDataRequest) throws IOException {
         return new ApiResponse<>(openSearchService.addDataToIndex(addDataRequest.getIndexName(), addDataRequest.getStringMapping()));
     }
+
+    @PostMapping("/load")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Boolean> postBakeryAdnBread() throws IOException {
+
+        openSearchService.deleteAndCreateIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
+        openSearchService.deleteAndCreateIndex(OpenSearchIndex.BREAD_SEARCH.getIndexNameWithVersion());
+
+        openSearchService.loadEntireData();
+
+        return new ApiResponse<>(Boolean.TRUE);
+    }
+
 
     @GetMapping("/bread")
     @ResponseStatus(HttpStatus.OK)

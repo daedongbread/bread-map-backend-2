@@ -495,15 +495,15 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         // Create match queries for different fields
         boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
         boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
         boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
         boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
         boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
