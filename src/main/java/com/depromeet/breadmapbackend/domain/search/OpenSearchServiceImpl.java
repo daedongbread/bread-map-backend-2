@@ -405,7 +405,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
             boolQuery.should(QueryBuilders.matchQuery("description", keyword));
         } catch (Exception e) {
-            log.error("getBakeryByKeyword ::: " + "keyword" + " " + e.getMessage());
+            log.error("getBakeryByKeyword ::: " + keyword + " " + e.getMessage());
         }
 
 
@@ -579,7 +579,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
             boolQuery.should(QueryBuilders.matchQuery("description", keyword));
         } catch(Exception e) {
-            log.error("getBakeryByKeyword ::: " + "keyword" + " " + e.getMessage());
+            log.error("getBakeryByKeyword ::: " + keyword + " " + e.getMessage());
         }
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
@@ -643,9 +643,14 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             loadHashMap.put("latitude", String.valueOf(loadItem.getLatitude()));
 
             if(loadItem instanceof BakeryLoadData) {
-                loadHashMap.put("chosung", tokenizer.chosungTokenizer(bakeryName));
-                loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(bakeryName));
-                loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(bakeryName));
+                try {
+                    loadHashMap.put("chosung", tokenizer.chosungTokenizer(bakeryName));
+                    loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(bakeryName));
+                    loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(bakeryName));
+                } catch (Exception e) {
+                    log.error("convertDataAndLoadToEngine ::: " + bakeryName + " " + e.getMessage());
+                }
+
             }
 
             if (loadItem instanceof BreadLoadData bread) {
@@ -656,9 +661,13 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
                 String parsedBreadName = parseEndingWithNumberAndSizeInKorean(breadName);
                 loadHashMap.put("breadName", parsedBreadName);
-                loadHashMap.put("chosung", tokenizer.chosungTokenizer(breadName));
-                loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(breadName));
-                loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(breadName));
+                try {
+                    loadHashMap.put("chosung", tokenizer.chosungTokenizer(breadName));
+                    loadHashMap.put("jamo", UnicodeHandleUtils.splitHangulToConsonant(breadName));
+                    loadHashMap.put("engtokor", tokenizer.convertKoreanToEnglish(breadName));
+                } catch (Exception e) {
+                    log.error("convertDataAndLoadToEngine ::: " + breadName + " " + e.getMessage());
+                }
             }
 
             bulkRequest.add(new IndexRequest(indexName)
