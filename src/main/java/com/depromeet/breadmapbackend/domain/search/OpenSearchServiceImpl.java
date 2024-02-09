@@ -385,23 +385,29 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 //                """;
 
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-        boolQuery.should(QueryBuilders.matchQuery("bakeryName", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("bakeryName.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("bakeryAddress", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("bakeryAddress.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("description", keyword));
+
+        try {
+            boolQuery.should(QueryBuilders.matchQuery("bakeryName", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("bakeryName.keyword", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("bakeryAddress", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("bakeryAddress.keyword", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("description", keyword));
+        } catch (Exception e) {
+            log.error("getBakeryByKeyword ::: " + "keyword" + " " + e.getMessage());
+        }
+
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(7)
@@ -555,22 +561,26 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 
-        // Create match queries for different fields
-        boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
-        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("description", keyword));
+        try {
+            // Create match queries for different fields
+            boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+            boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
+            boolQuery.should(QueryBuilders.matchQuery("description", keyword));
+        } catch(Exception e) {
+            log.error("getBakeryByKeyword ::: " + "keyword" + " " + e.getMessage());
+        }
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(12)
