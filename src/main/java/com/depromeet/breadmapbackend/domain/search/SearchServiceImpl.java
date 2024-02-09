@@ -1,6 +1,9 @@
 package com.depromeet.breadmapbackend.domain.search;
 
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
+import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewQueryRepository;
 import com.depromeet.breadmapbackend.domain.review.ReviewService;
@@ -36,6 +39,7 @@ public class SearchServiceImpl implements SearchService {
     private final UserRepository userRepository;
     private final SubwayStationRepository subwayStationRepository;
     private final ReviewQueryRepository reviewQueryRepository;
+    private final FlagBakeryRepository flagBakeryRepository;
 
     private final ReviewService reviewService;
     private final SearchLogService searchLogService;
@@ -60,7 +64,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResultResponse searchEngine(String oAuthId, String keyword, Double userLat, Double userLng, SearchType searchType) {
-        userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
+        User user = userRepository.findByOAuthId(oAuthId).orElseThrow(() -> new DaedongException(DaedongStatus.USER_NOT_FOUND));
         searchLogService.saveRecentSearchLog(oAuthId, keyword);
 
         SearchResultResponse.SearchResultResponseBuilder builder = SearchResultResponse.builder();
@@ -84,22 +88,56 @@ public class SearchServiceImpl implements SearchService {
             searchResults.addAll(getSearchEngineDtoList(document.getHits(), userLat, userLng));
         }
 
-        List<BakeryReviewScoreDto> bakeriesReviews = reviewQueryRepository.getBakeriesReview(SearchEngineDto.extractBakeryIdList(searchResults));
-        List<SearchResultDto> searchResultDtos = mergeSearchEngineAndReview(searchResults, bakeriesReviews);
+        List<Long> bakeryIds = SearchEngineDto.extractBakeryIdList(searchResults);
+        List<BakeryReviewScoreDto> bakeriesReviews = reviewQueryRepository.getBakeriesReview(bakeryIds);
 
+        List<SearchResultDto> searchResultDtos = this.mergeSearchEngineAndAdditionalInfo(searchResults, user.getId(), bakeriesReviews);
+
+        // 인기순/거리순 정렬
         resultSortBySearchType(searchType, searchResultDtos);
+
+        // keyword 위치 정렬
+        String finalKeyword = keyword;
+        searchResultDtos.sort((dto1, dto2) -> {
+            int index1 = dto1.getBakeryName().indexOf(finalKeyword);
+            int index2 = dto2.getBakeryName().indexOf(finalKeyword);
+
+            if (index1 < 0) {
+                return 1;
+            } else if (index2 < 0) {
+                return -1;
+            } else {
+                return Integer.compare(index2, index1);
+            }
+        });
 
         return builder
                 .searchResultDtoList(searchResultDtos)
                 .build();
     }
 
-    private static List<SearchResultDto> mergeSearchEngineAndReview(List<SearchEngineDto> searchResults, List<BakeryReviewScoreDto> bakeriesReviews) {
+    private List<SearchResultDto> mergeSearchEngineAndAdditionalInfo(List<SearchEngineDto> searchResults, Long userId, List<BakeryReviewScoreDto> bakeriesReviews) {
 
         List<SearchResultDto> searchResultDtos = new ArrayList<>();
 
         for (SearchEngineDto searchResultDto : searchResults) {
             SearchResultDto.SearchResultDtoBuilder searchResultDtoBuilder = SearchResultDto.builder();
+
+            Optional<Bakery> bakeryOptional = bakeryRepository.findById(searchResultDto.getBakeryId());
+            if(bakeryOptional.isPresent()) {
+                searchResultDtoBuilder
+                        .latitude(bakeryOptional.get().getLatitude())
+                        .longitude(bakeryOptional.get().getLongitude())
+                        .bakeryImageUrl(bakeryOptional.get().getImages());
+
+                searchResultDtoBuilder.flagCount(flagBakeryRepository.countFlagNum(bakeryOptional.get()));
+
+                Optional<FlagBakery> flagBakeryOptional = flagBakeryRepository.findByBakeryAndUserId(bakeryOptional.get(), userId);
+                if(flagBakeryOptional.isPresent()) {
+                    searchResultDtoBuilder.flagColor(flagBakeryOptional.get().getFlag().getColor().getCode());
+                }
+            }
+
             searchResultDtoBuilder
                     .bakeryId(searchResultDto.getBakeryId())
                     .bakeryName(searchResultDto.getBakeryName())
@@ -107,6 +145,7 @@ public class SearchServiceImpl implements SearchService {
                     .distance(searchResultDto.getDistance())
                     .reviewNum(0L) // init
                     .totalScore(0d); // init
+
             if (searchResultDto.getBreadId() != null) {
                 searchResultDtoBuilder
                         .breadId(searchResultDto.getBreadId())
@@ -171,23 +210,41 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<String> searchKeywordSuggestions(String word) {
-        HashSet<String> keywordSuggestions;
-        SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, word);
-        keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
+    public List<String> searchKeywordSuggestions(String keyword) {
+
+        SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, keyword);
+        HashSet<String> keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
                 .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
                 .collect(Collectors.toCollection(HashSet::new));
 
         if (keywordSuggestions.size() < MAX_KEYWORD_SUGGESTION) {
-            SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, word);
+            SearchResponse breadSuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BREAD_SEARCH, keyword);
             for (SearchHit breadHit : breadSuggestions.getHits().getHits()) {
                 keywordSuggestions.add((String) breadHit.getSourceAsMap().get("breadName"));
             }
         }
 
-        List<String> tempSet = new ArrayList<>(keywordSuggestions);
-        Collections.sort(tempSet);
-        return tempSet;
+        List<String> sortedResult = new ArrayList<>(keywordSuggestions);
+        sortedResult.sort((s1, s2) -> {
+            int index1 = s1.indexOf(keyword);
+            int index2 = s2.indexOf(keyword);
+
+            if (index1 < 0) {
+                return 1;
+            } else if (index2 < 0) {
+                return -1;
+            } else {
+                return Integer.compare(index2, index1);
+            }
+        });
+
+        if(sortedResult.size() > 0) {
+            if(!sortedResult.get(0).equals(keyword)) {
+                sortedResult.add(0, keyword);
+            }
+        }
+
+        return sortedResult;
     }
 
     private Double bakeryRating(List<Review> reviewList) {

@@ -1,12 +1,14 @@
 package com.depromeet.breadmapbackend.mock;
 
-import java.util.List;
-
+import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.search.SearchService;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchResultDto;
 import com.depromeet.breadmapbackend.domain.search.dto.SearchType;
 import com.depromeet.breadmapbackend.domain.search.dto.keyword.response.SearchResultResponse;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * FakeSearchServiceImpl
@@ -41,6 +43,11 @@ public class FakeSearchServiceImpl implements SearchService {
 			.totalScore(5d)
 			.reviewNum(5L)
 			.distance(100d)
+			.bakeryImageUrl(Collections.singletonList("https://test.com"))
+			.latitude(123d)
+			.longitude(123d)
+			.flagCount(123)
+			.flagColor(FlagColor.ORANGE.getCode())
 			.build();
 
 		return SearchResultResponse

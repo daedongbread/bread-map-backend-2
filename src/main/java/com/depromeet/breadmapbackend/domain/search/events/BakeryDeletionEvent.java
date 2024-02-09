@@ -5,13 +5,13 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class OpenSearchDeleteBakeryEvent extends ApplicationEvent {
+public class BakeryDeletionEvent extends ApplicationEvent {
     OpenSearchIndex openSearchIndex;
-    Long targetId;
+    Long bakeryId;
 
-    public OpenSearchDeleteBakeryEvent(Object source, OpenSearchIndex openSearchIndex, Long targetId) {
+    public BakeryDeletionEvent(Object source, OpenSearchIndex openSearchIndex, Long bakeryId) {
         super(source);
         this.openSearchIndex = openSearchIndex;
-        this.targetId = targetId;
+        this.bakeryId = bakeryId;
     }
 }

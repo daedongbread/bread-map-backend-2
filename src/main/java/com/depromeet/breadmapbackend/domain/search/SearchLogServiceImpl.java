@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,16 +36,22 @@ public class SearchLogServiceImpl implements SearchLogService {
             redisTemplate.opsForList().rightPop(key);
         }
 
-        redisTemplate.opsForList().leftPush(key, value);
+        redisTemplate.opsForList().leftPush(key, keyword);
     }
 
     @Override
     public List<String> getRecentSearchLogs(String oauthId) {
         String key = searchLogKey(oauthId);
-        List<SearchLog> range = redisTemplate.opsForList()
-                .range(key, 0, RECENT_KEYWORD_SIZE);
+        List<String> range = new ArrayList<>();
 
-        return Objects.requireNonNull(range).stream().map(SearchLog::getKeyword).toList();
+        try {
+            range = redisTemplate.opsForList()
+                    .range(key, 0, RECENT_KEYWORD_SIZE);
+        } catch (Exception e) {
+            log.error("getRecentSearchLogs error: " + key);
+        }
+
+        return range;
     }
 
     @Override

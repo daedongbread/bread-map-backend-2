@@ -5,16 +5,12 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class OpenSearchBakeryEvent extends ApplicationEvent {
+public class BakeryCreationEvent extends ApplicationEvent {
     Long bakeryId;
     BakeryLoadData bakeryLoadData;
 
-    public OpenSearchBakeryEvent(Object source, BakeryLoadData bakeryLoadData) {
+    public BakeryCreationEvent(Object source, BakeryLoadData bakeryLoadData) {
         super(source);
         this.bakeryLoadData = bakeryLoadData;
-    }
-    public OpenSearchBakeryEvent(Object source, Long bakeryId) {
-        super(source);
-        this.bakeryId = bakeryId;
     }
 }

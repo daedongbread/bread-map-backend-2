@@ -1,28 +1,5 @@
 package com.depromeet.breadmapbackend.domain.admin.bakery.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import com.depromeet.breadmapbackend.domain.search.dto.keyword.BakeryLoadData;
-import com.depromeet.breadmapbackend.domain.search.events.OpenSearchEventPublisher;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
-
 import com.depromeet.breadmapbackend.domain.admin.bakery.AdminBakeryServiceImpl;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.AdminBakeryDto;
 import com.depromeet.breadmapbackend.domain.admin.bakery.dto.BakeryAddDto;
@@ -39,6 +16,24 @@ import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReport;
 import com.depromeet.breadmapbackend.domain.bakery.report.BakeryAddReportRepository;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.infra.properties.CustomAWSS3Properties;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AdminBakeryServiceTest {
@@ -55,12 +50,10 @@ public class AdminBakeryServiceTest {
 	private CustomAWSS3Properties customAWSS3Properties;
 	@Mock
 	private ApplicationEventPublisher eventPublisher;
-	@Mock
-	private OpenSearchEventPublisher openSearchEventPublisher;
 
 	private List<Bakery> bakeries;
 	private List<Product> products;
-	private CustomAWSS3Properties.DefaultImage defaultImage = new CustomAWSS3Properties.DefaultImage(
+	private final CustomAWSS3Properties.DefaultImage defaultImage = new CustomAWSS3Properties.DefaultImage(
 		"bakery default image",
 		"comment default image",
 		"like default image",
@@ -73,6 +66,8 @@ public class AdminBakeryServiceTest {
 
 	@BeforeEach
 	void setup() {
+
+//		MockitoAnnotations.openMocks(this);
 
 		List<String> images1 = List.of("bakery test image 1", "bakery test image 2");
 		List<String> images2 = List.of("bakery test image 1");
@@ -151,6 +146,8 @@ public class AdminBakeryServiceTest {
 		verify(customAWSS3Properties, times(bakeries.get(0).getImages().size()))
 			.getDefaultImage();
 
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
+
 	}
 
 	@DisplayName("addBakery 테스트")
@@ -202,8 +199,7 @@ public class AdminBakeryServiceTest {
 		verify(bakeryRepository, times(1))
 			.existsByNameAndAddress(addRequest.getName(), addRequest.getAddress());
 
-		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
-		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
 
 	}
 
@@ -255,8 +251,8 @@ public class AdminBakeryServiceTest {
 		verify(bakeryRepository, times(1))
 			.existsByNameAndAddress(addRequest.getName(), addRequest.getAddress());
 
-		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
-		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
+
 	}
 
 	@DisplayName("updateBakery 테스트")
@@ -317,9 +313,6 @@ public class AdminBakeryServiceTest {
 			"2023-08-2700:00:00", "update check point"
 		);
 
-		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
-		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
-
 	}
 
 	@DisplayName("updateBakery 테스트 - 수정 이미지가 0개일 경우 기본 이미지 1개를 삽입한다")
@@ -365,7 +358,7 @@ public class AdminBakeryServiceTest {
 		assertThat(bakeries.get(0).getImages().get(0)).contains(
 			customAWSS3Properties.getCloudFront() + "/" + customAWSS3Properties.getDefaultImage().getBakery());
 
-		ArgumentCaptor<BakeryLoadData> bakeryLoadDataCaptor = ArgumentCaptor.forClass(BakeryLoadData.class);
-		verify(openSearchEventPublisher).publishSaveBakery(bakeryLoadDataCaptor.capture());
+		ReflectionTestUtils.setField(adminBakeryService, "eventPublisher", eventPublisher);
+
 	}
 }

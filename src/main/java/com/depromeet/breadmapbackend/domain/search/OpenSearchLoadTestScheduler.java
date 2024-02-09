@@ -27,7 +27,7 @@ public class OpenSearchLoadTestScheduler {
         RLock lock = client.getLock("Load-Entire-Data");
         try {
 
-            if (lock.tryLock(2, TimeUnit.HOURS)) {
+            if (lock.tryLock(1, TimeUnit.HOURS)) {
                 log.info("========================= Loading entire data to search engine =========================");
 
                 openSearchService.deleteAndCreateIndex(OpenSearchIndex.BAKERY_SEARCH.getIndexNameWithVersion());
@@ -38,9 +38,12 @@ public class OpenSearchLoadTestScheduler {
             } else {
                 log.info("Job loadEntireData skipped by this instance");
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
+            log.error("Job loadEntireData error" + e.getMessage());
+            lock.unlock();
             Thread.currentThread().interrupt();
         } finally {
+            log.info("Job loadEntireData reached finally");
             lock.unlock();
         }
 

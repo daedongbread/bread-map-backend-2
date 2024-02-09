@@ -45,8 +45,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -62,6 +60,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     private final static Double LONGITUDE_1KM = 1 / 88.74;
 
     private final BakeryQueryRepository bakeryQueryRepository;
+    final HanguelJamoMorphTokenizer tokenizer = HanguelJamoMorphTokenizer.getInstance();
 
     @Override
     public OpenSearchCreateIndexResponse deleteAndCreateIndex(String indexName) throws IOException {
@@ -78,10 +77,22 @@ public class OpenSearchServiceImpl implements OpenSearchService {
                             .field("number_of_replicas", 0)
                             .field("max_ngram_diff", 30)
                             .startObject("analysis")
+                            .startObject("filter")
+                            .startObject("daedong-synonym")
+                            .field("type", "synonym")
+                            .field("synonyms_path", "analyzers/F217539104")
+                            .field("updatable", true)
+                            .endObject()
+                            .endObject()
                             .startObject("analyzer")
                             .startObject("analyzer-daedong")
                             .field("type", "custom")
                             .field("tokenizer", "seunjeon_tokenizer")
+                            .endObject()
+                            .startObject("synonym-daedong")
+                            .field("type", "custom")
+                            .field("tokenizer", "standard")
+                            .field("filter", "daedong-synonym")
                             .endObject()
                             .startObject("ngram-daedong")
                             .field("type", "custom")
@@ -143,6 +154,11 @@ public class OpenSearchServiceImpl implements OpenSearchService {
                           "id": {
                             "type": "keyword",
                             "index": false
+                          },
+                          "description": {
+                            "type": "text",
+                            "analyzer": "standard",
+                            "search_analyzer": "synonym-daedong"
                           },
                           "indexName": {
                             "type": "text",
@@ -292,96 +308,100 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     @Override
     public SearchResponse getBakeryByKeyword(String keyword) {
 
-        String source = """
-                {
-                  "query": {
-                    "bool": {
-                      "should": [
-                        {
-                          "match": {
-                            "bakeryName": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "bakeryName.keyword": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "bakeryAddress": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "bakeryAddress.keyword": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "jamo.back": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "jamo.partial": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "jamo.exact": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "engtokor.back": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "engtokor.partial": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "engtokor.exact": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "chosung.back": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "chosung.partial": "inputKeyword"
-                          }
-                        },
-                        {
-                          "match": {
-                            "chosung.exact": "inputKeyword"
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-                """;
+//        String source = """
+//                {
+//                  "query": {
+//                    "bool": {
+//                      "should": [
+//                        {
+//                          "match": {
+//                            "bakeryName": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "bakeryName.keyword": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "bakeryAddress": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "bakeryAddress.keyword": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "jamo.back": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "jamo.partial": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "jamo.exact": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "engtokor.back": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "engtokor.partial": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "engtokor.exact": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "chosung.back": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "chosung.partial": "inputKeyword"
+//                          }
+//                        },
+//                        {
+//                          "match": {
+//                            "chosung.exact": "inputKeyword"
+//                          }
+//                        }
+//                      ]
+//                    }
+//                  }
+//                }
+//                """;
 
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
         boolQuery.should(QueryBuilders.matchQuery("bakeryName", keyword));
         boolQuery.should(QueryBuilders.matchQuery("bakeryName.keyword", keyword));
         boolQuery.should(QueryBuilders.matchQuery("bakeryAddress", keyword));
         boolQuery.should(QueryBuilders.matchQuery("bakeryAddress.keyword", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
-        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(7)
@@ -484,6 +504,10 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         boolQuery.should(QueryBuilders.matchQuery("chosung.back", keyword));
         boolQuery.should(QueryBuilders.matchQuery("chosung.partial", keyword));
         boolQuery.should(QueryBuilders.matchQuery("chosung.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(7)
@@ -528,12 +552,30 @@ public class OpenSearchServiceImpl implements OpenSearchService {
 
     @Override
     public SearchResponse getKeywordSuggestions(OpenSearchIndex openSearchIndex, String keyword) {
-        MatchPhrasePrefixQueryBuilder matchPhrasePrefixQueryBuilder = QueryBuilders.matchPhrasePrefixQuery(openSearchIndex.getFieldName(), keyword);
+
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+
+        // Create match queries for different fields
+        boolQuery.should(QueryBuilders.matchQuery("breadName", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("breadName.keyword", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.back", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.partial", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("jamo.exact", UnicodeHandleUtils.splitHangulToConsonant(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.back", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.partial", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("engtokor.exact", tokenizer.convertKoreanToEnglish(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.back", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.partial", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("chosung.exact", tokenizer.chosungTokenizer(keyword)));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.back", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.partial", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("indexName.exact", keyword));
+        boolQuery.should(QueryBuilders.matchQuery("description", keyword));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .size(12)
                 .timeout(new TimeValue(60, TimeUnit.SECONDS))
-                .query(matchPhrasePrefixQueryBuilder);
+                .query(boolQuery);
 
         SearchRequest searchRequest = new SearchRequest()
                 .indices(openSearchIndex.getIndexNameWithVersion())
@@ -576,7 +618,6 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     public void convertDataAndLoadToEngine(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
 
         final BulkRequest bulkRequest = new BulkRequest();
-        final HanguelJamoMorphTokenizer tokenizer = HanguelJamoMorphTokenizer.getInstance();
 
         for (CommonLoadData loadItem : loadList) {
 
@@ -585,6 +626,8 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             Map<String, Object> loadHashMap = new HashMap<>();
             loadHashMap.put("bakeryId", loadItem.getBakeryId());
             loadHashMap.put("bakeryName", bakeryName);
+            loadHashMap.put("description", bakeryName);
+            loadHashMap.put("indexName", bakeryName);
             loadHashMap.put("bakeryAddress", loadItem.getBakeryAddress());
             loadHashMap.put("longitude", String.valueOf(loadItem.getLongitude()));
             loadHashMap.put("latitude", String.valueOf(loadItem.getLatitude()));
@@ -598,6 +641,8 @@ public class OpenSearchServiceImpl implements OpenSearchService {
             if (loadItem instanceof BreadLoadData bread) {
                 String breadName = bread.getBreadName();
                 loadHashMap.put("breadId", bread.getBreadId());
+                loadHashMap.put("description", breadName);
+                loadHashMap.put("indexName", breadName);
 
                 String parsedBreadName = parseEndingWithNumberAndSizeInKorean(breadName);
                 loadHashMap.put("breadName", parsedBreadName);

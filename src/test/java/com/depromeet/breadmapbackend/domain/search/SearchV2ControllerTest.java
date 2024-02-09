@@ -7,7 +7,6 @@ import com.depromeet.breadmapbackend.global.security.domain.RoleType;
 import com.depromeet.breadmapbackend.utils.ControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
@@ -25,14 +24,12 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SearchV2ControllerTest extends ControllerTest {
     @Autowired
@@ -41,7 +38,6 @@ class SearchV2ControllerTest extends ControllerTest {
     private DataSource dataSource;
     @MockBean
     private SearchService searchService;
-
     private String userToken;
 
     private void setUpTestDate() throws Exception {
@@ -115,39 +111,14 @@ class SearchV2ControllerTest extends ControllerTest {
                                 fieldWithPath("data.searchResultDtoList.[].address").description("빵집 주소"),
                                 fieldWithPath("data.searchResultDtoList.[].totalScore").description("빵집 점수"),
                                 fieldWithPath("data.searchResultDtoList.[].reviewNum").description("빵집 리뷰 갯수"),
-                                fieldWithPath("data.searchResultDtoList.[].distance").description("빵집까지 거리")
+                                fieldWithPath("data.searchResultDtoList.[].distance").description("빵집까지 거리"),
+                                fieldWithPath("data.searchResultDtoList.[].latitude").description("위도"),
+                                fieldWithPath("data.searchResultDtoList.[].longitude").description("경도"),
+                                fieldWithPath("data.searchResultDtoList.[].bakeryImageUrl").description("빵집 이미지 URL"),
+                                fieldWithPath("data.searchResultDtoList.[].flagCount").description("깃발 갯수"),
+                                fieldWithPath("data.searchResultDtoList.[].flagColor").description("깃발 색깔")
                         )
                 ))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-// TODO: github CI test check... mock 객체 return이 안됨
-//    @Test
-//    void searchKeywordSuggestions() throws Exception {
-//        String keyword = "베이커리";
-//
-//        List<String> keywordSuggestions = new ArrayList<>();
-//        keywordSuggestions.add("test1");
-//        keywordSuggestions.add("test2");
-//        keywordSuggestions.add("test3");
-//
-//        when(searchService.searchKeywordSuggestions(eq(keyword)))
-//                .thenReturn(keywordSuggestions);
-//
-//        mockMvc.perform(get("/v2/search/suggestions")
-//                        .param("keyword", keyword)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andDo(document("v2/search/suggestions",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestParameters(
-//                                parameterWithName("keyword").description("검색 키워드")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("data.keywordSuggestions").description("추천 검색어 리스트")
-//                        )
-//                ))
-//                .andExpect(status().isOk());
-//    }
 }
