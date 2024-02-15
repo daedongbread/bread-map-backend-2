@@ -35,4 +35,17 @@ public class NoticeFcmDto {
 		this.type = type;
 		this.extraParam = extraParam;
 	}
+
+	@Override
+	public String toString() {
+		return "NoticeFcmDto{" +
+				"fcmTokens=" + fcmTokens +
+				", title='" + title + '\'' +
+				", content='" + content + '\'' +
+				", contentId=" + contentId +
+				", subContentId=" + subContentId +
+				", type=" + type +
+				", extraParam='" + extraParam + '\'' +
+				'}';
+	}
 }

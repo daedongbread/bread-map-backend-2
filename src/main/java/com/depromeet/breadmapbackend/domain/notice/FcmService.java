@@ -48,7 +48,7 @@ public class FcmService {
 					.build()
 			);
 		} catch (Exception e) {
-			log.error("Firebase FirebaseMessagingException : " + e.getMessage());
+			log.error("Firebase FirebaseMessagingException : " + e.getMessage() + " " + dto.toString());
 		}
 	}
 }
