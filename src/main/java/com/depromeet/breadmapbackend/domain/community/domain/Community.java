@@ -1,10 +1,11 @@
 package com.depromeet.breadmapbackend.domain.community.domain;
 
-import static javax.persistence.FetchType.*;
-
+import static javax.persistence.FetchType.LAZY;
+import com.depromeet.breadmapbackend.domain.bakery.Bakery;
+import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -20,11 +21,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.user.User;
-import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,62 +40,53 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn(name = "communityType")
 public abstract class Community {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	@Column(nullable = false, updatable = false)
-	@Enumerated(EnumType.STRING)
-	private CommunityType communityType;
+    @Column(nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    private CommunityType communityType;
 
-	@Column(nullable = false, length = 100)
-	private String title;
+    @Column(nullable = false, length = 500)
+    private String content;
 
-	@Column(nullable = false, length = 500)
-	private String content;
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityImage> images = new ArrayList<>();
 
-	@OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CommunityImage> images = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "bakery_id")
+    private Bakery bakery;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "bakery_id")
-	private Bakery bakery;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isBlock = Boolean.FALSE;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "temp_bakery_source_id")
-	private TempBakerySource tempBakerySource;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isHide = Boolean.FALSE;
 
-	@Column(nullable = false)
-	@Convert(converter = BooleanToYNConverter.class)
-	private Boolean isBlock = Boolean.FALSE;
+    @Column(nullable = false)
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isDelete = Boolean.FALSE;
 
-	@Column(nullable = false)
-	@Convert(converter = BooleanToYNConverter.class)
-	private Boolean isHide = Boolean.FALSE;
+    protected Community(
+        final User user,
+        final CommunityType communityType,
+        final String content,
+        final Bakery bakery
+    ) {
+        this.user = user;
+        this.communityType = communityType;
+        this.content = content;
+        this.bakery = bakery;
+    }
 
-	@Column(nullable = false)
-	@Convert(converter = BooleanToYNConverter.class)
-	private Boolean isDelete = Boolean.FALSE;
-
-	public Community(
-		final User user,
-		final CommunityType communityType,
-		final String title,
-		final String content,
-		final List<CommunityImage> images,
-		final Bakery bakery,
-		final TempBakerySource tempBakerySource
-	) {
-		this.user = user;
-		this.communityType = communityType;
-		this.title = title;
-		this.content = content;
-		this.images = images;
-		this.bakery = bakery;
-		this.tempBakerySource = tempBakerySource;
-	}
+    public void addImages(final List<String> images) {
+        images.forEach(image -> this.images.add(CommunityImage.createCommunityImage(this, image)));
+    }
 }

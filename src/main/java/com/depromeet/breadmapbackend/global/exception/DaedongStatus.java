@@ -43,6 +43,7 @@ public enum DaedongStatus {
 	BAKERY_RANKING_NOT_FOUND(BAD_REQUEST, 40098, "bakery ranking not found"), // 랭킹이 존재하지 않을 때
 
 	INVALID_POST_TOPIC(BAD_REQUEST, 40099, "invalid post topic"),
+	INVALID_COMMUNITY_TYPE(BAD_REQUEST, 40099, "invalid community type"),
 	COMMENT_NOT_FOUND(BAD_REQUEST, 40100, "comment not found"),
 	INVALID_COMMENT_STATUS(BAD_REQUEST, 40101, "comment status not valid"),
 	INVALID_POST(BAD_REQUEST, 40102, "invalid post"),

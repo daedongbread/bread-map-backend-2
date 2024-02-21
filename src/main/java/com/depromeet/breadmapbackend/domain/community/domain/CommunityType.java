@@ -1,5 +1,8 @@
 package com.depromeet.breadmapbackend.domain.community.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * CommunityType
  *
@@ -7,13 +10,19 @@ package com.depromeet.breadmapbackend.domain.community.domain;
  * @version 1.0.0
  * @since 12/20/23
  */
+
+@Getter
+@AllArgsConstructor
 public enum CommunityType {
-	REVIEW,
-	BREAD_PILGRIMAGE,
-	BRAG_BREAD,
-	BAKING,
-	BREAD_TALK,
-	ONE_DAY_CLASS,
-	BREAD_GROUP_BUY,
-	EVENT
+    REVIEW(true),
+    BREAD_PILGRIMAGE(false),
+    BRAG_BREAD(false),
+    BAKING(false),
+    BREAD_TALK(false),
+    ONE_DAY_CLASS(false),
+    BREAD_GROUP_BUY(false),
+    EVENT(false),
+    ;
+
+    private final boolean containsProduct;
 }

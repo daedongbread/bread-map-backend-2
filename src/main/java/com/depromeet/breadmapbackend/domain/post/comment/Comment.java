@@ -43,10 +43,6 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false, length = 500)
 	private String content;
 
-	// @ManyToOne(fetch = LAZY)
-	// @JoinColumn(name = "post_id", insertable = false, updatable = false)
-	// private Post post;
-
 	@Column(name = "post_id")
 	private Long postId;
 

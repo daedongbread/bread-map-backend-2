@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import com.depromeet.breadmapbackend.global.converter.BooleanToYNConverter;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,20 +48,19 @@ public class CommunityImage {
 	@Convert(converter = BooleanToYNConverter.class)
 	private Boolean isRegistered = Boolean.FALSE;
 
-	@Builder
-	public CommunityImage(Community community, String image) {
+	private CommunityImage(Community community, String image) {
 		this.community = community;
 		this.image = image;
-		this.community.getImages().add(this);
+		this.isRegistered = true;
+		this.isNew = true;
+	}
+
+	public static CommunityImage createCommunityImage(Community community, String image) {
+		return new CommunityImage(community, image);
 	}
 
 	public void unNew() {
 		this.isNew = false;
-	}
-
-	public void register() {
-		this.isRegistered = true;
-		this.isNew = true;
 	}
 
 	public void unregister() {
