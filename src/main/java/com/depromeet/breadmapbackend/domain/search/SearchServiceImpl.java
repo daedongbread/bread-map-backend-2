@@ -212,6 +212,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<String> searchKeywordSuggestions(String keyword) {
 
+        log.info("searchKeywordSuggestions keyword :: " + keyword);
         SearchResponse bakerySuggestions = openSearchService.getKeywordSuggestions(OpenSearchIndex.BAKERY_SEARCH, keyword);
         HashSet<String> keywordSuggestions = Arrays.stream(bakerySuggestions.getHits().getHits())
                 .map(breadHits -> (String) breadHits.getSourceAsMap().get("bakeryName"))
