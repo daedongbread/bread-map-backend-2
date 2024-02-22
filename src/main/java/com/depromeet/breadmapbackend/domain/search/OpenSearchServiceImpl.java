@@ -628,12 +628,12 @@ public class OpenSearchServiceImpl implements OpenSearchService {
     public void convertDataAndLoadToEngine(String indexName, List<? extends CommonLoadData> loadList) throws IOException {
 
         final BulkRequest bulkRequest = new BulkRequest();
+        Map<String, Object> loadHashMap = new HashMap<>();
 
         for (CommonLoadData loadItem : loadList) {
 
             String bakeryName = loadItem.getBakeryName();
 
-            Map<String, Object> loadHashMap = new HashMap<>();
             loadHashMap.put("bakeryId", loadItem.getBakeryId());
             loadHashMap.put("bakeryName", bakeryName);
             loadHashMap.put("description", bakeryName);
@@ -676,6 +676,7 @@ public class OpenSearchServiceImpl implements OpenSearchService {
         }
 
         try (RestHighLevelClient searchClient = searchClient()) {
+            log.info("convertDataAndLoadToEngine bulkRequest ::: " + indexName + " " + loadHashMap);
             searchClient.bulk(bulkRequest, RequestOptions.DEFAULT);
         }
     }
