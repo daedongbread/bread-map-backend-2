@@ -29,4 +29,6 @@ public class Challenge extends BaseEntity {
 
     @Column(nullable = false)
     private boolean available;
+
+    private Integer limit;
 }
