@@ -57,11 +57,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Build with Gradle
-      run: |
-        chmod +x ./gradlew
-        ./gradlew build
-
     - name: Set up docker buildx
       id: buildx
       uses: docker/setup-buildx-action@v2
