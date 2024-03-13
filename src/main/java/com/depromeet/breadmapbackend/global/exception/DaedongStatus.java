@@ -104,6 +104,7 @@ public enum DaedongStatus {
 		"product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
 	POST_NOT_FOUND(NOT_FOUND, 40495, "Post not found"),
 	CAROUSEL_NOT_FOUND(NOT_FOUND, 40496, "Carousel not found"),
+	CHALLENGE_NOT_FOUND(NOT_FOUND, 40497, "Challenge not found"),
 
 	// 409 CONFLICT
 	ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때
@@ -122,6 +123,7 @@ public enum DaedongStatus {
 	//    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
 	ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate"), // 관리자 이메일 중복일 때
 	CURATION_DUPLICATE_EXCEPTION(CONFLICT, 40991, "curation already has same bakery"),
+	ALREADY_PARTICIPATED_CHALLENGE(CONFLICT, 40992, "already participated challenge"),
 
 	// 500
 	OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key"), // OIDC public key가 문제일 때
