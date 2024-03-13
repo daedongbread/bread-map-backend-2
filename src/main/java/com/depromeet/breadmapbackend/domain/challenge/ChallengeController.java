@@ -18,7 +18,7 @@ public class ChallengeController {
      * 챌린지 참가
      */
     @PostMapping("/{challengeId}/participants")
-    public void participateChallenge(@CurrentUser String oAuthId, @PathVariable Long challengeId) {
+    public void participateChallenge(@CurrentUser String oAuthId, @PathVariable long challengeId) {
         challengeService.participate(oAuthId, challengeId);
     }
 

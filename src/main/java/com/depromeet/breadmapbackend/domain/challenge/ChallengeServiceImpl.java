@@ -23,7 +23,7 @@ public class ChallengeServiceImpl implements ChallengeService {
      * 챌린지 참가
      */
     @Override
-    public void participate(long challengeId, String oAuthId) {
+    public void participate(String oAuthId, long challengeId) {
         var challenge = challengeQuery.getChallengeWithUserOAuthId(challengeId, oAuthId)
                 .orElseThrow(() -> new DaedongException(DaedongStatus.CHALLENGE_NOT_FOUND));
 
