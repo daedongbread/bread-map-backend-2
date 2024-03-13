@@ -4,6 +4,7 @@ import com.depromeet.breadmapbackend.global.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class Challenge extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime endDatetime;
 
+    @Setter
     @Column(nullable = false)
     private boolean available;
 
@@ -35,4 +37,8 @@ public class Challenge extends BaseEntity {
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeParticipant> participants;
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(endDatetime);
+    }
 }
