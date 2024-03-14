@@ -23,11 +23,9 @@ public class ChallengeQuery {
         Challenge c = queryFactory
                 .selectFrom(challenge)
                 .leftJoin(challenge.participants, challengeParticipant)
-                .join(challengeParticipant.user, user)
-                .where(
-                        challenge.id.eq(challengeId),
-                        user.oAuthInfo.oAuthId.eq(oAuthId)
-                )
+                .leftJoin(challengeParticipant.user, user)
+                    .on(user.oAuthInfo.oAuthId.eq(oAuthId))
+                .where(challenge.id.eq(challengeId))
                 .fetchOne();
         return Optional.ofNullable(c);
     }
