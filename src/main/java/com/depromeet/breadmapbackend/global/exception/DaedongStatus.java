@@ -122,6 +122,7 @@ public enum DaedongStatus {
 	//    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
 	ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate"), // 관리자 이메일 중복일 때
 	CURATION_DUPLICATE_EXCEPTION(CONFLICT, 40991, "curation already has same bakery"),
+	CHALLENGE_SUBMISSION_DUPLICATE_EXCEPTION(CONFLICT, 40992, "already registered challenge today"),
 
 	// 500
 	OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key"), // OIDC public key가 문제일 때

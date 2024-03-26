@@ -8,27 +8,19 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class VerificationHistory extends BaseEntity {
+@Entity
+public class ChallengeParticipant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    @Enumerated(EnumType.STRING)
-    private ApprovalType approvalType;
-
-    public void updateApprovalType(ApprovalType approvalType) {
-        this.approvalType = approvalType;
-    }
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
