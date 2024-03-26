@@ -12,7 +12,8 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: bread-map
+  # ECR_REPOSITORY: bread-map
+  ECR_REPOSITORY: prod-daedong-api
   ECS_TASK_DEFINITION: prod-api-server-task-definition
   CONTAINER_NAME: prod-api-server-container
   ECS_SERVICE: prod-api-server-service
@@ -28,12 +29,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        role-to-assume: arn:aws:iam::134510465097:role/GitHubActions
+        role-to-assume: arn:aws:iam::590183743745:role/prod-GithubActionsRole
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
@@ -73,7 +74,6 @@ jobs:
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
-          
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
@@ -86,28 +86,28 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-    - name: Download Task Definition Template
-      run: |
-        aws ecs describe-task-definition \
-          --task-definition ${{ env.ECS_TASK_DEFINITION }} \
-          --query taskDefinition \
-          > task-definition.json
+    # - name: Download Task Definition Template
+    #   run: |
+    #     aws ecs describe-task-definition \
+    #       --task-definition ${{ env.ECS_TASK_DEFINITION }} \
+    #       --query taskDefinition \
+    #       > task-definition.json
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: task-definition.json
-        container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
+    # - name: Fill in the new image ID in the Amazon ECS task definition
+    #   id: task-def
+    #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+    #   with:
+    #     task-definition: task-definition.json
+    #     container-name: ${{ env.CONTAINER_NAME }}
+    #     image: ${{ steps.build-image.outputs.image }}
 
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ env.ECS_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+    # - name: Deploy Amazon ECS task definition
+    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+    #   with:
+    #     task-definition: ${{ steps.task-def.outputs.task-definition }}
+    #     service: ${{ env.ECS_SERVICE }}
+    #     cluster: ${{ env.ECS_CLUSTER }}
+    #     wait-for-service-stability: true
 
     - name: CD notification to Slack
       uses: 8398a7/action-slack@v3
