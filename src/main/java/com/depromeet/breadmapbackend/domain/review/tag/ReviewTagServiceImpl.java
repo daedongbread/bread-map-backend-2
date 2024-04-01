@@ -25,13 +25,13 @@ public class ReviewTagServiceImpl implements ReviewTagService {
 
         List<TagResponse> BakeryTagResponses = bakeryTags.stream()
                 .map(bakeryTag -> new TagResponse(
-                        bakeryTag.getOrder(),
+                        bakeryTag.getTagOrder(),
                         bakeryTag.getReviewTagType().name(),
                         bakeryTag.getDescription())).collect(Collectors.toList());
 
         List<TagResponse> BreadTagResponses = breadTags.stream()
                 .map(breadTag -> new TagResponse(
-                        breadTag.getOrder(),
+                        breadTag.getTagOrder(),
                         breadTag.getReviewTagType().name(),
                         breadTag.getDescription())).collect(Collectors.toList());
 

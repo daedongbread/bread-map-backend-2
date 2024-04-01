@@ -16,10 +16,12 @@ public class BakeryTag extends BaseEntity {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private Long order;
+    private Long tagOrder;
 
     @Enumerated(EnumType.STRING)
     private BakeryTagType reviewTagType;
+
+    private boolean isActive;
 
     @Column(nullable = false)
     private String description;

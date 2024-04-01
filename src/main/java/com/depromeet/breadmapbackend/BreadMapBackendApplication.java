@@ -47,6 +47,6 @@ public class BreadMapBackendApplication {
 //		System.out.println("passwordEncoder :: ================" + adminUserForEventPost.getAccessToken());
 //
 //		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//
 //	}
+
 }
