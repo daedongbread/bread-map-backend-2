@@ -12,13 +12,13 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  # ECR_REPOSITORY: bread-map
   ECR_REPOSITORY: prod-daedong-api
-  ECS_TASK_DEFINITION: prod-api-server-task-definition
-  CONTAINER_NAME: prod-api-server-container
-  ECS_SERVICE: prod-api-server-service
-  ECS_CLUSTER: prod-cluster-t2-small
-  
+  ECS_TASK_DEFINITION: daedong-api
+  CONTAINER_NAME: daedong-api
+  ECS_SERVICE: daedong-api
+  ECS_CLUSTER: prod-daedong
+
+
 permissions:
   id-token: write
   contents: read
@@ -84,30 +84,44 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    # - name: Download Task Definition Template
-    #   run: |
-    #     aws ecs describe-task-definition \
-    #       --task-definition ${{ env.ECS_TASK_DEFINITION }} \
-    #       --query taskDefinition \
-    #       > task-definition.json
+    - name: Checkout Infra Repository
+      uses: actions/checkout@v3
+      with:
+        path: terraform
+        repository: 'daedongbread/bread-map-infra'
+        token: ${{ secrets.INFRA_REPO_ACCESS_TOKEN }}
+        ref: stage
 
-    # - name: Fill in the new image ID in the Amazon ECS task definition
-    #   id: task-def
-    #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-    #   with:
-    #     task-definition: task-definition.json
-    #     container-name: ${{ env.CONTAINER_NAME }}
-    #     image: ${{ steps.build-image.outputs.image }}
+    - name: Update Image Tag
+      env:
+        IMAGE_TAG_NAME: ${{ env.IMAGE_TAG_NAME }}
+        IMAGE_TAG: ${{ steps.build-image.outputs.IMAGE_TAG }}
+      working-directory: terraform/root/prod
+      run: |
+        sed -i "s/${IMAGE_TAG_NAME} = \".*\"/${IMAGE_TAG_NAME} = \"$IMAGE_TAG\"/" prod.tfvars
 
-    # - name: Deploy Amazon ECS task definition
-    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-    #   with:
-    #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-    #     service: ${{ env.ECS_SERVICE }}
-    #     cluster: ${{ env.ECS_CLUSTER }}
-    #     wait-for-service-stability: true
+    - name: Commit and Push and Create PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.INFRA_REPO_ACCESS_TOKEN }}
+        GITHUB_ACTOR: ${{ github.actor }}
+        PR_URL: ${{ github.event.pull_request.html_url }}
+      working-directory: terraform/root/prod
+      run: |
+        git config user.name 'daedong'
+        git config user.email 'daedong@daedong.com'
+        git add prod.tfvars
+        git commit -m "deploy: update api image tag"
+        git push origin stage
+        
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          PR_BODY="Automated PR to deploy **[API]** by update image tag<br/><br/><br/>open by $PR_URL @$GITHUB_ACTOR"
+        elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          PR_BODY="Automated PR to deploy **[API]** by update image tag<br/><br/><br/>open by workflow_dispatch by @$GITHUB_ACTOR"
+        fi
+        echo "$PR_BODY" > pr-body.txt
+        gh pr create --title "API 운영 환경 배포" --body-file pr-body.txt --base main --head stage
 
     - name: CD notification to Slack
       uses: 8398a7/action-slack@v3
