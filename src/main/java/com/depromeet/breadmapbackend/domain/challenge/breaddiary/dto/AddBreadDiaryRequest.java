@@ -11,8 +11,9 @@ import java.util.Set;
 public record AddBreadDiaryRequest(
         @NotNull MultipartFile image,
         long bakeryId,
-        long productId,
+        @NotNull String productName,
+        int productPrice,
         @Min(1) @Max(5) int rating,
         @NotEmpty Set<Long> bakeryTags,
-        @NotEmpty Set<Long> productTags) {
+        @NotEmpty Set<Long> breadTags) {
 }

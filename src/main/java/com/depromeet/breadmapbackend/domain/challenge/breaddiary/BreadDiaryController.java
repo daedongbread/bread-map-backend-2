@@ -24,10 +24,11 @@ public class BreadDiaryController {
                         oAuthId,
                         request.image(),
                         request.bakeryId(),
-                        request.productId(),
+                        request.productName(),
+                        request.productPrice(),
                         request.rating(),
                         request.bakeryTags(),
-                        request.productTags()));
+                        request.breadTags()));
     }
 
 }

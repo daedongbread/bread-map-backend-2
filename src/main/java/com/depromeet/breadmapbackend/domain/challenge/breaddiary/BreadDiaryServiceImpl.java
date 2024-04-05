@@ -14,5 +14,4 @@ public class BreadDiaryServiceImpl implements BreadDiaryService {
     public void addBreadDiary(AddBreadDiaryDto dto) {
 
     }
-
 }

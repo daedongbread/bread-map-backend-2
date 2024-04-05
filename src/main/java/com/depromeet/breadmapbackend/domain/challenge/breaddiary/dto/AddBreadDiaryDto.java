@@ -8,7 +8,8 @@ public record AddBreadDiaryDto(
         String oAuthId,
         MultipartFile image,
         long bakeryId,
-        long productId,
+        String productName,
+        int productPrice,
         int rating,
         Set<Long> bakeryTags,
         Set<Long> productTags) {
