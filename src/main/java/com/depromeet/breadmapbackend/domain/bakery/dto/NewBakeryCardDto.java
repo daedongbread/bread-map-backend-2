@@ -19,7 +19,7 @@ public record NewBakeryCardDto(
 	public NewBakeryCardDto(final NewBakeryDto dto) {
 		this(
 			dto.bakery().getId(),
-			dto.bakery().getImages().get(0),
+			dto.bakery().getImages().isEmpty() ? null : dto.bakery().getImages().get(0),
 			dto.bakery().getName(),
 			getPioneer(dto) != null ? getPioneer(dto).getId() : null,
 			getPioneer(dto) != null ? getPioneer(dto).getNickName() : null,
