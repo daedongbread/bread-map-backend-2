@@ -23,10 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ConfigurationPropertiesScan
 @SpringBootApplication
 @EnableScheduling
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class BreadMapBackendApplication {
 
-//	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtTokenProvider jwtTokenProvider;
 	@PostConstruct
 	public void started() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
@@ -43,10 +43,10 @@ public class BreadMapBackendApplication {
 
 //	@PostConstruct
 //	public PasswordEncoder passwordEncoder() {
-//		JwtToken adminUserForEventPost = jwtTokenProvider.createJwtToken("ADMIN_USER_FOR_EVENT_POST", RoleType.USER.getCode());
+//		JwtToken adminUserForEventPost = jwtTokenProvider.createJwtToken("KAKAO_2811166920", RoleType.USER.getCode());
 //		System.out.println("passwordEncoder :: ================" + adminUserForEventPost.getAccessToken());
 //
 //		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//
 //	}
+
 }
