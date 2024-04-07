@@ -67,6 +67,7 @@ public enum DaedongStatus {
 	NOT_EXISTS_SORT_TYPE(BAD_REQUEST, 40112, "존재하지 않는 정렬 타입 입니다."),
 
 	SEARCH_LOG_NOT_EXIST(BAD_REQUEST, 40113, "keyword search log not found."),
+	NOT_AVAILABLE_CHALLENGE(BAD_REQUEST, 40114, "챌린지가 유효하지 않거나 만료되었습니다."),
 
 	// 401 UNAUTHORIZED
 	CUSTOM_AUTHENTICATION_ENTRYPOINT(UNAUTHORIZED, 40100, "invalid jwt"), // 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
@@ -104,6 +105,7 @@ public enum DaedongStatus {
 		"product add report image not found"), // 상품 추가 제보 이미지가 존재하지 않을 때
 	POST_NOT_FOUND(NOT_FOUND, 40495, "Post not found"),
 	CAROUSEL_NOT_FOUND(NOT_FOUND, 40496, "Carousel not found"),
+	CHALLENGE_NOT_FOUND(NOT_FOUND, 40497, "Challenge not found"),
 
 	// 409 CONFLICT
 	ALREADY_REGISTER_USER(CONFLICT, 40900, "already register user"), // 이미 가입한 유저일 때
@@ -122,7 +124,8 @@ public enum DaedongStatus {
 	//    NOTICE_TOKEN_DUPLICATE_EXCEPTION(CONFLICT, 40960, "notice token duplicate"), // 알림 토큰이 이미 존재할 때
 	ADMIN_EMAIL_DUPLICATE_EXCEPTION(CONFLICT, 40990, "admin email duplicate"), // 관리자 이메일 중복일 때
 	CURATION_DUPLICATE_EXCEPTION(CONFLICT, 40991, "curation already has same bakery"),
-	CHALLENGE_SUBMISSION_DUPLICATE_EXCEPTION(CONFLICT, 40992, "already registered challenge today"),
+	ALREADY_PARTICIPATED_CHALLENGE(CONFLICT, 40992, "already participated challenge"),
+	CHALLENGE_SUBMISSION_DUPLICATE_EXCEPTION(CONFLICT, 40993, "already registered challenge today"),
 
 	// 500
 	OIDC_PUBLIC_KEY_EXCEPTION(INTERNAL_SERVER_ERROR, 50000, "wrong oidc public key"), // OIDC public key가 문제일 때
