@@ -17,6 +17,7 @@ env:
   CONTAINER_NAME: daedong-api
   ECS_SERVICE: daedong-api
   ECS_CLUSTER: prod-daedong
+  IMAGE_TAG_NAME: api_image_tag
 
 
 permissions:
@@ -115,6 +116,7 @@ jobs:
         git commit -m "deploy: update api image tag"
         git push origin stage
         
+        echo ${{ github.event_name }}
         if [[ "${{ github.event_name }}" == "pull_request" ]]; then
           PR_BODY="Automated PR to deploy **[API]** by update image tag<br/><br/><br/>open by $PR_URL @$GITHUB_ACTOR"
         elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
