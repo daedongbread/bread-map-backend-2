@@ -1,16 +1,15 @@
 package com.depromeet.breadmapbackend.domain.review.tag;
 
-import com.depromeet.breadmapbackend.domain.challenge.dto.ChallengeSubmission;
-import com.depromeet.breadmapbackend.domain.review.tag.dto.ReviewTagsRequest;
 import com.depromeet.breadmapbackend.domain.review.tag.dto.TagListResponse;
 import com.depromeet.breadmapbackend.global.dto.ApiResponse;
 import com.depromeet.breadmapbackend.global.exception.ValidationSequence;
-import com.depromeet.breadmapbackend.global.security.userinfo.CurrentUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @Validated(ValidationSequence.class)
 @RestController
@@ -24,16 +23,4 @@ public class ReviewTagController {
     public ApiResponse<TagListResponse> getAllReviewTags() {
         return new ApiResponse<>(reviewTagService.getAllReviewTags());
     }
-
-    @PostMapping("/submission")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<ChallengeSubmission> addFeed(
-            @AuthenticationPrincipal CurrentUserInfo currentUserInfo,
-            @RequestBody ReviewTagsRequest requestDto
-    ) {
-        //TODO:: 그렇지 않으면 이력 insert
-        return null;
-    }
-
-
 }
