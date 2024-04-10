@@ -23,23 +23,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ConfigurationPropertiesScan
 @SpringBootApplication
 @EnableScheduling
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class BreadMapBackendApplication {
 
-	private final JwtTokenProvider jwtTokenProvider;
-	@PostConstruct
-	public void started() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	}
+    //	private final JwtTokenProvider jwtTokenProvider;
+    @PostConstruct
+    public void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(BreadMapBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BreadMapBackendApplication.class, args);
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
 //	@PostConstruct
 //	public PasswordEncoder passwordEncoder() {
