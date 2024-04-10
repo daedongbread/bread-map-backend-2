@@ -43,7 +43,7 @@ public class JwtTokenProvider {
 	private final RedisTokenUtils redisTokenUtils;
 	private final CustomJWTKeyProperties customJWTKeyProperties;
 
-	private final Long accessTokenExpiredDate = 1000 * 60 * 60 * 1000L; // 1 hours
+	private final Long accessTokenExpiredDate = 1 * 60 * 60 * 1000L; // 1 hours
 	private final Long refreshTokenExpiredDate = 14 * 24 * 60 * 60 * 1000L; // 14 days
 
 	private static final String ROLES = "roles";
