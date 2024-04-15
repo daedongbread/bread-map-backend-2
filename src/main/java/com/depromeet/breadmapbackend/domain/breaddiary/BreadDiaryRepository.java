@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.challenge.breaddiary;
+package com.depromeet.breadmapbackend.domain.breaddiary;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
