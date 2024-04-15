@@ -1,22 +1,14 @@
-package com.depromeet.breadmapbackend.domain.challenge.breaddiary;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+package com.depromeet.breadmapbackend.domain.breaddiary;
 
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
-import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import javax.persistence.*;
 
 @ToString
 @Getter
@@ -35,9 +27,9 @@ public class BreadDiary extends BaseEntity {
     @JoinColumn(name = "bakery_id")
     private Bakery bakery;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private String productName;
+
+    private int productPrice;
 
     @Column(nullable = false)
     private int rating;

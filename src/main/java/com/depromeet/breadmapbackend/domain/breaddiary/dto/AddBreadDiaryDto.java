@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.challenge.breaddiary.dto;
+package com.depromeet.breadmapbackend.domain.breaddiary.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

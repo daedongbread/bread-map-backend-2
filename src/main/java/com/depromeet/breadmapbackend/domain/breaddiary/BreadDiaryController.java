@@ -1,7 +1,7 @@
-package com.depromeet.breadmapbackend.domain.challenge.breaddiary;
+package com.depromeet.breadmapbackend.domain.breaddiary;
 
-import com.depromeet.breadmapbackend.domain.challenge.breaddiary.dto.AddBreadDiaryDto;
-import com.depromeet.breadmapbackend.domain.challenge.breaddiary.dto.AddBreadDiaryRequest;
+import com.depromeet.breadmapbackend.domain.breaddiary.dto.AddBreadDiaryDto;
+import com.depromeet.breadmapbackend.domain.breaddiary.dto.AddBreadDiaryRequest;
 import com.depromeet.breadmapbackend.global.security.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@RequestMapping("/v1/bread-diary")
+@RequestMapping("/v1/bread-diaries")
 @RestController
 public class BreadDiaryController {
 

@@ -1,6 +1,6 @@
-package com.depromeet.breadmapbackend.domain.challenge.breaddiary;
+package com.depromeet.breadmapbackend.domain.breaddiary;
 
-import com.depromeet.breadmapbackend.domain.challenge.breaddiary.dto.AddBreadDiaryDto;
+import com.depromeet.breadmapbackend.domain.breaddiary.dto.AddBreadDiaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
