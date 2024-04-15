@@ -20,15 +20,17 @@ public class BreadDiary extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "bakery_id")
+    @JoinColumn(name = "bakery_id", nullable = false)
     private Bakery bakery;
 
+    @Column(nullable = false)
     private String productName;
 
+    @Column(nullable = false)
     private int productPrice;
 
     @Column(nullable = false)
