@@ -20,6 +20,4 @@ public class ReviewTag extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReviewTagType reviewTagType;
 
-
-
 }
