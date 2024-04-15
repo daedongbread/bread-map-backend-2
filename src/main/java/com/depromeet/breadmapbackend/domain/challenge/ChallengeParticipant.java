@@ -18,10 +18,10 @@ public class ChallengeParticipant extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "challenge_id")
+    @JoinColumn(name = "challenge_id", nullable = false)
     private Challenge challenge;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
