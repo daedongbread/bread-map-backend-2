@@ -3,8 +3,8 @@ package com.depromeet.breadmapbackend.domain.event.domain.breaddiaryevent;
 import lombok.Getter;
 
 @Getter
-public class BreadDiaryEventCheckContent {
-    private BreadDiaryEventCheckState state = BreadDiaryEventCheckState.PENDING;
+public class BreadDiaryEventContent {
+    private BreadDiaryEventState state = BreadDiaryEventState.PENDING;
     private String description = "";
     private int point = 500;
 

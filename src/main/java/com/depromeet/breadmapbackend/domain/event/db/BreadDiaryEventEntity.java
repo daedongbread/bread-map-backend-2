@@ -1,7 +1,7 @@
 package com.depromeet.breadmapbackend.domain.event.db;
 
 import com.depromeet.breadmapbackend.domain.breaddiary.BreadDiary;
-import com.depromeet.breadmapbackend.domain.event.domain.breaddiaryevent.BreadDiaryEventCheckState;
+import com.depromeet.breadmapbackend.domain.event.domain.breaddiaryevent.BreadDiaryEventState;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @Table(name = "bread_diary_event_check")
-class BreadDiaryEventCheckEntity extends TimestampEntity {
+class BreadDiaryEventEntity extends TimestampEntity {
     @Id
     private long diaryId;
     @OneToOne
@@ -21,5 +21,5 @@ class BreadDiaryEventCheckEntity extends TimestampEntity {
     private String description = "";
     @Enumerated(EnumType.STRING)
     @NotNull
-    private BreadDiaryEventCheckState state = BreadDiaryEventCheckState.PENDING;
+    private BreadDiaryEventState state = BreadDiaryEventState.PENDING;
 }

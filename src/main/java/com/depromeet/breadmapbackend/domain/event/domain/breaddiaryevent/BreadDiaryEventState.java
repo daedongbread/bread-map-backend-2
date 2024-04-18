@@ -5,14 +5,14 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
 
 @AllArgsConstructor
-public enum BreadDiaryEventCheckState {
+public enum BreadDiaryEventState {
     PENDING("대기"), ACCEPTED("수락"), REJECTED("거부");
     public final String value;
 
     @JsonCreator
-    static public BreadDiaryEventCheckState jsonCreator(String state) {
+    static public BreadDiaryEventState jsonCreator(String state) {
         try {
-            return BreadDiaryEventCheckState.valueOf(state);
+            return BreadDiaryEventState.valueOf(state);
         } catch (Exception e) {
             return null;
         }
