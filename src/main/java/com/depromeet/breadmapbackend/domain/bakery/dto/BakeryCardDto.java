@@ -1,17 +1,16 @@
 package com.depromeet.breadmapbackend.domain.bakery.dto;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagColor;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.dto.MapSimpleReviewDto;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -40,7 +39,7 @@ public class BakeryCardDto {
 		this.latitude = bakery.getLatitude();
 		this.longitude = bakery.getLongitude();
 		this.id = bakery.getId();
-		this.image = bakery.getImages().get(0);
+		this.image = bakery.getImages().isEmpty() ? null : bakery.getImages().get(0);
 		this.name = bakery.getName();
 		this.flagNum = flagNum;
 		this.rating = bakery.bakeryRating(reviewList);

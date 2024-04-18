@@ -1,23 +1,21 @@
 package com.depromeet.breadmapbackend.domain.bakery.ranking;
 
-import static com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository.*;
-
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.depromeet.breadmapbackend.domain.bakery.dto.BakeryScoreBaseWithSelectedDate;
 import com.depromeet.breadmapbackend.domain.bakery.ranking.dto.BakeryRankingCard;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.depromeet.breadmapbackend.domain.flag.FlagBakeryRepository.FlagBakeryCount;
 
 /**
  * ScoredBakeryServiceImpl
@@ -137,7 +135,9 @@ public class ScoredBakeryServiceImpl implements ScoredBakeryService {
 			.id(bakeryScores.getBakery().getId())
 			.flagNum(getFlagCount(bakeryScores, flagBakeryCounts))
 			.name(bakeryScores.getBakery().getName())
-			.image(bakeryScores.getBakery().getImages().get(0).describeConstable().orElse(""))
+			.image(bakeryScores.getBakery().getImages().isEmpty()
+					? ""
+					: bakeryScores.getBakery().getImages().get(0).describeConstable().orElse(""))
 			.shortAddress(bakeryScores.getBakery().getShortAddress())
 			.isFlagged(isUserFlaggedBakery(bakeryScores, flagBakeryList))
 			.calculatedDate(bakeryScores.getCalculatedDate())

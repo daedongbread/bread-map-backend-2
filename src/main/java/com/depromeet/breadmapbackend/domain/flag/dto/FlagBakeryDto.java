@@ -1,14 +1,13 @@
 package com.depromeet.breadmapbackend.domain.flag.dto;
 
-import java.util.List;
-
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.flag.Flag;
 import com.depromeet.breadmapbackend.domain.review.dto.MapSimpleReviewDto;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -31,7 +30,7 @@ public class FlagBakeryDto {
 		public FlagBakeryInfo(Bakery bakery, Integer flagNum, Double rating, Integer reviewNum,
 			List<MapSimpleReviewDto> simpleReviewList) {
 			this.id = bakery.getId();
-			this.image = bakery.getImages().get(0);
+			this.image = bakery.getImages().isEmpty() ? null : bakery.getImages().get(0);
 			this.name = bakery.getName();
 			this.flagNum = flagNum;
 			this.rating = rating;

@@ -1,17 +1,16 @@
 package com.depromeet.breadmapbackend.domain.admin.feed.dto.response;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.depromeet.breadmapbackend.domain.admin.feed.domain.CurationBakery;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.FacilityInfo;
 import com.depromeet.breadmapbackend.domain.bakery.product.Product;
 import com.depromeet.breadmapbackend.domain.flag.FlagBakery;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -76,7 +75,7 @@ public class CurationFeedResponseDto {
 			.bakeryName(bakery.getName())
 			.bakeryAddress(bakery.getAddress())
 			.openingHours(bakery.getHours())
-			.bakeryImageUrl(bakery.getImages().get(0))
+			.bakeryImageUrl(bakery.getImages().isEmpty() ? null : bakery.getImages().get(0))
 			.checkPoint(bakery.getCheckPoint())
 			.newBreadTime(bakery.getNewBreadTime())
 			.address(bakery.getAddress())

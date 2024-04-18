@@ -1,14 +1,5 @@
 package com.depromeet.breadmapbackend.domain.flag;
 
-import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.*;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryStatus;
@@ -22,9 +13,16 @@ import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
 import com.depromeet.breadmapbackend.global.exception.DaedongException;
 import com.depromeet.breadmapbackend.global.exception.DaedongStatus;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.depromeet.breadmapbackend.domain.flag.FlagRepository.BakeryCountInFlag;
 
 @Slf4j
 @Service
@@ -44,6 +42,7 @@ public class FlagServiceImpl implements FlagService {
 				.bakeryImageList(flag.getFlagBakeryList().stream()
 					.filter(flagBakery -> flagBakery.getBakery().isPosting())
 					.sorted(Comparator.comparing(FlagBakery::getCreatedAt)).limit(3)
+                    .filter(flagBakery -> !flagBakery.getBakery().getImages().isEmpty())
 					.map(flagBakery -> flagBakery.getBakery().getImages().get(0))
 					.collect(Collectors.toList())).build())
 			.collect(Collectors.toList());

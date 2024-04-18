@@ -1,16 +1,15 @@
 package com.depromeet.breadmapbackend.domain.review.dto;
 
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.review.Review;
 import com.depromeet.breadmapbackend.domain.review.ReviewImage;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -30,7 +29,7 @@ public class ReviewDto {
 		@Builder
 		public BakeryInfo(Bakery bakery) {
 			this.bakeryId = bakery.getId();
-			this.bakeryImage = bakery.getImages().get(0);
+			this.bakeryImage = bakery.getImages().isEmpty() ? null : bakery.getImages().get(0);
 			this.bakeryName = bakery.getName();
 			this.bakeryAddress = bakery.getAddress();
 		}
