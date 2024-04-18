@@ -1,9 +1,7 @@
 package com.depromeet.breadmapbackend.domain.event.domain.breaddiaryevent;
 
 import com.depromeet.breadmapbackend.domain.event.domain.Timestamp;
-import lombok.Getter;
 
-@Getter
 public record BreadDiaryEventCheck(BreadDiaryEventCheckPK pk, BreadDiaryEventCheckTarget diary,
                                    BreadDiaryEventCheckContent content, Timestamp timestamps) {
     public String getHistoryDescription() {
