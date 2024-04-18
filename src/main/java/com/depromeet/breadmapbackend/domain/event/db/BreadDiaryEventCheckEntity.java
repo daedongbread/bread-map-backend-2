@@ -12,10 +12,9 @@ import javax.validation.constraints.NotNull;
 @Table(name = "bread_diary_event_check")
 class BreadDiaryEventCheckEntity extends TimestampEntity {
     @Id
-    @GeneratedValue
-    private long id;
+    private long diaryId;
     @OneToOne
-    @JoinColumn(name = "diary_id")
+    @PrimaryKeyJoinColumn(name = "diary_id")
     @NotNull
     private BreadDiary diary;
     @NotNull

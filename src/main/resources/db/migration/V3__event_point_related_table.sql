@@ -1,6 +1,5 @@
 CREATE TABLE `bread_diary_event_check` (
-                                           `id` bigint PRIMARY KEY,
-                                           `bread_diary_id` bigint NOT NULL,
+                                           `diary_id` bigint PRIMARY KEY ,
                                            `state` ENUM ('PENDING', 'ACCEPTED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
                                            `point` int NOT NULL DEFAULT 0,
                                            `description` string NOT NULL DEFAULT '',
@@ -9,7 +8,7 @@ CREATE TABLE `bread_diary_event_check` (
 );
 
 CREATE TABLE `point_history` (
-                                 `id` bigint PRIMARY KEY,
+                                 `id` bigint auto_increment PRIMARY KEY,
                                  `user_id` bigint NOT NULL,
                                  `point` int NOT NULL DEFAULT 0,
                                  `grand_total_point` int NOT NULL DEFAULT 0,
@@ -26,7 +25,7 @@ CREATE TABLE `user_point` (
                               `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE `bread_diary_event_check` ADD FOREIGN KEY (`bread_diary_id`) REFERENCES `bread_diary` (`id`);
+ALTER TABLE `bread_diary_event_check` ADD FOREIGN KEY (`diary_id`) REFERENCES `bread_diary` (`id`);
 
 ALTER TABLE `point_history` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 

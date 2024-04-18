@@ -14,11 +14,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 class UserPointEntity extends TimestampEntity {
     @Id
-    @GeneratedValue
     private long userId;
 
     @OneToOne
     @PrimaryKeyJoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @NotNull
