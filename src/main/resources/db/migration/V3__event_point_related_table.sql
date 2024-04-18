@@ -10,6 +10,7 @@ CREATE TABLE `bread_diary_event` (
 CREATE TABLE `point_history` (
                                  `id` bigint auto_increment PRIMARY KEY,
                                  `user_id` bigint NOT NULL,
+                                 `target_id` bigint,
                                  `point` int NOT NULL DEFAULT 0,
                                  `grand_total_point` int NOT NULL DEFAULT 0,
                                  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
