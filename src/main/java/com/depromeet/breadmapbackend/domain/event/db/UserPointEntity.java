@@ -1,6 +1,7 @@
 package com.depromeet.breadmapbackend.domain.event.db;
 
 import com.depromeet.breadmapbackend.domain.user.User;
+import com.depromeet.breadmapbackend.global.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Table(name = "user_point")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class UserPointEntity extends TimestampEntity {
+public class UserPointEntity extends BaseEntity {
+
     @Id
     private long userId;
 

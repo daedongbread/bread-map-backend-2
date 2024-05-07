@@ -3,8 +3,8 @@ CREATE TABLE `bread_diary_event` (
                                            `state` ENUM ('PENDING', 'ACCEPTED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
                                            `point` int NOT NULL DEFAULT 0,
                                            `description` string NOT NULL DEFAULT '',
-                                           `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                           `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                           `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                           `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `point_history` (
