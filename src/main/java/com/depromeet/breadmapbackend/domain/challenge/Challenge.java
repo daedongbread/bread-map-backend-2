@@ -24,10 +24,10 @@ public class Challenge extends BaseEntity {
     private String linkUrl;
 
     @Column(nullable = false)
-    private LocalDateTime startDatetime;
+    private LocalDateTime startDateTime;
 
     @Column(nullable = false)
-    private LocalDateTime endDatetime;
+    private LocalDateTime endDateTime;
 
     @Setter
     @Column(nullable = false)
@@ -39,6 +39,6 @@ public class Challenge extends BaseEntity {
     private List<ChallengeParticipant> participants;
 
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(endDatetime);
+        return LocalDateTime.now().isAfter(endDateTime);
     }
 }
