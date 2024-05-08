@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.event.domain.breaddiaryevent;
+package com.depromeet.breadmapbackend.domain.event;
 
 import lombok.AllArgsConstructor;
 import org.codehaus.jackson.annotate.JsonCreator;

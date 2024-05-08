@@ -1,6 +1,5 @@
-package com.depromeet.breadmapbackend.domain.event.db;
+package com.depromeet.breadmapbackend.domain.event;
 
-import com.depromeet.breadmapbackend.domain.event.domain.point.PointHistoryType;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,10 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "user_point_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserPointHistoryEntity extends BaseEntity {
+public class UserPointHistory extends BaseEntity {
 
     @Id @GeneratedValue
     private long id;
@@ -42,7 +40,7 @@ public class UserPointHistoryEntity extends BaseEntity {
     @Column(updatable = false)
     private Long targetId;
 
-    UserPointHistoryEntity(long id, long userId, int point, int grandTotalPoint, PointHistoryType type, String description, Long targetId) {
+    UserPointHistory(long id, long userId, int point, int grandTotalPoint, PointHistoryType type, String description, Long targetId) {
         this.id = id;
         this.userId = userId;
         this.point = point;

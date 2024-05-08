@@ -1,4 +1,4 @@
-package com.depromeet.breadmapbackend.domain.event.db;
+package com.depromeet.breadmapbackend.domain.event;
 
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.global.BaseEntity;
@@ -11,9 +11,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Table(name = "user_point")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserPointEntity extends BaseEntity {
+public class UserPoint extends BaseEntity {
 
     @Id
     private long userId;
@@ -26,7 +25,7 @@ public class UserPointEntity extends BaseEntity {
     @NotNull
     private int totalPoint = 0;
 
-    UserPointEntity(long userId, User user) {
+    UserPoint(long userId, User user) {
         this.userId = userId;
         this.user = user;
     }

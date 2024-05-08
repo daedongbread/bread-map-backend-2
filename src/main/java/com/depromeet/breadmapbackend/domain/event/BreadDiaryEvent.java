@@ -1,17 +1,17 @@
-package com.depromeet.breadmapbackend.domain.event.db;
+package com.depromeet.breadmapbackend.domain.event;
 
 import com.depromeet.breadmapbackend.domain.breaddiary.BreadDiary;
-import com.depromeet.breadmapbackend.domain.event.domain.breaddiaryevent.BreadDiaryEventState;
 import com.depromeet.breadmapbackend.global.BaseEntity;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Table(name = "bread_diary_event_check")
-public class BreadDiaryEventEntity extends BaseEntity {
+@ToString
+public class BreadDiaryEvent extends BaseEntity {
     @Id
     private long diaryId;
 
