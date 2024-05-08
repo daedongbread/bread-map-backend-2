@@ -1,8 +1,8 @@
 CREATE TABLE `bread_diary_event` (
                                            `diary_id` bigint PRIMARY KEY ,
-                                           `state` ENUM ('PENDING', 'ACCEPTED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
+                                           `state` varchar(255) NOT NULL DEFAULT 'PENDING',
                                            `point` int NOT NULL DEFAULT 0,
-                                           `description` string NOT NULL DEFAULT '',
+                                           `description` varchar(4000) NOT NULL DEFAULT '',
                                            `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                            `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -15,8 +15,8 @@ CREATE TABLE `point_history` (
                                  `grand_total_point` int NOT NULL DEFAULT 0,
                                  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                 `type` ENUM ('BREAD_DIARY', 'ETC') NOT NULL DEFAULT 'ETC',
-                                 `description` string NOT NULL DEFAULT ''
+                                 `type` varchar(255) NOT NULL DEFAULT 'ETC',
+                                 `description` varchar(4000) NOT NULL DEFAULT ''
 );
 
 CREATE TABLE `user_point` (
