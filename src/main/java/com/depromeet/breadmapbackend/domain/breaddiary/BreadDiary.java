@@ -10,10 +10,10 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
-@ToString
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@ToString
 public class BreadDiary extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
