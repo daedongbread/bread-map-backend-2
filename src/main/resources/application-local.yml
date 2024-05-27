@@ -5,8 +5,8 @@ spring:
     secret: thisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecret
     admin: thisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkey
   datasource:
-    url: jdbc:mysql://localhost:3306/local_bread_map
-    username: admin
+    url: jdbc:mysql://localhost:33065/local_bread_map
+    username: root
     password: 1234
     hikari:
       maximum-pool-size: 20

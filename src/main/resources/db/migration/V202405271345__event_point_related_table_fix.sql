@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS bread_diary_event;
 CREATE TABLE bread_diary_event
 (
     diary_id      BIGINT       NOT NULL,
@@ -12,7 +11,6 @@ CREATE TABLE bread_diary_event
 ALTER TABLE bread_diary_event
     ADD CONSTRAINT FK_BREADDIARYEVENT_ON_DIARY FOREIGN KEY (diary_id) REFERENCES bread_diary (id);
 
-DROP TABLE IF EXISTS user_point;
 CREATE TABLE user_point
 (
     user_id     BIGINT   NOT NULL,
@@ -25,7 +23,6 @@ CREATE TABLE user_point
 ALTER TABLE user_point
     ADD CONSTRAINT FK_USERPOINT_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
 
-DROP TABLE IF EXISTS user_point_history;
 CREATE TABLE user_point_history
 (
     id                BIGINT       NOT NULL,
@@ -40,7 +37,5 @@ CREATE TABLE user_point_history
     CONSTRAINT pk_userpointhistory PRIMARY KEY (id)
 );
 
-ALTER TABLE challenge
-    CHANGE start_datetime start_date_time datetime;
-ALTER TABLE challenge
-    CHANGE end_datetime end_date_time datetime;
+ALTER TABLE user_point_history
+    ADD CONSTRAINT FK_USERPOINT_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
