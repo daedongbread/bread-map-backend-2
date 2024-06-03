@@ -35,4 +35,12 @@ public class BreadDiary extends BaseEntity {
 
     @Column(nullable = false)
     private int rating;
+
+    public BreadDiary(User user, Bakery bakery, String productName, int productPrice, int rating) {
+        this.user = user;
+        this.bakery = bakery;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.rating = rating;
+    }
 }
