@@ -5,7 +5,7 @@ spring:
     secret: thisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecret
     admin: thisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkey
   datasource:
-    url: jdbc:mysql://localhost:33065/local_bread_map
+    url:
     username: root
     password: 1234
     hikari:
@@ -38,47 +38,47 @@ oauth:
 cloud:
   aws:
     region:
-      static: ${S3_REGION}
+      static: us-east-1
     s3:
-      bucket: ${S3_BUCKET}
-      cloud-front: ${S3_CLOUDFRONT}
+      bucket: bucket
+      cloud-front: cloud-front
       default-bucket:
-        image: ${S3_DEFAULT_BUCKET_IMAGE}
+        image: image
       default-image:
-        bakery: ${S3_DEFAULT_IMAGE_BAKERY}
-        comment: ${S3_DEFAULT_IMAGE_COMMENT}
-        like: ${S3_DEFAULT_IMAGE_LIKE}
-        report: ${S3_DEFAULT_IMAGE_REPORT}
-        flag: ${S3_DEFAULT_IMAGE_FLAG}
-        user: ${S3_DEFAULT_IMAGE_USER}
-        curation: ${S3_DEFAULT_IMAGE_CURATION}
-        event: ${S3_DEFAULT_IMAGE_EVENT}
-        breadAdd: ${S3_DEFAULT_IMAGE_BREAD_ADD}
+        bakery: bakery
+        comment: comment
+        like: like
+        report: report
+        flag: flag
+        user: user
+        curation: curation
+        event: event
+        breadAdd: breadAdd
     open-search:
-      id: ${OPEN_SEARCH_ID}
-      password: ${OPEN_SEARCH_PASSWORD}
-      host: ${OPEN_SEARCH_HOST}
+      id: id
+      password: password
+      host: host
 
 firebase:
-  credentials: ${FIREBASE_CREDENTIALS}
-  scope: ${FIREBASE_SCOPE}
-  projectId: ${FIREBASE_PROJECTID}
+  credentials: credentials
+  scope: scope
+  projectId: projectId
   message:
     path:
-      user: ${FIREBASE_MESSAGE_PATH_USER}
-      review: ${FIREBASE_MESSAGE_PATH_REVIEW}
+      user: user
+      review: review
 
 sgis:
-  src: ${SGIS_SRC}
-  dst1: ${SGIS_DST1}
-  dst2: ${SGIS_DST2}
-  key: ${SGIS_KEY}
-  secret: ${SGIS_SECRET}
+  src: 1
+  dst1: 2
+  dst2: 3
+  key: key
+  secret: secret
 
 admin:
   event:
     post:
-      user-id: ${EVENT_POST_ADMIN_USER_ID}
+      user-id: 1
 
 redis:
   poll-timeout:
@@ -87,4 +87,3 @@ redis:
 
 server:
   shutdown: graceful
-
