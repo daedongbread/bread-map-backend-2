@@ -1,0 +1,89 @@
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 40s
+  jwt:
+    secret: thisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecretthisisjwtsecret
+    admin: thisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkeythisisjwtadminkey
+  datasource:
+    url:
+    username: root
+    password: 1234
+    hikari:
+      maximum-pool-size: 20
+  #      idle-timeout: 300
+  #      max-lifeitme: 300
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      default_batch_fetch_size: 100
+    generate-ddl: false
+  redis:
+    key:
+      delete: delete
+      recent: recent
+      access: access
+      refresh: refresh
+      admin-refresh: admin-refresh
+      bakery-review: bakery-review
+      product-review: product-review
+      user-review: user-review
+
+oauth:
+  google: google-id
+  kakao: kakao-id
+  apple: apple-id
+
+cloud:
+  aws:
+    region:
+      static: us-east-1
+    s3:
+      bucket: bucket
+      cloud-front: cloud-front
+      default-bucket:
+        image: image
+      default-image:
+        bakery: bakery
+        comment: comment
+        like: like
+        report: report
+        flag: flag
+        user: user
+        curation: curation
+        event: event
+        breadAdd: breadAdd
+    open-search:
+      id: id
+      password: password
+      host: host
+
+firebase:
+  credentials: credentials
+  scope: scope
+  projectId: projectId
+  message:
+    path:
+      user: user
+      review: review
+
+sgis:
+  src: 1
+  dst1: 2
+  dst2: 3
+  key: key
+  secret: secret
+
+admin:
+  event:
+    post:
+      user-id: 1
+
+redis:
+  poll-timeout:
+    bakery-view: 5
+    bakery-ranking-calculator: 20
+
+server:
+  shutdown: graceful

@@ -5,8 +5,8 @@ create table challenge
     modified_at    datetime null,
     title          varchar(255) not null,
     link_url       varchar(255) null,
-    start_datetime datetime     not null,
-    end_datetime   datetime     not null,
+    start_date_time datetime     not null,
+    end_date_time   datetime     not null,
     available      bit(1)       not null,
     `limit`        int null,
     constraint pk_challenge primary key (id)
@@ -63,3 +63,19 @@ create table bread_tag
     `description`   varchar(255) not null,
     constraint pk_breadtag primary key (id)
 );
+
+CREATE TABLE challenge_participant
+(
+    id           bigint AUTO_INCREMENT NOT NULL,
+    created_at   datetime              NULL,
+    modified_at  datetime              NULL,
+    challenge_id bigint                NOT NULL,
+    user_id      bigint                NOT NULL,
+    CONSTRAINT pk_challengeparticipant PRIMARY KEY (id)
+);
+
+ALTER TABLE challenge_participant
+    ADD CONSTRAINT fk_challengeparticipant_on_challenge FOREIGN KEY (challenge_id) REFERENCES challenge (id);
+
+ALTER TABLE challenge_participant
+    ADD CONSTRAINT fk_challengeparticipant_on_user FOREIGN KEY (user_id) REFERENCES user (id);

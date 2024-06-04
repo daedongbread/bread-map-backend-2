@@ -25,6 +25,10 @@ spring:
     redis:
       repositories:
         enabled: false # Spring Data Redis 저장소 기능
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
 
 #logging:
 #  level:

@@ -31,10 +31,6 @@ spring:
       bakery-review: ${REDIS_KEY_BAKERY_REVIEW}
       product-review: ${REDIS_KEY_PRODUCT_REVIEW}
       user-review: ${REDIS_KEY_USER_REVIEW}
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-    baseline-version: 0
 
 oauth:
   google: ${GOOGLE_ID}

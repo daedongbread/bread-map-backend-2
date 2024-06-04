@@ -25,7 +25,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    jcenter()
     google()
 }
 
@@ -94,8 +93,6 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '3.1.4'
     // redisson
     implementation 'org.redisson:redisson-spring-data-26:3.23.5'
-    // embedded-redis
-    implementation(group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2')
     // FCM push
     implementation 'com.google.firebase:firebase-admin:6.8.1'
     // OpenFeign
@@ -118,9 +115,9 @@ dependencies {
     // easy random
     testImplementation 'org.jeasy:easy-random-core:5.0.0'
 
-    testImplementation 'org.testcontainers:testcontainers:1.17.2'
+    implementation 'org.testcontainers:testcontainers:1.19.8'
 
-    testImplementation 'org.testcontainers:junit-jupiter:1.17.2'
+    implementation 'org.testcontainers:junit-jupiter:1.19.8'
 
     testImplementation 'org.mockito:mockito-inline:3.6.0'
 
