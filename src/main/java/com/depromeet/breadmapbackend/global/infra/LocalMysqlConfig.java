@@ -10,7 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Map;
 
 @Slf4j
-@Profile({"default", "local"})
+@Profile({"local"})
 @Configuration
 @RequiredArgsConstructor
 public class LocalMysqlConfig {
