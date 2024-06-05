@@ -6,7 +6,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -25,12 +28,12 @@ public class UserPoint extends BaseEntity {
     @NotNull
     private int totalPoint = 0;
 
-    UserPoint(long userId, User user) {
-        this.userId = userId;
+    public UserPoint(User user) {
+        this.userId = user.getId();
         this.user = user;
     }
 
-    void addPoint(int point) {
+    public void addPoint(int point) {
         totalPoint += point;
     }
 }

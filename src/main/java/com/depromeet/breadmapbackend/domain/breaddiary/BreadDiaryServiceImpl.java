@@ -3,6 +3,10 @@ package com.depromeet.breadmapbackend.domain.breaddiary;
 import com.depromeet.breadmapbackend.domain.bakery.Bakery;
 import com.depromeet.breadmapbackend.domain.bakery.BakeryRepository;
 import com.depromeet.breadmapbackend.domain.breaddiary.dto.AddBreadDiaryDto;
+import com.depromeet.breadmapbackend.domain.event.BreadDiaryEvent;
+import com.depromeet.breadmapbackend.domain.event.BreadDiaryEventRepository;
+import com.depromeet.breadmapbackend.domain.event.UserPoint;
+import com.depromeet.breadmapbackend.domain.event.UserPointRepository;
 import com.depromeet.breadmapbackend.domain.image.ImageService;
 import com.depromeet.breadmapbackend.domain.user.User;
 import com.depromeet.breadmapbackend.domain.user.UserRepository;
@@ -27,6 +31,10 @@ public class BreadDiaryServiceImpl implements BreadDiaryService {
 
     private final BreadDiaryRepository breadDiaryRepository;
 
+    private final BreadDiaryEventRepository breadDiaryEventRepository;
+
+    private final UserPointRepository userPointRepository;
+
     @Override
     public void addBreadDiary(AddBreadDiaryDto dto) {
         User user = userRepository.findByOAuthId(dto.oAuthId())
@@ -38,6 +46,10 @@ public class BreadDiaryServiceImpl implements BreadDiaryService {
         } catch (IOException e) {
             throw new DaedongException(DaedongStatus.IMAGE_INVALID_EXCEPTION);
         }
-        breadDiaryRepository.save(new BreadDiary(user, bakery, dto.productName(), dto.productPrice(), dto.rating()));
+        BreadDiary saved = breadDiaryRepository.save(new BreadDiary(user, bakery, dto.productName(), dto.productPrice(), dto.rating()));
+        breadDiaryEventRepository.save(new BreadDiaryEvent(saved));
+        UserPoint userPoint = userPointRepository.findById(user.getId())
+                .orElseGet(() -> userPointRepository.save(new UserPoint(user)));
+        userPoint.addPoint(500);
     }
 }

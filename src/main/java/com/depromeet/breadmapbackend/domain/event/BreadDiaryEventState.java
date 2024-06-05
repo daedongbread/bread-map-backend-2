@@ -1,16 +1,21 @@
 package com.depromeet.breadmapbackend.domain.event;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@ToString
 public enum BreadDiaryEventState {
     PENDING("대기"), ACCEPTED("수락"), REJECTED("거부");
-    public final String value;
+
+    private final String value;
 
     @JsonCreator
-    static public BreadDiaryEventState jsonCreator(String state) {
+    public static BreadDiaryEventState jsonCreator(String state) {
         try {
             return BreadDiaryEventState.valueOf(state);
         } catch (Exception e) {
