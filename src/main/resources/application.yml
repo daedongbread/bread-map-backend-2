@@ -3,8 +3,10 @@ spring:
     timeout-per-shutdown-phase: 40s
   jpa:
     hibernate:
+      ddl-auto: validate
       use-new-id-generator-mappings: false # Hibernate id 생성 전략 여부
     #    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false # OSIV
     properties:
       default_batch_fetch_size: 100
@@ -12,6 +14,7 @@ spring:
         #        format_sql: true
         create_empty_composites:
           enabled: true # @Embbeded 전체 value 들이 null 이어도 null 로 나오지 않게
+    generate-ddl: false
   servlet:
     multipart:
       maxFileSize: 10MB # 파일 한건당
