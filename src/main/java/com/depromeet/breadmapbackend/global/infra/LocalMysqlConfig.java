@@ -1,11 +1,13 @@
 package com.depromeet.breadmapbackend.global.infra;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
 
+@Configuration
 @Slf4j
 class LocalMysqlConfig {
     static {
